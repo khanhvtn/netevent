@@ -14,7 +14,8 @@ app.use(cors());
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'success' });
 });
-app.use('/api/user', userRoutes);
+//Routes
+app.use('/api/user', require('./routes/userRoutes'));
 
 //error handler
 app.use(errorHandler);
@@ -30,6 +31,6 @@ mongoose.connect(
             return console.log(err);
         }
         console.log(`Connect to DB success.`);
-        app.listen(port, () => console.log(`Server is running on port${port}`));
+        app.listen(port, () => console.log(`Server is running on port:${port}`));
     }
 );
