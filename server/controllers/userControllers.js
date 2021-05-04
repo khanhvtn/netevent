@@ -2,7 +2,7 @@ const { User } = require('../models');
 const { cusResponse } = require('../utils');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const CustomError = require('../class/CustomeError');
 //Create User
 const createUser = async (req, res, next) => {
     try {
@@ -11,7 +11,7 @@ const createUser = async (req, res, next) => {
         const existedUser = await User.findOne({ email: userReq.email });
 
         if (existedUser) {
-            return cusResponse(res, 400, null, 'Email is already existed');
+            return next(new CustomError(400, 'Email is already existed'));
         }
 
         //hash password
@@ -23,7 +23,7 @@ const createUser = async (req, res, next) => {
         const newUser = await User.create(userReq);
         return cusResponse(res, 200, newUser, null);
     } catch (error) {
-        return cusResponse(res, 500, null, 'Something went wrong');
+        return next(new CustomError(500, error.message));
     }
 };
 
@@ -36,7 +36,7 @@ const login = async (req, res, next) => {
         const existedUser = await User.findOne({ email: userReq.email });
 
         if (!existedUser) {
-            return cusResponse(res, 400, null, 'Email or password is invalid');
+            return next(new CustomError(400, 'Email or password is invalid'));
         }
         //check password
         const result = await bcrypt.compare(
@@ -44,7 +44,7 @@ const login = async (req, res, next) => {
             existedUser.password
         );
         if (!result) {
-            return cusResponse(res, 400, null, 'Email or password is invalid');
+            return next(new CustomError(400, 'Email or password is invalid'));
         }
 
         //gen token
@@ -62,8 +62,7 @@ const login = async (req, res, next) => {
         //response token to client
         return cusResponse(res, 200, {}, null);
     } catch (error) {
-        console.log(error);
-        return cusResponse(res, 500, null, 'Something  went wrong');
+        return next(new CustomError(500, error.message));
     }
 };
 
