@@ -92,7 +92,7 @@ const getUser = async(req, res, next) => {
 
         const users = await features.query
 
-        res.json({
+        res.status(200).json({
             status: 'success',
             result: users.length,
             users: users
@@ -107,7 +107,7 @@ const getUser = async(req, res, next) => {
 const deleteUser = async(req, res, next) => {
     try {
         await User.findByIdAndDelete(req.params.id)
-        res.json({msg: "Deleted a User"})
+        res.status(200).json({msg: "Deleted a User"})
     } catch (error) {
         return next(new CustomError(500, error.message))
     }
