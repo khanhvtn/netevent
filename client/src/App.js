@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Login from './actions/Login/Login';
+import Login from './components/Login/Login';
 
 const App = () => {
     return (
