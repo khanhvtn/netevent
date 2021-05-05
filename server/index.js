@@ -4,11 +4,13 @@ const app = express();
 const { userRoutes } = require('./routes');
 const cors = require('cors');
 const { errorHandler } = require('./middlewares');
+const cookieParser = require('cookie-parser');
 
 //middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(cookieParser());
 
 //routes
 app.get('/', (req, res) => {
@@ -29,7 +31,9 @@ mongoose.connect(
         if (err) {
             return console.log(err);
         }
-        console.log(`Connect to DB success.`);
-        app.listen(port, () => console.log(`Server is running on port${port}`));
+        console.log(`Connect to DB success`);
+        app.listen(port, () =>
+            console.log(`Server is running on port ${port}`)
+        );
     }
 );

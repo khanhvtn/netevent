@@ -13,11 +13,11 @@ export default makeStyles(() => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '85%',
+        width: '90%',
         margin: 'auto',
     },
     textField: {
-        margin: ' 20px 0',
+        margin: '20px 0',
     },
     btnSubmit: {
         margin: '20px 0',
@@ -25,4 +25,5 @@ export default makeStyles(() => ({
     media: {
         height: 100,
     },
+    errorDrop: { width: '90%', margin: '0 auto' },
 }));
