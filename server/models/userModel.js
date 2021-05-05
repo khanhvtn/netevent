@@ -13,6 +13,11 @@ const userSchema = mongoose.Schema(
         role: {
             type: [String],
         },
+        isConfirmed: {
+            type: Boolean,
+            default: false,
+            required: true
+        }
     },
     { timestamps: true }
 );

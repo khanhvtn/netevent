@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const { userRoutes } = require('./routes');
+const { userRoutes, linkRoutes } = require('./routes');
 const cors = require('cors');
 const { errorHandler } = require('./middlewares');
 
@@ -15,6 +15,7 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: 'success' });
 });
 app.use('/api/user', userRoutes);
+app.use('/api/link', linkRoutes)
 
 //error handler
 app.use(errorHandler);
