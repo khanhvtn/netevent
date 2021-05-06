@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
     AppBar,
@@ -21,19 +21,21 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
 
     return (
         <AppBar
-            className={css.appbar}
+            className={css.navbarColor}
             color="default"
             elevation={1}
             {...rest}
         >
             <Toolbar>
-                <RouterLink to="/">
-                    <img
-                        className={css.image}
-                        alt="Logo"
-                        src={logo}
-                    />
-                </RouterLink>
+                <div className={css.imageSize} align="center">
+                    <Link to="/">
+                        <img
+                            className={css.image}
+                            alt="Logo"
+                            src={logo}
+                        />
+                    </Link>
+                </div>
                 <Box className={css.leftSide} />
                 <Hidden lgDown>
                     <IconButton color="inherit">

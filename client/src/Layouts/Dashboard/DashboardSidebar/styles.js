@@ -1,30 +1,25 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
-    box1: {
+    sidebarWrapper: {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         backgroundColor: theme.palette.background.default,
     },
-    box2: {
+    sidebarAccountWrapper: {
         alignItems: 'center',
         display: 'flex',
         flexDirection: 'column',
         padding: 18
     },
-    p_2: {
+    p2: {
         padding: 16,
     },
-    avatarHandle: {
-        cursor: 'pointer',
-        width: 64,
-        height: 64
-    },
-    listItem1: {
+    sidebarListItem: {
         display: 'flex'
     },
-    button1: {
+    sidebarListButton: {
         color: 'text.secondary',
         fontWeight: 'medium',
         justifyContent: 'flex-start',
@@ -33,11 +28,8 @@ export default makeStyles((theme) => ({
         paddingBottom: 12,
         textTransform: 'none',
         width: '100%',
-        // ...(active && {
-        //     color: 'primary.main'
-        // }),
         '& svg': {
-            mr: 1
+            marginRight: 8
         }
     }
 }));

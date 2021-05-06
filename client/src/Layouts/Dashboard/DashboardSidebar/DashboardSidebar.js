@@ -11,21 +11,20 @@ import {
     List,
     Typography
 } from '@material-ui/core';
-// import {
-//     AlertCircle as AlertCircleIcon,
-//     BarChart as BarChartIcon,
-//     Lock as LockIcon,
-//     Settings as SettingsIcon,
-//     ShoppingBag as ShoppingBagIcon,
-//     User as UserIcon,
-//     UserPlus as UserPlusIcon,
-//     Users as UsersIcon
-// } from 'react-feather';
+import {
+    AlertCircle as AlertCircleIcon,
+    BarChart as BarChartIcon,
+    Lock as LockIcon,
+    Settings as SettingsIcon,
+    ShoppingBag as ShoppingBagIcon,
+    User as UserIcon,
+    UserPlus as UserPlusIcon,
+    Users as UsersIcon
+} from 'react-feather';
 import NavItem from './NavItem';
 import useStyles from './styles'
 
 const user = {
-    avatar: '/static/images/avatars/avatar_6.png',
     jobTitle: 'Senior Developer',
     name: 'Katarina Smith'
 };
@@ -33,42 +32,42 @@ const user = {
 const items = [
     {
         href: '/app/dashboard',
-        // icon: BarChartIcon,
+        icon: BarChartIcon,
         title: 'Dashboard'
     },
     {
-        href: '#',
-        // icon: UsersIcon,
+        href: '/app/customer',
+        icon: UsersIcon,
         title: 'Customers'
     },
     {
         href: '#',
-        // icon: ShoppingBagIcon,
+        icon: ShoppingBagIcon,
         title: 'Products'
     },
     {
         href: '#',
-        // icon: UserIcon,
+        icon: UserIcon,
         title: 'Account'
     },
     {
         href: '#',
-        // icon: SettingsIcon,
+        icon: SettingsIcon,
         title: 'Settings'
     },
     {
         href: '#',
-        // icon: LockIcon,
+        icon: LockIcon,
         title: 'Login'
     },
     {
         href: '#',
-        // icon: UserPlusIcon,
+        icon: UserPlusIcon,
         title: 'Register'
     },
     {
         href: '#',
-        // icon: AlertCircleIcon,
+        icon: AlertCircleIcon,
         title: 'Error'
     }
 ];
@@ -84,8 +83,8 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     }, [location.pathname]);
 
     const content = (
-        <Box className={css.box1}>
-            <Box className={css.box2} >
+        <Box className={css.sidebarWrapper}>
+            <Box className={css.sidebarAccountWrapper} >
                 <Typography
                     color="textPrimary"
                     variant="h5"
@@ -100,7 +99,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                 </Typography>
             </Box>
             <Divider />
-            <Box className={css.p_2}>
+            <Box className={css.p2}>
                 <List>
                     {items.map((item) => (
                         <NavItem

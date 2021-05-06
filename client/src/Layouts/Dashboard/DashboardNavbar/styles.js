@@ -5,11 +5,17 @@ export default makeStyles((theme) => ({
         flexGrow: 1
     },
     image: {
-        width: 200,
-        height: 60,
-        objectFit: 'cover'
+        width: 232,
+        height: 64,
+        objectFit: 'cover',      
     },
-    appbar: {
+    imageSize:{
+        width: 232,
+        height: 64,
+        marginRight: 24,
+    },
+    navbarColor: {
         backgroundColor: theme.palette.background.default,
+        paddingLeft: 0,
     }
 }));

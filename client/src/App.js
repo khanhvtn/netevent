@@ -13,10 +13,13 @@ const App = () => {
             <Route exact path="/">
                 <div>NetCompany</div>
             </Route>
+
+            {/* Here is the place to add route for dashboard layout */}
             <Route>
                 <DashboardLayout >
                     <Switch>
                         <Route path='/app/dashboard' component={Dashboard} exact />
+                        <Route path='/app/customer'><div>NetCompany</div></Route>
                     </Switch>
                 </DashboardLayout>
             </Route>

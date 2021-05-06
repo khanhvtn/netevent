@@ -1,43 +1,31 @@
 import {
     NavLink as RouterLink,
-    matchPath,
     useLocation
 } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, ListItem } from '@material-ui/core';
 import useStyles from './styles'
 
-const NavItem = ({
-    href,
-    icon: Icon,
-    title,
-    ...rest
-}) => {
+const NavItem = ({ href, icon: Icon, title, ...rest }) => {
     const location = useLocation();
     const css = useStyles();
-    // const active = href ? !!matchPath({
-    //     path: href,
-    //     end: false
-    // }, location.pathname) : false;
+    const active = location.pathname === href ? true : false;
 
     return (
         <ListItem
             disableGutters
-            className={css.ListItem1}
+            className={css.sidebarListItem}
             style={{ paddingTop: 0, paddingBottom: 0 }}
             {...rest}
         >
             <Button
                 component={RouterLink}
-                className={css.button1}
+                className={css.sidebarListButton}
+                color={active ? 'primary' : 'default'}
                 to={href}
             >
-                {Icon && (
-                    <Icon size="20" />
-                )}
-                <span>
-                    {title}
-                </span>
+                {Icon && <Icon size="20" />}
+                <span>{title}</span>
             </Button>
         </ListItem>
     );
