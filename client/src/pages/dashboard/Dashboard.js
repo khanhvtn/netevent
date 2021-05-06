@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useStyles from './styles'
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -10,11 +10,84 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Chip from '@material-ui/core/Chip';
+import { Typography } from '@material-ui/core'
+import { useDispatch } from 'react-redux'
+import { userCreate } from '../../actions/userActions';
+const initialState = {
+    email: '',
+    password: '',
+    role: []
+}
 
+const roles = [
+    '1',
+    '2',
+    '3',
+    '4'
+];
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
 const Dashboard = () => {
     const css = useStyles();
+    const [openCreaterUserDialog, setOpenCreaterUserDialog] = useState(false);
+    const [role, setRole] = useState([]);
+    const [userData, setUserData] = useState(initialState);
+    const [errorEmail, setErrorEmail] = useState(false);
+    const [errorRole, setErrorRole] = useState(false);
+    const dispatch = useDispatch();
+    const handleChange = (event) => {
+        setUserData({ ...userData, role: event.target.value });
+    };
+    const handleOpenCreateUserDialog = () => {
+        setOpenCreaterUserDialog(true)
+    }
 
+    const handleCloseCreateUserDialog = () => {
+        setOpenCreaterUserDialog(false);
+    }
+
+    const handleOnSubmit = (e) => {
+        e.preventDefault();
+        if (userData.email === '') {
+            setErrorEmail(true)
+        }
+        else if (userData.role.length === 0) {
+            setErrorRole(true)
+        }
+        else {
+            setErrorEmail(false)
+            setErrorRole(false)
+            dispatch(userCreate(userData))
+            clearField();
+            handleCloseCreateUserDialog();
+        }
+
+    }
+
+    const clearField = () => {
+        setUserData(initialState)
+    }
     return (
         <>
             <div className={css.main}>
@@ -39,9 +112,72 @@ const Dashboard = () => {
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        className={css.addUser}>
+                                        className={css.addUser}
+                                        onClick={handleOpenCreateUserDialog}
+                                    >
                                         Add user
                                     </Button>
+
+
+                                    <Dialog open={openCreaterUserDialog} onClose={handleCloseCreateUserDialog} aria-labelledby="form-dialog-title">
+                                        <DialogTitle id="form-dialog-title">User Register</DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText>
+                                                Enter User Email and Roles to create an account.
+                                            </DialogContentText>
+                                            <TextField
+                                                autoFocus
+                                                margin="dense"
+                                                id="email"
+                                                label="Email Address"
+                                                type="email"
+                                                fullWidth
+                                                value={userData.email}
+                                                onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+
+                                            />
+
+                                            {errorEmail ? <Typography className={css.errorMessage}>Email must not be empty</Typography> : <></>}
+
+
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-mutiple-chip-label">Role</InputLabel>
+                                                <Select
+                                                    labelId="demo-mutiple-chip-label"
+                                                    id="demo-mutiple-chip"
+                                                    multiple
+                                                    value={userData.role}
+                                                    onChange={handleChange}
+                                                    input={<Input id="select-multiple-chip" />}
+                                                    renderValue={(selected) => (
+                                                        <div className={css.chips}>
+                                                            {selected.map((value) => (
+                                                                <Chip key={value} label={value == "1" ? "Admin" : value == "2" ? "Reviewer" : value == "3" ? "Creator" : "Team Member"} className={css.chip} />
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                    MenuProps={MenuProps}
+                                                >
+                                                    {roles.map((role) => (
+                                                        <MenuItem key={role} value={role}>
+                                                            {role == "1" ? "Admin" : role == "2" ? "Reviewer" : role == "3" ? "Creator" : "Team Member"}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                            {errorRole ? <Typography className={css.errorMessage}>Role must not be empty</Typography> : <></>}
+
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={handleCloseCreateUserDialog} color="primary">
+                                                Cancel
+                                            </Button>
+                                            <Button onClick={handleOnSubmit} color="primary">
+                                                Submit
+                                            </Button>
+                                        </DialogActions>
+                                    </Dialog>
+
                                     <Tooltip title="Reload">
                                         <IconButton onClick={() => window.location.reload(false)}>
                                             <RefreshIcon className={css.block} color="inherit" />

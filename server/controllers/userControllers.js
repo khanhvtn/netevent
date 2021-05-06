@@ -15,7 +15,7 @@ const getUsers = async (req, res, next) => {
         if (userData) {
             return cusResponse(res, 200, userData, null);
         } else {
-            return cusResponse(res, 504, "No User Data", null);
+            return cusResponse(res, 404, "No User Data", null);
 
 
         }
@@ -34,13 +34,7 @@ const createUser = async (req, res, next) => {
         if (existedUser) {
             return next(new CustomError(400, 'Email is already existed'));
         }
-
-        //hash password
-        hashPassword = await bcrypt.hash(userReq.password, 10);
-
-        //update hash password to userReq
-        userReq.password = hashPassword;
-        
+  
 
         const newUser = await User.create(userReq);
         const newLink = {

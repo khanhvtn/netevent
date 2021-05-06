@@ -1,4 +1,4 @@
-import { USER_LOADING, USER_LOGIN, ERROR, USER_CHECK } from '../constants';
+import { USER_LOADING, USER_LOGIN, ERROR, USER_CHECK, USER_CREATE } from '../constants';
 import * as api from '../api';
 //setIsLoading func is to set loading status
 const setUserIsLoading = (status, dispatch) => {
@@ -46,3 +46,12 @@ export const userCheck = (history) => async (dispatch) => {
     }
     setUserIsLoading(false, dispatch);
 };
+
+export const userCreate = (userData) => async (dispatch) => {
+    try {
+        const {data} = await api.createUser(userData);
+        dispatch({type: USER_CREATE, payload: data});
+    } catch (error) {
+        console.log(error)
+    }
+}

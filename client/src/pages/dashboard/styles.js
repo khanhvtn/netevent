@@ -20,7 +20,20 @@ export default makeStyles((theme) => ({
     block: {
         display: 'block',
     },
-    root:{
+    root: {
         width: '100%'
+    },
+
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    chip: {
+        margin: 4,
+    },
+
+    errorMessage: {
+        color: "red",
+        fontSize: 10
     }
 }));
