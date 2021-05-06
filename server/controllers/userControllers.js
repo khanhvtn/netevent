@@ -66,7 +66,31 @@ const login = async (req, res, next) => {
     }
 };
 
+const searchUser = async (req, res, next) => {
+    const { searchString } = req.body;
+
+    if(!searchString){
+        return next(new CustomError(400, 'Invalid Search'))
+    }
+
+    try {
+        const searchResult = await User.find({ email: { $regex: searchString } });
+
+        console.log(searchString)
+
+        if (searchResult.length === 0) {
+            return next(new CustomError(400, 'Cannot find email'))
+        }
+
+        return cusResponse(res, 200, searchResult, null);
+
+    } catch (error) {
+        return next(new CustomError(500, error.message))
+    }
+}
+
 module.exports = {
     createUser,
     login,
+    searchUser
 };
