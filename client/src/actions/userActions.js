@@ -4,6 +4,7 @@ import {
     ERROR,
     USER_CHECK,
     USER_CHECKING,
+    ERROR_CLEAR,
 } from '../constants';
 import * as api from '../api';
 import { getCookie } from '../utils';
@@ -33,6 +34,11 @@ export const userLogin = (userReq, history) => async (dispatch) => {
             type: USER_LOGIN,
             payload: data.data,
         });
+        //Clear Error
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null,
+        });
         //redirect to pickrole page
         history.push('/pickrole');
     } catch (error) {
@@ -46,6 +52,13 @@ export const userLogin = (userReq, history) => async (dispatch) => {
 
 export const userCheck = (history) => async (dispatch) => {
     setUserIsChecking(true, dispatch);
+    const previousPath = history.location.pathname;
+    /*
+        Check user token.
+        Then, sen request to the server to check the token.
+        If the token is valid, then update user data.
+        If not set user null and redirect to login page
+    */
     try {
         //get user info
         const { data } = await api.userCheckingAPI();
@@ -53,12 +66,18 @@ export const userCheck = (history) => async (dispatch) => {
             type: USER_CHECK,
             payload: data.data,
         });
+        /* 
+        Prevent user already login but access to login by inputing link.
+         */
+        previousPath === '/' || previousPath === '/login'
+            ? history.push('/pickrole')
+            : history.push(previousPath);
     } catch (error) {
         dispatch({
-            type: ERROR,
-            payload: error.response.data?.errMessage,
+            type: USER_CHECK,
+            payload: null,
         });
-        // history.push('/login');
+        previousPath === '/' ? history.push('/') : history.push('/login');
     }
     setUserIsChecking(false, dispatch);
 };
