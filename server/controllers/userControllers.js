@@ -4,8 +4,8 @@ const { cusResponse } = require('../utils');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const CustomError = require('../class/CustomeError');
-const {sendEmail} = require('./misc/mailer')
-const {html} = require('../mail-template/template')
+const { sendEmail } = require('./misc/mailer')
+const { html } = require('../mail-template/template')
 const mongoose = require('mongoose')
 
 //Get All Users
@@ -24,6 +24,40 @@ const getUsers = async (req, res, next) => {
     }
 }
 
+//Paginatting
+class APIfeatures {
+    constructor(query, queryString){
+        this.query = query;
+        this.queryString = queryString;
+    }
+
+    paginating(){
+        const page = this.queryString.page * 1 || 1
+        const limit = this.queryString.limit * 1 || 9
+        const skip = (page - 1) * limit;
+        this.query = this.query.skip(skip).limit(limit)
+        return this;
+    }
+}
+
+//Get User List
+const getUser = async (req, res, next) => {
+    try {
+        const features = new APIfeatures(User.find(), req.query).paginating()
+
+        const users = await features.query
+
+        res.status(200).json({
+            status: 'success',
+            result: users.length,
+            users: users
+        })
+
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+}
+
 //Create User
 const createUser = async (req, res, next) => {
     try {
@@ -34,7 +68,7 @@ const createUser = async (req, res, next) => {
         if (existedUser) {
             return next(new CustomError(400, 'Email is already existed'));
         }
-  
+
 
         const newUser = await User.create(userReq);
         const newLink = {
@@ -54,14 +88,14 @@ const createUser = async (req, res, next) => {
     }
 };
 
-const deleteUser = async (req, res) => {
-    const {id: _id} = req.params;
-    if (!mongoose.Types.ObjectId.isValid(_id)) {
-        return res.status(404).send('No user with that id');
-    }
-    await User.findByIdAndRemove(_id);
-    res.json({ message: 'User deleted successfully' });
-}
+// const deleteUser = async (req, res) => {
+//     const { id: _id } = req.params;
+//     if (!mongoose.Types.ObjectId.isValid(_id)) {
+//         return res.status(404).send('No user with that id');
+//     }
+//     await User.findByIdAndRemove(_id);
+//     res.json({ message: 'User deleted successfully' });
+// }
 
 
 //user login
@@ -118,10 +152,21 @@ const userCheck = async (req, res, next) => {
     }
 };
 
+//Delete user
+const deleteUser = async (req, res, next) => {
+    try {
+        await User.findByIdAndDelete(req.params.id)
+        res.status(200).json({ msg: "Deleted a User" })
+    } catch (error) {
+        return next(new CustomError(500, error.message))
+    }
+}
+
 module.exports = {
     createUser,
     login,
     userCheck,
     getUsers,
+    getUser,
     deleteUser
 };
