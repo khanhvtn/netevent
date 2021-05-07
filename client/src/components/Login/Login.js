@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import logo from '../../images/logo.png';
 import { userLogin } from '../../actions/userActions';
 
@@ -48,6 +48,9 @@ const Login = () => {
             });
         };
     }, [dispatch]);
+    if (user) {
+        return <Redirect to="/pickrole" />;
+    }
     return (
         <div className={css.main}>
             <div className={css.wrapper}>
