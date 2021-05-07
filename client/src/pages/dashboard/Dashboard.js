@@ -107,12 +107,11 @@ const Dashboard = () => {
     const handleOnSubmit = (e) => {
         e.preventDefault();
         if (userData.email !== '' && validateEmail(userData.email) == true && userData.role.length > 0) {
-            console.log("Submit")
-            // setErrorEmail(false)
-            // setErrorRole(false)
-            // dispatch(userCreate(userData))
-            // clearField();
-            // handleCloseCreateUserDialog();
+            setErrorEmail(false)
+            setErrorRole(false)
+            dispatch(userCreate(userData))
+            clearField();
+            handleCloseCreateUserDialog();
         }
 
 
