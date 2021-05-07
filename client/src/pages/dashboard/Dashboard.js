@@ -24,6 +24,7 @@ import Chip from '@material-ui/core/Chip';
 import { Typography } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
 import { userCreate } from '../../actions/userActions';
+import { EMAIL_ERROR, ROLE_ERROR } from '../../constants'
 const initialState = {
     email: '',
     password: '',
@@ -64,24 +65,59 @@ const Dashboard = () => {
     }
 
     const handleCloseCreateUserDialog = () => {
+        clearField(initialState)
+        setErrorEmail(false)
+        setErrorRole(false)
         setOpenCreaterUserDialog(false);
+    }
+
+    const handleOnBlurEmailField = () => {
+        if (userData.email === '') {
+            setErrorEmail(true)
+        }
+
+        else if (validateEmail(userData.email) == false) {
+            setErrorEmail(true)
+
+        } else {
+            setErrorEmail(false)
+
+        }
+    }
+
+    const handleOnBlueRole = () => {
+        if (userData.role.length === 0) {
+            setErrorRole(true)
+        } else {
+            setErrorRole(false)
+
+        }
+    }
+
+    const handleChangeEmail = (e) => {
+        setUserData({ ...userData, email: e.target.value })
+    }
+
+
+    const validateEmail = (email) => {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
     }
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        if (userData.email === '') {
-            setErrorEmail(true)
+        if (userData.email !== '' && validateEmail(userData.email) == true && userData.role.length > 0) {
+            console.log("Submit")
+            // setErrorEmail(false)
+            // setErrorRole(false)
+            // dispatch(userCreate(userData))
+            // clearField();
+            // handleCloseCreateUserDialog();
         }
-        else if (userData.role.length === 0) {
-            setErrorRole(true)
-        }
-        else {
-            setErrorEmail(false)
-            setErrorRole(false)
-            dispatch(userCreate(userData))
-            clearField();
-            handleCloseCreateUserDialog();
-        }
+
+
+
+
 
     }
 
@@ -126,18 +162,19 @@ const Dashboard = () => {
                                                 Enter User Email and Roles to create an account.
                                             </DialogContentText>
                                             <TextField
-                                                autoFocus
+                                                
                                                 margin="dense"
                                                 id="email"
                                                 label="Email Address"
                                                 type="email"
                                                 fullWidth
+                                                onBlur={handleOnBlurEmailField}
                                                 value={userData.email}
-                                                onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                                                onChange={(e) => handleChangeEmail(e)}
 
                                             />
 
-                                            {errorEmail ? <Typography className={css.errorMessage}>Email must not be empty</Typography> : <></>}
+                                            {errorEmail ? <Typography className={css.errorMessage}>{EMAIL_ERROR}</Typography> : <></>}
 
 
                                             <FormControl fullWidth>
@@ -146,8 +183,10 @@ const Dashboard = () => {
                                                     labelId="demo-mutiple-chip-label"
                                                     id="demo-mutiple-chip"
                                                     multiple
+                                                
                                                     value={userData.role}
                                                     onChange={handleChange}
+                                                    onBlur={handleOnBlueRole}
                                                     input={<Input id="select-multiple-chip" />}
                                                     renderValue={(selected) => (
                                                         <div className={css.chips}>
@@ -165,7 +204,7 @@ const Dashboard = () => {
                                                     ))}
                                                 </Select>
                                             </FormControl>
-                                            {errorRole ? <Typography className={css.errorMessage}>Role must not be empty</Typography> : <></>}
+                                            {errorRole ? <Typography className={css.errorMessage}>{ROLE_ERROR}</Typography> : <></>}
 
                                         </DialogContent>
                                         <DialogActions>

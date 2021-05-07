@@ -3,7 +3,9 @@ import makeStyles from './styles';
 import { Zoom, Paper, TextField, Button, CardMedia } from '@material-ui/core';
 import logo from '../../images/logo.png'
 import { Typography } from '@material-ui/core'
-
+import {useDispatch} from 'react-redux'
+import {useHistory, useParams} from 'react-router-dom'
+import {userConfirm} from '../../actions/userActions'
 const initialState = {
     password1: "",
     password2: ""
@@ -11,14 +13,16 @@ const initialState = {
 
 const Confirmation = () => {
     const css = makeStyles();
-  
+    const dispatch = useDispatch();
+    const history = useHistory();
     const [password, setPassword] = useState(initialState)
     const [errorPassword, setErrorPassword] = useState(false)
-
+    const id = useParams();
     const handleSubmit = (e) => {
         e.preventDefault();
         if(password.password1 == password.password2 && password.password1 !== "" && password.password2 !== "") {
-            console.log("Submit")
+            dispatch(userConfirm(id.id, password.password2, history))
+
         } else {
             setErrorPassword(true)
         }
@@ -42,7 +46,7 @@ const Confirmation = () => {
                             <TextField
                                 variant="outlined"
                                 className={css.textField}
-                                type="email"
+                                type="password"
                                 label="Password"
                                 value={password.password1}
                                 name="password1"
@@ -54,7 +58,7 @@ const Confirmation = () => {
                             <TextField
                                 variant="outlined"
                                 className={css.textField}
-                                type="email"
+                                type="password"
                                 label="Confirmed Password"
                                 value={password.password2}
                                 name="password2"

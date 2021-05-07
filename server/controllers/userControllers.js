@@ -63,6 +63,7 @@ const deleteUser = async (req, res) => {
     res.json({ message: 'User deleted successfully' });
 }
 
+
 //user login
 const login = async (req, res, next) => {
     try {
