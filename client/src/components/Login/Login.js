@@ -100,7 +100,7 @@ const Login = () => {
                                 fullWidth
                             >
                                 {user.isLoading ? (
-                                    <CircularProgress />
+                                    <CircularProgress color="inherit" />
                                 ) : (
                                     'Login'
                                 )}
