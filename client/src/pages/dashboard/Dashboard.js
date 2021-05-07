@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import useStyles from './styles'
+import React, { useEffect, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -22,9 +21,12 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import { Typography } from '@material-ui/core'
-import { useDispatch } from 'react-redux'
-import { userCreate } from '../../actions/userActions';
+import { useDispatch, useSelector } from 'react-redux'
+import { getUsers, userCreate } from '../../actions/userActions';
 import { EMAIL_ERROR, ROLE_ERROR } from '../../constants'
+import useStyles from './styles'
+import UserTable from '../../components/users/userTable/UserTable';
+
 const initialState = {
     email: '',
     password: '',
@@ -56,10 +58,13 @@ const Dashboard = () => {
     const [userData, setUserData] = useState(initialState);
     const [errorEmail, setErrorEmail] = useState(false);
     const [errorRole, setErrorRole] = useState(false);
+    const { users } = useSelector((state) => state.user)
     const dispatch = useDispatch();
+
     const handleChange = (event) => {
         setUserData({ ...userData, role: event.target.value });
     };
+
     const handleOpenCreateUserDialog = () => {
         setOpenCreaterUserDialog(true)
     }
@@ -113,16 +118,16 @@ const Dashboard = () => {
             clearField();
             handleCloseCreateUserDialog();
         }
-
-
-
-
-
     }
 
     const clearField = () => {
         setUserData(initialState)
     }
+
+    useEffect(() => {
+        dispatch(getUsers())
+    }, [dispatch])
+
     return (
         <>
             <div className={css.main}>
@@ -223,17 +228,11 @@ const Dashboard = () => {
                             </Grid>
                         </Toolbar>
                     </AppBar>
-                    <Paper elevation={0}
+                    <Paper
+                        elevation={0}
                         className={css.root}
-                        style={{
-                            paddingTop: '20%',
-                            fontWeight: 'bold',
-                            fontFamily: 'monospace',
-                            fontSize: '3em'
-                        }}>
-                        <div align="center">
-                            Table Of User
-                        </div>
+                    >
+                        <UserTable userData={users} />
                     </Paper>
                 </Paper>
             </div>

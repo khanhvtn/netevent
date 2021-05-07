@@ -10,7 +10,6 @@ import { Grid, CircularProgress } from '@material-ui/core';
 import DashboardLayout from './Layouts/Dashboard/DashboardLayout';
 import Confirmation from './pages/confirmation/Confirmation';
 import Dashboard from './pages/dashboard/Dashboard';
-import User from './components/users/userTable/Users';
 
 const App = () => {
     const dispatch = useDispatch();

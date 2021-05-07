@@ -4,13 +4,16 @@ import {
     USER_LOADING,
     USER_CHECKING,
     USER_CREATE,
-    USER_CONFIRM
+    USER_CONFIRM,
+    FETCH_ALL_USERS,
+    DELETE_USER
 } from '../constants';
 
 const initialState = {
     isUserChecking: false,
     isLoading: false,
     user: null,
+    users: []
 };
 
 export default function userReducers(state = initialState, action) {
@@ -27,6 +30,13 @@ export default function userReducers(state = initialState, action) {
             return { ...state, isLoading: action.payload };
         case USER_CHECKING:
             return { ...state, isUserChecking: action.payload };
+        case FETCH_ALL_USERS:
+            return { ...state, users: action.payload };
+        case DELETE_USER:
+            return {
+                ...state,
+                users: state.users.filter((user) => user._id !== action.payload)
+            }
         default:
             return state;
     }

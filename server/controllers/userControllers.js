@@ -88,15 +88,6 @@ const createUser = async (req, res, next) => {
     }
 };
 
-// const deleteUser = async (req, res) => {
-//     const { id: _id } = req.params;
-//     if (!mongoose.Types.ObjectId.isValid(_id)) {
-//         return res.status(404).send('No user with that id');
-//     }
-//     await User.findByIdAndRemove(_id);
-//     res.json({ message: 'User deleted successfully' });
-// }
-
 
 //user login
 const login = async (req, res, next) => {
@@ -151,6 +142,15 @@ const userCheck = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+
+// const deleteUser = async (req, res) => {
+//     const { id: _id } = req.params;
+//     if (!mongoose.Types.ObjectId.isValid(_id)) {
+//         return res.status(404).send('No user with that id');
+//     }
+//     await User.findByIdAndRemove(_id);
+//     res.json({ message: 'User deleted successfully' });
+// }
 
 //Delete user
 const deleteUser = async (req, res, next) => {

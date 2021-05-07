@@ -6,7 +6,9 @@ import {
     USER_CHECKING,
     ERROR_CLEAR,
     USER_CREATE,
-    USER_CONFIRM
+    USER_CONFIRM,
+    FETCH_ALL_USERS,
+    DELETE_USER
 } from '../constants';
 
 import * as api from '../api';
@@ -99,5 +101,27 @@ export const userConfirm = (id, password, history) => async (dispatch) => {
     } catch (error) {
         console.log(error)
 
+    }
+}
+
+export const getUsers = () => async (dispatch) => {
+    setUserIsLoading(true, dispatch)
+    try {
+        const { data } = await api.fetchUsers();
+        console.log(data)
+        dispatch({ type: FETCH_ALL_USERS, payload: data })
+
+    } catch (error) {
+        console.log(error)
+    }
+    setUserIsLoading(false, dispatch)
+}
+
+export const deleteUser = (id) => async (dispatch) => {
+    try {
+        await api.deleteUser(id)
+        dispatch({ type: DELETE_USER, payload: id })
+    } catch (error) {
+        console.log(error)
     }
 }
