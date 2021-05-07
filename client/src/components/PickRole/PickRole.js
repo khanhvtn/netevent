@@ -14,7 +14,7 @@ const roleInfo = {
     1: {
         roleName: 'Admin',
         icon: adminIcon,
-        path: '/admin',
+        path: '/app/admin/dashboard',
     },
     2: {
         roleName: 'Reviewer',

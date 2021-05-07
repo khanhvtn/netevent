@@ -5,9 +5,13 @@ import {
     USER_CHECK,
     USER_CHECKING,
     ERROR_CLEAR,
+    USER_CREATE,
+    USER_CONFIRM
 } from '../constants';
+
 import * as api from '../api';
 import { getCookie } from '../utils';
+
 //setIsLoading func is to set loading status
 const setUserIsLoading = (status, dispatch) => {
     dispatch({
@@ -76,3 +80,24 @@ export const userCheck = (history) => async (dispatch) => {
     }
     setUserIsChecking(false, dispatch);
 };
+
+export const userCreate = (userData) => async (dispatch) => {
+    try {
+        const { data } = await api.createUser(userData);
+        dispatch({ type: USER_CREATE, payload: data });
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const userConfirm = (id, password, history) => async (dispatch) => {
+    try {
+        const { data } = await api.confirmUser(id, password);
+        dispatch({ type: USER_CONFIRM, payload: data });
+        history.push('/login')
+
+    } catch (error) {
+        console.log(error)
+
+    }
+}

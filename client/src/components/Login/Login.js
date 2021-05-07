@@ -99,11 +99,7 @@ const Login = () => {
                                 color="primary"
                                 fullWidth
                             >
-                                {user.isLoading ? (
-                                    <CircularProgress />
-                                ) : (
-                                    'Login'
-                                )}
+                                {user.isLoading ? <CircularProgress /> : 'Login'}
                             </Button>
                         </form>
                     </Paper>

@@ -8,11 +8,16 @@ const userSchema = mongoose.Schema(
         },
         password: {
             type: String,
-            required: true,
         },
         role: {
             type: [String],
+            required: true
         },
+        isConfirmed: {
+            type: Boolean,
+            default: false,
+            required: true
+        }
     },
     { timestamps: true }
 );

@@ -1,8 +1,29 @@
 const { User } = require('../models');
+const Link = require('../models/linkModel')
 const { cusResponse } = require('../utils');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const CustomError = require('../class/CustomeError');
+const {sendEmail} = require('./misc/mailer')
+const {html} = require('../mail-template/template')
+const mongoose = require('mongoose')
+
+//Get All Users
+const getUsers = async (req, res, next) => {
+    try {
+        const userData = await User.find();
+        if (userData) {
+            return cusResponse(res, 200, userData, null);
+        } else {
+            return cusResponse(res, 404, "No User Data", null);
+
+
+        }
+    } catch (error) {
+        return next(new CustomError(500, error.message))
+    }
+}
+
 //Create User
 const createUser = async (req, res, next) => {
     try {
@@ -13,19 +34,35 @@ const createUser = async (req, res, next) => {
         if (existedUser) {
             return next(new CustomError(400, 'Email is already existed'));
         }
-
-        //hash password
-        hashPassword = await bcrypt.hash(userReq.password, 10);
-
-        //update hash password to userReq
-        userReq.password = hashPassword;
+  
 
         const newUser = await User.create(userReq);
+        const newLink = {
+            user: newUser._id
+        }
+
+        const idLink = await Link.create(newLink);
+        await sendEmail(
+            'noreply@netevent.com',
+            userReq.email,
+            'User Confirmation Link',
+            html(userReq.email, idLink._id)
+        )
         return cusResponse(res, 200, newUser, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
 };
+
+const deleteUser = async (req, res) => {
+    const {id: _id} = req.params;
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+        return res.status(404).send('No user with that id');
+    }
+    await User.findByIdAndRemove(_id);
+    res.json({ message: 'User deleted successfully' });
+}
+
 
 //user login
 const login = async (req, res, next) => {
@@ -85,4 +122,6 @@ module.exports = {
     createUser,
     login,
     userCheck,
+    getUsers,
+    deleteUser
 };
