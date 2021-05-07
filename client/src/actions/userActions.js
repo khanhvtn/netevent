@@ -29,16 +29,11 @@ export const userLogin = (userReq, history) => async (dispatch) => {
     try {
         //get user info
         const { data } = await api.userLoginAPI(userReq);
-        console.log(getCookie('token'));
         dispatch({
             type: USER_LOGIN,
             payload: data.data,
         });
-        //Clear Error
-        dispatch({
-            type: ERROR_CLEAR,
-            payload: null,
-        });
+
         //redirect to pickrole page
         history.push('/pickrole');
     } catch (error) {
