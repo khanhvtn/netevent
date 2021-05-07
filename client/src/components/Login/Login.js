@@ -48,7 +48,7 @@ const Login = () => {
             });
         };
     }, [dispatch]);
-    if (user) {
+    if (user.user) {
         return <Redirect to="/pickrole" />;
     }
     return (

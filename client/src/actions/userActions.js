@@ -4,10 +4,8 @@ import {
     ERROR,
     USER_CHECK,
     USER_CHECKING,
-    ERROR_CLEAR,
 } from '../constants';
 import * as api from '../api';
-import { getCookie } from '../utils';
 //setIsLoading func is to set loading status
 const setUserIsLoading = (status, dispatch) => {
     dispatch({
@@ -72,7 +70,9 @@ export const userCheck = (history) => async (dispatch) => {
             type: USER_CHECK,
             payload: null,
         });
-        previousPath === '/' ? history.push('/') : history.push('/login');
+        previousPath.includes('confirmation')
+            ? history.push(previousPath)
+            : history.push('/login');
     }
     setUserIsChecking(false, dispatch);
 };
