@@ -137,10 +137,11 @@ const Dashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const { user } = useSelector((state) => state)
     const [userTableData, setUserTableData] = useState([])
+    const [tableRefresh, setTableRefresh] = useState(false)
 
     useEffect(() => {
         dispatch(getUsers())
-    }, [])
+    }, [tableRefresh])
 
     useEffect(() => {
         if (user.users){
@@ -243,7 +244,7 @@ const Dashboard = () => {
                                     </Dialog>
 
                                     <Tooltip title="Reload">
-                                        <IconButton onClick={() => window.location.reload(false)}>
+                                        <IconButton onClick={() => setTableRefresh(!tableRefresh)}>
                                             <RefreshIcon className={css.block} color="inherit" />
                                         </IconButton>
                                     </Tooltip>

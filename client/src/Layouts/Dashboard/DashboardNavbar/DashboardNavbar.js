@@ -14,6 +14,7 @@ import {
     Typography,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { userLogout } from '../../../actions/userActions';
 import InputIcon from '@material-ui/icons/Input';
 import useStyles from './styles';
@@ -64,21 +65,31 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
                 {...rest}
             >
                 <Toolbar>
-                    <div className={css.imageSize} align="center">
-                        <Link to="/">
-                            <img className={css.image} alt="Logo" src={logo} />
-                        </Link>
-                    </div>
-                    <Box className={css.leftSide} />
                     <Hidden mdDown>
+                        <div className={css.imageSize} align="center">
+                            <Link to="/">
+                                <img className={css.image} alt="Logo" src={logo} />
+                            </Link>
+                        </div>
+                        <Box className={css.leftSide} />
+
                         <Typography>{user.email}</Typography>
                         <IconButton onClick={handleLogout} color="inherit">
                             <InputIcon />
                         </IconButton>
                     </Hidden>
                     <Hidden lgUp>
-                        <IconButton color="inherit" onClick={handleMenuOpen}>
+                        <IconButton color="inherit" onClick={onMobileNavOpen}>
                             <MenuIcon />
+                        </IconButton>
+                        <div className={css.imageSize} align="center">
+                            <Link to="/">
+                                <img className={css.image} alt="Logo" src={logo} />
+                            </Link>
+                        </div>
+                        <Box className={css.leftSide} />
+                        <IconButton color="inherit" onClick={handleMenuOpen}>
+                            <AccountCircleIcon />
                         </IconButton>
                     </Hidden>
                 </Toolbar>
