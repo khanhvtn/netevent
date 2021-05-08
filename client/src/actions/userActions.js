@@ -11,6 +11,7 @@ import {
     DELETE_USER,
     SEARCH_USER,
     USER_LOGOUT,
+    USER_CREATE_SUCCESSFUL
 } from '../constants';
 
 import * as api from '../api';
@@ -116,7 +117,9 @@ export const userCheck = (history) => async (dispatch) => {
 export const userCreate = (userData) => async (dispatch) => {
     try {
         const { data } = await api.createUser(userData);
+        dispatch({ type: USER_CREATE_SUCCESSFUL, payload: true });
         dispatch({ type: USER_CREATE, payload: data });
+
     } catch (error) {
         console.log(error)
     }
