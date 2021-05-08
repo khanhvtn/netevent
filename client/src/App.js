@@ -41,15 +41,19 @@ const App = () => {
                         <Route path="/404" component={Error} />
 
                         {/* Here is the place to add route for dashboard layout */}
-                        <PrivateRoute>
+                        <Route>
                             <DashboardLayout>
                                 <Switch>
-                                    <Route exact path='/app/:role/dashboard' component={Dashboard} />
-                                    <Route path='/app/customer'><div>NetCompany</div></Route>
-                                    <Redirect from="*" to="/404" />
+                                    <Route exact path="/dashboard/user" component={Dashboard} />
+                                    <Route exact path="/dashboard/facility"><div>NetCompany</div></Route>
+                                    <Route path="/app/customer">
+                                        <div>NetCompany</div>
+                                    </Route>
+                                    {/* <Route component={Error} /> */}
+                                    {/* <Redirect from="*" to="/404" /> */}
                                 </Switch>
                             </DashboardLayout>
-                        </PrivateRoute>
+                        </Route>
                     </Switch>
                 )}
         </div>

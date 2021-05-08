@@ -7,22 +7,21 @@ import {
     CardMedia,
     Typography,
     ButtonBase,
-    Zoom,
     Grow,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 
-const RoleCard = ({ roleName, icon, path, delay }) => {
+const RoleCard = ({ roleNum, roleName, defaultPath, icon, delay }) => {
     const css = makeStyles();
     const history = useHistory();
 
-    const handlePickRole = (path) => {
-        history.push(path);
+    const handlePickRole = () => {
+        history.push(defaultPath, { roleNum });
     };
     return (
         <Grid item>
             <Grow timeout={delay} in style={{ transformOrigin: '0 0 0' }}>
-                <ButtonBase onClick={() => handlePickRole(path)}>
+                <ButtonBase onClick={handlePickRole}>
                     <Paper className={css.paper}>
                         <CardMedia className={css.media} image={icon} />
                         <Typography>{roleName}</Typography>

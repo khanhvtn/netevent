@@ -157,11 +157,19 @@ const Dashboard = () => {
         <>
             <div className={css.main}>
                 <Paper className={css.paper}>
-                    <AppBar className={css.searchBar} position="static" color="default" elevation={0}>
+                    <AppBar
+                        className={css.searchBar}
+                        position="static"
+                        color="default"
+                        elevation={0}
+                    >
                         <Toolbar>
                             <Grid container spacing={2} alignItems="center">
                                 <Grid item>
-                                    <SearchIcon className={css.block} color="inherit" />
+                                    <SearchIcon
+                                        className={css.block}
+                                        color="inherit"
+                                    />
                                 </Grid>
                                 <Grid item xs>
                                     <TextField
@@ -265,7 +273,7 @@ const Dashboard = () => {
                 </Paper>
             </div>
         </>
-    )
-}
+    );
+};
 
 export default Dashboard;
