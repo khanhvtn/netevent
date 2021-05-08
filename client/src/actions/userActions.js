@@ -67,12 +67,6 @@ export const userLogout = (history) => async (dispatch) => {
         //redirect to pickrole page
         history.push('/login');
     } catch (error) {
-        if (error.response.data?.errMessage) {
-            dispatch({
-                type: ERROR,
-                payload: error.response.data?.errMessage,
-            });
-        }
         console.log(error);
     }
     setUserIsLoading(false, dispatch);
@@ -97,6 +91,7 @@ export const userCheck = (history) => async (dispatch) => {
         /* 
         Prevent user already login but access to login by inputing link.
          */
+        console.log(previousPath);
         previousPath === '/' || previousPath === '/login'
             ? history.push('/pickrole')
             : history.push(previousPath);
@@ -117,53 +112,48 @@ export const userCreate = (userData) => async (dispatch) => {
         const { data } = await api.createUser(userData);
         dispatch({ type: USER_CREATE, payload: data });
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-}
+};
 
 export const userConfirm = (id, password, history) => async (dispatch) => {
     try {
         const { data } = await api.confirmUser(id, password);
         dispatch({ type: USER_CONFIRM, payload: data });
-        history.push('/login')
-
+        history.push('/login');
     } catch (error) {
-        console.log(error)
-
+        console.log(error);
     }
-}
+};
 
 export const getUsers = () => async (dispatch) => {
-    setUserIsLoading(true, dispatch)
+    setUserIsLoading(true, dispatch);
     try {
         const { data } = await api.fetchUsers();
-        dispatch({ type: FETCH_ALL_USERS, payload: data })
-
+        dispatch({ type: FETCH_ALL_USERS, payload: data });
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-    setUserIsLoading(false, dispatch)
-}
+    setUserIsLoading(false, dispatch);
+};
 
 export const searchUsers = (searchString) => async (dispatch) => {
-    setUserIsLoading(true, dispatch)
+    setUserIsLoading(true, dispatch);
     try {
         const { data } = await api.searchUsersAPI(searchString);
-        console.log(data)
-        dispatch({ type: SEARCH_USER, payload: data })
-
+        console.log(data);
+        dispatch({ type: SEARCH_USER, payload: data });
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-    setUserIsLoading(false, dispatch)
-}
-
+    setUserIsLoading(false, dispatch);
+};
 
 export const deleteUser = (id) => async (dispatch) => {
     try {
-        await api.deleteUser(id)
-        dispatch({ type: DELETE_USER, payload: id })
+        await api.deleteUser(id);
+        dispatch({ type: DELETE_USER, payload: id });
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-}
+};

@@ -1,6 +1,4 @@
 import React from 'react';
-//import makeStyles in the last
-import makeStyles from './styles';
 import {
     Grid,
     Paper,
@@ -10,13 +8,23 @@ import {
     Grow,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { USER_PICK_ROLE } from '../../../constants';
+//import makeStyles in the last
+import makeStyles from './styles';
 
 const RoleCard = ({ roleNum, roleName, defaultPath, icon, delay }) => {
     const css = makeStyles();
     const history = useHistory();
+    const dispatch = useDispatch();
 
     const handlePickRole = () => {
-        history.push(defaultPath, { roleNum });
+        //set picked role
+        dispatch({
+            type: USER_PICK_ROLE,
+            payload: roleNum,
+        });
+        history.push(defaultPath);
     };
     return (
         <Grid item>

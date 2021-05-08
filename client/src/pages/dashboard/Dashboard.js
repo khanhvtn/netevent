@@ -20,25 +20,20 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
-import { Typography } from '@material-ui/core'
-import { useDispatch, useSelector } from 'react-redux'
+import { Typography } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUsers, searchUsers, userCreate } from '../../actions/userActions';
-import { EMAIL_ERROR, ROLE_ERROR } from '../../constants'
-import useStyles from './styles'
+import { EMAIL_ERROR, ROLE_ERROR } from '../../constants';
+import useStyles from './styles';
 import UserTable from '../../components/users/userTable/UserTable';
 
 const initialState = {
     email: '',
     password: '',
-    role: []
-}
+    role: [],
+};
 
-const roles = [
-    '1',
-    '2',
-    '3',
-    '4'
-];
+const roles = ['1', '2', '3', '4'];
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -54,7 +49,6 @@ const MenuProps = {
 const Dashboard = () => {
     const css = useStyles();
     const [openCreaterUserDialog, setOpenCreaterUserDialog] = useState(false);
-    const [role, setRole] = useState([]);
     const [userData, setUserData] = useState(initialState);
     const [errorEmail, setErrorEmail] = useState(false);
     const [errorRole, setErrorRole] = useState(false);
@@ -65,93 +59,91 @@ const Dashboard = () => {
     };
 
     const handleOpenCreateUserDialog = () => {
-        setOpenCreaterUserDialog(true)
-    }
+        setOpenCreaterUserDialog(true);
+    };
 
     const handleCloseCreateUserDialog = () => {
-        clearField(initialState)
-        setErrorEmail(false)
-        setErrorRole(false)
+        clearField(initialState);
+        setErrorEmail(false);
+        setErrorRole(false);
         setOpenCreaterUserDialog(false);
-    }
+    };
 
     const handleOnBlurEmailField = () => {
         if (userData.email === '') {
-            setErrorEmail(true)
-        }
-
-        else if (validateEmail(userData.email) == false) {
-            setErrorEmail(true)
-
+            setErrorEmail(true);
+        } else if (validateEmail(userData.email) === false) {
+            setErrorEmail(true);
         } else {
-            setErrorEmail(false)
-
+            setErrorEmail(false);
         }
-    }
+    };
 
     const handleOnBlueRole = () => {
         if (userData.role.length === 0) {
-            setErrorRole(true)
+            setErrorRole(true);
         } else {
-            setErrorRole(false)
-
+            setErrorRole(false);
         }
-    }
+    };
 
     const handleChangeEmail = (e) => {
-        setUserData({ ...userData, email: e.target.value })
-    }
-
+        setUserData({ ...userData, email: e.target.value });
+    };
 
     const validateEmail = (email) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
-    }
+    };
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        if (userData.email !== '' && validateEmail(userData.email) == true && userData.role.length > 0) {
-            setErrorEmail(false)
-            setErrorRole(false)
-            dispatch(userCreate(userData))
+        if (
+            userData.email !== '' &&
+            validateEmail(userData.email) === true &&
+            userData.role.length > 0
+        ) {
+            setErrorEmail(false);
+            setErrorRole(false);
+            dispatch(userCreate(userData));
             clearField();
             handleCloseCreateUserDialog();
         }
-    }
+    };
 
     const clearField = () => {
-        setUserData(initialState)
-    }
+        setUserData(initialState);
+    };
 
     const handleSearchUser = (e) => {
         if (e.key === 'Enter') {
-            if (searchTerm){
-                dispatch(searchUsers(searchTerm))
+            if (searchTerm) {
+                dispatch(searchUsers(searchTerm));
             } else {
-                setTableRefresh(!tableRefresh)
+                setTableRefresh(!tableRefresh);
             }
             e.preventDefault();
         }
-    }
+    };
 
     const handleChangeSearch = (e) => {
-        setSearchTerm(e.target.value)
-    }
+        setSearchTerm(e.target.value);
+    };
 
     const [searchTerm, setSearchTerm] = useState('');
-    const { user } = useSelector((state) => state)
-    const [userTableData, setUserTableData] = useState([])
-    const [tableRefresh, setTableRefresh] = useState(false)
+    const { user } = useSelector((state) => state);
+    const [userTableData, setUserTableData] = useState([]);
+    const [tableRefresh, setTableRefresh] = useState(false);
 
     useEffect(() => {
-        dispatch(getUsers())
-    }, [dispatch, tableRefresh])
+        dispatch(getUsers());
+    }, [dispatch, tableRefresh]);
 
     useEffect(() => {
         if (user.users) {
-            setUserTableData(user.users?.data)
+            setUserTableData(user.users?.data);
         }
-    }, [handleSearchUser])
+    }, [handleSearchUser, user.users]);
 
     return (
         <>
@@ -194,12 +186,18 @@ const Dashboard = () => {
                                         Add user
                                     </Button>
 
-
-                                    <Dialog open={openCreaterUserDialog} onClose={handleCloseCreateUserDialog} aria-labelledby="form-dialog-title">
-                                        <DialogTitle id="form-dialog-title">User Register</DialogTitle>
+                                    <Dialog
+                                        open={openCreaterUserDialog}
+                                        onClose={handleCloseCreateUserDialog}
+                                        aria-labelledby="form-dialog-title"
+                                    >
+                                        <DialogTitle id="form-dialog-title">
+                                            User Register
+                                        </DialogTitle>
                                         <DialogContent>
                                             <DialogContentText>
-                                                Enter User Email and Roles to create an account.
+                                                Enter User Email and Roles to
+                                                create an account.
                                             </DialogContentText>
                                             <TextField
                                                 margin="dense"
@@ -209,15 +207,25 @@ const Dashboard = () => {
                                                 fullWidth
                                                 onBlur={handleOnBlurEmailField}
                                                 value={userData.email}
-                                                onChange={(e) => handleChangeEmail(e)}
-
+                                                onChange={(e) =>
+                                                    handleChangeEmail(e)
+                                                }
                                             />
 
-                                            {errorEmail ? <Typography className={css.errorMessage}>{EMAIL_ERROR}</Typography> : <></>}
-
+                                            {errorEmail ? (
+                                                <Typography
+                                                    className={css.errorMessage}
+                                                >
+                                                    {EMAIL_ERROR}
+                                                </Typography>
+                                            ) : (
+                                                <></>
+                                            )}
 
                                             <FormControl fullWidth>
-                                                <InputLabel id="demo-mutiple-chip-label">Role</InputLabel>
+                                                <InputLabel id="demo-mutiple-chip-label">
+                                                    Role
+                                                </InputLabel>
                                                 <Select
                                                     labelId="demo-mutiple-chip-label"
                                                     id="demo-mutiple-chip"
@@ -225,50 +233,108 @@ const Dashboard = () => {
                                                     value={userData.role}
                                                     onChange={handleChange}
                                                     onBlur={handleOnBlueRole}
-                                                    input={<Input id="select-multiple-chip" />}
+                                                    input={
+                                                        <Input id="select-multiple-chip" />
+                                                    }
                                                     renderValue={(selected) => (
-                                                        <div className={css.chips}>
-                                                            {selected.map((value) => (
-                                                                <Chip key={value} label={value == "1" ? "Admin" : value == "2" ? "Reviewer" : value == "3" ? "Creator" : "Team Member"} className={css.chip} />
-                                                            ))}
+                                                        <div
+                                                            className={
+                                                                css.chips
+                                                            }
+                                                        >
+                                                            {selected.map(
+                                                                (value) => (
+                                                                    <Chip
+                                                                        key={
+                                                                            value
+                                                                        }
+                                                                        label={
+                                                                            value ===
+                                                                            '1'
+                                                                                ? 'Admin'
+                                                                                : value ===
+                                                                                  '2'
+                                                                                ? 'Reviewer'
+                                                                                : value ===
+                                                                                  '3'
+                                                                                ? 'Creator'
+                                                                                : 'Team Member'
+                                                                        }
+                                                                        className={
+                                                                            css.chip
+                                                                        }
+                                                                    />
+                                                                )
+                                                            )}
                                                         </div>
                                                     )}
                                                     MenuProps={MenuProps}
                                                 >
                                                     {roles.map((role) => (
-                                                        <MenuItem key={role} value={role}>
-                                                            {role == "1" ? "Admin" : role == "2" ? "Reviewer" : role == "3" ? "Creator" : "Team Member"}
+                                                        <MenuItem
+                                                            key={role}
+                                                            value={role}
+                                                        >
+                                                            {role === '1'
+                                                                ? 'Admin'
+                                                                : role === '2'
+                                                                ? 'Reviewer'
+                                                                : role === '3'
+                                                                ? 'Creator'
+                                                                : 'Team Member'}
                                                         </MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
-                                            {errorRole ? <Typography className={css.errorMessage}>{ROLE_ERROR}</Typography> : <></>}
-
+                                            {errorRole ? (
+                                                <Typography
+                                                    className={css.errorMessage}
+                                                >
+                                                    {ROLE_ERROR}
+                                                </Typography>
+                                            ) : (
+                                                <></>
+                                            )}
                                         </DialogContent>
                                         <DialogActions>
-                                            <Button onClick={handleCloseCreateUserDialog} color="primary">
+                                            <Button
+                                                onClick={
+                                                    handleCloseCreateUserDialog
+                                                }
+                                                color="primary"
+                                            >
                                                 Cancel
                                             </Button>
-                                            <Button onClick={handleOnSubmit} color="primary">
+                                            <Button
+                                                onClick={handleOnSubmit}
+                                                color="primary"
+                                            >
                                                 Submit
                                             </Button>
                                         </DialogActions>
                                     </Dialog>
 
                                     <Tooltip title="Reload">
-                                        <IconButton onClick={() => setTableRefresh(!tableRefresh)}>
-                                            <RefreshIcon className={css.block} color="inherit" />
+                                        <IconButton
+                                            onClick={() =>
+                                                setTableRefresh(!tableRefresh)
+                                            }
+                                        >
+                                            <RefreshIcon
+                                                className={css.block}
+                                                color="inherit"
+                                            />
                                         </IconButton>
                                     </Tooltip>
                                 </Grid>
                             </Grid>
                         </Toolbar>
                     </AppBar>
-                    <Paper
-                        elevation={0}
-                        className={css.root}
-                    >
-                        <UserTable userData={userTableData} loading={user.isLoading} />
+                    <Paper elevation={0} className={css.root}>
+                        <UserTable
+                            userData={userTableData}
+                            loading={user.isLoading}
+                        />
                     </Paper>
                 </Paper>
             </div>
