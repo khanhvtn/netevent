@@ -6,6 +6,7 @@ import {
     USER_CHECKING,
     USER_CREATE,
     USER_CONFIRM,
+    USER_IS_CONFIRM,
     FETCH_ALL_USERS,
     DELETE_USER,
     SEARCH_USER,
@@ -121,10 +122,20 @@ export const userCreate = (userData) => async (dispatch) => {
     }
 }
 
+const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+  }
+  
+
 export const userConfirm = (id, password, history) => async (dispatch) => {
     try {
+        dispatch({ type: USER_LOADING, payload: true });
         const { data } = await api.confirmUser(id, password);
         dispatch({ type: USER_CONFIRM, payload: data });
+        dispatch({ type: USER_LOADING, payload: false });
+        dispatch({ type: USER_IS_CONFIRM, payload: true });
+        await sleep(5000)
+        dispatch({ type: USER_IS_CONFIRM, payload: false });
         history.push('/login')
 
     } catch (error) {

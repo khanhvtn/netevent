@@ -1,11 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import makeStyles from './styles';
-import { Zoom, Paper, TextField, Button, CardMedia } from '@material-ui/core';
+import { Zoom, Paper, TextField, Button, CardMedia, Collapse, CircularProgress } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
+
 import logo from '../../images/logo.png'
 import { Typography } from '@material-ui/core'
-import {useDispatch} from 'react-redux'
-import {useHistory, useParams} from 'react-router-dom'
-import {userConfirm} from '../../actions/userActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory, useParams } from 'react-router-dom'
+import { userConfirm } from '../../actions/userActions'
+import { getLinks } from '../../actions/linkActions';
+import { PASSWORD_MATCHED } from '../../constants';
+import confirm from '../../images/check_confirm.png'
 
 const initialState = {
     password1: "",
@@ -17,11 +22,32 @@ const Confirmation = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const [password, setPassword] = useState(initialState)
+    const [validLink, setValidLink] = useState([]);
     const [errorPassword, setErrorPassword] = useState(false)
     const id = useParams();
+    const { links } = useSelector((state) => state.link)
+    const { user } = useSelector((state) => ({
+        user: state.user,
+    }));
+
+    useEffect(() => {
+        dispatch(getLinks());
+    }, [dispatch])
+
+    useEffect(() => {
+        if (links.length > 0) {
+            for (var i = 0; i < links.length; i++) {
+                validLink.push(links[i]._id)
+            }
+            if (!validLink.includes(id.id)) {
+                history.push('/404')
+            }
+        }
+    }, [links.length])
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(password.password1 == password.password2 && password.password1 !== "" && password.password2 !== "") {
+        if (password.password1 == password.password2 && password.password1 !== "" && password.password2 !== "") {
             dispatch(userConfirm(id.id, password.password2, history))
 
         } else {
@@ -39,46 +65,62 @@ const Confirmation = () => {
                             image={logo}
                             title="Logo"
                         />
-                        <form
-                            className={css.form}
-                            onSubmit={handleSubmit}
-                            noValidate
-                        >
-                            <TextField
-                                variant="outlined"
-                                className={css.textField}
-                                type="password"
-                                label="Password"
-                                value={password.password1}
-                                name="password1"
-                                fullWidth
-                                onChange={(e) => setPassword({ ...password, password1: e.target.value })}
+                        {user.isConfirm ? 
+                            <Alert severity="info">
+                                <AlertTitle>Info</AlertTitle>
+                                    Update Password Successful. Please wait 5 seconds to login!
+                            </Alert> :
+                            <>
+                                <Collapse
+                                    className={css.errorDrop}
+                                    in={errorPassword ? true : false}
+                                >
+                                    <Alert className={css.alert} severity="error">
+                                        {PASSWORD_MATCHED}
+                                    </Alert>
+                                </Collapse>
+                                <form
+                                    className={css.form}
+                                    onSubmit={handleSubmit}
+                                    noValidate
+                                >
+                                    <TextField
+                                        variant="outlined"
+                                        className={css.textField}
+                                        type="password"
+                                        label="Password"
+                                        value={password.password1}
+                                        name="password1"
+                                        fullWidth
+                                        onChange={(e) => setPassword({ ...password, password1: e.target.value })}
 
-                            />
+                                    />
 
-                            <TextField
-                                variant="outlined"
-                                className={css.textField}
-                                type="password"
-                                label="Confirmed Password"
-                                value={password.password2}
-                                name="password2"
-                                fullWidth
-                                onChange={(e) => setPassword({ ...password, password2: e.target.value })}
-                            />
+                                    <TextField
+                                        variant="outlined"
+                                        className={css.textField}
+                                        type="password"
+                                        label="Confirmed Password"
+                                        value={password.password2}
+                                        name="password2"
+                                        fullWidth
+                                        onChange={(e) => setPassword({ ...password, password2: e.target.value })}
+                                    />
 
-                            {errorPassword ? <Typography className={css.errorPasswordText}>Password must be matched and not empty</Typography> : <></>}
-                            <Button
-                                size="large"
-                                variant="contained"
-                                className={css.btnSubmit}
-                                type="submit"
-                                color="primary"
-                                fullWidth
-                            >
-                                Submit
-                            </Button>
-                        </form>
+                                    <Button
+                                        size="large"
+                                        variant="contained"
+                                        className={css.btnSubmit}
+                                        type="submit"
+                                        color="primary"
+                                        fullWidth
+                                    >
+                                        {user.isLoading ? <CircularProgress color="inherit" /> : 'Submit'}
+
+                                    </Button>
+                                </form> </>}
+
+
                     </Paper>
                 </Zoom>
             </div>
