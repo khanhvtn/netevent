@@ -6,5 +6,5 @@ const AXIOS = axios.create({
 });
 
 //user apis
-export const userCheckingAPI = () => AXIOS.get(`/user/checking`);
+export const userCheckingAPI = () => AXIOS.get(`/user/userCheck`);
 export const userLoginAPI = (userReq) => AXIOS.post(`/user/login`, userReq);

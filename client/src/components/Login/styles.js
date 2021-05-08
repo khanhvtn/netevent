@@ -13,16 +13,17 @@ export default makeStyles(() => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        width: '90%',
+        margin: 'auto',
     },
     textField: {
-        width: '90%',
-        margin: ' 20px 0',
+        margin: '20px 0',
     },
     btnSubmit: {
         margin: '20px 0',
-        width: '90%',
     },
     media: {
         height: 100,
     },
+    errorDrop: { width: '90%', margin: '0 auto' },
 }));

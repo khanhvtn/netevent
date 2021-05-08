@@ -1,9 +1,23 @@
-import { USER_LOADING, USER_LOGIN, ERROR, USER_CHECK } from '../constants';
+import {
+    USER_LOADING,
+    USER_LOGIN,
+    ERROR,
+    USER_CHECK,
+    USER_CHECKING,
+} from '../constants';
 import * as api from '../api';
 //setIsLoading func is to set loading status
 const setUserIsLoading = (status, dispatch) => {
     dispatch({
         type: USER_LOADING,
+        payload: status,
+    });
+};
+
+//setIsLoading func is to set loading status
+const setUserIsChecking = (status, dispatch) => {
+    dispatch({
+        type: USER_CHECKING,
         payload: status,
     });
 };
@@ -15,34 +29,50 @@ export const userLogin = (userReq, history) => async (dispatch) => {
         const { data } = await api.userLoginAPI(userReq);
         dispatch({
             type: USER_LOGIN,
-            payload: data,
+            payload: data.data,
         });
+
         //redirect to pickrole page
         history.push('/pickrole');
     } catch (error) {
         dispatch({
             type: ERROR,
-            payload: error.response.data?.message,
+            payload: error.response.data?.errMessage,
         });
     }
     setUserIsLoading(false, dispatch);
 };
 
 export const userCheck = (history) => async (dispatch) => {
-    setUserIsLoading(true, dispatch);
+    setUserIsChecking(true, dispatch);
+    const previousPath = history.location.pathname;
+    /*
+        Check user token.
+        Then, sen request to the server to check the token.
+        If the token is valid, then update user data.
+        If not set user null and redirect to login page
+    */
     try {
         //get user info
         const { data } = await api.userCheckingAPI();
         dispatch({
             type: USER_CHECK,
-            payload: data,
+            payload: data.data,
         });
+        /* 
+        Prevent user already login but access to login by inputing link.
+         */
+        previousPath === '/' || previousPath === '/login'
+            ? history.push('/pickrole')
+            : history.push(previousPath);
     } catch (error) {
         dispatch({
-            type: ERROR,
-            payload: error.response.data?.message,
+            type: USER_CHECK,
+            payload: null,
         });
-        history.push('/login');
+        previousPath.includes('confirmation')
+            ? history.push(previousPath)
+            : history.push('/login');
     }
-    setUserIsLoading(false, dispatch);
+    setUserIsChecking(false, dispatch);
 };

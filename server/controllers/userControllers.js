@@ -55,12 +55,27 @@ const login = async (req, res, next) => {
         );
 
         res.cookie('token', token, {
-            expires: new Date(Date.now() + 60000),
+            expires: new Date(Date.now() + 1 * 60 * 60 * 1000), //expire in 1h
             httpOnly: true,
         });
 
         //response token to client
-        return cusResponse(res, 200, {}, null);
+        return cusResponse(
+            res,
+            200,
+            { email: existedUser.email, role: existedUser.role },
+            null
+        );
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
+//user login
+const userCheck = async (req, res, next) => {
+    try {
+        //response user info to client
+        return cusResponse(res, 200, req.user, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
@@ -69,4 +84,5 @@ const login = async (req, res, next) => {
 module.exports = {
     createUser,
     login,
+    userCheck,
 };
