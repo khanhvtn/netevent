@@ -62,7 +62,7 @@ const EnhancedTableToolbar = (props) => {
 
     //Handle the Delete button
     const handleDeleteUser = (id) => {
-        dispatch(deleteUser(id))
+        dispatch(deleteUser(id));
     };
 
     const handleDeleteButton = () => {

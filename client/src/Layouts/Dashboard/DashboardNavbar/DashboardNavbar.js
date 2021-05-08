@@ -1,18 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { AppBar, Box, Hidden, IconButton, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Box, Hidden, IconButton, Toolbar } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { userLogout } from '../../../actions/userActions';
 import InputIcon from '@material-ui/icons/Input';
 import useStyles from './styles';
 import logo from '../../../images/logo.png';
+import { useDispatch } from 'react-redux';
 
-const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
+const DashboardNavbar = ({ onMobileNavOpen, onPickRole, ...rest }) => {
     const css = useStyles();
+    const dispatch = useDispatch();
+    const history = useHistory();
 
-    const handleOpenSidebar = () => {};
+    const handleLogout = () => {
+        dispatch(userLogout(history));
+    };
 
     return (
         <div>
@@ -44,6 +48,13 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
                         </Link>
                     </div>
                     <Box className={css.leftSide} />
+                    {onPickRole ? (
+                        <IconButton onClick={handleLogout} color="inherit">
+                            <InputIcon />
+                        </IconButton>
+                    ) : (
+                        ''
+                    )}
                     <Hidden lgUp>
                         <IconButton color="inherit" onClick={onMobileNavOpen}>
                             <MenuIcon />

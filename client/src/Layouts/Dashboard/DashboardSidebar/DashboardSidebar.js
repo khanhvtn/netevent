@@ -49,11 +49,12 @@ const defaultActions = [
     },
 ];
 
-const DashboardSidebar = ({ onMobileClose, openMobile, roleNum }) => {
+const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     const location = useLocation();
     const css = useStyles();
-    const { user } = useSelector((state) => ({
+    const { user, roleNum } = useSelector((state) => ({
         user: state.user.user,
+        roleNum: state.user.pickedRoleNum,
     }));
     const renderListActions = roleActions[roleNum].map((action, index) => {
         return (
@@ -80,7 +81,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile, roleNum }) => {
         if (openMobile && onMobileClose) {
             onMobileClose();
         }
-    }, [location.pathname]);
+    }, [location.pathname, openMobile, onMobileClose]);
 
     const content = (
         <Box className={css.sidebarWrapper}>

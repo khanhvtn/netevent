@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import Login from './components/Login/Login';
 import PrivateRoute from './routes/PrivateRoute';
 import PickRole from './components/PickRole/PickRole';
@@ -33,29 +33,41 @@ const App = () => {
                     />
                 </Grid>
             ) : (
-                    <Switch>
-                        <Route exact path="/" component={Login} />
-                        <Route exact path="/login" component={Login} />
-                        <PrivateRoute exact path="/pickrole" component={PickRole} />
-                        <Route exact path="/confirmation/:id" component={Confirmation} />
-                        <Route path="/404" component={Error} />
+                <Switch>
+                    <Route exact path="/" component={Login} />
+                    <Route exact path="/login" component={Login} />
+                    <PrivateRoute exact path="/pickrole" component={PickRole} />
+                    <Route
+                        exact
+                        path="/confirmation/:id"
+                        component={Confirmation}
+                    />
 
-                        {/* Here is the place to add route for dashboard layout */}
-                        <Route>
-                            <DashboardLayout>
-                                <Switch>
-                                    <Route exact path="/dashboard/user" component={Dashboard} />
-                                    <Route exact path="/dashboard/facility"><div>NetCompany</div></Route>
-                                    <Route path="/app/customer">
-                                        <div>NetCompany</div>
-                                    </Route>
-                                    {/* <Route component={Error} /> */}
-                                    {/* <Redirect from="*" to="/404" /> */}
-                                </Switch>
-                            </DashboardLayout>
-                        </Route>
-                    </Switch>
-                )}
+                    {/* Here is the place to add route for dashboard layout */}
+                    <Route>
+                        <Switch>
+                            <Route
+                                path="/dashboard/user"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <Dashboard />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/facility"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <h1>Facility</h1>
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route path="*" component={Error} />
+                        </Switch>
+                    </Route>
+                    <Route path="*" component={Error} />
+                </Switch>
+            )}
         </div>
     );
 };
