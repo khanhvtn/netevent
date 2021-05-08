@@ -65,7 +65,7 @@ const EnhancedTableToolbar = (props) => {
                         onClick={handleDeleteButton}
                     >
                         Delete
-            </Button>
+                    </Button>
                 </Tooltip>
             ) : (
                     <Tooltip title="Filter list">
