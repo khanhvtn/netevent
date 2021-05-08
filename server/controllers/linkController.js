@@ -23,7 +23,7 @@ const getLink = async (req, res) => {
     const { id: _id } = req.params;
     try {
         const link = await Link.findById(_id)
-       
+
         if (link) {
             const update = await User.findByIdAndUpdate(
                 link.user,
@@ -43,39 +43,38 @@ const getLink = async (req, res) => {
 
 
 const confirmPassword = async (req, res) => {
-    const passwordBody = req.body;
-    const newPassword = passwordBody.toString();
-    hashPassword = await bcrypt.hash(newPassword, 10);
+    const { password } = req.body;
+    console.log("Password: ", req.body)
+    hashPassword = await bcrypt.hash(password, 10);
 
     const { id: _id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(_id)) {
         return res.status(404).send('No link with that id');
     } else {
-    const data = await Link.findByIdAndRemove(_id);
-    const userID = data.user;
-    const update = await User.findByIdAndUpdate(
-        userID,
-        { $set: { 'isConfirmed': true, 'password': hashPassword } },
-        { new: true }
+        const data = await Link.findByIdAndRemove(_id);
+        const userID = data.user;
+        const update = await User.findByIdAndUpdate(
+            userID,
+            { $set: { 'isConfirmed': true, 'password': hashPassword } },
+            { new: true }
+        )
 
-    )
-
-    res.json(update);
+        res.json(update);
 
     }
 }
 
 const deleteLink = async (req, res) => {
-    
+
 
     const { id: _id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(_id)) {
         return res.status(404).send('No link with that id');
     } else {
-    const data = await Link.findByIdAndRemove(_id);
+        const data = await Link.findByIdAndRemove(_id);
 
 
-    res.json(data);
+        res.json(data);
 
     }
 }

@@ -50,7 +50,6 @@ const App = () => {
                                 </Switch>
                             </DashboardLayout>
                         </PrivateRoute>
-
                     </Switch>
                 )}
         </div>

@@ -22,7 +22,7 @@ import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import { Typography } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUsers, userCreate } from '../../actions/userActions';
+import { getUsers, searchUsers, userCreate } from '../../actions/userActions';
 import { EMAIL_ERROR, ROLE_ERROR } from '../../constants'
 import useStyles from './styles'
 import UserTable from '../../components/users/userTable/UserTable';
@@ -58,7 +58,6 @@ const Dashboard = () => {
     const [userData, setUserData] = useState(initialState);
     const [errorEmail, setErrorEmail] = useState(false);
     const [errorRole, setErrorRole] = useState(false);
-    const { users } = useSelector((state) => state.user)
     const dispatch = useDispatch();
 
     const handleChange = (event) => {
@@ -124,9 +123,30 @@ const Dashboard = () => {
         setUserData(initialState)
     }
 
+    const handleSearchUser = (e) => {
+        if (e.key === 'Enter' && searchTerm) {
+            dispatch(searchUsers(searchTerm))
+            e.preventDefault();
+        }
+    }
+
+    const handleChangeSearch = (e) => {
+        setSearchTerm(e.target.value)
+    }
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const { user } = useSelector((state) => state)
+    const [userTableData, setUserTableData] = useState([])
+
     useEffect(() => {
         dispatch(getUsers())
-    }, [dispatch])
+    }, [])
+
+    useEffect(() => {
+        if (user.users){
+            setUserTableData(user.users?.data)
+        }
+    }, [handleSearchUser])
 
     return (
         <>
@@ -141,6 +161,9 @@ const Dashboard = () => {
                                 <Grid item xs>
                                     <TextField
                                         fullWidth
+                                        value={searchTerm}
+                                        onChange={handleChangeSearch}
+                                        onKeyPress={(e) => handleSearchUser(e)}
                                         placeholder="Search by email address, phone number, or user UID"
                                         InputProps={{
                                             disableUnderline: true,
@@ -232,7 +255,7 @@ const Dashboard = () => {
                         elevation={0}
                         className={css.root}
                     >
-                        <UserTable userData={users} />
+                        <UserTable userData={userTableData} loading={user.isLoading} />
                     </Paper>
                 </Paper>
             </div>

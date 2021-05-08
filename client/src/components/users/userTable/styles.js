@@ -39,4 +39,7 @@ export default makeStyles((theme) => ({
     title: {
         flex: "1 1 100%",
     },
+    contentWrapper:{
+        margin: '40px 16px'
+    }
 }));

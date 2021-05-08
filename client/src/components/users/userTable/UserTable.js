@@ -11,7 +11,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { v4 as uuidv4 } from "uuid";
 
 //CSS makeStyles at the last
-import { CircularProgress, Grid, Table } from "@material-ui/core";
+import { CircularProgress, Grid, Table, Typography } from "@material-ui/core";
 import EnhancedTableToolbar from "./EnhancedTableToolbar";
 import EnhancedTableHead from "./EnhancedTableHead";
 import useStyles from './styles'
@@ -44,8 +44,7 @@ function stableSort(array, comparator) {
 }
 
 
-
-const UserTable = ({ userData }) => {
+const UserTable = ({ userData, loading }) => {
   const css = useStyles();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("role");
@@ -99,20 +98,32 @@ const UserTable = ({ userData }) => {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const users = userData.length !== 0 ? userData.users : [];
+  const [users, setUsers] = useState([])
+  useEffect(() => {
+    if (userData) {
+      setUsers(userData)
+    }
+  }, [userData])
 
   return (
     <>
-      {userData.isLoading ? (
+      {loading ? (
         <Grid container justify="center" alignItems="center">
           <CircularProgress
             style={{
               height: '100%',
+              marginTop: '10%'
             }}
           />
         </Grid>
-      ) : (
-
+      ) :
+        users.length === 0 ?
+          <div className={css.contentWrapper}>
+            <Typography color="textSecondary" align="center">
+              Cannot found users
+            </Typography>
+          </div>
+          :
           <Paper className={css.paper}>
             <EnhancedTableToolbar
               numSelected={selected.length}
@@ -184,7 +195,7 @@ const UserTable = ({ userData }) => {
               onChangeRowsPerPage={handleChangeRowsPerPage}
             />
           </Paper>
-        )}
+      }
     </>
   );
 }

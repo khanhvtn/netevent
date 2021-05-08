@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import logo from '../../images/logo.png';
 import { userLogin } from '../../actions/userActions';
 
@@ -48,6 +48,11 @@ const Login = () => {
             });
         };
     }, [dispatch]);
+
+    if (user.user) {
+        return <Redirect to="/pickrole" />;
+    }
+
     return (
         <div className={css.main}>
             <div className={css.wrapper}>
@@ -99,7 +104,7 @@ const Login = () => {
                                 color="primary"
                                 fullWidth
                             >
-                                {user.isLoading ? <CircularProgress /> : 'Login'}
+                                {user.isLoading ? <CircularProgress color="inherit" /> : 'Login'}
                             </Button>
                         </form>
                     </Paper>

@@ -26,12 +26,12 @@ const getUsers = async (req, res, next) => {
 
 //Paginatting
 class APIfeatures {
-    constructor(query, queryString){
+    constructor(query, queryString) {
         this.query = query;
         this.queryString = queryString;
     }
 
-    paginating(){
+    paginating() {
         const page = this.queryString.page * 1 || 1
         const limit = this.queryString.limit * 1 || 9
         const skip = (page - 1) * limit;
@@ -46,12 +46,8 @@ const getUser = async (req, res, next) => {
         const features = new APIfeatures(User.find(), req.query).paginating()
 
         const users = await features.query
+        return cusResponse(res, 200, users, null);
 
-        res.status(200).json({
-            status: 'success',
-            result: users.length,
-            users: users
-        })
 
     } catch (error) {
         return next(new CustomError(500, error.message));
@@ -162,11 +158,33 @@ const deleteUser = async (req, res, next) => {
     }
 }
 
+const searchUser = async (req, res, next) => {
+    const { searchString } = req.body;
+
+    if (!searchString) {
+        return next(new CustomError(400, 'Invalid Search'))
+    }
+
+    try {
+        const searchResult = await User.find({ email: { $regex: searchString } });
+
+        if (searchResult.length === 0) {
+            return cusResponse(res, 200, searchResult, null);
+        }
+
+        return cusResponse(res, 200, searchResult, null);
+
+    } catch (error) {
+        return next(new CustomError(500, error.message))
+    }
+}
+
 module.exports = {
     createUser,
     login,
     userCheck,
     getUsers,
     getUser,
-    deleteUser
+    deleteUser,
+    searchUser
 };

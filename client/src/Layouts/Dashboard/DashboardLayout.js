@@ -7,8 +7,6 @@ const DashboardLayout = ({ children }) => {
     const css = useStyles();
     const [isMobileNavOpen, setMobileNavOpen] = useState(false);
 
-    console.log(isMobileNavOpen)
-
     return (
         <>
             <div className={css.dashboardLayoutRoot}>

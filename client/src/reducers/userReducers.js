@@ -6,7 +6,8 @@ import {
     USER_CREATE,
     USER_CONFIRM,
     FETCH_ALL_USERS,
-    DELETE_USER
+    SEARCH_USER,
+    DELETE_USER,
 } from '../constants';
 
 const initialState = {
@@ -32,6 +33,8 @@ export default function userReducers(state = initialState, action) {
             return { ...state, isUserChecking: action.payload };
         case FETCH_ALL_USERS:
             return { ...state, users: action.payload };
+        case SEARCH_USER:
+            return { ...state, users: action.payload }
         case DELETE_USER:
             return {
                 ...state,

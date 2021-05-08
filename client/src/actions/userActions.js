@@ -4,15 +4,14 @@ import {
     ERROR,
     USER_CHECK,
     USER_CHECKING,
-    ERROR_CLEAR,
     USER_CREATE,
     USER_CONFIRM,
     FETCH_ALL_USERS,
-    DELETE_USER
+    DELETE_USER,
+    SEARCH_USER
 } from '../constants';
 
 import * as api from '../api';
-import { getCookie } from '../utils';
 
 //setIsLoading func is to set loading status
 const setUserIsLoading = (status, dispatch) => {
@@ -78,7 +77,9 @@ export const userCheck = (history) => async (dispatch) => {
             type: USER_CHECK,
             payload: null,
         });
-        previousPath === '/' ? history.push('/') : history.push('/login');
+        previousPath.includes('confirmation')
+            ? history.push(previousPath)
+            : history.push('/login');
     }
     setUserIsChecking(false, dispatch);
 };
@@ -108,7 +109,6 @@ export const getUsers = () => async (dispatch) => {
     setUserIsLoading(true, dispatch)
     try {
         const { data } = await api.fetchUsers();
-        console.log(data)
         dispatch({ type: FETCH_ALL_USERS, payload: data })
 
     } catch (error) {
@@ -116,6 +116,20 @@ export const getUsers = () => async (dispatch) => {
     }
     setUserIsLoading(false, dispatch)
 }
+
+export const searchUsers = (searchString) => async (dispatch) => {
+    setUserIsLoading(true, dispatch)
+    try {
+        const { data } = await api.searchUsersAPI(searchString);
+        console.log(data)
+        dispatch({ type: SEARCH_USER, payload: data })
+
+    } catch (error) {
+        console.log(error)
+    }
+    setUserIsLoading(false, dispatch)
+}
+
 
 export const deleteUser = (id) => async (dispatch) => {
     try {
