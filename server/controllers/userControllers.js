@@ -81,8 +81,21 @@ const userCheck = async (req, res, next) => {
     }
 };
 
+//user login
+const logout = async (req, res, next) => {
+    try {
+        //clear token
+        res.clearCookie('token');
+        //response user info to client
+        return cusResponse(res, 200, null, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
     createUser,
     login,
     userCheck,
+    logout,
 };

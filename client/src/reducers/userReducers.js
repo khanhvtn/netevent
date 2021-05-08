@@ -3,6 +3,7 @@ import {
     USER_LOGIN,
     USER_LOADING,
     USER_CHECKING,
+    USER_LOGOUT,
 } from '../constants';
 
 const initialState = {
@@ -17,6 +18,8 @@ export default function userReducers(state = initialState, action) {
             return { ...state, user: action.payload };
         case USER_LOGIN:
             return { ...state, user: action.payload };
+        case USER_LOGOUT:
+            return initialState;
         case USER_LOADING:
             return { ...state, isLoading: action.payload };
         case USER_CHECKING:

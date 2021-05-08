@@ -41,17 +41,17 @@ const App = () => {
                         <DashboardLayout>
                             <Switch>
                                 <Route
-                                    path="/app/dashboard"
+                                    path="/admin"
                                     component={Dashboard}
                                     exact
                                 />
                                 <Route path="/app/customer">
                                     <div>NetCompany</div>
                                 </Route>
+                                <Route component={Error} />
                             </Switch>
                         </DashboardLayout>
                     </Route>
-                    <Route component={Error} />
                 </Switch>
             )}
         </div>

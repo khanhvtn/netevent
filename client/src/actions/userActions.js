@@ -4,6 +4,7 @@ import {
     ERROR,
     USER_CHECK,
     USER_CHECKING,
+    USER_LOGOUT,
 } from '../constants';
 import * as api from '../api';
 //setIsLoading func is to set loading status
@@ -35,10 +36,37 @@ export const userLogin = (userReq, history) => async (dispatch) => {
         //redirect to pickrole page
         history.push('/pickrole');
     } catch (error) {
+        if (error.response.data?.errMessage) {
+            dispatch({
+                type: ERROR,
+                payload: error.response.data?.errMessage,
+            });
+        }
+        console.log(error);
+    }
+    setUserIsLoading(false, dispatch);
+};
+
+export const userLogout = (history) => async (dispatch) => {
+    setUserIsLoading(true, dispatch);
+    try {
+        //get user info
+        const { data } = await api.userLogoutAPI();
         dispatch({
-            type: ERROR,
-            payload: error.response.data?.errMessage,
+            type: USER_LOGOUT,
+            payload: data.data,
         });
+
+        //redirect to pickrole page
+        history.push('/login');
+    } catch (error) {
+        if (error.response.data?.errMessage) {
+            dispatch({
+                type: ERROR,
+                payload: error.response.data?.errMessage,
+            });
+        }
+        console.log(error);
     }
     setUserIsLoading(false, dispatch);
 };
