@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import clsx from "clsx";
@@ -10,13 +10,29 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import axios from "axios";
 import useStyles from './styles'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser } from '../../../actions/userActions';
+import Grid from '@material-ui/core/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContentText from '@material-ui/core/DialogContentText';
 
 const EnhancedTableToolbar = (props) => {
     const css = useStyles();
     const dispatch = useDispatch();
     const { numSelected, selected, users } = props;
+    const [openDeleteUserDialog, setOpenDeleteUserDialog] = useState(false);
+
+
+    const handleOpenDeleteUserDialog = () => {
+        setOpenDeleteUserDialog(true)
+    }
+    
+      const handleCloseDeleteUserDialog = () => {
+        setOpenDeleteUserDialog(false);
+    }
+
 
     //Handle the Delete button
     const handleDeleteUser = (id) => {
@@ -25,7 +41,10 @@ const EnhancedTableToolbar = (props) => {
 
     const handleDeleteButton = () => {
         users.forEach((user) => {
-            if (selected.indexOf(user.email) !== -1) handleDeleteUser(user._id);
+            if (selected.indexOf(user.email) !== -1)  {
+                handleDeleteUser(user._id)
+                handleCloseDeleteUserDialog();
+            };
         });
     };
 
@@ -57,15 +76,28 @@ const EnhancedTableToolbar = (props) => {
 
             {numSelected > 0 ? (
                 <Tooltip title="Delete">
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        className={css.button}
-                        startIcon={<DeleteIcon />}
-                        onClick={handleDeleteButton}
-                    >
-                        Delete
-            </Button>
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            className={css.button}
+                            startIcon={<DeleteIcon />}
+                            onClick={handleOpenDeleteUserDialog}
+                        >
+                            Delete
+                            </Button>
+                            <Dialog open={openDeleteUserDialog} onClose={handleCloseDeleteUserDialog} aria-labelledby="form-dialog-title">
+                            <DialogTitle id="form-dialog-title">Delete User Confirmation</DialogTitle>
+                            <DialogActions>
+                            <Button onClick={handleCloseDeleteUserDialog} color="secondary" >
+                                Cancel
+                            </Button>
+                            <Button onClick={handleDeleteButton} color="secondary">
+                                Submit
+                            </Button>
+                            </DialogActions>
+                            </Dialog>
+                    </Grid>
                 </Tooltip>
             ) : (
                     <Tooltip title="Filter list">

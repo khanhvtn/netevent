@@ -52,6 +52,7 @@ const UserTable = ({ userData, loading }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -105,6 +106,8 @@ const UserTable = ({ userData, loading }) => {
     }
   }, [userData])
 
+
+
   return (
     <>
       {loading ? (
@@ -149,9 +152,10 @@ const UserTable = ({ userData, loading }) => {
                   {stableSort(users, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((user, index) => {
+                      
                       const isItemSelected = isSelected(user.email);
                       const labelId = `enhanced-table-checkbox-${index}`;
-
+                       
                       return (
                         <TableRow
                           hover
@@ -176,7 +180,11 @@ const UserTable = ({ userData, loading }) => {
                           >
                             {user.email}
                           </TableCell>
-                          <TableCell align="right">{user.role}</TableCell>
+                          <TableCell align="right">{user.role == 1 ? "Admin" : user.role == 2 ?
+                           "Reviewer" : user.role == 3 ? "Creator" : user.role == 4 ? "Team Member" : user.role == 12 ?
+                            "Admin,Reviewer" : user.role = 123 ? "Admin,Reviewer,Creator" :  
+                           user.role == 23 ? "Reviewer,Creator" : user.role == 234 ? 
+                        "Reviewer,Creator,Team Member" : user.role = 34 ? "Creator,Team Member" : "Admin,Reviewer,Creator,Team Member" }</TableCell>
                           <TableCell align="right">{user.createdAt}</TableCell>
                           <TableCell align="right">{user.updatedAt}</TableCell>
                         </TableRow>

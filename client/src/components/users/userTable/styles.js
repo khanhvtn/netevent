@@ -41,5 +41,5 @@ export default makeStyles((theme) => ({
     },
     contentWrapper:{
         margin: '40px 16px'
-    }
+    },
 }));
