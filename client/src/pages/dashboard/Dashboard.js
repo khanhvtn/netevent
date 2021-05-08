@@ -124,8 +124,12 @@ const Dashboard = () => {
     }
 
     const handleSearchUser = (e) => {
-        if (e.key === 'Enter' && searchTerm) {
-            dispatch(searchUsers(searchTerm))
+        if (e.key === 'Enter') {
+            if (searchTerm){
+                dispatch(searchUsers(searchTerm))
+            } else {
+                setTableRefresh(!tableRefresh)
+            }
             e.preventDefault();
         }
     }
@@ -141,10 +145,10 @@ const Dashboard = () => {
 
     useEffect(() => {
         dispatch(getUsers())
-    }, [tableRefresh])
+    }, [dispatch, tableRefresh])
 
     useEffect(() => {
-        if (user.users){
+        if (user.users) {
             setUserTableData(user.users?.data)
         }
     }, [handleSearchUser])
