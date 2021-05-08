@@ -9,7 +9,7 @@ router.get('/userCheck', authentication, userControllers.userCheck);
 router.get('/logout', authentication, userControllers.logout);
 // router.delete('/:id', userControllers.deleteUser)
 router.post('/search', userControllers.searchUser)
-
+router.patch('/:id', userControllers.updateUser)
 router.route('/users').get(userControllers.getUser)
 
 router.route('/users/:id').delete(userControllers.deleteUser)

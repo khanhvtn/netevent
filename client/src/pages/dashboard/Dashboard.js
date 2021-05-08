@@ -78,22 +78,31 @@ const Dashboard = () => {
     return (
         <>
             <Snackbar
-                anchorOrigin={{ vertical: "center", horizontal: "top" }}
+                anchorOrigin={{ vertical: "center", horizontal: "bottom" }}
                 open={user.isCreated}
-                autoHideDuration={4000}
+                autoHideDuration={5000}
                 color="primary"
                 className={css.snackBar}
-                onClose={handleClose}>
-                    <Alert severity="info">Create User Successful</Alert>
-                </Snackbar>
+                onClose={handleClose}
+                >
+                    <Alert severity="success">Create User Successful</Alert>
+            </Snackbar>
             
             <div className={css.main}>
                 <Paper className={css.paper}>
-                    <AppBar className={css.searchBar} position="static" color="default" elevation={0}>
+                    <AppBar
+                        className={css.searchBar}
+                        position="static"
+                        color="default"
+                        elevation={0}
+                    >
                         <Toolbar>
                             <Grid container spacing={2} alignItems="center">
                                 <Grid item>
-                                    <SearchIcon className={css.block} color="inherit" />
+                                    <SearchIcon
+                                        className={css.block}
+                                        color="inherit"
+                                    />
                                 </Grid>
                                 <Grid item xs>
                                     <TextField
@@ -129,7 +138,7 @@ const Dashboard = () => {
                 </Paper>
             </div>
         </>
-    )
-}
+    );
+};
 
 export default Dashboard;

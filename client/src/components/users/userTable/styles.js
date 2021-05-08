@@ -62,5 +62,10 @@ export default makeStyles((theme) => ({
     dialogCreate: {
         minWidth: 500,
 
+    },
+    m2:{
+        marginTop: 16,
+        marginRight: 16,
+        marginBottom: 8,
     }
 }));
