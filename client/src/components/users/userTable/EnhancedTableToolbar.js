@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import clsx from "clsx";
@@ -28,8 +28,8 @@ const EnhancedTableToolbar = (props) => {
     const handleOpenDeleteUserDialog = () => {
         setOpenDeleteUserDialog(true)
     }
-    
-      const handleCloseDeleteUserDialog = () => {
+
+    const handleCloseDeleteUserDialog = () => {
         setOpenDeleteUserDialog(false);
     }
 
@@ -41,7 +41,7 @@ const EnhancedTableToolbar = (props) => {
 
     const handleDeleteButton = () => {
         users.forEach((user) => {
-            if (selected.indexOf(user.email) !== -1)  {
+            if (selected.indexOf(user.email) !== -1) {
                 handleDeleteUser(user._id)
                 handleCloseDeleteUserDialog();
             };
@@ -86,17 +86,17 @@ const EnhancedTableToolbar = (props) => {
                         >
                             Delete
                             </Button>
-                            <Dialog open={openDeleteUserDialog} onClose={handleCloseDeleteUserDialog} aria-labelledby="form-dialog-title">
+                        <Dialog open={openDeleteUserDialog} onClose={handleCloseDeleteUserDialog} aria-labelledby="form-dialog-title">
                             <DialogTitle id="form-dialog-title">Delete User Confirmation</DialogTitle>
                             <DialogActions>
-                            <Button onClick={handleCloseDeleteUserDialog} color="secondary" >
-                                Cancel
+                                <Button onClick={handleCloseDeleteUserDialog} color="secondary" >
+                                    Cancel
                             </Button>
-                            <Button onClick={handleDeleteButton} color="secondary">
-                                Submit
+                                <Button onClick={handleDeleteButton} color="secondary">
+                                    Submit
                             </Button>
                             </DialogActions>
-                            </Dialog>
+                        </Dialog>
                     </Grid>
                 </Tooltip>
             ) : (

@@ -9,27 +9,29 @@ import { useSelector } from 'react-redux';
 //import makeStyles in the last
 import makeStyles from './styles';
 import RoleCard from './RoleCard/RoleCard';
+import DashboardNavbar from '../../Layouts/Dashboard/DashboardNavbar/DashboardNavbar';
 
+/* Default path is used to enable the first actions in user dashboard based on their role */
 const roleInfo = {
     1: {
         roleName: 'Admin',
         icon: adminIcon,
-        path: '/app/admin/dashboard',
+        defaultPath: 'dashboard/user',
     },
     2: {
         roleName: 'Reviewer',
         icon: reviewerIcon,
-        path: '/reviewer',
+        defaultPath: 'dashboard/event-reviewer',
     },
     3: {
         roleName: 'Creator',
         icon: creatorIcon,
-        path: '/creator',
+        defaultPath: 'dashboard/event-creator',
     },
     4: {
         roleName: 'Team Member',
         icon: memberIcon,
-        path: '/teamMember',
+        defaultPath: 'dashboard/task',
     },
 };
 
@@ -39,20 +41,22 @@ const PickRole = () => {
         userInfo: state.user.user,
     }));
     const renderRoleCard = userInfo.role.map((roleNum, index) => {
-        const { roleName, icon, path } = roleInfo[roleNum];
+        const { roleName, icon, defaultPath } = roleInfo[roleNum];
         return (
             <RoleCard
                 key={index}
+                roleNum={roleNum}
                 roleName={roleName}
                 icon={icon}
-                path={path}
                 delay={(index + 1) * 600}
+                defaultPath={defaultPath}
             />
         );
     });
     return (
         <div className={css.main}>
             <Container maxWidth="lg" style={{ margin: 'auto' }}>
+                <DashboardNavbar />
                 <Typography
                     style={{ textAlign: 'center', marginBottom: '40px' }}
                     variant="h4"

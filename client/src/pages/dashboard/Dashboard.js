@@ -124,8 +124,12 @@ const Dashboard = () => {
     }
 
     const handleSearchUser = (e) => {
-        if (e.key === 'Enter' && searchTerm) {
-            dispatch(searchUsers(searchTerm))
+        if (e.key === 'Enter') {
+            if (searchTerm){
+                dispatch(searchUsers(searchTerm))
+            } else {
+                setTableRefresh(!tableRefresh)
+            }
             e.preventDefault();
         }
     }
@@ -137,13 +141,14 @@ const Dashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const { user } = useSelector((state) => state)
     const [userTableData, setUserTableData] = useState([])
+    const [tableRefresh, setTableRefresh] = useState(false)
 
     useEffect(() => {
         dispatch(getUsers())
-    }, [])
+    }, [dispatch, tableRefresh])
 
     useEffect(() => {
-        if (user.users){
+        if (user.users) {
             setUserTableData(user.users?.data)
         }
     }, [handleSearchUser])
@@ -152,11 +157,19 @@ const Dashboard = () => {
         <>
             <div className={css.main}>
                 <Paper className={css.paper}>
-                    <AppBar className={css.searchBar} position="static" color="default" elevation={0}>
+                    <AppBar
+                        className={css.searchBar}
+                        position="static"
+                        color="default"
+                        elevation={0}
+                    >
                         <Toolbar>
                             <Grid container spacing={2} alignItems="center">
                                 <Grid item>
-                                    <SearchIcon className={css.block} color="inherit" />
+                                    <SearchIcon
+                                        className={css.block}
+                                        color="inherit"
+                                    />
                                 </Grid>
                                 <Grid item xs>
                                     <TextField
@@ -243,7 +256,7 @@ const Dashboard = () => {
                                     </Dialog>
 
                                     <Tooltip title="Reload">
-                                        <IconButton onClick={() => window.location.reload(false)}>
+                                        <IconButton onClick={() => setTableRefresh(!tableRefresh)}>
                                             <RefreshIcon className={css.block} color="inherit" />
                                         </IconButton>
                                     </Tooltip>
@@ -260,7 +273,7 @@ const Dashboard = () => {
                 </Paper>
             </div>
         </>
-    )
-}
+    );
+};
 
 export default Dashboard;

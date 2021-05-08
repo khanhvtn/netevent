@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const CustomError = require('../class/CustomeError');
 const { sendEmail } = require('./misc/mailer')
 const { html } = require('../mail-template/template')
-const mongoose = require('mongoose')
 
 //Get All Users
 const getUsers = async (req, res, next) => {
@@ -179,12 +178,69 @@ const searchUser = async (req, res, next) => {
     }
 }
 
+const filterUser = async (req, res, next) => {
+    const { searchString } = req.body;
+
+    if (!searchString) {
+        return next(new CustomError(400, 'Invalid Search'))
+    }
+
+    try {
+        const searchResult = await User.find({ email: { $regex: searchString } });
+
+        if (searchResult.length === 0) {
+            return cusResponse(res, 200, searchResult, null);
+        }
+
+        return cusResponse(res, 200, searchResult, null);
+
+    } catch (error) {
+        return next(new CustomError(500, error.message))
+    }
+}
+
+const updateUser = async (req, res, next) => {
+    const { id } = req.params;
+    const userData = req.body;
+
+    console.log(userData)
+    console.log(id)
+
+    try {
+        const newUpdateUser = await User.findByIdAndUpdate(
+            id,
+            { role: userData.role },
+            { new: true }
+        )
+        console.log(newUpdateUser)
+        return cusResponse(res, 200, newUpdateUser, null)
+
+    } catch (error) {
+        console.log(error.message)
+        return next(new CustomError(500), error.message)
+    }
+}
+
+//user login
+const logout = async (req, res, next) => {
+    try {
+        //clear token
+        res.clearCookie('token');
+        //response user info to client
+        return cusResponse(res, 200, null, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
     createUser,
     login,
+    logout,
     userCheck,
     getUsers,
     getUser,
     deleteUser,
-    searchUser
+    searchUser,
+    updateUser
 };
