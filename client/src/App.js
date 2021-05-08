@@ -9,7 +9,6 @@ import { userCheck } from './actions/userActions';
 import { Grid, CircularProgress } from '@material-ui/core';
 
 import DashboardLayout from './Layouts/Dashboard/DashboardLayout';
-import Dashboard from './pages/dashboard/Dashboard';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -40,11 +39,12 @@ const App = () => {
                     <Route>
                         <DashboardLayout>
                             <Switch>
-                                <Route
-                                    path="/admin"
-                                    component={Dashboard}
-                                    exact
-                                />
+                                <Route exact path="/dashboard/user">
+                                    <div>user</div>
+                                </Route>
+                                <Route exact path="/dashboard/facility">
+                                    <div>Facility</div>
+                                </Route>
                                 <Route path="/app/customer">
                                     <div>NetCompany</div>
                                 </Route>

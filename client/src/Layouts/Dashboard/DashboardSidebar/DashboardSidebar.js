@@ -1,114 +1,101 @@
 import { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-    Avatar,
     Box,
-    Button,
     Divider,
     Drawer,
     Hidden,
     List,
-    Typography
+    Typography,
 } from '@material-ui/core';
-import {
-    AlertCircle as AlertCircleIcon,
-    BarChart as BarChartIcon,
-    Lock as LockIcon,
-    Settings as SettingsIcon,
-    ShoppingBag as ShoppingBagIcon,
-    User as UserIcon,
-    UserPlus as UserPlusIcon,
-    Users as UsersIcon
-} from 'react-feather';
-import NavItem from './NavItem';
-import useStyles from './styles'
+import { useSelector } from 'react-redux';
+import { LogOut as LogOutIcon } from 'react-feather';
 
-const user = {
-    jobTitle: 'Senior Developer',
-    name: 'Katarina Smith'
+import { DevicesOther, People } from '@material-ui/icons';
+import NavItem from './NavItem';
+import useStyles from './styles';
+
+const roleName = {
+    1: 'Admin',
+    2: 'Reviewer',
+    3: 'Creator',
+    4: 'Team Member',
+};
+const roleActions = {
+    1: [
+        {
+            title: 'User',
+            icon: People,
+            href: '/dashboard/user',
+        },
+        {
+            title: 'Facility',
+            icon: DevicesOther,
+            href: '/dashboard/facility',
+        },
+    ],
+    2: [],
+    3: [],
+    4: [],
 };
 
-const items = [
+const defaultActions = [
     {
-        href: '/app/dashboard',
-        icon: BarChartIcon,
-        title: 'Dashboard'
+        title: 'Logout',
+        icon: LogOutIcon,
+        href: 'logout',
     },
-    {
-        href: '/app/customer',
-        icon: UsersIcon,
-        title: 'Customers'
-    },
-    {
-        href: '#',
-        icon: ShoppingBagIcon,
-        title: 'Products'
-    },
-    {
-        href: '#',
-        icon: UserIcon,
-        title: 'Account'
-    },
-    {
-        href: '#',
-        icon: SettingsIcon,
-        title: 'Settings'
-    },
-    {
-        href: '#',
-        icon: LockIcon,
-        title: 'Login'
-    },
-    {
-        href: '#',
-        icon: UserPlusIcon,
-        title: 'Register'
-    },
-    {
-        href: '#',
-        icon: AlertCircleIcon,
-        title: 'Error'
-    }
 ];
 
-const DashboardSidebar = ({ onMobileClose, openMobile }) => {
+const DashboardSidebar = ({ onMobileClose, openMobile, roleNum }) => {
     const location = useLocation();
     const css = useStyles();
+    const { user } = useSelector((state) => ({
+        user: state.user.user,
+    }));
+    const renderListActions = roleActions[roleNum].map((action, index) => {
+        return (
+            <NavItem
+                key={index}
+                title={action.title}
+                icon={action.icon}
+                href={action.href}
+            />
+        );
+    });
+    const renderDefaultActions = defaultActions.map((action, index) => {
+        return (
+            <NavItem
+                key={index}
+                title={action.title}
+                icon={action.icon}
+                href={action.href}
+            />
+        );
+    });
 
     useEffect(() => {
         if (openMobile && onMobileClose) {
             onMobileClose();
         }
-    }, [location.pathname]);
+    }, [location.pathname, onMobileClose, openMobile]);
 
     const content = (
         <Box className={css.sidebarWrapper}>
-            <Box className={css.sidebarAccountWrapper} >
-                <Typography
-                    color="textPrimary"
-                    variant="h5"
-                >
-                    {user.name}
+            <Box className={css.sidebarAccountWrapper}>
+                <Typography color="textPrimary" variant="body1">
+                    {user.email}
                 </Typography>
-                <Typography
-                    color="textSecondary"
-                    variant="body2"
-                >
-                    {user.jobTitle}
+                <Typography color="textSecondary" variant="body2">
+                    {roleName[roleNum]}
                 </Typography>
             </Box>
             <Divider />
             <Box className={css.p2}>
                 <List>
-                    {items.map((item) => (
-                        <NavItem
-                            href={item.href}
-                            key={item.title}
-                            title={item.title}
-                            icon={item.icon}
-                        />
-                    ))}
+                    {renderListActions}
+                    {renderDefaultActions}
                 </List>
             </Box>
         </Box>
@@ -116,7 +103,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
 
     return (
         <>
-            <Hidden mdUp >
+            <Hidden mdUp>
                 <Drawer
                     onClose={onMobileClose}
                     open={openMobile}
@@ -135,8 +122,8 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                         style: {
                             width: 256,
                             top: 66,
-                            height: 'calc(100% - 64px)'
-                        }
+                            height: 'calc(100% - 64px)',
+                        },
                     }}
                 >
                     {content}
@@ -148,12 +135,12 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
 
 DashboardSidebar.propTypes = {
     onMobileClose: PropTypes.func,
-    openMobile: PropTypes.bool
+    openMobile: PropTypes.bool,
 };
 
 DashboardSidebar.defaultProps = {
-    onMobileClose: () => { },
-    openMobile: false
+    onMobileClose: () => {},
+    openMobile: false,
 };
 
 export default DashboardSidebar;
