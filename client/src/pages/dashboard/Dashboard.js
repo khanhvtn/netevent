@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
@@ -25,7 +24,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUsers, searchUsers, userCreate } from '../../actions/userActions';
 import { EMAIL_ERROR, ROLE_ERROR } from '../../constants';
 import useStyles from './styles';
+
 import UserTable from '../../components/users/userTable/UserTable';
+import Snackbar from '@material-ui/core/Snackbar';
+import {Alert} from '@material-ui/lab';
+import {USER_CREATE_SUCCESSFUL} from '../../constants';
 
 const initialState = {
     email: '',
@@ -35,16 +38,9 @@ const initialState = {
 
 const roles = ['1', '2', '3', '4'];
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
+const userCreateState = {
+    isAlertSuccess: false
+}
 
 const Dashboard = () => {
     const css = useStyles();
@@ -53,6 +49,7 @@ const Dashboard = () => {
     const [errorEmail, setErrorEmail] = useState(false);
     const [errorRole, setErrorRole] = useState(false);
     const dispatch = useDispatch();
+    const [state, setState] = useState(userCreateState);
 
     const handleChange = (event) => {
         setUserData({ ...userData, role: event.target.value });
@@ -139,14 +136,40 @@ const Dashboard = () => {
         dispatch(getUsers());
     }, [dispatch, tableRefresh]);
 
+    // useEffect(() => {
+    //     setState((prevState) => ({ ...prevState, isCreateUserSuccess: user.isCreated }))
+    // }, [user.isCreated])
+
     useEffect(() => {
         if (user.users) {
             setUserTableData(user.users?.data);
         }
     }, [handleSearchUser, user.users]);
 
+    useEffect(() => {
+        setState((prevState) => ({ ...prevState, isAlertSuccess: user.isCreated }))
+    }, [user.isCreated])
+
+    const handleClose = () => {
+        setState((prevState) => ({ ...prevState, isAlertSuccess: false }))
+        //set isSuccessPurchase == false
+        dispatch({ type: USER_CREATE_SUCCESSFUL, payload: false })
+    }
+
+
     return (
         <>
+            <Snackbar
+                anchorOrigin={{ vertical: "center", horizontal: "bottom" }}
+                open={user.isCreated}
+                autoHideDuration={5000}
+                color="primary"
+                className={css.snackBar}
+                onClose={handleClose}
+                >
+                    <Alert severity="success">Create User Successful</Alert>
+            </Snackbar>
+            
             <div className={css.main}>
                 <Paper className={css.paper}>
                     <AppBar

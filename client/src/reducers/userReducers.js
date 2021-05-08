@@ -10,6 +10,7 @@ import {
     DELETE_USER,
     USER_LOGOUT,
     USER_PICK_ROLE,
+    USER_CREATE_SUCCESSFUL
 } from '../constants';
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
     user: null,
     pickedRoleNum: null,
     users: [],
+    isCreated: false,
 };
 
 export default function userReducers(state = initialState, action) {
@@ -26,6 +28,8 @@ export default function userReducers(state = initialState, action) {
             return { ...state, user: action.payload };
         case USER_CREATE:
             return { ...state, user: action.payload };
+        case USER_CREATE_SUCCESSFUL:
+            return{ ...state, isCreated: action.payload}
         case USER_CONFIRM:
             return { ...state, user: action.payload };
         case USER_LOGIN:

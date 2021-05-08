@@ -6,6 +6,7 @@ export const USER_LOADING = 'USER_LOADING';
 export const USER_CHECKING = 'USER_CHECKING';
 export const USER_PICK_ROLE = 'USER_PICK_ROLE';
 
+export const USER_CREATE_SUCCESSFUL = 'USER_CREATE_SUCCESSFUL';
 export const USER_CREATE = 'USER_CREATE';
 export const USER_CONFIRM = 'USER_CONFIRM';
 
