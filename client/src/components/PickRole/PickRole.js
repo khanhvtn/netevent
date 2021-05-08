@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 //import makeStyles in the last
 import makeStyles from './styles';
 import RoleCard from './RoleCard/RoleCard';
+import DashboardNavbar from '../../Layouts/Dashboard/DashboardNavbar/DashboardNavbar';
 
 const roleInfo = {
     1: {
@@ -53,6 +54,7 @@ const PickRole = () => {
     return (
         <div className={css.main}>
             <Container maxWidth="lg" style={{ margin: 'auto' }}>
+                <DashboardNavbar />
                 <Typography
                     style={{ textAlign: 'center', marginBottom: '40px' }}
                     variant="h4"
