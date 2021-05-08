@@ -8,6 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { userCheck } from './actions/userActions';
 import { Grid, CircularProgress } from '@material-ui/core';
 
+import DashboardLayout from './Layouts/Dashboard/DashboardLayout';
+import Dashboard from './pages/dashboard/Dashboard';
+
 const App = () => {
     const dispatch = useDispatch();
     const history = useHistory();
@@ -32,6 +35,22 @@ const App = () => {
                     <Route exact path="/" component={Login} />
                     <Route exact path="/login" component={Login} />
                     <PrivateRoute exact path="/pickrole" component={PickRole} />
+
+                    {/* Here is the place to add route for dashboard layout */}
+                    <Route>
+                        <DashboardLayout>
+                            <Switch>
+                                <Route
+                                    path="/app/dashboard"
+                                    component={Dashboard}
+                                    exact
+                                />
+                                <Route path="/app/customer">
+                                    <div>NetCompany</div>
+                                </Route>
+                            </Switch>
+                        </DashboardLayout>
+                    </Route>
                     <Route component={Error} />
                 </Switch>
             )}
