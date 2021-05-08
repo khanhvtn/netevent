@@ -42,4 +42,22 @@ export default makeStyles((theme) => ({
     contentWrapper:{
         margin: '40px 16px'
     },
+    popup1: {
+        padding: "30px",
+        paddingTop: "0px",
+        paddingBottom: "20px",
+        position: "relative",
+    },
+    popup: {
+        padding: "30px",
+        border: "15px",
+        position: "relative",
+        alignContent: "center",
+        justifyContent: "center",
+    },
+    moment: {
+        textAlign: "center",
+        verticalAlign: "middle",
+        display: "table-cell",
+    }
 }));

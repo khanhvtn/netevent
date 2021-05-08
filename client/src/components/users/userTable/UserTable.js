@@ -10,6 +10,10 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 import { v4 as uuidv4 } from "uuid";
 
+//Timestamp converting
+import Moment from 'react-moment';
+import 'moment-timezone';
+
 //CSS makeStyles at the last
 import { CircularProgress, Grid, Table, Typography } from "@material-ui/core";
 import EnhancedTableToolbar from "./EnhancedTableToolbar";
@@ -177,16 +181,17 @@ const UserTable = ({ userData, loading }) => {
                             id={labelId}
                             scope="row"
                             padding="none"
+                            align="center"
                           >
                             {user.email}
                           </TableCell>
-                          <TableCell align="right">{user.role == 1 ? "Admin" : user.role == 2 ?
+                          <TableCell align="center">{user.role == 1 ? "Admin" : user.role == 2 ?
                            "Reviewer" : user.role == 3 ? "Creator" : user.role == 4 ? "Team Member" : user.role == 12 ?
                             "Admin,Reviewer" : user.role = 123 ? "Admin,Reviewer,Creator" :  
                            user.role == 23 ? "Reviewer,Creator" : user.role == 234 ? 
                         "Reviewer,Creator,Team Member" : user.role = 34 ? "Creator,Team Member" : "Admin,Reviewer,Creator,Team Member" }</TableCell>
-                          <TableCell align="right">{user.createdAt}</TableCell>
-                          <TableCell align="right">{user.updatedAt}</TableCell>
+                          <Moment format="DD/MM/YYYY" className={css.moment} ><TableCell align="center">{user.createdAt}</TableCell></Moment>
+                          <Moment format="DD/MM/YYYY" className={css.moment}><TableCell align="center">{user.updatedAt}</TableCell></Moment>
                         </TableRow>
                       );
                     })}

@@ -9,7 +9,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import axios from "axios";
-import useStyles from './styles'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser } from '../../../actions/userActions';
 import Grid from '@material-ui/core/Grid';
@@ -17,6 +16,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContentText from '@material-ui/core/DialogContentText';
+
+import useStyles from './styles'
 
 const EnhancedTableToolbar = (props) => {
     const css = useStyles();
@@ -87,12 +88,15 @@ const EnhancedTableToolbar = (props) => {
                             Delete
                             </Button>
                         <Dialog open={openDeleteUserDialog} onClose={handleCloseDeleteUserDialog} aria-labelledby="form-dialog-title">
-                            <DialogTitle id="form-dialog-title">Delete User Confirmation</DialogTitle>
+                            <DialogTitle id="form-dialog-title" className={css.popup} >Warning!</DialogTitle>
+                            <DialogContentText id="form-dialog-title" className={css.popup1} >
+                                    Are you sure to delete this user?
+                            </DialogContentText>
                             <DialogActions>
-                                <Button onClick={handleCloseDeleteUserDialog} color="secondary" >
+                                <Button onClick={handleCloseDeleteUserDialog} fullWidth color="default" >
                                     Cancel
                             </Button>
-                                <Button onClick={handleDeleteButton} color="secondary">
+                                <Button onClick={handleDeleteButton} fullWidth color="default">
                                     Submit
                             </Button>
                             </DialogActions>
