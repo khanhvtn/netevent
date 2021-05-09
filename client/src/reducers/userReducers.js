@@ -48,7 +48,7 @@ export default function userReducers(state = initialState, action) {
         case FETCH_ALL_USERS:
             return { ...state, users: action.payload.data };
         case SEARCH_USER:
-            return { ...state, users: action.payload };
+            return { ...state, users: action.payload.data };
         case UPDATE_USER:
             console.log(state.users.data)
             return {
