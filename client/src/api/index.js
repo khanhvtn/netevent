@@ -17,3 +17,4 @@ export const updateUserAPI = (id, newUpdateUser) => AXIOS.patch(`/user/${id}`, n
 
 // Link API
 export const confirmUser = (id, password) => AXIOS.patch(`/link/confirm/${id}`, { password: password })
+export const getLinks = () => AXIOS.get('/link')
