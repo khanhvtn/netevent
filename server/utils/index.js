@@ -1,14 +1,14 @@
 //custom response
 
 //cusResponse func is to create a custom response.
-const cusResponse = (res, code, data, errMessage) => {
+const cusResponse = (res, code, data, errors) => {
     let responseTemplate = { code };
     //if an err exists
-    if (errMessage) {
+    if (errors) {
         responseTemplate = {
             ...responseTemplate,
             message: 'fail',
-            errMessage,
+            errors,
         };
     } else {
         //otherwise

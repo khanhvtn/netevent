@@ -10,7 +10,7 @@ import {
     DELETE_USER,
     SEARCH_USER,
     USER_LOGOUT,
-    USER_CREATE_SUCCESSFUL
+    USER_CREATE_SUCCESSFUL,
 } from '../constants';
 
 import * as api from '../api';
@@ -44,10 +44,10 @@ export const userLogin = (userReq, history) => async (dispatch) => {
         //redirect to pickrole page
         history.push('/pickrole');
     } catch (error) {
-        if (error.response.data?.errMessage) {
+        if (error.response.data?.errors) {
             dispatch({
                 type: ERROR,
-                payload: error.response.data?.errMessage,
+                payload: error.response.data?.errors,
             });
         }
         console.log(error);
@@ -92,7 +92,6 @@ export const userCheck = (history) => async (dispatch) => {
         /* 
         Prevent user already login but access to login by inputing link.
          */
-        console.log(previousPath);
         previousPath === '/' || previousPath === '/login'
             ? history.push('/pickrole')
             : history.push(previousPath);
@@ -113,7 +112,6 @@ export const userCreate = (userData) => async (dispatch) => {
         const { data } = await api.createUser(userData);
         dispatch({ type: USER_CREATE_SUCCESSFUL, payload: true });
         dispatch({ type: USER_CREATE, payload: data });
-
     } catch (error) {
         console.log(error);
     }

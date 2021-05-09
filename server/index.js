@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const { userRoutes, linkRoutes } = require('./routes');
+const { userRoutes, linkRoutes, facilityRoutes } = require('./routes');
 const cors = require('cors');
 const { errorHandler } = require('./middlewares');
 const cookieParser = require('cookie-parser');
@@ -17,7 +17,8 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: 'success' });
 });
 app.use('/api/user', userRoutes);
-app.use('/api/link', linkRoutes)
+app.use('/api/facility', facilityRoutes);
+app.use('/api/link', linkRoutes);
 
 //error handler
 app.use(errorHandler);

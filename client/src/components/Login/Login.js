@@ -25,8 +25,8 @@ const Login = () => {
     const [state, setState] = useState(initialState);
     const history = useHistory();
     const dispatch = useDispatch();
-    const { error, user } = useSelector((state) => ({
-        error: state.error.error,
+    const { errors, user } = useSelector((state) => ({
+        errors: state.error.errors,
         user: state.user,
     }));
     const css = makeStyles();
@@ -63,20 +63,14 @@ const Login = () => {
                             image={logo}
                             title="Logo"
                         />
-                        <Collapse
-                            className={css.errorDrop}
-                            in={error ? true : false}
-                        >
-                            <Alert className={css.alert} severity="error">
-                                {error ? error : ''}
-                            </Alert>
-                        </Collapse>
                         <form
                             className={css.form}
                             onSubmit={handleSubmit}
                             noValidate
                         >
                             <TextField
+                                helperText={errors?.email ? errors?.email : ''}
+                                error={errors?.email ? true : false}
                                 variant="outlined"
                                 className={css.textField}
                                 type="email"
@@ -87,6 +81,10 @@ const Login = () => {
                                 onChange={handleChange}
                             />
                             <TextField
+                                helperText={
+                                    errors?.password ? errors?.password : ''
+                                }
+                                error={errors?.password ? true : false}
                                 variant="outlined"
                                 className={css.textField}
                                 type="password"
@@ -104,7 +102,11 @@ const Login = () => {
                                 color="primary"
                                 fullWidth
                             >
-                                {user.isLoading ? <CircularProgress color="inherit" /> : 'Login'}
+                                {user.isLoading ? (
+                                    <CircularProgress color="inherit" />
+                                ) : (
+                                    'Login'
+                                )}
                             </Button>
                         </form>
                     </Paper>

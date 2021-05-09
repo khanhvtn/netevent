@@ -1,11 +1,11 @@
 const { User } = require('../models');
-const Link = require('../models/linkModel')
+const Link = require('../models/linkModel');
 const { cusResponse } = require('../utils');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const CustomError = require('../class/CustomeError');
-const { sendEmail } = require('./misc/mailer')
-const { html } = require('../mail-template/template')
+const { sendEmail } = require('./misc/mailer');
+const { html } = require('../mail-template/template');
 
 //Get All Users
 const getUsers = async (req, res, next) => {
@@ -14,14 +14,12 @@ const getUsers = async (req, res, next) => {
         if (userData) {
             return cusResponse(res, 200, userData, null);
         } else {
-            return cusResponse(res, 404, "No User Data", null);
-
-
+            return cusResponse(res, 404, 'No User Data', null);
         }
     } catch (error) {
-        return next(new CustomError(500, error.message))
+        return next(new CustomError(500, { sysError: error.message }));
     }
-}
+};
 
 //Paginatting
 class APIfeatures {
@@ -31,10 +29,10 @@ class APIfeatures {
     }
 
     paginating() {
-        const page = this.queryString.page * 1 || 1
-        const limit = this.queryString.limit * 1 || 9
+        const page = this.queryString.page * 1 || 1;
+        const limit = this.queryString.limit * 1 || 9;
         const skip = (page - 1) * limit;
-        this.query = this.query.skip(skip).limit(limit)
+        this.query = this.query.skip(skip).limit(limit);
         return this;
     }
 }
@@ -42,16 +40,14 @@ class APIfeatures {
 //Get User List
 const getUser = async (req, res, next) => {
     try {
-        const features = new APIfeatures(User.find(), req.query).paginating()
+        const features = new APIfeatures(User.find(), req.query).paginating();
 
-        const users = await features.query
+        const users = await features.query;
         return cusResponse(res, 200, users, null);
-
-
     } catch (error) {
-        return next(new CustomError(500, error.message));
+        return next(new CustomError(500, { sysError: error.message }));
     }
-}
+};
 
 //Create User
 const createUser = async (req, res, next) => {
@@ -64,11 +60,10 @@ const createUser = async (req, res, next) => {
             return next(new CustomError(400, 'Email is already existed'));
         }
 
-
         const newUser = await User.create(userReq);
         const newLink = {
-            user: newUser._id
-        }
+            user: newUser._id,
+        };
 
         const idLink = await Link.create(newLink);
         await sendEmail(
@@ -76,13 +71,12 @@ const createUser = async (req, res, next) => {
             userReq.email,
             'User Confirmation Link',
             html(userReq.email, idLink._id)
-        )
+        );
         return cusResponse(res, 200, newUser, null);
     } catch (error) {
-        return next(new CustomError(500, error.message));
+        return next(new CustomError(500, { sysError: error.message }));
     }
 };
-
 
 //user login
 const login = async (req, res, next) => {
@@ -93,7 +87,7 @@ const login = async (req, res, next) => {
         const existedUser = await User.findOne({ email: userReq.email });
 
         if (!existedUser) {
-            return next(new CustomError(400, 'Email or password is invalid'));
+            return next(new CustomError(400, { email: 'Email is invalid' }));
         }
         //check password
         const result = await bcrypt.compare(
@@ -101,7 +95,9 @@ const login = async (req, res, next) => {
             existedUser.password
         );
         if (!result) {
-            return next(new CustomError(400, 'Email or password is invalid'));
+            return next(
+                new CustomError(400, { password: 'Password is invalid' })
+            );
         }
 
         //gen token
@@ -124,7 +120,7 @@ const login = async (req, res, next) => {
             null
         );
     } catch (error) {
-        return next(new CustomError(500, error.message));
+        return next(new CustomError(500, { sysError: error.message }));
     }
 };
 
@@ -134,7 +130,7 @@ const userCheck = async (req, res, next) => {
         //response user info to client
         return cusResponse(res, 200, req.user, null);
     } catch (error) {
-        return next(new CustomError(500, error.message));
+        return next(new CustomError(500, { sysError: error.message }));
     }
 };
 
@@ -150,76 +146,77 @@ const userCheck = async (req, res, next) => {
 //Delete user
 const deleteUser = async (req, res, next) => {
     try {
-        await User.findByIdAndDelete(req.params.id)
-        res.status(200).json({ msg: "Deleted a User" })
+        await User.findByIdAndDelete(req.params.id);
+        res.status(200).json({ msg: 'Deleted a User' });
     } catch (error) {
-        return next(new CustomError(500, error.message))
+        return next(new CustomError(500, { sysError: error.message }));
     }
-}
+};
 
 const searchUser = async (req, res, next) => {
     const { searchString } = req.body;
 
     if (!searchString) {
-        return next(new CustomError(400, 'Invalid Search'))
+        return next(new CustomError(400, 'Invalid Search'));
     }
 
     try {
-        const searchResult = await User.find({ email: { $regex: searchString } });
+        const searchResult = await User.find({
+            email: { $regex: searchString },
+        });
 
         if (searchResult.length === 0) {
             return cusResponse(res, 200, searchResult, null);
         }
 
         return cusResponse(res, 200, searchResult, null);
-
     } catch (error) {
-        return next(new CustomError(500, error.message))
+        return next(new CustomError(500, { sysError: error.message }));
     }
-}
+};
 
 const filterUser = async (req, res, next) => {
     const { searchString } = req.body;
 
     if (!searchString) {
-        return next(new CustomError(400, 'Invalid Search'))
+        return next(new CustomError(400, 'Invalid Search'));
     }
 
     try {
-        const searchResult = await User.find({ email: { $regex: searchString } });
+        const searchResult = await User.find({
+            email: { $regex: searchString },
+        });
 
         if (searchResult.length === 0) {
             return cusResponse(res, 200, searchResult, null);
         }
 
         return cusResponse(res, 200, searchResult, null);
-
     } catch (error) {
-        return next(new CustomError(500, error.message))
+        return next(new CustomError(500, { sysError: error.message }));
     }
-}
+};
 
 const updateUser = async (req, res, next) => {
     const { id } = req.params;
     const userData = req.body;
 
-    console.log(userData)
-    console.log(id)
+    console.log(userData);
+    console.log(id);
 
     try {
         const newUpdateUser = await User.findByIdAndUpdate(
             id,
             { role: userData.role },
             { new: true }
-        )
-        console.log(newUpdateUser)
-        return cusResponse(res, 200, newUpdateUser, null)
-
+        );
+        console.log(newUpdateUser);
+        return cusResponse(res, 200, newUpdateUser, null);
     } catch (error) {
-        console.log(error.message)
-        return next(new CustomError(500), error.message)
+        console.log(error.message);
+        return next(new CustomError(500), error.message);
     }
-}
+};
 
 //user login
 const logout = async (req, res, next) => {
@@ -229,7 +226,7 @@ const logout = async (req, res, next) => {
         //response user info to client
         return cusResponse(res, 200, null, null);
     } catch (error) {
-        return next(new CustomError(500, error.message));
+        return next(new CustomError(500, { sysError: error.message }));
     }
 };
 
@@ -242,5 +239,5 @@ module.exports = {
     getUser,
     deleteUser,
     searchUser,
-    updateUser
+    updateUser,
 };
