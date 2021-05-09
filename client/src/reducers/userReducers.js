@@ -10,6 +10,7 @@ import {
     SEARCH_USER,
     DELETE_USER,
     USER_LOGOUT,
+    USER_PICK_ROLE,
     USER_CREATE_SUCCESSFUL
 } from '../constants';
 
@@ -18,9 +19,9 @@ const initialState = {
     isLoading: false,
     isConfirm: false,
     user: null,
+    pickedRoleNum: null,
     users: [],
     isCreated: false,
-
 };
 
 export default function userReducers(state = initialState, action) {
@@ -43,15 +44,19 @@ export default function userReducers(state = initialState, action) {
             return { ...state, isLoading: action.payload };
         case USER_CHECKING:
             return { ...state, isUserChecking: action.payload };
+        case USER_PICK_ROLE:
+            return { ...state, pickedRoleNum: action.payload };
         case FETCH_ALL_USERS:
             return { ...state, users: action.payload };
         case SEARCH_USER:
-            return { ...state, users: action.payload }
+            return { ...state, users: action.payload };
         case DELETE_USER:
             return {
                 ...state,
-                users: state.users.filter((user) => user._id !== action.payload)
-            }
+                users: state.users.filter(
+                    (user) => user._id !== action.payload
+                ),
+            };
         default:
             return state;
     }

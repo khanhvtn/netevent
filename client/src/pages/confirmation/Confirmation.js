@@ -4,18 +4,16 @@ import { Zoom, Paper, TextField, Button, CardMedia, Collapse, CircularProgress }
 import { Alert, AlertTitle } from '@material-ui/lab';
 
 import logo from '../../images/logo.png'
-import { Typography } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import { userConfirm } from '../../actions/userActions'
 import { getLinks } from '../../actions/linkActions';
 import { PASSWORD_MATCHED } from '../../constants';
-import confirm from '../../images/check_confirm.png'
 
 const initialState = {
-    password1: "",
-    password2: ""
-}
+    password1: '',
+    password2: '',
+};
 
 const Confirmation = () => {
     const css = makeStyles();
@@ -37,19 +35,19 @@ const Confirmation = () => {
     }, [dispatch])
 
     useEffect(() => {
-        if(link.complete) {
-        if (link.links.length > 0 && link.links !== null) {
-            for (var i = 0; i < link.links.length; i++) {
-                validLink.push(link.links[i]._id)
-            }
-            if (!validLink.includes(id.id)) {
+        if (link.complete) {
+            if (link.links.length > 0 && link.links !== null) {
+                for (var i = 0; i < link.links.length; i++) {
+                    validLink.push(link.links[i]._id)
+                }
+                if (!validLink.includes(id.id)) {
+                    history.push('/404')
+                }
+            } else {
                 history.push('/404')
+
             }
-        } else {
-            history.push('/404')
-            
         }
-    }
     }, [id])
 
     const handleSubmit = (e) => {
@@ -58,9 +56,9 @@ const Confirmation = () => {
             dispatch(userConfirm(id.id, password.password2, history))
 
         } else {
-            setErrorPassword(true)
+            setErrorPassword(true);
         }
-    }
+    };
 
     return (
         <div className={css.main}>
@@ -72,11 +70,14 @@ const Confirmation = () => {
                             image={logo}
                             title="Logo"
                         />
-                        {user.isConfirm ? 
+                        {user.isConfirm ?
                             <Alert severity="info">
-                                <AlertTitle>Info</AlertTitle>
+                                <AlertTitle>
+                                    Info
+                                </AlertTitle>
                                     Update Password Successful. Please wait 5 seconds to login!
-                            </Alert> :
+                            </Alert>
+                            :
                             <>
                                 <Collapse
                                     className={css.errorDrop}
@@ -100,7 +101,6 @@ const Confirmation = () => {
                                         name="password1"
                                         fullWidth
                                         onChange={(e) => setPassword({ ...password, password1: e.target.value })}
-
                                     />
 
                                     <TextField
@@ -123,16 +123,15 @@ const Confirmation = () => {
                                         fullWidth
                                     >
                                         {user.isLoading ? <CircularProgress color="inherit" /> : 'Submit'}
-
                                     </Button>
-                                </form> </>}
-
-
+                                </form>
+                            </>
+                        }
                     </Paper>
                 </Zoom>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Confirmation;

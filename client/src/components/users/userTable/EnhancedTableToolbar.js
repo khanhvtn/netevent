@@ -8,9 +8,8 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import axios from "axios";
 import useStyles from './styles'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { deleteUser, userCreate } from '../../../actions/userActions';
 import { EMAIL_ERROR, ROLE_ERROR } from '../../../constants'
 import Dialog from '@material-ui/core/Dialog';
@@ -62,7 +61,7 @@ const EnhancedTableToolbar = (props) => {
 
     //Handle the Delete button
     const handleDeleteUser = (id) => {
-        dispatch(deleteUser(id))
+        dispatch(deleteUser(id));
     };
 
     const handleDeleteButton = () => {

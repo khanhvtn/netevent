@@ -6,12 +6,12 @@ const { authentication } = require('../middlewares');
 router.post('/create', userControllers.createUser);
 router.post('/login', userControllers.login);
 router.get('/userCheck', authentication, userControllers.userCheck);
-router.get('/logout', authentication, userControllers.logout);
+router.get('/logout', userControllers.logout);
 // router.delete('/:id', userControllers.deleteUser)
-router.post('/search', userControllers.searchUser)
-router.patch('/:id', userControllers.updateUser)
-router.route('/users').get(userControllers.getUser)
+router.post('/search', userControllers.searchUser);
+router.patch('/:id', userControllers.updateUser);
+router.route('/users').get(userControllers.getUser);
 
-router.route('/users/:id').delete(userControllers.deleteUser)
+router.route('/users/:id').delete(userControllers.deleteUser);
 
 module.exports = router;
