@@ -4,7 +4,7 @@ import DashboardSidebar from './DashboardSidebar/DashboardSidebar';
 import { useSelector } from 'react-redux';
 
 import useStyles from './styles';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 const DashboardLayout = ({ children }) => {
     const css = useStyles();
@@ -12,14 +12,12 @@ const DashboardLayout = ({ children }) => {
     const { user } = useSelector((state) => ({
         user: state.user.user,
     }));
-    const history = useHistory();
-    const roleNum = history.location.state?.roleNum;
 
     //prevent user refresh the page
     if (!user) {
         return <Redirect to="/login" />;
     }
-    
+
     return (
         <>
             <div className={css.dashboardLayoutRoot}>
@@ -27,7 +25,6 @@ const DashboardLayout = ({ children }) => {
                     onMobileNavOpen={() => setMobileNavOpen(true)}
                 />
                 <DashboardSidebar
-                    roleNum={roleNum}
                     onMobileClose={() => setMobileNavOpen(false)}
                     openMobile={isMobileNavOpen}
                 />

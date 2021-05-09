@@ -11,6 +11,11 @@ export default makeStyles((theme) => ({
     table: {
         minWidth: 750,
     },
+
+    addUser: {
+        width: "15%",
+        maxHeight: 40
+    },
     visuallyHidden: {
         border: 0,
         clip: "rect(0 0 0 0)",
@@ -39,7 +44,7 @@ export default makeStyles((theme) => ({
     title: {
         flex: "1 1 100%",
     },
-    contentWrapper:{
+    contentWrapper: {
         margin: '40px 16px'
     },
     popup1: {
@@ -59,5 +64,25 @@ export default makeStyles((theme) => ({
         textAlign: "center",
         verticalAlign: "middle",
         display: "table-cell",
+    },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    chip: {
+        margin: 4,
+    },
+    errorMessage: {
+        color: "red",
+        fontSize: 10
+    },
+    dialogCreate: {
+        minWidth: 500,
+
+    },
+    m2: {
+        marginTop: 16,
+        marginRight: 16,
+        marginBottom: 8,
     }
 }));

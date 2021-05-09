@@ -24,16 +24,6 @@ export default makeStyles((theme) => ({
         width: '100%'
     },
 
-    chips: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    chip: {
-        margin: 4,
-    },
-
-    errorMessage: {
-        color: "red",
-        fontSize: 10
-    }
+    
+    
 }));
