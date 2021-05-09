@@ -85,7 +85,7 @@ const UpdateUserDialog = (props) => {
                             renderValue={(selected) => (
                                 <div className={css.chips}>
                                     {selected.map((value) => (
-                                        <Chip key={value} label={value == "1" ? "Admin" : value == "2" ? "Reviewer" : value == "3" ? "Creator" : "Team Member"} className={css.chip} />
+                                        <Chip key={value} label={value === "1" ? "Admin" : value === "2" ? "Reviewer" : value === "3" ? "Creator" : "Team Member"} className={css.chip} />
                                     ))}
                                 </div>
                             )}
@@ -93,7 +93,7 @@ const UpdateUserDialog = (props) => {
                         >
                             {roles.map((role) => (
                                 <MenuItem key={role} value={role}>
-                                    {role == "1" ? "Admin" : role == "2" ? "Reviewer" : role == "3" ? "Creator" : "Team Member"}
+                                    {role === "1" ? "Admin" : role === "2" ? "Reviewer" : role === "3" ? "Creator" : "Team Member"}
                                 </MenuItem>
                             ))}
                         </Select>

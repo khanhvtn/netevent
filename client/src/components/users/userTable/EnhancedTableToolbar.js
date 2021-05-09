@@ -109,7 +109,7 @@ const EnhancedTableToolbar = (props) => {
             setErrorEmail(true)
         }
 
-        else if (validateEmail(userData.email) == false) {
+        else if (validateEmail(userData.email) === false) {
             setErrorEmail(true)
 
         } else {
@@ -138,7 +138,7 @@ const EnhancedTableToolbar = (props) => {
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        if (userData.email !== '' && validateEmail(userData.email) == true && userData.role.length > 0) {
+        if (userData.email !== '' && validateEmail(userData.email) === true && userData.role.length > 0) {
             setErrorEmail(false)
             setErrorRole(false)
             dispatch(userCreate(userData))
@@ -270,7 +270,7 @@ const EnhancedTableToolbar = (props) => {
                                         renderValue={(selected) => (
                                             <div className={css.chips}>
                                                 {selected.map((value) => (
-                                                    <Chip key={value} label={value == "1" ? "Admin" : value == "2" ? "Reviewer" : value == "3" ? "Creator" : "Team Member"} className={css.chip} />
+                                                    <Chip key={value} label={value === "1" ? "Admin" : value === "2" ? "Reviewer" : value === "3" ? "Creator" : "Team Member"} className={css.chip} />
                                                 ))}
                                             </div>
                                         )}
@@ -278,7 +278,7 @@ const EnhancedTableToolbar = (props) => {
                                     >
                                         {roles.map((role) => (
                                             <MenuItem key={role} value={role}>
-                                                {role == "1" ? "Admin" : role == "2" ? "Reviewer" : role == "3" ? "Creator" : "Team Member"}
+                                                {role === "1" ? "Admin" : role === "2" ? "Reviewer" : role === "3" ? "Creator" : "Team Member"}
                                             </MenuItem>
                                         ))}
                                     </Select>

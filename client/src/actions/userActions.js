@@ -95,7 +95,6 @@ export const userCheck = (history) => async (dispatch) => {
         /* 
         Prevent user already login but access to login by inputing link.
          */
-        console.log(previousPath);
         previousPath === '/' || previousPath === '/login'
             ? history.push('/pickrole')
             : history.push(previousPath);
