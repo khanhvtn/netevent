@@ -7,6 +7,7 @@ export const USER_CHECKING = 'USER_CHECKING';
 export const USER_PICK_ROLE = 'USER_PICK_ROLE';
 
 export const USER_CREATE_SUCCESSFUL = 'USER_CREATE_SUCCESSFUL';
+export const USER_UPDATE_SUCCESSFUL = 'USER_UPDATE_SUCCESSFUL';
 export const USER_CREATE = 'USER_CREATE';
 export const USER_CONFIRM = 'USER_CONFIRM';
 export const USER_IS_CONFIRM = 'USER_IS_CONFIRM';
@@ -14,6 +15,7 @@ export const USER_IS_CONFIRM = 'USER_IS_CONFIRM';
 export const FETCH_ALL_USERS = 'FETCH_ALL_USERS';
 export const DELETE_USER = 'DELETE_USER';
 export const SEARCH_USER = 'SEARCH_USER';
+export const UPDATE_USER = 'UPDATE_USER';
 
 //error action types
 export const ERROR = 'ERROR';

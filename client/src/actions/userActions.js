@@ -11,7 +11,9 @@ import {
     DELETE_USER,
     SEARCH_USER,
     USER_LOGOUT,
-    USER_CREATE_SUCCESSFUL
+    USER_CREATE_SUCCESSFUL,
+    USER_UPDATE_SUCCESSFUL,
+    UPDATE_USER
 } from '../constants';
 
 import * as api from '../api';
@@ -93,7 +95,6 @@ export const userCheck = (history) => async (dispatch) => {
         /* 
         Prevent user already login but access to login by inputing link.
          */
-        console.log(previousPath);
         previousPath === '/' || previousPath === '/login'
             ? history.push('/pickrole')
             : history.push(previousPath);
@@ -163,6 +164,19 @@ export const searchUsers = (searchString) => async (dispatch) => {
     }
     setUserIsLoading(false, dispatch);
 };
+
+export const updateUser = (id, updateUser) => async (dispatch) => {
+    // setUserIsChecking(true, dispatch);
+    try {
+        const { data } = await api.updateUserAPI(id, updateUser)
+        console.log(data)
+        dispatch({ type: UPDATE_USER, payload: data });
+        dispatch({ type: USER_UPDATE_SUCCESSFUL, payload: true });
+    } catch (error) {
+        console.log(error)
+    }
+    // setUserIsLoading(false, dispatch)
+}
 
 export const deleteUser = (id) => async (dispatch) => {
     try {

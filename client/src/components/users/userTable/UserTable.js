@@ -194,7 +194,8 @@ const UserTable = ({ userData, loading }) => {
                                         : user.role == 23 ? "Reviewer,Creator"
                                           : user.role == 234 ? "Reviewer,Creator,Team Member"
                                             : user.role = 34 ? "Creator,Team Member"
-                                              : "Admin,Reviewer,Creator,Team Member"}
+                                              : "Admin,Reviewer,Creator,Team Member"
+                            }
                           </TableCell>
                           <TableCell>
                             <Moment format="DD/MM/YYYY" className={css.moment} >{user.createdAt}</Moment>

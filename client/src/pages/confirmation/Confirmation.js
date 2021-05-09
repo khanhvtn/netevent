@@ -52,7 +52,7 @@ const Confirmation = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (password.password1 == password.password2 && password.password1 !== "" && password.password2 !== "") {
+        if (password.password1 === password.password2 && password.password1 !== "" && password.password2 !== "") {
             dispatch(userConfirm(id.id, password.password2, history))
 
         } else {
