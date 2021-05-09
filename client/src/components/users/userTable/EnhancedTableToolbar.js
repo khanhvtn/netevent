@@ -4,13 +4,12 @@ import Button from "@material-ui/core/Button";
 import clsx from "clsx";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import EditIcon from '@material-ui/icons/Edit';
 import useStyles from './styles'
 import { useDispatch } from 'react-redux';
-import { deleteUser, userCreate } from '../../../actions/userActions';
+import { deleteUser, updateUser, userCreate } from '../../../actions/userActions';
 import { EMAIL_ERROR, ROLE_ERROR } from '../../../constants'
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -24,7 +23,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
-import Snackbar from '@material-ui/core/Snackbar';
+import UpdateUserDialog from './UpdateUserDialog/UpdateUserDialog';
 
 const initialState = {
     email: '',
@@ -55,6 +54,7 @@ const EnhancedTableToolbar = (props) => {
     const dispatch = useDispatch();
     const { numSelected, selected, users } = props;
     const [openCreaterUserDialog, setOpenCreaterUserDialog] = useState(false);
+    const [openUpdateUserDialog, setOpenUpdateUserDialog] = useState(false);
     const [userData, setUserData] = useState(initialState);
     const [errorEmail, setErrorEmail] = useState(false);
     const [errorRole, setErrorRole] = useState(false);
@@ -70,6 +70,17 @@ const EnhancedTableToolbar = (props) => {
         });
     };
 
+    //Handle the Delete button
+    const handleUpdateUser = (id, updateRole) => {
+        dispatch(updateUser(id, updateRole));
+    };
+
+    const handleUpdateButton = (updateRole) => {
+        users.forEach((user) => {
+            if (selected.indexOf(user.email) !== -1) handleUpdateUser(user._id, updateRole);
+        });
+    };
+
     const handleChange = (event) => {
         setUserData({ ...userData, role: event.target.value });
     };
@@ -78,11 +89,19 @@ const EnhancedTableToolbar = (props) => {
         setOpenCreaterUserDialog(true)
     }
 
+    const handleOpenUpdateUserDialog = () => {
+        setOpenUpdateUserDialog(true)
+    }
+
     const handleCloseCreateUserDialog = () => {
         clearField(initialState)
         setErrorEmail(false)
         setErrorRole(false)
         setOpenCreaterUserDialog(false);
+    }
+
+    const handleCloseUpdateUserDialog = () => {
+        setOpenUpdateUserDialog(false);
     }
 
     const handleOnBlurEmailField = () => {
@@ -95,7 +114,6 @@ const EnhancedTableToolbar = (props) => {
 
         } else {
             setErrorEmail(false)
-
         }
     }
 
@@ -135,23 +153,31 @@ const EnhancedTableToolbar = (props) => {
 
     return (
         <>
-
+            <UpdateUserDialog
+                roles={roles}
+                MenuProps={MenuProps}
+                openUpdateUserDialog={openUpdateUserDialog}
+                closeUpdateUserDialog={handleCloseUpdateUserDialog}
+                updateUserDialog={handleUpdateButton}
+            />
             <Toolbar
                 className={clsx(css.rootEnhanceTableToolbar, {
                     [css.highlight]: numSelected > 0,
                 })}
             >
-
-                {numSelected > 0 ? (
-                    <Typography
-                        className={css.title}
-                        color="inherit"
-                        variant="subtitle1"
-                        component="div"
-                    >
-                        {numSelected} selected
-                    </Typography>
-                ) : (
+                {numSelected > 0 ?
+                    <>
+                        <Typography
+                            className={css.title}
+                            color="inherit"
+                            variant="subtitle1"
+                            component="div"
+                        >
+                            {numSelected} selected
+                        </Typography>
+                    </>
+                    :
+                    <>
                         <Typography
                             className={css.title}
                             variant="h4"
@@ -160,99 +186,117 @@ const EnhancedTableToolbar = (props) => {
                         >
                             User List
                         </Typography>
-                    )}
+                    </>
+                }
 
-                {numSelected > 0 ? (
+                {numSelected > 0 ? numSelected === 1 ?
+                    <>
+                        <Tooltip title="Edit">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className={css.editButton}
+                                startIcon={<EditIcon />}
+                                onClick={handleOpenUpdateUserDialog}
+                            >
+                                Edit
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                className={css.deleteButton}
+                                startIcon={<DeleteIcon />}
+                                onClick={handleDeleteButton}
+                            >
+                                Delete
+                            </Button>
+                        </Tooltip>
+                    </>
+                    :
                     <Tooltip title="Delete">
                         <Button
                             variant="contained"
                             color="secondary"
-                            className={css.button}
+                            className={css.deleteButton}
                             startIcon={<DeleteIcon />}
                             onClick={handleDeleteButton}
                         >
                             Delete
                         </Button>
                     </Tooltip>
-                ) : (
-                        <>
-                            {/* <IconButton aria-label="filter list">
-                            <FilterListIcon />
-                            </IconButton> */}
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                className={css.addUser}
-                                onClick={handleOpenCreateUserDialog}
-                            >
-                                Add user
-                            </Button>
+                    :
+                    <>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            className={css.addUser}
+                            onClick={handleOpenCreateUserDialog}
+                        >
+                            Add user
+                        </Button>
 
-                            <Dialog open={openCreaterUserDialog} onClose={handleCloseCreateUserDialog} aria-labelledby="form-dialog-title" className={css.dialogCreate} fullWidth>
-                                <DialogTitle id="form-dialog-title">User Register</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        Enter User Email and Roles to create an account.
-                                    </DialogContentText>
-                                    <TextField
-                                        margin="dense"
-                                        id="email"
-                                        label="Email Address"
-                                        type="email"
-                                        fullWidth
-                                        onBlur={handleOnBlurEmailField}
-                                        value={userData.email}
-                                        onChange={(e) => handleChangeEmail(e)}
-                                    />
+                        <Dialog open={openCreaterUserDialog} onClose={handleCloseCreateUserDialog} aria-labelledby="form-dialog-title" className={css.dialogCreate} fullWidth>
+                            <DialogTitle id="form-dialog-title">User Register</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Enter User Email and Roles to create an account.
+                                </DialogContentText>
+                                <TextField
+                                    margin="dense"
+                                    id="email"
+                                    label="Email Address"
+                                    type="email"
+                                    fullWidth
+                                    onBlur={handleOnBlurEmailField}
+                                    value={userData.email}
+                                    onChange={(e) => handleChangeEmail(e)}
+                                />
 
-                                    {errorEmail ? <Typography className={css.errorMessage}>{EMAIL_ERROR}</Typography> : <></>}
+                                {errorEmail ? <Typography className={css.errorMessage}>{EMAIL_ERROR}</Typography> : <></>}
 
 
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-mutiple-chip-label">Role</InputLabel>
-                                        <Select
-                                            labelId="demo-mutiple-chip-label"
-                                            id="demo-mutiple-chip"
-                                            multiple
-                                            value={userData.role}
-                                            onChange={handleChange}
-                                            onBlur={handleOnBlueRole}
-                                            input={<Input id="select-multiple-chip" />}
-                                            renderValue={(selected) => (
-                                                <div className={css.chips}>
-                                                    {selected.map((value) => (
-                                                        <Chip key={value} label={value == "1" ? "Admin" : value == "2" ? "Reviewer" : value == "3" ? "Creator" : "Team Member"} className={css.chip} />
-                                                    ))}
-                                                </div>
-                                            )}
-                                            MenuProps={MenuProps}
-                                        >
-                                            {roles.map((role) => (
-                                                <MenuItem key={role} value={role}>
-                                                    {role == "1" ? "Admin" : role == "2" ? "Reviewer" : role == "3" ? "Creator" : "Team Member"}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    {errorRole ? <Typography className={css.errorMessage}>{ROLE_ERROR}</Typography> : <></>}
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-mutiple-chip-label">Role</InputLabel>
+                                    <Select
+                                        labelId="demo-mutiple-chip-label"
+                                        id="demo-mutiple-chip"
+                                        multiple
+                                        value={userData.role}
+                                        onChange={handleChange}
+                                        onBlur={handleOnBlueRole}
+                                        input={<Input id="select-multiple-chip" />}
+                                        renderValue={(selected) => (
+                                            <div className={css.chips}>
+                                                {selected.map((value) => (
+                                                    <Chip key={value} label={value == "1" ? "Admin" : value == "2" ? "Reviewer" : value == "3" ? "Creator" : "Team Member"} className={css.chip} />
+                                                ))}
+                                            </div>
+                                        )}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {roles.map((role) => (
+                                            <MenuItem key={role} value={role}>
+                                                {role == "1" ? "Admin" : role == "2" ? "Reviewer" : role == "3" ? "Creator" : "Team Member"}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                {errorRole ? <Typography className={css.errorMessage}>{ROLE_ERROR}</Typography> : <></>}
 
-                                </DialogContent>
-                                <DialogActions className={css.m2}>
-                                    <Button onClick={handleCloseCreateUserDialog} variant="default" color="default">
-                                        Cancel
-                                    </Button>
-                                    <Button onClick={handleOnSubmit} variant="contained" color="primary">
-                                        Submit
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
-                            <Tooltip title="Filter list">
-                                <IconButton aria-label="filter list">
-                                    <FilterListIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </>
-                    )}
+                            </DialogContent>
+                            <DialogActions className={css.m2}>
+                                <Button onClick={handleCloseCreateUserDialog} color="default">
+                                    Cancel
+                                </Button>
+                                <Button onClick={handleOnSubmit} variant="contained" color="primary">
+                                    Submit
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    </>
+                }
             </Toolbar>
         </>
     );

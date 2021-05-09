@@ -67,5 +67,12 @@ export default makeStyles((theme) => ({
         marginTop: 16,
         marginRight: 16,
         marginBottom: 8,
+    },
+    editButton:{
+        margin: 0
+    },
+    deleteButton:{
+        margin: 8
     }
+
 }));
