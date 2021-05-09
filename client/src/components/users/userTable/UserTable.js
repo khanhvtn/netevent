@@ -109,6 +109,8 @@ const UserTable = ({ userData, loading }) => {
       setUsers(userData)
     }
   }, [userData])
+  
+
 
 
 
@@ -185,17 +187,10 @@ const UserTable = ({ userData, loading }) => {
                             {user.email}
                           </TableCell>
                           <TableCell>
-                            {user.role == 1 ? "Admin"
-                              : user.role == 2 ? "Reviewer"
-                                : user.role == 3 ? "Creator"
-                                  : user.role == 4 ? "Team Member"
-                                    : user.role == 12 ? "Admin,Reviewer"
-                                      : user.role = 123 ? "Admin,Reviewer,Creator"
-                                        : user.role == 23 ? "Reviewer,Creator"
-                                          : user.role == 234 ? "Reviewer,Creator,Team Member"
-                                            : user.role = 34 ? "Creator,Team Member"
-                                              : "Admin,Reviewer,Creator,Team Member"
-                            }
+                            {user.role.map((eachRole) => (
+                              <>{eachRole === "1" ? "Admin, " : eachRole === "2" ? "Reviewer, " : eachRole === "3" ? "Creator, " : "Team Member"}</>
+                            ))}
+                           
                           </TableCell>
                           <TableCell>
                             <Moment format="DD/MM/YYYY" className={css.moment} >{user.createdAt}</Moment>
