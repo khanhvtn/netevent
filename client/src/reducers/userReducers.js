@@ -10,6 +10,7 @@ import {
     SEARCH_USER,
     DELETE_USER,
     USER_LOGOUT,
+    USER_CREATE_SUCCESSFUL
 } from '../constants';
 
 const initialState = {
@@ -17,7 +18,9 @@ const initialState = {
     isLoading: false,
     isConfirm: false,
     user: null,
-    users: []
+    users: [],
+    isCreated: false,
+
 };
 
 export default function userReducers(state = initialState, action) {
@@ -25,7 +28,9 @@ export default function userReducers(state = initialState, action) {
         case USER_CHECK:
             return { ...state, user: action.payload };
         case USER_CREATE:
-            return { ...state, user: action.payload }
+            return { ...state, user: action.payload };
+        case USER_CREATE_SUCCESSFUL:
+            return{ ...state, isCreated: action.payload}
         case USER_CONFIRM:
             return { ...state, user: action.payload }
         case USER_IS_CONFIRM:
