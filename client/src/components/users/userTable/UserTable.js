@@ -10,6 +10,10 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 import { v4 as uuidv4 } from "uuid";
 
+//Timestamp converting
+import Moment from 'react-moment';
+import 'moment-timezone';
+
 //CSS makeStyles at the last
 import { CircularProgress, Grid, Table, Typography } from "@material-ui/core";
 import EnhancedTableToolbar from "./EnhancedTableToolbar";
@@ -51,6 +55,7 @@ const UserTable = ({ userData, loading }) => {
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -105,6 +110,8 @@ const UserTable = ({ userData, loading }) => {
     }
   }, [userData])
 
+
+
   return (
     <>
       {loading ? (
@@ -149,6 +156,7 @@ const UserTable = ({ userData, loading }) => {
                   {stableSort(users, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((user, index) => {
+
                       const isItemSelected = isSelected(user.email);
                       const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -176,9 +184,24 @@ const UserTable = ({ userData, loading }) => {
                           >
                             {user.email}
                           </TableCell>
-                          <TableCell align="right">{user.role}</TableCell>
-                          <TableCell align="right">{user.createdAt}</TableCell>
-                          <TableCell align="right">{user.updatedAt}</TableCell>
+                          <TableCell>
+                            {user.role == 1 ? "Admin"
+                              : user.role == 2 ? "Reviewer"
+                                : user.role == 3 ? "Creator"
+                                  : user.role == 4 ? "Team Member"
+                                    : user.role == 12 ? "Admin,Reviewer"
+                                      : user.role = 123 ? "Admin,Reviewer,Creator"
+                                        : user.role == 23 ? "Reviewer,Creator"
+                                          : user.role == 234 ? "Reviewer,Creator,Team Member"
+                                            : user.role = 34 ? "Creator,Team Member"
+                                              : "Admin,Reviewer,Creator,Team Member"}
+                          </TableCell>
+                          <TableCell>
+                            <Moment format="DD/MM/YYYY" className={css.moment} >{user.createdAt}</Moment>
+                          </TableCell>
+                          <TableCell>
+                            <Moment format="DD/MM/YYYY" className={css.moment}>{user.updatedAt}</Moment>
+                          </TableCell>
                         </TableRow>
                       );
                     })}
