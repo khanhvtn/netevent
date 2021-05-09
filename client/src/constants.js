@@ -24,4 +24,5 @@ export const PASSWORD_MATCHED = 'Passwords must be matched and should not be emp
 
 //link action types
 export const GET_LINKS = "GET_LIKKS"
+export const GET_LINK_COMPLETE = "GET_LINK_COMPLETE"
 
