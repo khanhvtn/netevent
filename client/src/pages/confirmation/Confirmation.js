@@ -35,15 +35,17 @@ const Confirmation = () => {
     }, [dispatch])
 
     useEffect(() => {
-        if (links.length > 0) {
+        if (links.length > 0 && links !== null) {
             for (var i = 0; i < links.length; i++) {
                 validLink.push(links[i]._id)
             }
             if (!validLink.includes(id.id)) {
                 history.push('/404')
             }
+        } else {
+            history.push('/404')
         }
-    }, [links.length])
+    }, [dispatch])
 
     const handleSubmit = (e) => {
         e.preventDefault();
