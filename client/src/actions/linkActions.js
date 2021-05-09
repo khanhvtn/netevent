@@ -7,7 +7,6 @@ export const getLinks = () => async (dispatch) => {
         const {data} = await api.getLinks();
         dispatch({type: GET_LINKS, payload: data})
         dispatch({type: GET_LINK_COMPLETE, payload: true})
-        dispatch({type: GET_LINK_COMPLETE, payload: false})
 
 
     } catch (error) {

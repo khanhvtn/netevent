@@ -60,78 +60,82 @@ const Confirmation = () => {
         }
     };
 
-    return (
-        <div className={css.main}>
-            <div className={css.wrapper}>
-                <Zoom in>
-                    <Paper>
-                        <CardMedia
-                            className={css.media}
-                            image={logo}
-                            title="Logo"
-                        />
-                        {user.isConfirm ?
-                            <Alert severity="info">
-                                <AlertTitle>
-                                    Info
+    return link.complete === false ?
+        <div className={css.contentWrapper} align="center">
+            <CircularProgress color="primary" />
+        </div>
+        : (
+            <div className={css.main}>
+                <div className={css.wrapper}>
+                    <Zoom in>
+                        <Paper>
+                            <CardMedia
+                                className={css.media}
+                                image={logo}
+                                title="Logo"
+                            />
+                            {user.isConfirm ?
+                                <Alert severity="info">
+                                    <AlertTitle>
+                                        Info
                                 </AlertTitle>
                                     Update Password Successful. Please wait 5 seconds to login!
                             </Alert>
-                            :
-                            <>
-                                <Collapse
-                                    className={css.errorDrop}
-                                    in={errorPassword ? true : false}
-                                >
-                                    <Alert className={css.alert} severity="error">
-                                        {PASSWORD_MATCHED}
-                                    </Alert>
-                                </Collapse>
-                                <form
-                                    className={css.form}
-                                    onSubmit={handleSubmit}
-                                    noValidate
-                                >
-                                    <TextField
-                                        variant="outlined"
-                                        className={css.textField}
-                                        type="password"
-                                        label="Password"
-                                        value={password.password1}
-                                        name="password1"
-                                        fullWidth
-                                        onChange={(e) => setPassword({ ...password, password1: e.target.value })}
-                                    />
-
-                                    <TextField
-                                        variant="outlined"
-                                        className={css.textField}
-                                        type="password"
-                                        label="Confirmed Password"
-                                        value={password.password2}
-                                        name="password2"
-                                        fullWidth
-                                        onChange={(e) => setPassword({ ...password, password2: e.target.value })}
-                                    />
-
-                                    <Button
-                                        size="large"
-                                        variant="contained"
-                                        className={css.btnSubmit}
-                                        type="submit"
-                                        color="primary"
-                                        fullWidth
+                                :
+                                <>
+                                    <Collapse
+                                        className={css.errorDrop}
+                                        in={errorPassword ? true : false}
                                     >
-                                        {user.isLoading ? <CircularProgress color="inherit" /> : 'Submit'}
-                                    </Button>
-                                </form>
-                            </>
-                        }
-                    </Paper>
-                </Zoom>
+                                        <Alert className={css.alert} severity="error">
+                                            {PASSWORD_MATCHED}
+                                        </Alert>
+                                    </Collapse>
+                                    <form
+                                        className={css.form}
+                                        onSubmit={handleSubmit}
+                                        noValidate
+                                    >
+                                        <TextField
+                                            variant="outlined"
+                                            className={css.textField}
+                                            type="password"
+                                            label="Password"
+                                            value={password.password1}
+                                            name="password1"
+                                            fullWidth
+                                            onChange={(e) => setPassword({ ...password, password1: e.target.value })}
+                                        />
+
+                                        <TextField
+                                            variant="outlined"
+                                            className={css.textField}
+                                            type="password"
+                                            label="Confirmed Password"
+                                            value={password.password2}
+                                            name="password2"
+                                            fullWidth
+                                            onChange={(e) => setPassword({ ...password, password2: e.target.value })}
+                                        />
+
+                                        <Button
+                                            size="large"
+                                            variant="contained"
+                                            className={css.btnSubmit}
+                                            type="submit"
+                                            color="primary"
+                                            fullWidth
+                                        >
+                                            {user.isLoading ? <CircularProgress color="inherit" /> : 'Submit'}
+                                        </Button>
+                                    </form>
+                                </>
+                            }
+                        </Paper>
+                    </Zoom>
+                </div>
             </div>
-        </div>
-    );
+        );
 };
 
 export default Confirmation;

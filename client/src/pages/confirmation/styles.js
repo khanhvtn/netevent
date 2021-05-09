@@ -33,6 +33,10 @@ export default makeStyles(() => ({
 
     info : {
         textAlign: "center"
+    },
+
+    contentWrapper: {
+        marginTop: '20%'
     }
 
 }));

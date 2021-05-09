@@ -13,7 +13,8 @@ import {
     USER_LOGOUT,
     USER_CREATE_SUCCESSFUL,
     USER_UPDATE_SUCCESSFUL,
-    UPDATE_USER
+    UPDATE_USER,
+    GET_LINK_COMPLETE
 } from '../constants';
 
 import * as api from '../api';
@@ -135,6 +136,8 @@ export const userConfirm = (id, password, history) => async (dispatch) => {
         dispatch({ type: USER_IS_CONFIRM, payload: true });
         await sleep(5000)
         dispatch({ type: USER_IS_CONFIRM, payload: false });
+        dispatch({type: GET_LINK_COMPLETE, payload: false})
+
         history.push('/login')
 
     } catch (error) {
