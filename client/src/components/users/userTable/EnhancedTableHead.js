@@ -10,8 +10,8 @@ import useStyles from './styles'
 const headCells = [
     { id: "username", numeric: false, disablePadding: true, label: "Username" },
     { id: "role", numeric: true, disablePadding: false, label: "Role" },
-    { id: "createat", numeric: true, disablePadding: false, label: "Create At" },
-    { id: "updateat", numeric: true, disablePadding: false, label: "Update At" },
+    { id: "createdAt", numeric: true, disablePadding: false, label: "Created At" },
+    { id: "updatedAt", numeric: true, disablePadding: false, label: "Updated At" },
 ];
 
 const EnhancedTableHead = (props) => {
@@ -45,7 +45,6 @@ const EnhancedTableHead = (props) => {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? "right" : "left"}
                         padding={headCell.disablePadding ? "none" : "default"}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >

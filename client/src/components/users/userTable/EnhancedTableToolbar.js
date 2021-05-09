@@ -53,11 +53,20 @@ const EnhancedTableToolbar = (props) => {
     const css = useStyles();
     const dispatch = useDispatch();
     const { numSelected, selected, users } = props;
+    const [openDeleteUserDialog, setOpenDeleteUserDialog] = useState(false);
     const [openCreaterUserDialog, setOpenCreaterUserDialog] = useState(false);
     const [openUpdateUserDialog, setOpenUpdateUserDialog] = useState(false);
     const [userData, setUserData] = useState(initialState);
     const [errorEmail, setErrorEmail] = useState(false);
     const [errorRole, setErrorRole] = useState(false);
+
+    const handleOpenDeleteUserDialog = () => {
+        setOpenDeleteUserDialog(true)
+    }
+
+    const handleCloseDeleteUserDialog = () => {
+        setOpenDeleteUserDialog(false);
+    }
 
     //Handle the Delete button
     const handleDeleteUser = (id) => {
@@ -66,7 +75,10 @@ const EnhancedTableToolbar = (props) => {
 
     const handleDeleteButton = () => {
         users.forEach((user) => {
-            if (selected.indexOf(user.email) !== -1) handleDeleteUser(user._id);
+            if (selected.indexOf(user.email) !== -1) {
+                handleDeleteUser(user._id)
+                handleCloseDeleteUserDialog();
+            };
         });
     };
 
