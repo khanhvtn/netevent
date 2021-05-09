@@ -5,6 +5,7 @@ import {
     USER_CHECKING,
     USER_CREATE,
     USER_CONFIRM,
+    USER_IS_CONFIRM,
     FETCH_ALL_USERS,
     SEARCH_USER,
     DELETE_USER,
@@ -16,6 +17,7 @@ import {
 const initialState = {
     isUserChecking: false,
     isLoading: false,
+    isConfirm: false,
     user: null,
     pickedRoleNum: null,
     users: [],
@@ -31,7 +33,9 @@ export default function userReducers(state = initialState, action) {
         case USER_CREATE_SUCCESSFUL:
             return{ ...state, isCreated: action.payload}
         case USER_CONFIRM:
-            return { ...state, user: action.payload };
+            return { ...state, user: action.payload }
+        case USER_IS_CONFIRM:
+            return { ...state, isConfirm: action.payload }
         case USER_LOGIN:
             return { ...state, user: action.payload };
         case USER_LOGOUT:
