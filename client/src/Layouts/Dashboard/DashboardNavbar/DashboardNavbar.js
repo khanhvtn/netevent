@@ -53,13 +53,15 @@ const DashboardNavbar = ({ onMobileNavOpen, onPickRole, ...rest }) => {
                             <InputIcon />
                         </IconButton>
                     ) : (
-                        ''
+                        <Hidden lgUp>
+                            <IconButton
+                                color="inherit"
+                                onClick={onMobileNavOpen}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        </Hidden>
                     )}
-                    <Hidden lgUp>
-                        <IconButton color="inherit" onClick={onMobileNavOpen}>
-                            <MenuIcon />
-                        </IconButton>
-                    </Hidden>
                 </Toolbar>
             </AppBar>
         </div>
