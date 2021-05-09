@@ -156,10 +156,10 @@ const UserTable = ({ userData, loading }) => {
                   {stableSort(users, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((user, index) => {
-                      
+
                       const isItemSelected = isSelected(user.email);
                       const labelId = `enhanced-table-checkbox-${index}`;
-                       
+
                       return (
                         <TableRow
                           hover
@@ -181,17 +181,27 @@ const UserTable = ({ userData, loading }) => {
                             id={labelId}
                             scope="row"
                             padding="none"
-                            align="center"
                           >
                             {user.email}
                           </TableCell>
-                          <TableCell align="center">{user.role == 1 ? "Admin" : user.role == 2 ?
-                           "Reviewer" : user.role == 3 ? "Creator" : user.role == 4 ? "Team Member" : user.role == 12 ?
-                            "Admin,Reviewer" : user.role = 123 ? "Admin,Reviewer,Creator" :  
-                           user.role == 23 ? "Reviewer,Creator" : user.role == 234 ? 
-                        "Reviewer,Creator,Team Member" : user.role = 34 ? "Creator,Team Member" : "Admin,Reviewer,Creator,Team Member" }</TableCell>
-                          <Moment format="DD/MM/YYYY" className={css.moment} ><TableCell align="center">{user.createdAt}</TableCell></Moment>
-                          <Moment format="DD/MM/YYYY" className={css.moment}><TableCell align="center">{user.updatedAt}</TableCell></Moment>
+                          <TableCell>
+                            {user.role == 1 ? "Admin"
+                              : user.role == 2 ? "Reviewer"
+                                : user.role == 3 ? "Creator"
+                                  : user.role == 4 ? "Team Member"
+                                    : user.role == 12 ? "Admin,Reviewer"
+                                      : user.role = 123 ? "Admin,Reviewer,Creator"
+                                        : user.role == 23 ? "Reviewer,Creator"
+                                          : user.role == 234 ? "Reviewer,Creator,Team Member"
+                                            : user.role = 34 ? "Creator,Team Member"
+                                              : "Admin,Reviewer,Creator,Team Member"}
+                          </TableCell>
+                          <TableCell>
+                            <Moment format="DD/MM/YYYY" className={css.moment} >{user.createdAt}</Moment>
+                          </TableCell>
+                          <TableCell>
+                            <Moment format="DD/MM/YYYY" className={css.moment}>{user.updatedAt}</Moment>
+                          </TableCell>
                         </TableRow>
                       );
                     })}

@@ -125,7 +125,7 @@ const Dashboard = () => {
 
     const handleSearchUser = (e) => {
         if (e.key === 'Enter') {
-            if (searchTerm){
+            if (searchTerm) {
                 dispatch(searchUsers(searchTerm))
             } else {
                 setTableRefresh(!tableRefresh)
