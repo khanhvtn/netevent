@@ -9,6 +9,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import TagFacesIcon from '@material-ui/icons/TagFaces';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { getUsers, searchUsers, userCreate } from '../../actions/userActions';
 import useStyles from './styles';
@@ -17,7 +19,7 @@ import UserTable from '../../components/users/userTable/UserTable';
 import Snackbar from '@material-ui/core/Snackbar';
 import { Alert } from '@material-ui/lab';
 import { USER_CREATE_SUCCESSFUL, USER_UPDATE_SUCCESSFUL } from '../../constants';
-import { Button, Checkbox, ClickAwayListener, Divider, Fade, FormControlLabel, FormGroup, Popper, Typography } from '@material-ui/core';
+import { Button, Checkbox, ClickAwayListener, CssBaseline, DialogActions, Divider, Fade, Chip, FormControlLabel, FormGroup, Popper, Typography } from '@material-ui/core';
 
 const initialState = {
     email: '',
@@ -31,75 +33,25 @@ const userCreateState = {
     isAlertSuccess: false
 }
 
+const filterState = [
+    { key: 1, checked: false, label: 'Admin' },
+    { key: 2, checked: false, label: 'Creator' },
+    { key: 3, checked: false, label: 'Reviewer' },
+    { key: 4, checked: false, label: 'Team Member' }
+]
+
+
+const chipFilterData = [
+    { key: 1, label: 'Admin' },
+    { key: 2, label: 'Creator' },
+    { key: 3, label: 'Reviewer' },
+    { key: 4, label: 'Team Member' },
+]
+
 const Dashboard = () => {
     const css = useStyles();
-    const [openCreaterUserDialog, setOpenCreaterUserDialog] = useState(false);
-    const [userData, setUserData] = useState(initialState);
-    const [errorEmail, setErrorEmail] = useState(false);
-    const [errorRole, setErrorRole] = useState(false);
     const dispatch = useDispatch();
     const [state, setState] = useState(userCreateState);
-
-    const handleChange = (event) => {
-        setUserData({ ...userData, role: event.target.value });
-    };
-
-    const handleOpenCreateUserDialog = () => {
-        setOpenCreaterUserDialog(true);
-    };
-
-    const handleCloseCreateUserDialog = () => {
-        clearField(initialState);
-        setErrorEmail(false);
-        setErrorRole(false);
-        setOpenCreaterUserDialog(false);
-    };
-
-    const handleOnBlurEmailField = () => {
-        if (userData.email === '') {
-            setErrorEmail(true);
-        } else if (validateEmail(userData.email) === false) {
-            setErrorEmail(true);
-        } else {
-            setErrorEmail(false);
-        }
-    };
-
-    const handleOnBlueRole = () => {
-        if (userData.role.length === 0) {
-            setErrorRole(true);
-        } else {
-            setErrorRole(false);
-        }
-    };
-
-    const handleChangeEmail = (e) => {
-        setUserData({ ...userData, email: e.target.value });
-    };
-
-    const validateEmail = (email) => {
-        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    };
-
-    const handleOnSubmit = (e) => {
-        e.preventDefault();
-        if (
-            userData.email !== '' &&
-            validateEmail(userData.email) === true &&
-            userData.role.length > 0
-        ) {
-            setErrorEmail(false);
-            setErrorRole(false);
-            dispatch(userCreate(userData));
-            clearField();
-            handleCloseCreateUserDialog();
-        }
-    };
-
-    const clearField = () => {
-        setUserData(initialState);
-    };
 
     const handleSearchUser = (e) => {
         if (e.key === 'Enter') {
@@ -124,10 +76,6 @@ const Dashboard = () => {
     useEffect(() => {
         dispatch(getUsers());
     }, [dispatch, tableRefresh]);
-
-    // useEffect(() => {
-    //     setState((prevState) => ({ ...prevState, isCreateUserSuccess: user.isCreated }))
-    // }, [user.isCreated])
 
     useEffect(() => {
         if (user.users) {
@@ -166,19 +114,31 @@ const Dashboard = () => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;
         }
-
+        setStateFilter(filterState)
         setOpenFilter(false);
     };
 
-    const [stateFilter, setStateFilter] = useState({
-        checkedA: true,
-        checkedB: true,
-        checkedC: true,
-        checkedD: true,
-    });
+    const handleClearFilter = () => {
+        setStateFilter(filterState)
+    }
+
+    const handleFilter = () => {
+        console.log("Filter")
+        console.log(stateFilter)
+        setOpenFilter(false)
+    }
+
+    const [stateFilter, setStateFilter] = useState(filterState);
+    const [chipData, setChipData] = useState(chipFilterData);
 
     const handleFilterChange = (event) => {
-        setStateFilter({ ...stateFilter, [event.target.name]: event.target.checked });
+        console.log(event.target.name)
+        console.log(event.target.checked)
+        setStateFilter({ ...stateFilter, checked: event.target.checked });
+    };
+
+    const handleDeleteChip = (chipToDelete) => () => {
+        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
     };
 
     return (
@@ -263,6 +223,22 @@ const Dashboard = () => {
                             </Grid>
                         </Toolbar>
                     </AppBar>
+                    <Paper component="ul" className={css.filterArray}>
+                        {chipData.map((data) => {
+                            let icon;
+
+                            return (
+                                <li key={data.key}>
+                                    <Chip
+                                        icon={icon}
+                                        label={data.label}
+                                        onDelete={handleDeleteChip(data)}
+                                        className={css.chipHandle}
+                                    />
+                                </li>
+                            );
+                        })}
+                    </Paper>
                     <Paper elevation={0} className={css.root}>
                         <UserTable
                             userData={userTableData}
@@ -274,16 +250,35 @@ const Dashboard = () => {
                             {({ TransitionProps }) => (
                                 <Fade
                                     {...TransitionProps} timeout={350}>
-                                    <Paper>
-                                        <Typography className={css.typography}>The content of the Popper.</Typography>
+                                    <Paper className={css.filterPaper} square>
                                         <FormGroup>
-                                            <FormControlLabel
+                                            <Typography className={css.typography}>Filter by roles.</Typography>
+                                            {stateFilter.map((data, index) => {
+                                                return (
+                                                    <>
+                                                        <FormControlLabel
+                                                            key={index}
+                                                            className={css.typography}
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={data.checked}
+                                                                    onChange={handleFilterChange}
+                                                                    name={data.label}
+                                                                    color="primary"
+                                                                />
+                                                            }
+                                                            label={data.label}
+                                                        />
+                                                    </>
+                                                )
+                                            })}
+                                            {/* <FormControlLabel
                                                 className={css.typography}
                                                 control={
                                                     <Checkbox
-                                                        checked={stateFilter.checkedA}
+                                                        checked={stateFilter.checkedAdmin}
                                                         onChange={handleFilterChange}
-                                                        name="checkedA"
+                                                        name="checkedAdmin"
                                                         color="primary"
                                                     />
                                                 }
@@ -293,9 +288,9 @@ const Dashboard = () => {
                                                 className={css.typography}
                                                 control={
                                                     <Checkbox
-                                                        checked={stateFilter.checkedB}
+                                                        checked={stateFilter.checkedReviewer}
                                                         onChange={handleFilterChange}
-                                                        name="checkedB"
+                                                        name="checkedReviewer"
                                                         color="primary"
                                                     />
                                                 }
@@ -305,9 +300,9 @@ const Dashboard = () => {
                                                 className={css.typography}
                                                 control={
                                                     <Checkbox
-                                                        checked={stateFilter.checkedC}
+                                                        checked={stateFilter.checkedCreator}
                                                         onChange={handleFilterChange}
-                                                        name="checkedC"
+                                                        name="checkedCreator"
                                                         color="primary"
                                                     />
                                                 }
@@ -317,15 +312,23 @@ const Dashboard = () => {
                                                 className={css.typography}
                                                 control={
                                                     <Checkbox
-                                                        checked={stateFilter.checkedD}
+                                                        checked={stateFilter.checkedTeamMember}
                                                         onChange={handleFilterChange}
-                                                        name="checkedD"
+                                                        name="checkedTeamMember"
                                                         color="primary"
                                                     />
                                                 }
                                                 label="Team Member"
-                                            />
+                                            /> */}
                                             <Divider />
+                                            <DialogActions>
+                                                <Button className={css.filterAction} onClick={handleClearFilter} color="default">
+                                                    Clear
+                                                </Button>
+                                                <Button className={css.filterAction} onClick={handleFilter} variant="contained" color="primary">
+                                                    Filter
+                                                </Button>
+                                            </DialogActions>
                                         </FormGroup>
                                     </Paper>
                                 </Fade>

@@ -169,7 +169,7 @@ const UserTable = ({ userData, loading }) => {
                           role="checkbox"
                           aria-checked={isItemSelected}
                           tabIndex={-1}
-                          key={uuidv4()}
+                          key={index}
                           selected={isItemSelected}
                         >
                           <TableCell padding="checkbox">

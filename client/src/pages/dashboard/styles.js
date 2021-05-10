@@ -25,6 +25,26 @@ export default makeStyles((theme) => ({
     },
     typography: {
         padding: theme.spacing(2),
+    },
+    filterPaper: {
+        height: '100%',
+        width: 300,
+        borderRadius: 8,
+    },
+    filterAction: {
+        textTransform: 'none'
+    },
+    filterArray: {
+        display: 'flex',
+        justifyContent: 'start',
+        flexWrap: 'wrap',
+        listStyle: 'none',
+        borderRadius: 0,
+        padding: theme.spacing(0.5),
+        margin: 0,
+    },
+    chipHandle:{
+        margin: theme.spacing(0.5),
     }
 
 
