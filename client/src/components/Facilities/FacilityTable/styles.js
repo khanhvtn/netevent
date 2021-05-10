@@ -12,7 +12,7 @@ export default makeStyles((theme) => ({
         minWidth: 750,
     },
 
-    addUser: {
+    addFacility: {
         width: "15%",
         maxHeight: 40
     },
@@ -85,10 +85,10 @@ export default makeStyles((theme) => ({
         marginRight: 16,
         marginBottom: 8,
     },
-    editButton:{
+    editButton: {
         margin: 0
     },
-    deleteButton:{
+    deleteButton: {
         margin: 8
     }
 }));

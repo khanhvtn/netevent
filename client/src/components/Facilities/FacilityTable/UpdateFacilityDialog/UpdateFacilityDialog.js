@@ -5,100 +5,76 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Chip from '@material-ui/core/Chip';
 import Button from "@material-ui/core/Button";
-import { ROLE_ERROR } from '../../../../constants';
-import { Typography } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
+
+const facilityInitialState = {
+    name: '',
+    code: '',
+    type: ''
+}
 
 const UpdateFacilityDialog = (props) => {
     const {
-        roles,
-        MenuProps,
-        openUpdateUserDialog,
-        closeUpdateUserDialog,
-        updateUserDialog
+        openUpdateFacilityDialog,
+        closeUpdateFacilityDialog,
+        updateFacilityDialog
     } = props;
     const css = useStyles();
-    const [errorRole, setErrorRole] = useState(false);
-    const [roleData, setRoleData] = useState([]);
+    const [newFacilityUpdate, setNewFacilityUpdate] = useState(facilityInitialState);
 
     const handleOnSubmit = () => {
-        updateUserDialog(roleData);
+        updateFacilityDialog(newFacilityUpdate);
         handleCloseUpdate();
     }
 
-    const handleOnChange = (e) => {
-        setRoleData(e.target.value);
+    const handleOnChangeText = (event) => {
+        setNewFacilityUpdate({ ...newFacilityUpdate, [event.target.name]: event.target.value })
     }
 
     const handleCloseUpdate = () => {
-        setRoleData([]);
-        setErrorRole(false);
-        closeUpdateUserDialog();
-    }
-
-    const handleOnBlueRole = () => {
-        if (roleData.length === 0) {
-            setErrorRole(true);
-        } else {
-            setErrorRole(false);
-        }
+        setNewFacilityUpdate(facilityInitialState);
+        closeUpdateFacilityDialog();
     }
 
     return (
         <>
-            <Dialog open={openUpdateUserDialog} onClose={handleCloseUpdate} aria-labelledby="form-dialog-title" className={css.dialogCreate} fullWidth>
-                <DialogTitle id="form-dialog-title">User Update</DialogTitle>
+            <Dialog open={openUpdateFacilityDialog} onClose={handleCloseUpdate} aria-labelledby="form-dialog-title" className={css.dialogCreate} fullWidth>
+                <DialogTitle id="form-dialog-title">Facility Update</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Enter roles to update an account.
+                        Fill form to update a facility.
                     </DialogContentText>
-                    {/* <TextField
+                    <TextField
                         margin="dense"
-                        id="email"
-                        label="Email Address"
-                        type="email"
+                        id="name"
+                        name="name"
+                        label="Name"
+                        type="text"
+                        value={newFacilityUpdate.name}
+                        onChange={handleOnChangeText}
                         fullWidth
-                        onBlur={handleOnBlurEmailField}
-                        value={userData.email}
-                        onChange={(e) => handleChangeEmail(e)}
                     />
-
-                    {errorEmail ? <Typography className={css.errorMessage}>{EMAIL_ERROR}</Typography> : <></>} */}
-
-                    <FormControl fullWidth>
-                        <InputLabel id="demo-mutiple-chip-label">Role</InputLabel>
-                        <Select
-                            labelId="demo-mutiple-chip-label"
-                            id="demo-mutiple-chip"
-                            multiple
-                            variant='outlined'
-                            value={roleData}
-                            onChange={handleOnChange}
-                            onBlur={handleOnBlueRole}
-                            input={<Input id="select-multiple-chip" />}
-                            renderValue={(selected) => (
-                                <div className={css.chips}>
-                                    {selected.map((value) => (
-                                        <Chip key={value} label={value === "1" ? "Admin" : value === "2" ? "Reviewer" : value === "3" ? "Creator" : "Team Member"} className={css.chip} />
-                                    ))}
-                                </div>
-                            )}
-                            MenuProps={MenuProps}
-                        >
-                            {roles.map((role) => (
-                                <MenuItem key={role} value={role}>
-                                    {role === "1" ? "Admin" : role === "2" ? "Reviewer" : role === "3" ? "Creator" : "Team Member"}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    {errorRole ? <Typography className={css.errorMessage}>{ROLE_ERROR}</Typography> : <></>}
+                    <TextField
+                        margin="dense"
+                        id="code"
+                        name="code"
+                        label="Code"
+                        type="text"
+                        value={newFacilityUpdate.code}
+                        onChange={handleOnChangeText}
+                        fullWidth
+                    />
+                    <TextField
+                        margin="dense"
+                        id="type"
+                        name="type"
+                        label="Type"
+                        type="text"
+                        value={newFacilityUpdate.type}
+                        onChange={handleOnChangeText}
+                        fullWidth
+                    />
 
                 </DialogContent>
                 <DialogActions className={css.m2}>

@@ -12,10 +12,10 @@ import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import Snackbar from '@material-ui/core/Snackbar';
 
-import { getUsers, searchUsers, userCreate } from '../../actions/userActions';
-import { FACILITY_CREATE_SUCCESS } from '../../constants';
+import { FACILITY_CREATE_SUCCESS, FACILITY_UPDATE_SUCCESS } from '../../constants';
 import FacilityTable from '../../components/Facilities/FacilityTable/FacilityTable';
-
+import { getFacilities, searchFacilities } from '../../actions/facilityActions'
+import { Alert } from '@material-ui/lab';
 
 
 const facilityInitialState = {
@@ -32,34 +32,50 @@ const FacilityApp = () => {
     const [facilityState, setFacilityState] = useState(facilityInitialState);
 
     useEffect(() => {
-        // dispatch(getUsers());
+        dispatch(getFacilities());
     }, [dispatch, tableRefresh]);
 
+    
     useEffect(() => {
-        if (facility.facility) {
-            setFacilityTableData(facility.facilities);
-        }
-    }, [handleSearchFacility, facility.facilities]);
-
-    useEffect(() => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: facility.isCreated }))
+        setFacilityState((prevState) => ({ ...prevState, isAlertSuccess: facility.isCreated }))
     }, [facility.isCreated])
-
+    
     const handleCreateSnackbarClose = () => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: false }))
+        setFacilityState((prevState) => ({ ...prevState, isAlertSuccess: false }))
         //set isSuccessPurchase == false
         dispatch({ type: FACILITY_CREATE_SUCCESS, payload: false })
     }
-
+    
     useEffect(() => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: facility.isUpdated }))
+        setFacilityState((prevState) => ({ ...prevState, isAlertSuccess: facility.isUpdated }))
     }, [facility.isUpdated])
-
+    
     const handleUpdateSnackbarClose = () => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: false }))
+        setFacilityState((prevState) => ({ ...prevState, isAlertSuccess: false }))
         //set isSuccessPurchase == false
         dispatch({ type: FACILITY_UPDATE_SUCCESS, payload: false })
     }
+    
+    const handleSearchFacility = (e) => {
+        if (e.key === 'Enter') {
+            if (searchTerm) {
+                dispatch(searchFacilities(searchTerm));
+            } else {
+                setTableRefresh(!tableRefresh);
+            }
+            e.preventDefault();
+        }
+    };
+
+    useEffect(() => {
+        if (facility.facilities) {
+            setFacilityTableData(facility.facilities);
+        }
+    }, [handleSearchFacility, facility.facilities]);
+    
+    const handleChangeSearch = (e) => {
+        setSearchTerm(e.target.value);
+    };
 
     return (
         <>

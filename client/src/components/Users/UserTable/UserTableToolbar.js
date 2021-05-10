@@ -82,7 +82,7 @@ const UserTableToolbar = (props) => {
         });
     };
 
-    //Handle the Delete button
+    //Handle the Update button
     const handleUpdateUser = (id, updateRole) => {
         dispatch(updateUser(id, updateRole));
     };

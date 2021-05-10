@@ -6,6 +6,7 @@ import {
     DELETE_FACILITY,
     FACILITY_CREATE_SUCCESS,
     FACILITY_UPDATE_SUCCESS,
+    SEARCH_FACILITY,
 } from '../constants';
 
 const initialState = {
@@ -27,6 +28,8 @@ export default function errorReducers(state = initialState, action) {
         case FACILITY_UPDATE_SUCCESS:
             return { ...state, isUpdated: action.payload };
         case FETCH_ALL_FACILITIES:
+            return { ...state, facilities: action.payload };
+        case SEARCH_FACILITY:
             return { ...state, facilities: action.payload };
         case UPDATE_FACILITY:
             return {

@@ -9,57 +9,100 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from '@material-ui/icons/Edit';
 import useStyles from './styles'
 import { useDispatch } from 'react-redux';
-import { deleteUser, updateUser, userCreate } from '../../../actions/userActions';
-import { EMAIL_ERROR, ROLE_ERROR } from '../../../constants'
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
-import UpdateUserDialog from './UpdateUserDialog/UpdateUserDialog';
+import { createFacility, deleteFacility, updateFacility } from '../../../actions/facilityActions';
+import UpdateFacilityDialog from './UpdateFacilityDialog/UpdateFacilityDialog';
 
 const initialState = {
-    email: '',
-    password: '',
-    role: []
+    name: '',
+    code: '',
+    type: ''
 }
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
 
 const FacilityTableToolbar = (props) => {
     const css = useStyles();
     const dispatch = useDispatch();
-    const { numSelected, selected, users } = props;
+    const { numSelected, selected, facilities } = props;
     const [openDeleteFacilityDialog, setOpenDeleteFacilityDialog] = useState(false);
     const [openCreaterFacilityDialog, setOpenCreaterFacilityDialog] = useState(false);
     const [openUpdateFacilityDialog, setOpenUpdateFacilityDialog] = useState(false);
-    const [FacilityData, setFacilityData] = useState(initialState);
+    const [facilityData, setFacilityData] = useState(initialState);
+
+    const handleOnChangeText = (event) => {
+        setFacilityData({ ...facilityData, [event.target.name]: event.target.value });
+    };
+
+    // Handle Open & Close Create Dialog
+    const handleOpenCreateFacilityDialog = () => {
+        setOpenCreaterFacilityDialog(true);
+    };
+
+    const handleCloseCreateFacilityDialog = () => {
+        setFacilityData(initialState);
+        setOpenCreaterFacilityDialog(false);
+    };
+
+    //Handle the Update button.
+    const handleOpenUpdateFacilityDialog = () => {
+        setOpenUpdateFacilityDialog(true)
+    }
+
+    const handleCloseUpdateFacilityDialog = () => {
+        setOpenUpdateFacilityDialog(false);
+    }
+
+    const handleUpdateFacility = (id, newUpdateData) => {
+        dispatch(updateFacility(id, newUpdateData));
+    };
+
+    const handleUpdateButton = (newUpdateData) => {
+        facilities.forEach((facility) => {
+            if (selected.indexOf(facility.name) !== -1) handleUpdateFacility(facility._id, newUpdateData);
+        });
+    };
+
+    // Handle Open & Close Delete Dialog
+    const handleOpenDeleteFacilityDialog = () => {
+        setOpenDeleteFacilityDialog(true)
+    }
+
+    const handleCloseDeleteFacilityDialog = () => {
+        setOpenDeleteFacilityDialog(false);
+    }
+
+    //Handle the Delete button
+    const handleDeleteFacility = (id) => {
+        dispatch(deleteFacility(id));
+    };
+
+    const handleDeleteButton = () => {
+        facilities.forEach((facility) => {
+            if (selected.indexOf(facility.name) !== -1) {
+                handleDeleteFacility(facility._id)
+                handleCloseDeleteFacilityDialog();
+            };
+        });
+    };
+
+    const onCreateFacility = (e) => {
+        e.preventDefault();
+        dispatch(createFacility(facilityData))
+        handleCloseCreateFacilityDialog();
+    }
+
+
 
     return (
         <>
-            Dialog
-            {/* <UpdateUserDialog
-                roles={roles}
-                MenuProps={MenuProps}
-                openUpdateUserDialog={openUpdateUserDialog}
-                closeUpdateUserDialog={handleCloseUpdateUserDialog}
-                updateUserDialog={handleUpdateButton}
+            <UpdateFacilityDialog
+                openUpdateFacilityDialog={openUpdateFacilityDialog}
+                closeUpdateFacilityDialog={handleCloseUpdateFacilityDialog}
+                updateFacilityDialog={handleUpdateButton}
             />
             <Toolbar
                 className={clsx(css.rootEnhanceTableToolbar, {
@@ -85,7 +128,7 @@ const FacilityTableToolbar = (props) => {
                             id="tableTitle"
                             component="div"
                         >
-                            User List
+                            Facility List
                         </Typography>
                     </>
                 }
@@ -98,7 +141,7 @@ const FacilityTableToolbar = (props) => {
                                 color="primary"
                                 className={css.editButton}
                                 startIcon={<EditIcon />}
-                                onClick={handleOpenUpdateUserDialog}
+                                onClick={handleOpenUpdateFacilityDialog}
                             >
                                 Edit
                             </Button>
@@ -132,73 +175,62 @@ const FacilityTableToolbar = (props) => {
                         <Button
                             variant="contained"
                             color="primary"
-                            className={css.addUser}
-                            onClick={handleOpenCreateUserDialog}
+                            className={css.addFacility}
+                            onClick={handleOpenCreateFacilityDialog}
                         >
-                            Add user
+                            Add Facility
                         </Button>
 
-                        <Dialog open={openCreaterUserDialog} onClose={handleCloseCreateUserDialog} aria-labelledby="form-dialog-title" className={css.dialogCreate} fullWidth>
-                            <DialogTitle id="form-dialog-title">User Register</DialogTitle>
+                        <Dialog open={openCreaterFacilityDialog} onClose={handleCloseCreateFacilityDialog} aria-labelledby="form-dialog-title" className={css.dialogCreate} fullWidth>
+                            <DialogTitle id="form-dialog-title">Facility Creation</DialogTitle>
                             <DialogContent>
                                 <DialogContentText>
-                                    Enter User Email and Roles to create an account.
+                                    Fill the form to create new facility.
                                 </DialogContentText>
                                 <TextField
                                     margin="dense"
-                                    id="email"
-                                    label="Email Address"
-                                    type="email"
+                                    id="name"
+                                    name="name"
+                                    label="Name"
+                                    type="text"
+                                    value={facilityData.name}
+                                    onChange={handleOnChangeText}
                                     fullWidth
-                                    onBlur={handleOnBlurEmailField}
-                                    value={userData.email}
-                                    onChange={(e) => handleChangeEmail(e)}
                                 />
-
-                                {errorEmail ? <Typography className={css.errorMessage}>{EMAIL_ERROR}</Typography> : <></>}
-
-
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-mutiple-chip-label">Role</InputLabel>
-                                    <Select
-                                        labelId="demo-mutiple-chip-label"
-                                        id="demo-mutiple-chip"
-                                        multiple
-                                        value={userData.role}
-                                        onChange={handleChange}
-                                        onBlur={handleOnBlueRole}
-                                        input={<Input id="select-multiple-chip" />}
-                                        renderValue={(selected) => (
-                                            <div className={css.chips}>
-                                                {selected.map((value) => (
-                                                    <Chip key={value} label={value === "1" ? "Admin" : value === "2" ? "Reviewer" : value === "3" ? "Creator" : "Team Member"} className={css.chip} />
-                                                ))}
-                                            </div>
-                                        )}
-                                        MenuProps={MenuProps}
-                                    >
-                                        {roles.map((role) => (
-                                            <MenuItem key={role} value={role}>
-                                                {role === "1" ? "Admin" : role === "2" ? "Reviewer" : role === "3" ? "Creator" : "Team Member"}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                {errorRole ? <Typography className={css.errorMessage}>{ROLE_ERROR}</Typography> : <></>}
+                                <TextField
+                                    margin="dense"
+                                    id="code"
+                                    name="code"
+                                    label="Code"
+                                    type="text"
+                                    value={facilityData.code}
+                                    onChange={handleOnChangeText}
+                                    fullWidth
+                                />
+                                <TextField
+                                    margin="dense"
+                                    id="type"
+                                    name="type"
+                                    label="Type"
+                                    type="text"
+                                    value={facilityData.type}
+                                    onChange={handleOnChangeText}
+                                    fullWidth
+                                />
 
                             </DialogContent>
                             <DialogActions className={css.m2}>
-                                <Button onClick={handleCloseCreateUserDialog} color="default">
+                                <Button onClick={handleCloseCreateFacilityDialog} color="default">
                                     Cancel
                                 </Button>
-                                <Button onClick={handleOnSubmit} variant="contained" color="primary">
+                                <Button onClick={onCreateFacility} variant="contained" color="primary">
                                     Submit
                                 </Button>
                             </DialogActions>
                         </Dialog>
                     </>
                 }
-            </Toolbar> */}
+            </Toolbar>
         </>
     );
 };
