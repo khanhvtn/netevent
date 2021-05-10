@@ -31,13 +31,6 @@ const initialState = {
     role: []
 }
 
-const roles = [
-    '1',
-    '2',
-    '3',
-    '4'
-];
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -49,123 +42,19 @@ const MenuProps = {
     },
 };
 
-const EnhancedTableToolbar = (props) => {
+const FacilityTableToolbar = (props) => {
     const css = useStyles();
     const dispatch = useDispatch();
     const { numSelected, selected, users } = props;
-    const [openDeleteUserDialog, setOpenDeleteUserDialog] = useState(false);
-    const [openCreaterUserDialog, setOpenCreaterUserDialog] = useState(false);
-    const [openUpdateUserDialog, setOpenUpdateUserDialog] = useState(false);
-    const [userData, setUserData] = useState(initialState);
-    const [errorEmail, setErrorEmail] = useState(false);
-    const [errorRole, setErrorRole] = useState(false);
-
-    const handleOpenDeleteUserDialog = () => {
-        setOpenDeleteUserDialog(true)
-    }
-
-    const handleCloseDeleteUserDialog = () => {
-        setOpenDeleteUserDialog(false);
-    }
-
-    //Handle the Delete button
-    const handleDeleteUser = (id) => {
-        dispatch(deleteUser(id));
-    };
-
-    const handleDeleteButton = () => {
-        users.forEach((user) => {
-            if (selected.indexOf(user.email) !== -1) {
-                handleDeleteUser(user._id)
-                handleCloseDeleteUserDialog();
-            };
-        });
-    };
-
-    //Handle the Delete button
-    const handleUpdateUser = (id, updateRole) => {
-        dispatch(updateUser(id, updateRole));
-    };
-
-    const handleUpdateButton = (updateRole) => {
-        users.forEach((user) => {
-            if (selected.indexOf(user.email) !== -1) handleUpdateUser(user._id, updateRole);
-        });
-    };
-
-    const handleChange = (event) => {
-        setUserData({ ...userData, role: event.target.value });
-    };
-
-    const handleOpenCreateUserDialog = () => {
-        setOpenCreaterUserDialog(true)
-    }
-
-    const handleOpenUpdateUserDialog = () => {
-        setOpenUpdateUserDialog(true)
-    }
-
-    const handleCloseCreateUserDialog = () => {
-        clearField(initialState)
-        setErrorEmail(false)
-        setErrorRole(false)
-        setOpenCreaterUserDialog(false);
-    }
-
-    const handleCloseUpdateUserDialog = () => {
-        setOpenUpdateUserDialog(false);
-    }
-
-    const handleOnBlurEmailField = () => {
-        if (userData.email === '') {
-            setErrorEmail(true)
-        }
-
-        else if (validateEmail(userData.email) === false) {
-            setErrorEmail(true)
-
-        } else {
-            setErrorEmail(false)
-        }
-    }
-
-    const handleOnBlueRole = () => {
-        if (userData.role.length === 0) {
-            setErrorRole(true)
-        } else {
-            setErrorRole(false)
-
-        }
-    }
-
-    const handleChangeEmail = (e) => {
-        setUserData({ ...userData, email: e.target.value })
-    }
-
-
-    const validateEmail = (email) => {
-        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    }
-
-    const handleOnSubmit = (e) => {
-        e.preventDefault();
-        if (userData.email !== '' && validateEmail(userData.email) === true && userData.role.length > 0) {
-            setErrorEmail(false)
-            setErrorRole(false)
-            dispatch(userCreate(userData))
-            clearField();
-            handleCloseCreateUserDialog();
-        }
-    }
-
-    const clearField = () => {
-        setUserData(initialState)
-    }
+    const [openDeleteFacilityDialog, setOpenDeleteFacilityDialog] = useState(false);
+    const [openCreaterFacilityDialog, setOpenCreaterFacilityDialog] = useState(false);
+    const [openUpdateFacilityDialog, setOpenUpdateFacilityDialog] = useState(false);
+    const [FacilityData, setFacilityData] = useState(initialState);
 
     return (
         <>
-            <UpdateUserDialog
+            Dialog
+            {/* <UpdateUserDialog
                 roles={roles}
                 MenuProps={MenuProps}
                 openUpdateUserDialog={openUpdateUserDialog}
@@ -309,13 +198,13 @@ const EnhancedTableToolbar = (props) => {
                         </Dialog>
                     </>
                 }
-            </Toolbar>
+            </Toolbar> */}
         </>
     );
 };
 
-EnhancedTableToolbar.propTypes = {
+FacilityTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };
 
-export default EnhancedTableToolbar;
+export default FacilityTableToolbar;

@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUsers, searchUsers, userCreate } from '../../actions/userActions';
 import useStyles from './styles';
 
-import UserTable from '../../components/users/userTable/UserTable';
+import UserTable from '../../components/Users/UserTable/UserTable';
 import Snackbar from '@material-ui/core/Snackbar';
 import {Alert} from '@material-ui/lab';
 import {USER_CREATE_SUCCESSFUL, USER_UPDATE_SUCCESSFUL} from '../../constants';

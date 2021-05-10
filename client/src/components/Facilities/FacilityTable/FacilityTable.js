@@ -8,8 +8,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 
-import { v4 as uuidv4 } from "uuid";
-
 //Timestamp converting
 import Moment from 'react-moment';
 import 'moment-timezone';
@@ -17,8 +15,6 @@ import 'moment-timezone';
 //CSS makeStyles at the last
 import { CircularProgress, Grid, Table, Typography } from "@material-ui/core";
 import useStyles from './styles'
-import UserTableToolbar from "./UserTableToolbar";
-import UserTableHead from "./UserTableHead";
 
 //Descend Sorting
 function descendingComparator(a, b, orderBy) {
@@ -48,7 +44,7 @@ function stableSort(array, comparator) {
 }
 
 
-const UserTable = ({ userData, loading }) => {
+const FacilityTable = ({ facilityData, loading }) => {
   const css = useStyles();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("role");
@@ -103,20 +99,17 @@ const UserTable = ({ userData, loading }) => {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const [users, setUsers] = useState([])
+  const [facilities, setFacilities] = useState([])
   useEffect(() => {
-    if (userData) {
-      setUsers(userData)
+    if (facilityData) {
+      setUsers(facilityData)
     }
-  }, [userData])
+  }, [facilityData])
   
-
-
-
-
   return (
     <>
-      {loading ? (
+        This is facility table
+      {/* {loading ? (
         <Grid container justify="center" alignItems="center">
           <CircularProgress
             style={{
@@ -134,7 +127,7 @@ const UserTable = ({ userData, loading }) => {
           </div>
           :
           <Paper className={css.paper}>
-            <UserTableToolbar
+            <EnhancedTableToolbar
               numSelected={selected.length}
               selected={selected}
               users={users}
@@ -146,7 +139,7 @@ const UserTable = ({ userData, loading }) => {
                 size='medium'
                 aria-label="enhanced table"
               >
-                <UserTableHead
+                <EnhancedTableHead
                   numSelected={selected.length}
                   order={order}
                   orderBy={orderBy}
@@ -214,9 +207,9 @@ const UserTable = ({ userData, loading }) => {
               onChangeRowsPerPage={handleChangeRowsPerPage}
             />
           </Paper>
-      }
+      } */}
     </>
   );
 }
 
-export default UserTable;
+export default FacilityTable;
