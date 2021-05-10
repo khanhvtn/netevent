@@ -70,6 +70,9 @@ export const userLogout = (history) => async (dispatch) => {
             payload: data.data,
         });
 
+        //clear roleNum in localStorage
+        localStorage.removeItem('roleNum');
+
         //redirect to pickrole page
         history.push('/login');
     } catch (error) {
@@ -115,9 +118,6 @@ export const userCheck = (history) => async (dispatch) => {
             type: USER_CHECK,
             payload: null,
         });
-        // prevPath.includes('confirmation')
-        //     ? history.push(prevPath)
-        //     : history.push('/login');
         history.push(prevPath);
     }
     setUserIsChecking(false, dispatch);
