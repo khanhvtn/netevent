@@ -14,8 +14,11 @@ import useStyles from './styles';
 
 import UserTable from '../../components/users/userTable/UserTable';
 import Snackbar from '@material-ui/core/Snackbar';
-import {Alert} from '@material-ui/lab';
-import {USER_CREATE_SUCCESSFUL} from '../../constants';
+import { Alert } from '@material-ui/lab';
+import {
+    USER_CREATE_SUCCESSFUL,
+    USER_UPDATE_SUCCESSFUL,
+} from '../../constants';
 
 const initialState = {
     email: '',
@@ -26,8 +29,8 @@ const initialState = {
 const roles = ['1', '2', '3', '4'];
 
 const userCreateState = {
-    isAlertSuccess: false
-}
+    isAlertSuccess: false,
+};
 
 const Dashboard = () => {
     const css = useStyles();
@@ -129,34 +132,60 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (user.users) {
-            setUserTableData(user.users?.data);
+            setUserTableData(user.users);
         }
     }, [handleSearchUser, user.users]);
 
     useEffect(() => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: user.isCreated }))
-    }, [user.isCreated])
+        setState((prevState) => ({
+            ...prevState,
+            isAlertSuccess: user.isCreated,
+        }));
+    }, [user.isCreated]);
 
-    const handleClose = () => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: false }))
+    const handleCreateSnackbarClose = () => {
+        setState((prevState) => ({ ...prevState, isAlertSuccess: false }));
         //set isSuccessPurchase == false
-        dispatch({ type: USER_CREATE_SUCCESSFUL, payload: false })
-    }
+        dispatch({ type: USER_CREATE_SUCCESSFUL, payload: false });
+    };
 
+    useEffect(() => {
+        setState((prevState) => ({
+            ...prevState,
+            isAlertSuccess: user.isUpdated,
+        }));
+    }, [user.isUpdated]);
+
+    const handleUpdateSnackbarClose = () => {
+        setState((prevState) => ({ ...prevState, isAlertSuccess: false }));
+        //set isSuccessPurchase == false
+        dispatch({ type: USER_UPDATE_SUCCESSFUL, payload: false });
+    };
 
     return (
         <>
             <Snackbar
-                anchorOrigin={{ vertical: "center", horizontal: "bottom" }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 open={user.isCreated}
-                autoHideDuration={5000}
+                autoHideDuration={3000}
                 color="primary"
                 className={css.snackBar}
-                onClose={handleClose}
-                >
-                    <Alert severity="success">Create User Successful</Alert>
+                onClose={handleCreateSnackbarClose}
+            >
+                <Alert severity="success">Create User Successful</Alert>
             </Snackbar>
-            
+
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                open={user.isUpdated}
+                autoHideDuration={3000}
+                color="primary"
+                className={css.snackBar}
+                onClose={handleUpdateSnackbarClose}
+            >
+                <Alert severity="success">Update User Successful</Alert>
+            </Snackbar>
+
             <div className={css.main}>
                 <Paper className={css.paper}>
                     <AppBar

@@ -15,7 +15,7 @@ import logo from '../../images/logo.png';
 import { userLogin } from '../../actions/userActions';
 
 import makeStyles from './styles';
-import { ERROR_CLEAR } from '../../constants';
+import { ERROR_CLEAR, USER_PICK_ROLE } from '../../constants';
 
 const initialState = {
     email: '',
@@ -50,7 +50,7 @@ const Login = () => {
     }, [dispatch]);
 
     if (user.user) {
-        return <Redirect to="/pickrole" />;
+        return <Redirect to="/pickRole" />;
     }
 
     return (

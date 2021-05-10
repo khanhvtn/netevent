@@ -47,6 +47,24 @@ export default makeStyles((theme) => ({
     contentWrapper: {
         margin: '40px 16px'
     },
+    popup1: {
+        padding: "30px",
+        paddingTop: "0px",
+        paddingBottom: "20px",
+        position: "relative",
+    },
+    popup: {
+        padding: "30px",
+        border: "15px",
+        position: "relative",
+        alignContent: "center",
+        justifyContent: "center",
+    },
+    moment: {
+        textAlign: "center",
+        verticalAlign: "middle",
+        display: "table-cell",
+    },
     chips: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -54,18 +72,24 @@ export default makeStyles((theme) => ({
     chip: {
         margin: 4,
     },
-
     errorMessage: {
         color: "red",
         fontSize: 10
-    }, 
+    },
     dialogCreate: {
         minWidth: 500,
 
     },
-    m2:{
+    m2: {
         marginTop: 16,
         marginRight: 16,
         marginBottom: 8,
+    },
+    editButton:{
+        margin: 0
+    },
+    deleteButton:{
+        margin: 8
     }
+
 }));

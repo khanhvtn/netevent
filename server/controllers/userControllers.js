@@ -199,15 +199,12 @@ const filterUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
     const { id } = req.params;
-    const userData = req.body;
-
-    console.log(userData);
-    console.log(id);
+    const roleData = req.body;
 
     try {
         const newUpdateUser = await User.findByIdAndUpdate(
             id,
-            { role: userData.role },
+            { role: roleData },
             { new: true }
         );
         console.log(newUpdateUser);

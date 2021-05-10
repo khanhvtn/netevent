@@ -24,6 +24,8 @@ const RoleCard = ({ roleNum, roleName, defaultPath, icon, delay }) => {
             type: USER_PICK_ROLE,
             payload: roleNum,
         });
+        //set roleNum to localStorage
+        localStorage.setItem('roleNum', roleNum);
         history.push(defaultPath);
     };
     return (

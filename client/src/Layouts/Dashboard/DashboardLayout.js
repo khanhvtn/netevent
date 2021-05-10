@@ -4,7 +4,7 @@ import DashboardSidebar from './DashboardSidebar/DashboardSidebar';
 import { useSelector } from 'react-redux';
 
 import useStyles from './styles';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 
 const DashboardLayout = ({ children }) => {
     const css = useStyles();
@@ -12,10 +12,20 @@ const DashboardLayout = ({ children }) => {
     const { user } = useSelector((state) => ({
         user: state.user.user,
     }));
+    const history = useHistory();
 
     //prevent user refresh the page
     if (!user) {
-        return <Redirect to="/login" />;
+        return (
+            <Redirect
+                to={{
+                    pathname: '/login',
+                    state: {
+                        prevPath: history.location.pathname,
+                    },
+                }}
+            />
+        );
     }
 
     return (
