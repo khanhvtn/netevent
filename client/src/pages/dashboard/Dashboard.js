@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -8,14 +8,16 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import FilterListIcon from '@material-ui/icons/FilterList';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUsers, searchUsers, userCreate } from '../../actions/userActions';
 import useStyles from './styles';
 
 import UserTable from '../../components/users/userTable/UserTable';
 import Snackbar from '@material-ui/core/Snackbar';
-import {Alert} from '@material-ui/lab';
-import {USER_CREATE_SUCCESSFUL, USER_UPDATE_SUCCESSFUL} from '../../constants';
+import { Alert } from '@material-ui/lab';
+import { USER_CREATE_SUCCESSFUL, USER_UPDATE_SUCCESSFUL } from '../../constants';
+import { Button, Checkbox, ClickAwayListener, Divider, Fade, FormControlLabel, FormGroup, Popper, Typography } from '@material-ui/core';
 
 const initialState = {
     email: '',
@@ -153,6 +155,32 @@ const Dashboard = () => {
         dispatch({ type: USER_UPDATE_SUCCESSFUL, payload: false })
     }
 
+    const [openFilter, setOpenFilter] = useState(false);
+    const anchorRef = useRef(null);
+
+    const handleToggleFilter = () => {
+        setOpenFilter((prevOpen) => !prevOpen);
+    };
+
+    const handleCloseFilter = (event) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+            return;
+        }
+
+        setOpenFilter(false);
+    };
+
+    const [stateFilter, setStateFilter] = useState({
+        checkedA: true,
+        checkedB: true,
+        checkedC: true,
+        checkedD: true,
+    });
+
+    const handleFilterChange = (event) => {
+        setStateFilter({ ...stateFilter, [event.target.name]: event.target.checked });
+    };
+
     return (
         <>
             <Snackbar
@@ -162,8 +190,8 @@ const Dashboard = () => {
                 color="primary"
                 className={css.snackBar}
                 onClose={handleCreateSnackbarClose}
-                >
-                    <Alert severity="success">Create User Successful</Alert>
+            >
+                <Alert severity="success">Create User Successful</Alert>
             </Snackbar>
 
             <Snackbar
@@ -173,10 +201,10 @@ const Dashboard = () => {
                 color="primary"
                 className={css.snackBar}
                 onClose={handleUpdateSnackbarClose}
-                >
-                    <Alert severity="success">Update User Successful</Alert>
+            >
+                <Alert severity="success">Update User Successful</Alert>
             </Snackbar>
-            
+
             <div className={css.main}>
                 <Paper className={css.paper}>
                     <AppBar
@@ -207,6 +235,18 @@ const Dashboard = () => {
                                     />
                                 </Grid>
                                 <Grid item>
+                                    <Tooltip title="Filter">
+                                        <IconButton
+                                            ref={anchorRef}
+                                            onClick={handleToggleFilter}
+
+                                        >
+                                            <FilterListIcon
+                                                className={css.block}
+                                                color="inherit"
+                                            />
+                                        </IconButton>
+                                    </Tooltip>
                                     <Tooltip title="Reload">
                                         <IconButton
                                             onClick={() =>
@@ -229,6 +269,69 @@ const Dashboard = () => {
                             loading={user.isLoading}
                         />
                     </Paper>
+                    <ClickAwayListener onClickAway={handleCloseFilter}>
+                        <Popper open={openFilter} anchorEl={anchorRef.current} placement={'bottom-end'} role={undefined} transition>
+                            {({ TransitionProps }) => (
+                                <Fade
+                                    {...TransitionProps} timeout={350}>
+                                    <Paper>
+                                        <Typography className={css.typography}>The content of the Popper.</Typography>
+                                        <FormGroup>
+                                            <FormControlLabel
+                                                className={css.typography}
+                                                control={
+                                                    <Checkbox
+                                                        checked={stateFilter.checkedA}
+                                                        onChange={handleFilterChange}
+                                                        name="checkedA"
+                                                        color="primary"
+                                                    />
+                                                }
+                                                label="Admin"
+                                            />
+                                            <FormControlLabel
+                                                className={css.typography}
+                                                control={
+                                                    <Checkbox
+                                                        checked={stateFilter.checkedB}
+                                                        onChange={handleFilterChange}
+                                                        name="checkedB"
+                                                        color="primary"
+                                                    />
+                                                }
+                                                label="Reviewer"
+                                            />
+                                            <FormControlLabel
+                                                className={css.typography}
+                                                control={
+                                                    <Checkbox
+                                                        checked={stateFilter.checkedC}
+                                                        onChange={handleFilterChange}
+                                                        name="checkedC"
+                                                        color="primary"
+                                                    />
+                                                }
+                                                label="Creator"
+                                            />
+                                            <FormControlLabel
+                                                className={css.typography}
+                                                control={
+                                                    <Checkbox
+                                                        checked={stateFilter.checkedD}
+                                                        onChange={handleFilterChange}
+                                                        name="checkedD"
+                                                        color="primary"
+                                                    />
+                                                }
+                                                label="Team Member"
+                                            />
+                                            <Divider />
+                                        </FormGroup>
+                                    </Paper>
+                                </Fade>
+                            )}
+                        </Popper>
+                    </ClickAwayListener>
                 </Paper>
             </div>
         </>

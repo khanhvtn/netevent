@@ -23,7 +23,10 @@ export default makeStyles((theme) => ({
     root: {
         width: '100%'
     },
+    typography: {
+        padding: theme.spacing(2),
+    }
 
-    
-    
+
+
 }));
