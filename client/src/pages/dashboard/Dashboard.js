@@ -114,27 +114,28 @@ const Dashboard = () => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;
         }
-        setStateFilter(filterState)
+        setFilterData(filterState)
         setOpenFilter(false);
     };
 
     const handleClearFilter = () => {
-        setStateFilter(filterState)
+        setFilterData(filterState)
     }
 
     const handleFilter = () => {
         console.log("Filter")
-        console.log(stateFilter)
+        console.log(filterData)
         setOpenFilter(false)
     }
 
-    const [stateFilter, setStateFilter] = useState(filterState);
+    const [filterData, setFilterData] = useState(filterState);
     const [chipData, setChipData] = useState(chipFilterData);
 
     const handleFilterChange = (event) => {
         console.log(event.target.name)
         console.log(event.target.checked)
-        setStateFilter({ ...stateFilter, checked: event.target.checked });
+        setFilterData((datas) => datas.map((data) => data.label === event.target.name ? { ...data, checked: event.target.checked } : data));
+
     };
 
     const handleDeleteChip = (chipToDelete) => () => {
@@ -253,7 +254,7 @@ const Dashboard = () => {
                                     <Paper className={css.filterPaper} square>
                                         <FormGroup>
                                             <Typography className={css.typography}>Filter by roles.</Typography>
-                                            {stateFilter.map((data, index) => {
+                                            {filterData.map((data, index) => {
                                                 return (
                                                     <>
                                                         <FormControlLabel
@@ -272,54 +273,6 @@ const Dashboard = () => {
                                                     </>
                                                 )
                                             })}
-                                            {/* <FormControlLabel
-                                                className={css.typography}
-                                                control={
-                                                    <Checkbox
-                                                        checked={stateFilter.checkedAdmin}
-                                                        onChange={handleFilterChange}
-                                                        name="checkedAdmin"
-                                                        color="primary"
-                                                    />
-                                                }
-                                                label="Admin"
-                                            />
-                                            <FormControlLabel
-                                                className={css.typography}
-                                                control={
-                                                    <Checkbox
-                                                        checked={stateFilter.checkedReviewer}
-                                                        onChange={handleFilterChange}
-                                                        name="checkedReviewer"
-                                                        color="primary"
-                                                    />
-                                                }
-                                                label="Reviewer"
-                                            />
-                                            <FormControlLabel
-                                                className={css.typography}
-                                                control={
-                                                    <Checkbox
-                                                        checked={stateFilter.checkedCreator}
-                                                        onChange={handleFilterChange}
-                                                        name="checkedCreator"
-                                                        color="primary"
-                                                    />
-                                                }
-                                                label="Creator"
-                                            />
-                                            <FormControlLabel
-                                                className={css.typography}
-                                                control={
-                                                    <Checkbox
-                                                        checked={stateFilter.checkedTeamMember}
-                                                        onChange={handleFilterChange}
-                                                        name="checkedTeamMember"
-                                                        color="primary"
-                                                    />
-                                                }
-                                                label="Team Member"
-                                            /> */}
                                             <Divider />
                                             <DialogActions>
                                                 <Button className={css.filterAction} onClick={handleClearFilter} color="default">
