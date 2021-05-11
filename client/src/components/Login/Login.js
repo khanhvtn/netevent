@@ -57,7 +57,7 @@ const Login = () => {
         <div className={css.main}>
             <div className={css.wrapper}>
                 <Zoom in>
-                    <Paper>
+                    <Paper elevation={5}>
                         <CardMedia
                             className={css.media}
                             image={logo}
@@ -96,6 +96,7 @@ const Login = () => {
                                 fullWidth
                                 onChange={handleChange}
                             />
+
                             <Button
                                 size="large"
                                 variant="contained"
@@ -107,8 +108,8 @@ const Login = () => {
                                 {user.isLoading ? (
                                     <CircularProgress color="inherit" />
                                 ) : (
-                                    'Login'
-                                )}
+                                        'Login'
+                                    )}
                             </Button>
                         </form>
                     </Paper>

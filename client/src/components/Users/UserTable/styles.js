@@ -13,8 +13,15 @@ export default makeStyles((theme) => ({
     },
 
     addUser: {
-        width: "15%",
-        maxHeight: 40
+        minWidth: "15%",
+        margin: 8,
+        textTransform: 'none',
+        [theme.breakpoints.down('sm')]: {
+            minWidth: "20%",
+        },
+        [theme.breakpoints.down('xs')]: {
+            minWidth: "40%",
+        }
     },
     visuallyHidden: {
         border: 0,
@@ -43,6 +50,10 @@ export default makeStyles((theme) => ({
             },
     title: {
         flex: "1 1 100%",
+        [theme.breakpoints.down('sm')]: {
+            fontSize: 24,
+            fontWeight: 'bold'
+        },
     },
     contentWrapper: {
         height: '100%',
@@ -79,7 +90,9 @@ export default makeStyles((theme) => ({
     },
     dialogCreate: {
         minWidth: 500,
-
+        [theme.breakpoints.down('sm')]: {
+            minWidth: 0,
+        }
     },
     m2: {
         marginTop: 16,
@@ -90,7 +103,25 @@ export default makeStyles((theme) => ({
         margin: 0
     },
     deleteButton: {
-        margin: 8
+        margin: '0 8px'
+    },
+    selectedTitle:{
+        flex: "1 1 100%"
+    },
+    [theme.breakpoints.down('xs')]: {
+        editButton: {
+            margin: 0,
+            fontSize: 12
+        },
+        deleteButton: {
+            margin: '0 8px',
+            fontSize: 12,
+        },
+        selectedTitle:{
+            flex: "1 1 100%",
+            fontSize: 14,
+            fontWeight: 'bold'
+        },
     }
 
 }));
