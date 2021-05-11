@@ -103,7 +103,7 @@ const FacilityTableToolbar = (props) => {
                 {numSelected > 0 ?
                     <>
                         <Typography
-                            className={css.title}
+                            className={css.selectedTitle}
                             color="inherit"
                             variant="subtitle1"
                             component="div"

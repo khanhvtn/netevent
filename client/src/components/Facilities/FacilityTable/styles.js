@@ -13,8 +13,15 @@ export default makeStyles((theme) => ({
     },
 
     addFacility: {
-        width: "15%",
-        maxHeight: 40
+        minWidth: "15%",
+        margin: 8,
+        textTransform: 'none',
+        [theme.breakpoints.down('sm')]: {
+            minWidth: "20%",
+        },
+        [theme.breakpoints.down('xs')]: {
+            minWidth: "40%",
+        }
     },
     visuallyHidden: {
         border: 0,
@@ -43,6 +50,10 @@ export default makeStyles((theme) => ({
             },
     title: {
         flex: "1 1 100%",
+        [theme.breakpoints.down('sm')]: {
+            fontSize: 24,
+            fontWeight: 'bold'
+        },
     },
     contentWrapper: {
         margin: '40px 16px'
@@ -89,6 +100,24 @@ export default makeStyles((theme) => ({
         margin: 0
     },
     deleteButton: {
-        margin: 8
+        margin: '0 8px'
+    },
+    selectedTitle:{
+        flex: "1 1 100%"
+    },
+    [theme.breakpoints.down('xs')]: {
+        editButton: {
+            margin: 0,
+            fontSize: 12
+        },
+        deleteButton: {
+            margin: '0 8px',
+            fontSize: 12,
+        },
+        selectedTitle:{
+            flex: "1 1 100%",
+            fontSize: 14,
+            fontWeight: 'bold'
+        },
     }
 }));
