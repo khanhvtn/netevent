@@ -151,8 +151,12 @@ const EnhancedTableToolbar = (props) => {
     const handleOnSubmit = (e) => {
         e.preventDefault();
         if (userData.email !== '' && validateEmail(userData.email) === true && userData.role.length > 0) {
+            
             setErrorEmail(false)
             setErrorRole(false)
+            userData.role.sort(function(a,b) {
+                return a-b
+            })
             dispatch(userCreate(userData))
             clearField();
             handleCloseCreateUserDialog();
