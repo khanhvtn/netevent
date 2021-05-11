@@ -14,7 +14,8 @@ import {
     USER_CREATE_SUCCESSFUL,
     USER_UPDATE_SUCCESSFUL,
     UPDATE_USER,
-    GET_LINK_COMPLETE
+    GET_LINK_COMPLETE,
+    FILTER_USER_ROLE
 } from '../constants';
 
 import * as api from '../api';
@@ -162,6 +163,18 @@ export const searchUsers = (searchString) => async (dispatch) => {
         const { data } = await api.searchUsersAPI(searchString);
         console.log(data);
         dispatch({ type: SEARCH_USER, payload: data });
+    } catch (error) {
+        console.log(error);
+    }
+    setUserIsLoading(false, dispatch);
+};
+
+export const filterUsers = (filterData) => async (dispatch) => {
+    setUserIsLoading(true, dispatch);
+    try {
+        const { data } = await api.filterUsersAPI(filterData);
+        console.log(data);
+        dispatch({ type: FILTER_USER_ROLE, payload: data });
     } catch (error) {
         console.log(error);
     }

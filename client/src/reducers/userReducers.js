@@ -13,7 +13,8 @@ import {
     USER_LOGOUT,
     USER_PICK_ROLE,
     USER_CREATE_SUCCESSFUL,
-    USER_UPDATE_SUCCESSFUL
+    USER_UPDATE_SUCCESSFUL,
+    FILTER_USER_ROLE
 } from '../constants';
 
 const initialState = {
@@ -50,6 +51,8 @@ export default function userReducers(state = initialState, action) {
         case USER_PICK_ROLE:
             return { ...state, pickedRoleNum: action.payload };
         case FETCH_ALL_USERS:
+            return { ...state, users: action.payload.data };
+        case FILTER_USER_ROLE:
             return { ...state, users: action.payload.data };
         case SEARCH_USER:
             return { ...state, users: action.payload.data };

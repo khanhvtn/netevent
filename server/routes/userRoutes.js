@@ -13,5 +13,6 @@ router.get('/', userControllers.getUser)
 router.patch('/:id', userControllers.updateUser)
 
 router.route('/users/:id').delete(userControllers.deleteUser);
+router.post('/filter', userControllers.filterUser)
 
 module.exports = router;

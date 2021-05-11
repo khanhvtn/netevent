@@ -12,14 +12,14 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import TagFacesIcon from '@material-ui/icons/TagFaces';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getUsers, searchUsers, userCreate } from '../../actions/userActions';
+import { filterUsers, getUsers, searchUsers, userCreate } from '../../actions/userActions';
 import useStyles from './styles';
 
-import UserTable from '../../components/users/userTable/UserTable';
 import Snackbar from '@material-ui/core/Snackbar';
 import { Alert } from '@material-ui/lab';
 import { USER_CREATE_SUCCESSFUL, USER_UPDATE_SUCCESSFUL } from '../../constants';
 import { Button, Checkbox, ClickAwayListener, CssBaseline, DialogActions, Divider, Fade, Chip, FormControlLabel, FormGroup, Popper, Typography } from '@material-ui/core';
+import UserTable from '../../components/Users/UserTable/UserTable';
 
 const initialState = {
     email: '',
@@ -34,10 +34,10 @@ const userCreateState = {
 }
 
 const filterState = [
-    { key: 1, checked: false, label: 'Admin' },
-    { key: 2, checked: false, label: 'Creator' },
-    { key: 3, checked: false, label: 'Reviewer' },
-    { key: 4, checked: false, label: 'Team Member' }
+    { key: 1, checked: false, label: 'Admin', role: '1' },
+    { key: 2, checked: false, label: 'Reviewer', role: '2' },
+    { key: 3, checked: false, label: 'Creator', role: '3' },
+    { key: 4, checked: false, label: 'Team Member', role: '4' }
 ]
 
 
@@ -124,22 +124,15 @@ const Dashboard = () => {
 
     const handleFilter = () => {
         console.log("Filter")
-        console.log(filterData)
+        const filterRole = filterData.filter((data) => true === data.checked).map((data) => data.role);
+        dispatch(filterUsers(filterRole))
         setOpenFilter(false)
     }
 
     const [filterData, setFilterData] = useState(filterState);
-    const [chipData, setChipData] = useState(chipFilterData);
 
     const handleFilterChange = (event) => {
-        console.log(event.target.name)
-        console.log(event.target.checked)
         setFilterData((datas) => datas.map((data) => data.label === event.target.name ? { ...data, checked: event.target.checked } : data));
-
-    };
-
-    const handleDeleteChip = (chipToDelete) => () => {
-        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
     };
 
     return (
@@ -224,22 +217,6 @@ const Dashboard = () => {
                             </Grid>
                         </Toolbar>
                     </AppBar>
-                    <Paper component="ul" className={css.filterArray}>
-                        {chipData.map((data) => {
-                            let icon;
-
-                            return (
-                                <li key={data.key}>
-                                    <Chip
-                                        icon={icon}
-                                        label={data.label}
-                                        onDelete={handleDeleteChip(data)}
-                                        className={css.chipHandle}
-                                    />
-                                </li>
-                            );
-                        })}
-                    </Paper>
                     <Paper elevation={0} className={css.root}>
                         <UserTable
                             userData={userTableData}

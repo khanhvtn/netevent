@@ -16,6 +16,7 @@ export const FETCH_ALL_USERS = 'FETCH_ALL_USERS';
 export const DELETE_USER = 'DELETE_USER';
 export const SEARCH_USER = 'SEARCH_USER';
 export const UPDATE_USER = 'UPDATE_USER';
+export const FILTER_USER_ROLE = 'FILTER_USER_ROLE';
 
 //error action types
 export const ERROR = 'ERROR';

@@ -179,20 +179,22 @@ const searchUser = async (req, res, next) => {
 }
 
 const filterUser = async (req, res, next) => {
-    const { searchString } = req.body;
+    const { role } = req.body;
 
-    if (!searchString) {
+    console.log(role)
+
+    if (!role) {
         return next(new CustomError(400, 'Invalid Search'))
     }
 
     try {
-        const searchResult = await User.find({ email: { $regex: searchString } });
+        const filterResult = await User.find({ role: role });
 
-        if (searchResult.length === 0) {
-            return cusResponse(res, 200, searchResult, null);
+        if (filterResult.length === 0) {
+            return cusResponse(res, 200, filterResult, null);
         }
 
-        return cusResponse(res, 200, searchResult, null);
+        return cusResponse(res, 200, filterResult, null);
 
     } catch (error) {
         return next(new CustomError(500, error.message))
@@ -239,5 +241,6 @@ module.exports = {
     getUser,
     deleteUser,
     searchUser,
+    filterUser,
     updateUser
 };
