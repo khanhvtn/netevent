@@ -53,7 +53,7 @@ const Dashboard = () => {
         if (user.users) {
             setUserTableData(user.users);
         }
-    }, [handleSearchUser, user.users]);
+    }, [user.users]);
 
     useEffect(() => {
         setState((prevState) => ({

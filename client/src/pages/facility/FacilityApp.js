@@ -71,7 +71,7 @@ const FacilityApp = () => {
         if (facility.facilities) {
             setFacilityTableData(facility.facilities);
         }
-    }, [handleSearchFacility, facility.facilities]);
+    }, [facility.facilities]);
     
     const handleChangeSearch = (e) => {
         setSearchTerm(e.target.value);
