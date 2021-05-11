@@ -82,7 +82,12 @@ const UserTableToolbar = (props) => {
 
     const handleUpdateButton = (updateRole) => {
         users.forEach((user) => {
-            if (selected.indexOf(user.email) !== -1) handleUpdateUser(user._id, updateRole);
+            if (selected.indexOf(user.email) !== -1) {
+                updateRole.sort(function (a, b) {
+                    return a - b
+                })
+                handleUpdateUser(user._id, updateRole);
+            }
         });
     };
 
@@ -144,9 +149,13 @@ const UserTableToolbar = (props) => {
     const handleOnSubmit = (e) => {
         e.preventDefault();
         if (userData.email !== '' && validateEmail(userData.email) === true && userData.role.length > 0) {
-            setErrorEmail(false);
-            setErrorRole(false);
-            dispatch(userCreate(userData));
+
+            setErrorEmail(false)
+            setErrorRole(false)
+            userData.role.sort(function (a, b) {
+                return a - b
+            })
+            dispatch(userCreate(userData))
             clearField();
             handleCloseCreateUserDialog();
         }
