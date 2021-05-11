@@ -19,7 +19,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { Alert } from '@material-ui/lab';
 import { USER_CREATE_SUCCESSFUL, USER_UPDATE_SUCCESSFUL } from '../../constants';
 import { Button, Checkbox, ClickAwayListener, CssBaseline, DialogActions, Divider, Fade, Chip, FormControlLabel, FormGroup, Popper, Typography } from '@material-ui/core';
-import UserTable from '../../components/Users/UserTable/UserTable';
+import UserTable from "../../components/users/userTable/UserTable"
 
 const initialState = {
     email: '',
