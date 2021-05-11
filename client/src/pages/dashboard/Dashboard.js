@@ -9,7 +9,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUsers, searchUsers, userCreate } from '../../actions/userActions';
+import { getUsers, searchUsers } from '../../actions/userActions';
 import useStyles from './styles';
 
 import Snackbar from '@material-ui/core/Snackbar';
