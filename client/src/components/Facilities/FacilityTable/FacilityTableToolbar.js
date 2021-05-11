@@ -17,6 +17,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import { createFacility, deleteFacility, updateFacility } from '../../../actions/facilityActions';
 import UpdateFacilityDialog from './UpdateFacilityDialog/UpdateFacilityDialog';
+import { FACILITY_NAME_ERROR, FACILITY_CODE_ERROR, FACILITY_TYPE_ERROR } from '../../../constants'
 
 const initialState = {
     name: '',
@@ -32,6 +33,11 @@ const FacilityTableToolbar = (props) => {
     const [openCreaterFacilityDialog, setOpenCreaterFacilityDialog] = useState(false);
     const [openUpdateFacilityDialog, setOpenUpdateFacilityDialog] = useState(false);
     const [facilityData, setFacilityData] = useState(initialState);
+    const [errorName, setErrorName] = useState(false);
+    const [errorType, setErrorType] = useState(false);
+    const [errorCode, setErrorCode] = useState(false);
+
+
 
     const handleOnChangeText = (event) => {
         setFacilityData({ ...facilityData, [event.target.name]: event.target.value });
@@ -45,6 +51,9 @@ const FacilityTableToolbar = (props) => {
     const handleCloseCreateFacilityDialog = () => {
         setFacilityData(initialState);
         setOpenCreaterFacilityDialog(false);
+        setErrorName(false)
+        setErrorType(false)
+        setErrorCode(false)
     };
 
     //Handle the Update button.
@@ -54,6 +63,8 @@ const FacilityTableToolbar = (props) => {
 
     const handleCloseUpdateFacilityDialog = () => {
         setOpenUpdateFacilityDialog(false);
+      
+
     }
 
     const handleUpdateFacility = (id, newUpdateData) => {
@@ -81,9 +92,41 @@ const FacilityTableToolbar = (props) => {
     };
 
     const onCreateFacility = (e) => {
+        if(facilityData.name !== '' && facilityData.type !== '' && facilityData.code !== ''){
         e.preventDefault();
         dispatch(createFacility(facilityData))
         handleCloseCreateFacilityDialog();
+        setErrorName(false)
+        setErrorType(false)
+        setErrorCode(false)
+        }
+    }
+
+    const handleOnBlueName = () => {
+        if (facilityData.name === '') {
+            setErrorName(true);
+        } else {
+            setErrorName(false);
+
+        }
+    }
+
+    const handleOnBlueCode = () => {
+        if (facilityData.code === '') {
+            setErrorCode(true);
+        } else {
+            setErrorCode(false);
+
+        }
+    }
+
+    const handleOnBlueType = () => {
+        if (facilityData.type === '') {
+            setErrorType(true);
+        } else {
+            setErrorType(false);
+
+        }
     }
 
 
@@ -184,30 +227,38 @@ const FacilityTableToolbar = (props) => {
                                     name="name"
                                     label="Name"
                                     type="text"
+                                    onBlur={handleOnBlueName}
                                     value={facilityData.name}
                                     onChange={handleOnChangeText}
                                     fullWidth
                                 />
+                                {errorName ? <Typography className={css.errorMessage}>{FACILITY_NAME_ERROR}</Typography> : <></>}
+
                                 <TextField
                                     margin="dense"
                                     id="code"
                                     name="code"
                                     label="Code"
                                     type="text"
+                                    onBlur={handleOnBlueCode}
                                     value={facilityData.code}
                                     onChange={handleOnChangeText}
                                     fullWidth
                                 />
+                                {errorCode ? <Typography className={css.errorMessage}>{FACILITY_CODE_ERROR}</Typography> : <></>}
+
                                 <TextField
                                     margin="dense"
                                     id="type"
                                     name="type"
                                     label="Type"
+                                    onBlur={handleOnBlueType}
                                     type="text"
                                     value={facilityData.type}
                                     onChange={handleOnChangeText}
                                     fullWidth
                                 />
+                                {errorType ? <Typography className={css.errorMessage}>{FACILITY_TYPE_ERROR}</Typography> : <></>}
 
                             </DialogContent>
                             <DialogActions className={css.m2}>

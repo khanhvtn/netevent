@@ -25,6 +25,9 @@ export const ERROR_CLEAR = 'ERROR_CLEAR';
 export const EMAIL_ERROR = 'Email must not be empty and in right format';
 export const ROLE_ERROR = 'Role must not be empty';
 export const PASSWORD_MATCHED = 'Passwords must be matched and should not be empty'
+export const FACILITY_NAME_ERROR = 'Facility name must not be empty'
+export const FACILITY_CODE_ERROR = 'Facility code must not be empty'
+export const FACILITY_TYPE_ERROR = 'Facility type must not be empty'
 
 //link action types
 export const GET_LINKS = "GET_LIKKS"
