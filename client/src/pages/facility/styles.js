@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
     main: {
         padding: theme.spacing(3, 3),
+        background: '#eaeff1',
     },
     paper: {
         margin: 'auto',
@@ -20,7 +21,4 @@ export default makeStyles((theme) => ({
     root: {
         width: '100%'
     },
-
-    
-    
 }));

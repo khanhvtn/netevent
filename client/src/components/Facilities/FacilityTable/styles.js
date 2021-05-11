@@ -12,7 +12,7 @@ export default makeStyles((theme) => ({
         minWidth: 750,
     },
 
-    addUser: {
+    addFacility: {
         width: "15%",
         maxHeight: 40
     },
@@ -45,8 +45,7 @@ export default makeStyles((theme) => ({
         flex: "1 1 100%",
     },
     contentWrapper: {
-        height: '100%',
-        marginTop: '10%'
+        margin: '40px 16px'
     },
     popup1: {
         padding: "30px",
@@ -92,5 +91,4 @@ export default makeStyles((theme) => ({
     deleteButton: {
         margin: 8
     }
-
 }));

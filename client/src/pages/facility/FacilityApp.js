@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import useStyles from './styles'
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -8,32 +10,56 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { useDispatch, useSelector } from 'react-redux';
-import { getUsers, searchUsers, userCreate } from '../../actions/userActions';
-import useStyles from './styles';
-
 import Snackbar from '@material-ui/core/Snackbar';
-import {Alert} from '@material-ui/lab';
-import {USER_CREATE_SUCCESSFUL, USER_UPDATE_SUCCESSFUL} from '../../constants';
-import UserTable from '../../components/Users/UserTable/UserTable';
 
-const userCreateState = {
-    isAlertSuccess: false,
-};
+import { FACILITY_CREATE_SUCCESS, FACILITY_UPDATE_SUCCESS } from '../../constants';
+import FacilityTable from '../../components/Facilities/FacilityTable/FacilityTable';
+import { getFacilities, searchFacilities } from '../../actions/facilityActions'
+import { Alert } from '@material-ui/lab';
 
-const Dashboard = () => {
+
+const facilityInitialState = {
+    isAlertSuccess: false
+}
+
+const FacilityApp = () => {
     const css = useStyles();
     const dispatch = useDispatch();
     const [searchTerm, setSearchTerm] = useState('');
-    const { user } = useSelector((state) => state);
-    const [userTableData, setUserTableData] = useState([]);
+    const { facility } = useSelector((state) => state);
+    const [facilityTableData, setFacilityTableData] = useState([]);
     const [tableRefresh, setTableRefresh] = useState(false);
-    const [state, setState] = useState(userCreateState);
+    const [facilityState, setFacilityState] = useState(facilityInitialState);
 
-    const handleSearchUser = (e) => {
+    useEffect(() => {
+        dispatch(getFacilities());
+    }, [dispatch, tableRefresh]);
+
+    
+    useEffect(() => {
+        setFacilityState((prevState) => ({ ...prevState, isAlertSuccess: facility.isCreated }))
+    }, [facility.isCreated])
+    
+    const handleCreateSnackbarClose = () => {
+        setFacilityState((prevState) => ({ ...prevState, isAlertSuccess: false }))
+        //set isSuccessPurchase == false
+        dispatch({ type: FACILITY_CREATE_SUCCESS, payload: false })
+    }
+    
+    useEffect(() => {
+        setFacilityState((prevState) => ({ ...prevState, isAlertSuccess: facility.isUpdated }))
+    }, [facility.isUpdated])
+    
+    const handleUpdateSnackbarClose = () => {
+        setFacilityState((prevState) => ({ ...prevState, isAlertSuccess: false }))
+        //set isSuccessPurchase == false
+        dispatch({ type: FACILITY_UPDATE_SUCCESS, payload: false })
+    }
+    
+    const handleSearchFacility = (e) => {
         if (e.key === 'Enter') {
             if (searchTerm) {
-                dispatch(searchUsers(searchTerm));
+                dispatch(searchFacilities(searchTerm));
             } else {
                 setTableRefresh(!tableRefresh);
             }
@@ -41,68 +67,38 @@ const Dashboard = () => {
         }
     };
 
+    useEffect(() => {
+        if (facility.facilities) {
+            setFacilityTableData(facility.facilities);
+        }
+    }, [handleSearchFacility, facility.facilities]);
+    
     const handleChangeSearch = (e) => {
         setSearchTerm(e.target.value);
-    };
-
-    useEffect(() => {
-        dispatch(getUsers());
-    }, [dispatch, tableRefresh]);
-
-    useEffect(() => {
-        if (user.users) {
-            setUserTableData(user.users);
-        }
-    }, [handleSearchUser, user.users]);
-
-    useEffect(() => {
-        setState((prevState) => ({
-            ...prevState,
-            isAlertSuccess: user.isCreated,
-        }));
-    }, [user.isCreated]);
-
-    const handleCreateSnackbarClose = () => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: false }));
-        //set isSuccessPurchase == false
-        dispatch({ type: USER_CREATE_SUCCESSFUL, payload: false });
-    };
-
-    useEffect(() => {
-        setState((prevState) => ({
-            ...prevState,
-            isAlertSuccess: user.isUpdated,
-        }));
-    }, [user.isUpdated]);
-
-    const handleUpdateSnackbarClose = () => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: false }));
-        //set isSuccessPurchase == false
-        dispatch({ type: USER_UPDATE_SUCCESSFUL, payload: false });
     };
 
     return (
         <>
             <Snackbar
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                open={user.isCreated}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                open={facility.isCreated}
                 autoHideDuration={3000}
                 color="primary"
                 className={css.snackBar}
                 onClose={handleCreateSnackbarClose}
             >
-                <Alert severity="success">Create User Successful</Alert>
+                <Alert severity="success">Create facility Successful</Alert>
             </Snackbar>
 
             <Snackbar
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                open={user.isUpdated}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                open={facility.isUpdated}
                 autoHideDuration={3000}
                 color="primary"
                 className={css.snackBar}
                 onClose={handleUpdateSnackbarClose}
             >
-                <Alert severity="success">Update User Successful</Alert>
+                <Alert severity="success">Update facility Successful</Alert>
             </Snackbar>
 
             <div className={css.main}>
@@ -126,8 +122,8 @@ const Dashboard = () => {
                                         fullWidth
                                         value={searchTerm}
                                         onChange={handleChangeSearch}
-                                        onKeyPress={(e) => handleSearchUser(e)}
-                                        placeholder="Search by email address, phone number, or user UID"
+                                        onKeyPress={(e) => handleSearchFacility(e)}
+                                        placeholder="Search by name"
                                         InputProps={{
                                             disableUnderline: true,
                                             className: css.searchInput,
@@ -152,15 +148,15 @@ const Dashboard = () => {
                         </Toolbar>
                     </AppBar>
                     <Paper elevation={0} className={css.root}>
-                        <UserTable
-                            userData={userTableData}
-                            loading={user.isLoading}
+                        <FacilityTable
+                            facilityData={facilityTableData}
+                            loading={facility.isLoading}
                         />
                     </Paper>
                 </Paper>
             </div>
         </>
     );
-};
+}
 
-export default Dashboard;
+export default FacilityApp;

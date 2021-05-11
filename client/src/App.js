@@ -10,6 +10,7 @@ import { Grid, CircularProgress } from '@material-ui/core';
 import DashboardLayout from './Layouts/Dashboard/DashboardLayout';
 import Confirmation from './pages/confirmation/Confirmation';
 import Dashboard from './pages/dashboard/Dashboard';
+import FacilityApp from './pages/facility/FacilityApp';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -59,7 +60,7 @@ const App = () => {
                                 path="/dashboard/facility"
                                 render={() => (
                                     <DashboardLayout>
-                                        <h1>Facility</h1>
+                                        <FacilityApp />
                                     </DashboardLayout>
                                 )}
                             />

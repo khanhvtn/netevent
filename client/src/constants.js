@@ -30,3 +30,15 @@ export const PASSWORD_MATCHED = 'Passwords must be matched and should not be emp
 export const GET_LINKS = "GET_LIKKS"
 export const GET_LINK_COMPLETE = "GET_LINK_COMPLETE"
 
+// Facility action types
+export const CREATE_FACILITY = "CREATE_FACILITY";
+export const SEARCH_FACILITY = "SEARCH_FACILITY";
+export const FETCH_ALL_FACILITIES = "FETCH_ALL_FACILITIES";
+export const UPDATE_FACILITY = "UPDATE_FACILITY";
+export const DELETE_FACILITY = "DELETE_FACILITY";
+
+export const FACILITY_LOADING = "FACILITY_LOADING";
+export const FACILITY_CREATE_SUCCESS = "FACILITY_CREATE_SUCCESS";
+export const FACILITY_UPDATE_SUCCESS = "FACILITY_UPDATE_SUCCESS";
+
+

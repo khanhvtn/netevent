@@ -14,7 +14,7 @@ const headCells = [
     { id: "updatedAt", numeric: true, disablePadding: false, label: "Updated At" },
 ];
 
-const EnhancedTableHead = (props) => {
+const UserTableHead = (props) => {
     const {
         onSelectAllClick,
         order,
@@ -67,7 +67,7 @@ const EnhancedTableHead = (props) => {
     );
 }
 
-EnhancedTableHead.propTypes = {
+UserTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
     onSelectAllClick: PropTypes.func.isRequired,
@@ -75,5 +75,5 @@ EnhancedTableHead.propTypes = {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
 };
-
-export default EnhancedTableHead;
+    
+export default UserTableHead;
