@@ -16,13 +16,13 @@ const initialState = {
     facility: null,
     facilities: [],
 };
-
+ 
 export default function errorReducers(state = initialState, action) {
     switch (action.type) {
         case FACILITY_LOADING:
             return { ...state, isLoading: action.payload };
         case CREATE_FACILITY:
-            return { ...state, facility: action.payload };
+            return { ...state, facilities: [action.payload, ...state.facilities] };
         case FACILITY_CREATE_SUCCESS:
             return { ...state, isCreated: action.payload };
         case FACILITY_UPDATE_SUCCESS:

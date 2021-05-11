@@ -7,8 +7,7 @@ export default makeStyles((theme) => ({
     },
     paper: {
         margin: 'auto',
-        height: 830,
-        overflow: 'hidden',
+        height: '100%',
     },
     searchBar: {
         borderBottom: '1px solid rgba(0, 0, 0, 0.12)',

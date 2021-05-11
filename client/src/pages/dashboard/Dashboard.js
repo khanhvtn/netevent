@@ -12,18 +12,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUsers, searchUsers, userCreate } from '../../actions/userActions';
 import useStyles from './styles';
 
-import UserTable from '../../components/Users/UserTable/UserTable';
 import Snackbar from '@material-ui/core/Snackbar';
 import {Alert} from '@material-ui/lab';
 import {USER_CREATE_SUCCESSFUL, USER_UPDATE_SUCCESSFUL} from '../../constants';
-
-const initialState = {
-    email: '',
-    password: '',
-    role: [],
-};
-
-const roles = ['1', '2', '3', '4'];
+import UserTable from '../../components/Users/UserTable/UserTable';
 
 const userCreateState = {
     isAlertSuccess: false
@@ -31,73 +23,12 @@ const userCreateState = {
 
 const Dashboard = () => {
     const css = useStyles();
-    const [openCreaterUserDialog, setOpenCreaterUserDialog] = useState(false);
-    const [userData, setUserData] = useState(initialState);
-    const [errorEmail, setErrorEmail] = useState(false);
-    const [errorRole, setErrorRole] = useState(false);
     const dispatch = useDispatch();
+    const [searchTerm, setSearchTerm] = useState('');
+    const { user } = useSelector((state) => state);
+    const [userTableData, setUserTableData] = useState([]);
+    const [tableRefresh, setTableRefresh] = useState(false);
     const [state, setState] = useState(userCreateState);
-
-    const handleChange = (event) => {
-        setUserData({ ...userData, role: event.target.value });
-    };
-
-    const handleOpenCreateUserDialog = () => {
-        setOpenCreaterUserDialog(true);
-    };
-
-    const handleCloseCreateUserDialog = () => {
-        clearField(initialState);
-        setErrorEmail(false);
-        setErrorRole(false);
-        setOpenCreaterUserDialog(false);
-    };
-
-    const handleOnBlurEmailField = () => {
-        if (userData.email === '') {
-            setErrorEmail(true);
-        } else if (validateEmail(userData.email) === false) {
-            setErrorEmail(true);
-        } else {
-            setErrorEmail(false);
-        }
-    };
-
-    const handleOnBlueRole = () => {
-        if (userData.role.length === 0) {
-            setErrorRole(true);
-        } else {
-            setErrorRole(false);
-        }
-    };
-
-    const handleChangeEmail = (e) => {
-        setUserData({ ...userData, email: e.target.value });
-    };
-
-    const validateEmail = (email) => {
-        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    };
-
-    const handleOnSubmit = (e) => {
-        e.preventDefault();
-        if (
-            userData.email !== '' &&
-            validateEmail(userData.email) === true &&
-            userData.role.length > 0
-        ) {
-            setErrorEmail(false);
-            setErrorRole(false);
-            dispatch(userCreate(userData));
-            clearField();
-            handleCloseCreateUserDialog();
-        }
-    };
-
-    const clearField = () => {
-        setUserData(initialState);
-    };
 
     const handleSearchUser = (e) => {
         if (e.key === 'Enter') {
@@ -114,18 +45,11 @@ const Dashboard = () => {
         setSearchTerm(e.target.value);
     };
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const { user } = useSelector((state) => state);
-    const [userTableData, setUserTableData] = useState([]);
-    const [tableRefresh, setTableRefresh] = useState(false);
+
 
     useEffect(() => {
         dispatch(getUsers());
     }, [dispatch, tableRefresh]);
-
-    // useEffect(() => {
-    //     setState((prevState) => ({ ...prevState, isCreateUserSuccess: user.isCreated }))
-    // }, [user.isCreated])
 
     useEffect(() => {
         if (user.users) {

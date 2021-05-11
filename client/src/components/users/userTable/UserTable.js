@@ -8,8 +8,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 
-import { v4 as uuidv4 } from "uuid";
-
 //Timestamp converting
 import Moment from 'react-moment';
 import 'moment-timezone';
@@ -109,7 +107,7 @@ const UserTable = ({ userData, loading }) => {
       setUsers(userData)
     }
   }, [userData])
-  
+
 
 
 
@@ -121,20 +119,24 @@ const UserTable = ({ userData, loading }) => {
           <CircularProgress
             style={{
               height: '100%',
-              marginTop: '10%'
+              margin: '10%'
             }}
           />
         </Grid>
       ) :
         users.length === 0 ?
-          <div className={css.contentWrapper}>
-            <Typography color="textSecondary" align="center">
-              Cannot found users
+          <Grid container justify="center" alignItems="center">
+            <Typography color="textSecondary" style={{
+              height: '100%',
+              margin: '10%'
+            }}>
+              Cannot found users.
             </Typography>
-          </div>
+          </Grid>
           :
           <Paper className={css.paper}>
             <UserTableToolbar
+              setSelected={setSelected}
               numSelected={selected.length}
               selected={selected}
               users={users}
@@ -169,7 +171,7 @@ const UserTable = ({ userData, loading }) => {
                           role="checkbox"
                           aria-checked={isItemSelected}
                           tabIndex={-1}
-                          key={uuidv4()}
+                          key={index}
                           selected={isItemSelected}
                         >
                           <TableCell padding="checkbox">
@@ -190,7 +192,7 @@ const UserTable = ({ userData, loading }) => {
                             {user.role.map((eachRole) => (
                               <>{eachRole === "1" ? "Admin, " : eachRole === "2" ? "Reviewer, " : eachRole === "3" ? "Creator, " : "Team Member"}</>
                             ))}
-                           
+
                           </TableCell>
                           <TableCell>
                             <Moment format="DD/MM/YYYY" className={css.moment} >{user.createdAt}</Moment>

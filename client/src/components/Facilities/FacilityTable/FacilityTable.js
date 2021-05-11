@@ -115,20 +115,24 @@ const FacilityTable = ({ facilityData, loading }) => {
                     <CircularProgress
                         style={{
                             height: '100%',
-                            marginTop: '10%'
+                            margin: '10%'
                         }}
                     />
                 </Grid>
             ) :
                 facilities.length === 0 ?
-                    <div className={css.contentWrapper}>
-                        <Typography color="textSecondary" align="center">
-                            Cannot found facilities
-            </Typography>
-                    </div>
+                    <Grid container justify="center" alignItems="center">
+                        <Typography color="textSecondary" style={{
+                            height: '100%',
+                            margin: '10%'
+                        }}>
+                            Cannot found facilities.
+                        </Typography>
+                    </Grid>
                     :
                     <Paper className={css.paper}>
                         <FacilityTableToolbar
+                            setSelected={setSelected}
                             numSelected={selected.length}
                             selected={selected}
                             facilities={facilities}

@@ -45,7 +45,8 @@ export default makeStyles((theme) => ({
         flex: "1 1 100%",
     },
     contentWrapper: {
-        margin: '40px 16px'
+        height: '100%',
+        marginTop: '10%'
     },
     popup1: {
         padding: "30px",
@@ -85,10 +86,10 @@ export default makeStyles((theme) => ({
         marginRight: 16,
         marginBottom: 8,
     },
-    editButton:{
+    editButton: {
         margin: 0
     },
-    deleteButton:{
+    deleteButton: {
         margin: 8
     }
 

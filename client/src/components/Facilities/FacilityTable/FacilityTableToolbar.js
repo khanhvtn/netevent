@@ -27,7 +27,7 @@ const initialState = {
 const FacilityTableToolbar = (props) => {
     const css = useStyles();
     const dispatch = useDispatch();
-    const { numSelected, selected, facilities } = props;
+    const { numSelected, selected, facilities, setSelected } = props;
     const [openDeleteFacilityDialog, setOpenDeleteFacilityDialog] = useState(false);
     const [openCreaterFacilityDialog, setOpenCreaterFacilityDialog] = useState(false);
     const [openUpdateFacilityDialog, setOpenUpdateFacilityDialog] = useState(false);
@@ -66,15 +66,6 @@ const FacilityTableToolbar = (props) => {
         });
     };
 
-    // Handle Open & Close Delete Dialog
-    const handleOpenDeleteFacilityDialog = () => {
-        setOpenDeleteFacilityDialog(true)
-    }
-
-    const handleCloseDeleteFacilityDialog = () => {
-        setOpenDeleteFacilityDialog(false);
-    }
-
     //Handle the Delete button
     const handleDeleteFacility = (id) => {
         dispatch(deleteFacility(id));
@@ -84,7 +75,7 @@ const FacilityTableToolbar = (props) => {
         facilities.forEach((facility) => {
             if (selected.indexOf(facility.name) !== -1) {
                 handleDeleteFacility(facility._id)
-                handleCloseDeleteFacilityDialog();
+                setSelected([])
             };
         });
     };
