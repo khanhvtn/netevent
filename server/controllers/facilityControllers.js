@@ -53,7 +53,8 @@ const searchFacility = async (req, res, next) => {
     }
 
     try {
-        const searchResult = await Facility.find({ name: { $regex: searchString } });
+        var regex = new RegExp("^" + searchString.toLowerCase(), "i");
+        const searchResult = await Facility.find({ name: regex});
 
         if (searchResult.length === 0) {
             return cusResponse(res, 200, searchResult, null);
