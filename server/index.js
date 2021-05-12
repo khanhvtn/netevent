@@ -28,7 +28,11 @@ const MONGO_URI = `mongodb+srv://khanhvtn93:khanhvtn93123@cluster0.zjom9.mongodb
 // const MONGO_URI = `mongodb://localhost:27017`;
 mongoose.connect(
     MONGO_URI,
-    { useNewUrlParser: true, useUnifiedTopology: true },
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+    },
     (err) => {
         if (err) {
             return console.log(err);

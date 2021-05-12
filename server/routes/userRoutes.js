@@ -8,9 +8,9 @@ router.post('/login', userControllers.login);
 router.get('/userCheck', authentication, userControllers.userCheck);
 router.get('/logout', userControllers.logout);
 // router.delete('/:id', userControllers.deleteUser)
-router.post('/search', userControllers.searchUser)
-router.get('/', userControllers.getUser)
-router.patch('/:id', userControllers.updateUser)
+router.post('/search', userControllers.searchUser);
+router.get('/', userControllers.getUser);
+router.patch('/:id', userControllers.updateUser);
 
 router.route('/users/:id').delete(userControllers.deleteUser);
 

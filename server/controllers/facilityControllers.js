@@ -24,6 +24,144 @@ const createFacility = async (req, res, next) => {
     }
 };
 
+const filter = async (req, res, next) => {
+    let options = {
+        search: '',
+        take: 5,
+        type: '',
+        status: {
+            $in: [false, true],
+        },
+    };
+    try {
+        //adding search
+        if (req.query.search) {
+            options = {
+                ...options,
+                search: req.query.search.toString(),
+            };
+        }
+
+        /* 
+        Add take row filter
+        Default take is 5
+         */
+        if (req.query.take) {
+            options = {
+                ...options,
+                take: parseInt(req.query.take.toString()),
+            };
+        }
+
+        /* 
+        Add status filter
+        Default status is empty
+         */
+        if (req.query.status) {
+            options = {
+                ...options,
+                status: req.query.status === 'true',
+            };
+        }
+
+        /* 
+        Variable page default is 1
+         */
+        const page = parseInt(req.query.page) || 1;
+
+        /* 
+        Variable total facility based on search and filter
+         */
+        const totalFacilities = await Facility.find({
+            $or: [
+                { name: new RegExp(options.search, 'i') },
+                { type: new RegExp(options.search, 'i') },
+                { code: new RegExp(options.search, 'i') },
+            ],
+            status: options.status,
+        }).countDocuments();
+
+        let totalPages = (totalFacilities / options.take)
+            .toString()
+            .includes('.')
+            ? Math.ceil(totalFacilities / options.take)
+            : totalFacilities / options.take;
+
+        //return data to client
+        const facilities = await Facility.find({
+            $or: [
+                { name: new RegExp(options.search, 'i') },
+                { type: new RegExp(options.search, 'i') },
+                { code: new RegExp(options.search, 'i') },
+            ],
+            status: options.status,
+        })
+            .skip((page - 1) * options.take)
+            .limit(options.take);
+
+        return cusResponse(res, 200, facilities, null, totalPages);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
+const deleteFacilities = async (req, res, next) => {
+    try {
+        const { deleteList } = req.body;
+        if (deleteList.length === 1) {
+            const deletedFacility = await Facility.findOneAndDelete({
+                name: deleteList[0],
+            });
+            return cusResponse(res, 200, deletedFacility, null);
+        } else {
+            const deletedFacilities = await Promise.all(
+                deleteList.map(async (name) => {
+                    return await Facility.findOneAndDelete({
+                        name,
+                    });
+                })
+            );
+            return cusResponse(res, 200, deletedFacilities, null);
+        }
+
+        // const newFacility = await Facility.create(userReq);
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
+        return next(new CustomError(500, error.message));
+    }
+};
+
+const updateFacility = async (req, res, next) => {
+    try {
+        const userReq = req.body;
+        const updatedFacility = await Facility.findOneAndUpdate(
+            { name: userReq.filter },
+            userReq.update,
+            { runValidators: true, context: 'query' }
+        );
+
+        return cusResponse(res, 200, updatedFacility, null);
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
     createFacility,
+    filter,
+    deleteFacilities,
+    updateFacility,
 };

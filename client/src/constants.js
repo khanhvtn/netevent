@@ -24,9 +24,19 @@ export const ERROR_CLEAR = 'ERROR_CLEAR';
 //error form handle create users
 export const EMAIL_ERROR = 'Email must not be empty and in right format';
 export const ROLE_ERROR = 'Role must not be empty';
-export const PASSWORD_MATCHED = 'Passwords must be matched and should not be empty'
+export const PASSWORD_MATCHED =
+    'Passwords must be matched and should not be empty';
 
 //link action types
-export const GET_LINKS = "GET_LIKKS"
-export const GET_LINK_COMPLETE = "GET_LINK_COMPLETE"
+export const GET_LINKS = 'GET_LIKKS';
+export const GET_LINK_COMPLETE = 'GET_LINK_COMPLETE';
 
+//Facility action types
+export const FACILITY_GET_ALL = 'FACILITY_GET_ALL';
+export const FACILITY_LOADING = 'FACILITY_LOADING';
+export const FACILITY_CREATE = 'FACILITY_CREATE';
+export const FACILITY_UPDATE = 'FACILITY_UPDATE';
+export const FACILITY_DELETE = 'FACILITY_DELETE';
+export const FACILITY_CREATE_SUCCESS = 'FACILITY_CREATE_SUCCESS';
+export const FACILITY_UPDATE_SUCCESS = 'FACILITY_UPDATE_SUCCESS';
+export const FACILITY_DELETE_SUCCESS = 'FACILITY_DELETE_SUCCESS';

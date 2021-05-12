@@ -1,40 +1,17 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const facilitySchema = mongoose.Schema(
     {
         name: {
             type: String,
             required: [true, 'Name cannot be blanked'],
-            validate: {
-                validator: async function (v) {
-                    try {
-                        const existedFacility = await FacilityModel.findOne({
-                            name: v,
-                        });
-                        return existedFacility ? false : true;
-                    } catch (error) {
-                        throw error;
-                    }
-                },
-                message: (props) => `${props.value} is already existed`,
-            },
+            unique: true,
         },
         code: {
             type: String,
             required: [true, 'Code cannot be blanked'],
-            validate: {
-                validator: async function (v) {
-                    try {
-                        const existedFacility = await FacilityModel.findOne({
-                            code: v,
-                        });
-                        return existedFacility ? false : true;
-                    } catch (error) {
-                        throw error;
-                    }
-                },
-                message: (props) => `${props.value} is already existed`,
-            },
+            unique: true,
         },
         type: {
             type: String,
@@ -47,6 +24,11 @@ const facilitySchema = mongoose.Schema(
     },
     { timestamps: true }
 );
+
+// Apply the uniqueValidator plugin to facilitySchema
+facilitySchema.plugin(uniqueValidator, {
+    message: `{VALUE} is already existed`,
+});
 
 const FacilityModel = mongoose.model('Facility', facilitySchema);
 module.exports = FacilityModel;
