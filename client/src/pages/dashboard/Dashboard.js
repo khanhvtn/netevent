@@ -19,7 +19,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { Alert } from '@material-ui/lab';
 import { USER_CREATE_SUCCESSFUL, USER_UPDATE_SUCCESSFUL } from '../../constants';
 import { Button, Checkbox, ClickAwayListener, DialogActions, Divider, Fade, FormControlLabel, FormGroup, Popper, Typography } from '@material-ui/core';
-import UserTable from "../../components/users/userTable/UserTable"
+import UserTable from '../../components/Users/UserTable/UserTable';
 
 const userCreateState = {
     isAlertSuccess: false,
@@ -244,7 +244,7 @@ const Dashboard = () => {
                                                 <Button className={css.filterAction} onClick={handleClearFilter} color="default">
                                                     Clear
                                                 </Button>
-                                                <Button className={css.filterAction} onClick={handleFilter} variant="contained" color="primary">
+                                                <Button className={css.filterAction} onClick={handleFilter} variant="contained" color="primary" disabled={filterData.every((data) => data.checked === false) ? true : false}>
                                                     Filter
                                                 </Button>
                                             </DialogActions>
