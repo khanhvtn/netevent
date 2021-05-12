@@ -127,7 +127,7 @@ const Dashboard = () => {
                                         value={searchTerm}
                                         onChange={handleChangeSearch}
                                         onKeyPress={(e) => handleSearchUser(e)}
-                                        placeholder="Search by email address, phone number, or user UID"
+                                        placeholder="Search by email address"
                                         InputProps={{
                                             disableUnderline: true,
                                             className: css.searchInput,

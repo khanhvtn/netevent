@@ -123,7 +123,7 @@ const FacilityApp = () => {
                                         value={searchTerm}
                                         onChange={handleChangeSearch}
                                         onKeyPress={(e) => handleSearchFacility(e)}
-                                        placeholder="Search by name"
+                                        placeholder="Search by name, code and type"
                                         InputProps={{
                                             disableUnderline: true,
                                             className: css.searchInput,

@@ -54,10 +54,16 @@ const searchFacility = async (req, res, next) => {
 
     try {
         var regex = new RegExp("^" + searchString.toLowerCase(), "i");
-        const searchResult = await Facility.find({ name: regex});
-
+        const searchResult = await Facility.find({$or:[
+            {name:{"$in":regex}},
+            {code:{"$in":regex}},
+            {type:{"$in":regex}},
+        ]});
+       
         if (searchResult.length === 0) {
             return cusResponse(res, 200, searchResult, null);
+        } else {
+
         }
 
         return cusResponse(res, 200, searchResult, null);
