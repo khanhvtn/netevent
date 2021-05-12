@@ -15,7 +15,8 @@ import {
     USER_UPDATE_SUCCESSFUL,
     UPDATE_USER,
     GET_LINK_COMPLETE,
-    FILTER_USER_ROLE
+    FILTER_USER_ROLE,
+    USER_PICK_ROLE,
 } from '../constants';
 
 import * as api from '../api';
@@ -70,6 +71,9 @@ export const userLogout = (history) => async (dispatch) => {
             payload: data.data,
         });
 
+        //clear roleNum in localStorage
+        localStorage.removeItem('roleNum');
+
         //redirect to pickrole page
         history.push('/login');
     } catch (error) {
@@ -80,7 +84,17 @@ export const userLogout = (history) => async (dispatch) => {
 
 export const userCheck = (history) => async (dispatch) => {
     setUserIsChecking(true, dispatch);
-    const previousPath = history.location.pathname;
+    const prevPath = history.location.state?.prevPath
+        ? history.location.state?.prevPath
+        : history.location.pathname;
+
+    //set numRole
+    dispatch({
+        type: USER_PICK_ROLE,
+        payload: localStorage.getItem('roleNum')
+            ? localStorage.getItem('roleNum')
+            : null,
+    });
     /*
         Check user token.
         Then, sen request to the server to check the token.
@@ -97,17 +111,15 @@ export const userCheck = (history) => async (dispatch) => {
         /* 
         Prevent user already login but access to login by inputing link.
          */
-        previousPath === '/' || previousPath === '/login'
+        prevPath === '/' || prevPath === '/login'
             ? history.push('/pickrole')
-            : history.push(previousPath);
+            : history.push(prevPath);
     } catch (error) {
         dispatch({
             type: USER_CHECK,
             payload: null,
         });
-        previousPath.includes('confirmation')
-            ? history.push(previousPath)
-            : history.push('/login');
+        history.push(prevPath);
     }
     setUserIsChecking(false, dispatch);
 };
@@ -117,16 +129,14 @@ export const userCreate = (userData) => async (dispatch) => {
         const { data } = await api.createUser(userData);
         dispatch({ type: USER_CREATE_SUCCESSFUL, payload: true });
         dispatch({ type: USER_CREATE, payload: data });
-
     } catch (error) {
         console.log(error);
     }
 };
 
 const sleep = (milliseconds) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-  }
-  
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
 
 export const userConfirm = (id, password, history) => async (dispatch) => {
     try {
@@ -135,12 +145,11 @@ export const userConfirm = (id, password, history) => async (dispatch) => {
         dispatch({ type: USER_CONFIRM, payload: data });
         dispatch({ type: USER_LOADING, payload: false });
         dispatch({ type: USER_IS_CONFIRM, payload: true });
-        await sleep(5000)
+        await sleep(5000);
         dispatch({ type: USER_IS_CONFIRM, payload: false });
-        dispatch({type: GET_LINK_COMPLETE, payload: false})
+        dispatch({ type: GET_LINK_COMPLETE, payload: false });
 
-        history.push('/login')
-
+        history.push('/login');
     } catch (error) {
         console.log(error);
     }
@@ -184,15 +193,15 @@ export const filterUsers = (filterData) => async (dispatch) => {
 export const updateUser = (id, updateUser) => async (dispatch) => {
     // setUserIsChecking(true, dispatch);
     try {
-        const { data } = await api.updateUserAPI(id, updateUser)
-        console.log(data)
+        const { data } = await api.updateUserAPI(id, updateUser);
+        console.log(data);
         dispatch({ type: UPDATE_USER, payload: data });
         dispatch({ type: USER_UPDATE_SUCCESSFUL, payload: true });
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
     // setUserIsLoading(false, dispatch)
-}
+};
 
 export const deleteUser = (id) => async (dispatch) => {
     try {

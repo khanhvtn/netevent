@@ -15,7 +15,7 @@ import logo from '../../images/logo.png';
 import { userLogin } from '../../actions/userActions';
 
 import makeStyles from './styles';
-import { ERROR_CLEAR } from '../../constants';
+import { ERROR_CLEAR, USER_PICK_ROLE } from '../../constants';
 
 const initialState = {
     email: '',
@@ -50,14 +50,14 @@ const Login = () => {
     }, [dispatch]);
 
     if (user.user) {
-        return <Redirect to="/pickrole" />;
+        return <Redirect to="/pickRole" />;
     }
 
     return (
         <div className={css.main}>
             <div className={css.wrapper}>
                 <Zoom in>
-                    <Paper>
+                    <Paper elevation={5}>
                         <CardMedia
                             className={css.media}
                             image={logo}
@@ -96,6 +96,7 @@ const Login = () => {
                                 fullWidth
                                 onChange={handleChange}
                             />
+
                             <Button
                                 size="large"
                                 variant="contained"
@@ -104,7 +105,11 @@ const Login = () => {
                                 color="primary"
                                 fullWidth
                             >
-                                {user.isLoading ? <CircularProgress color="inherit" /> : 'Login'}
+                                {user.isLoading ? (
+                                    <CircularProgress color="inherit" />
+                                ) : (
+                                        'Login'
+                                    )}
                             </Button>
                         </form>
                     </Paper>

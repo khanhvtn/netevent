@@ -8,17 +8,15 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 
-import { v4 as uuidv4 } from "uuid";
-
 //Timestamp converting
 import Moment from 'react-moment';
 import 'moment-timezone';
 
 //CSS makeStyles at the last
 import { CircularProgress, Grid, Table, Typography } from "@material-ui/core";
-import EnhancedTableToolbar from "./EnhancedTableToolbar";
-import EnhancedTableHead from "./EnhancedTableHead";
 import useStyles from './styles'
+import UserTableToolbar from "./UserTableToolbar";
+import UserTableHead from "./UserTableHead";
 
 //Descend Sorting
 function descendingComparator(a, b, orderBy) {
@@ -55,6 +53,7 @@ const UserTable = ({ userData, loading }) => {
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [users, setUsers] = useState([]);
 
 
   const handleRequestSort = (event, property) => {
@@ -62,6 +61,7 @@ const UserTable = ({ userData, loading }) => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -71,6 +71,7 @@ const UserTable = ({ userData, loading }) => {
     }
     setSelected([]);
   };
+
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -92,27 +93,26 @@ const UserTable = ({ userData, loading }) => {
     setSelected(newSelected);
   };
 
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const [users, setUsers] = useState([])
+
   useEffect(() => {
     if (userData) {
-      setUsers(userData)
+      setUsers(userData);
     }
   }, [userData])
-  
-
-
-
 
   return (
     <>
@@ -121,20 +121,24 @@ const UserTable = ({ userData, loading }) => {
           <CircularProgress
             style={{
               height: '100%',
-              marginTop: '10%'
+              margin: '10%'
             }}
           />
         </Grid>
       ) :
         users.length === 0 ?
-          <div className={css.contentWrapper}>
-            <Typography color="textSecondary" align="center">
-              Cannot found users
+          <Grid container justify="center" alignItems="center">
+            <Typography color="textSecondary" style={{
+              height: '100%',
+              margin: '10%'
+            }}>
+              Cannot found users.
             </Typography>
-          </div>
+          </Grid>
           :
           <Paper className={css.paper}>
-            <EnhancedTableToolbar
+            <UserTableToolbar
+              setSelected={setSelected}
               numSelected={selected.length}
               selected={selected}
               users={users}
@@ -146,7 +150,7 @@ const UserTable = ({ userData, loading }) => {
                 size='medium'
                 aria-label="enhanced table"
               >
-                <EnhancedTableHead
+                <UserTableHead
                   numSelected={selected.length}
                   order={order}
                   orderBy={orderBy}
@@ -190,7 +194,7 @@ const UserTable = ({ userData, loading }) => {
                             {user.role.map((eachRole) => (
                               <>{eachRole === "1" ? "Admin " : eachRole === "2" ? "Reviewer " : eachRole === "3" ? "Creator " : "Team Member"}</>
                             ))}
-                           
+
                           </TableCell>
                           <TableCell>
                             <Moment format="DD/MM/YYYY" className={css.moment} >{user.createdAt}</Moment>

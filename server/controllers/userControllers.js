@@ -165,7 +165,8 @@ const searchUser = async (req, res, next) => {
     }
 
     try {
-        const searchResult = await User.find({ email: { $regex: searchString } });
+        var regex = new RegExp("^" + searchString.toLowerCase(), "i");
+        const searchResult = await User.find({ email: regex});
 
         if (searchResult.length === 0) {
             return cusResponse(res, 200, searchResult, null);

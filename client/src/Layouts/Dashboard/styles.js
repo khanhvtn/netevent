@@ -27,5 +27,7 @@ export default makeStyles((theme) => ({
         flex: '1 1 auto',
         height: '100%',
         overflow: 'auto',
+        background: '#eaeff1',
+        height: '93vh'
     }
 }));

@@ -17,13 +17,14 @@ export default makeStyles(() => ({
         margin: 'auto',
     },
     textField: {
-        margin: '20px 0',
+        margin: '8px 0',
     },
     btnSubmit: {
         margin: '20px 0',
     },
     media: {
         height: 100,
+        marginBottom: 16,
     },
     errorDrop: { width: '90%', margin: '0 auto' },
 }));

@@ -9,6 +9,7 @@ const Error = () => {
             <Box className={css.errorBox} >
                 <Container maxWidth="md">
                     <Typography
+                        className={css.pnf}
                         align="center"
                         color="textPrimary"
                         variant="h1"
@@ -23,15 +24,13 @@ const Error = () => {
                         You either tried some shady route or you came here by mistake.
                         Whichever it is, try using the navigation
                     </Typography> */}
-                    <Hidden smDown>
-                        <Box className={css.imageAlign}>
-                            <img
-                                alt="Under development"
-                                src="/static/images/undraw_page_not_found_su7k.svg"
-                                className={css.handleImage}
-                            />
-                        </Box>
-                    </Hidden>
+                    <Box className={css.imageAlign}>
+                        <img
+                            alt="Under development"
+                            src="/static/images/undraw_page_not_found_su7k.svg"
+                            className={css.handleImage}
+                        />
+                    </Box>
                 </Container>
             </Box>
         </>

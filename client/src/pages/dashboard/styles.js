@@ -3,13 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
     main: {
         padding: theme.spacing(3, 3),
-        background: '#eaeff1',
     },
     paper: {
         margin: 'auto',
-        height: 830,
-        overflow: 'hidden',
-
+        height: '100%',
     },
     searchBar: {
         borderBottom: '1px solid rgba(0, 0, 0, 0.12)',

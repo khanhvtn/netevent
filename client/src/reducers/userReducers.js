@@ -33,7 +33,7 @@ export default function userReducers(state = initialState, action) {
         case USER_CHECK:
             return { ...state, user: action.payload };
         case USER_CREATE:
-            return { ...state, user: action.payload };
+            return { ...state, users: [action.payload, ...state.users] };
         case USER_CREATE_SUCCESSFUL:
             return { ...state, isCreated: action.payload }
         case USER_CONFIRM:

@@ -12,18 +12,18 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import TagFacesIcon from '@material-ui/icons/TagFaces';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { filterUsers, getUsers, searchUsers, userCreate } from '../../actions/userActions';
+import { filterUsers, getUsers, searchUsers } from '../../actions/userActions';
 import useStyles from './styles';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import { Alert } from '@material-ui/lab';
 import { USER_CREATE_SUCCESSFUL, USER_UPDATE_SUCCESSFUL } from '../../constants';
-import { Button, Checkbox, ClickAwayListener, CssBaseline, DialogActions, Divider, Fade, Chip, FormControlLabel, FormGroup, Popper, Typography } from '@material-ui/core';
+import { Button, Checkbox, ClickAwayListener, DialogActions, Divider, Fade, FormControlLabel, FormGroup, Popper, Typography } from '@material-ui/core';
 import UserTable from "../../components/users/userTable/UserTable"
 
 const userCreateState = {
-    isAlertSuccess: false
-}
+    isAlertSuccess: false,
+};
 
 const filterState = [
     { key: 1, checked: false, label: 'Admin', role: '1' },
@@ -35,6 +35,10 @@ const filterState = [
 const Dashboard = () => {
     const css = useStyles();
     const dispatch = useDispatch();
+    const [searchTerm, setSearchTerm] = useState('');
+    const { user } = useSelector((state) => state);
+    const [userTableData, setUserTableData] = useState([]);
+    const [tableRefresh, setTableRefresh] = useState(false);
     const [state, setState] = useState(userCreateState);
 
     const handleSearchUser = (e) => {
@@ -52,11 +56,6 @@ const Dashboard = () => {
         setSearchTerm(e.target.value);
     };
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const { user } = useSelector((state) => state);
-    const [userTableData, setUserTableData] = useState([]);
-    const [tableRefresh, setTableRefresh] = useState(false);
-
     useEffect(() => {
         dispatch(getUsers());
     }, [dispatch, tableRefresh]);
@@ -65,27 +64,33 @@ const Dashboard = () => {
         if (user.users) {
             setUserTableData(user.users);
         }
-    }, [handleSearchUser, user.users]);
+    }, [user.users]);
 
     useEffect(() => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: user.isCreated }))
-    }, [user.isCreated])
+        setState((prevState) => ({
+            ...prevState,
+            isAlertSuccess: user.isCreated,
+        }));
+    }, [user.isCreated]);
 
     const handleCreateSnackbarClose = () => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: false }))
+        setState((prevState) => ({ ...prevState, isAlertSuccess: false }));
         //set isSuccessPurchase == false
-        dispatch({ type: USER_CREATE_SUCCESSFUL, payload: false })
-    }
+        dispatch({ type: USER_CREATE_SUCCESSFUL, payload: false });
+    };
 
     useEffect(() => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: user.isUpdated }))
-    }, [user.isUpdated])
+        setState((prevState) => ({
+            ...prevState,
+            isAlertSuccess: user.isUpdated,
+        }));
+    }, [user.isUpdated]);
 
     const handleUpdateSnackbarClose = () => {
-        setState((prevState) => ({ ...prevState, isAlertSuccess: false }))
+        setState((prevState) => ({ ...prevState, isAlertSuccess: false }));
         //set isSuccessPurchase == false
-        dispatch({ type: USER_UPDATE_SUCCESSFUL, payload: false })
-    }
+        dispatch({ type: USER_UPDATE_SUCCESSFUL, payload: false });
+    };
 
     const [openFilter, setOpenFilter] = useState(false);
     const anchorRef = useRef(null);
@@ -122,7 +127,7 @@ const Dashboard = () => {
     return (
         <>
             <Snackbar
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 open={user.isCreated}
                 autoHideDuration={3000}
                 color="primary"
@@ -133,7 +138,7 @@ const Dashboard = () => {
             </Snackbar>
 
             <Snackbar
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 open={user.isUpdated}
                 autoHideDuration={3000}
                 color="primary"

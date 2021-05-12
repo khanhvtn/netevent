@@ -49,10 +49,10 @@ const MenuProps = {
     },
 };
 
-const EnhancedTableToolbar = (props) => {
+const UserTableToolbar = (props) => {
     const css = useStyles();
     const dispatch = useDispatch();
-    const { numSelected, selected, users } = props;
+    const { numSelected, selected, users, setSelected } = props;
     const [openDeleteUserDialog, setOpenDeleteUserDialog] = useState(false);
     const [openCreaterUserDialog, setOpenCreaterUserDialog] = useState(false);
     const [openUpdateUserDialog, setOpenUpdateUserDialog] = useState(false);
@@ -60,13 +60,6 @@ const EnhancedTableToolbar = (props) => {
     const [errorEmail, setErrorEmail] = useState(false);
     const [errorRole, setErrorRole] = useState(false);
 
-    const handleOpenDeleteUserDialog = () => {
-        setOpenDeleteUserDialog(true)
-    }
-
-    const handleCloseDeleteUserDialog = () => {
-        setOpenDeleteUserDialog(false);
-    }
 
     //Handle the Delete button
     const handleDeleteUser = (id) => {
@@ -76,20 +69,25 @@ const EnhancedTableToolbar = (props) => {
     const handleDeleteButton = () => {
         users.forEach((user) => {
             if (selected.indexOf(user.email) !== -1) {
-                handleDeleteUser(user._id)
-                handleCloseDeleteUserDialog();
+                handleDeleteUser(user._id);
+                setSelected([]);
             };
         });
     };
 
-    //Handle the Delete button
+    //Handle the Update button
     const handleUpdateUser = (id, updateRole) => {
         dispatch(updateUser(id, updateRole));
     };
 
     const handleUpdateButton = (updateRole) => {
         users.forEach((user) => {
-            if (selected.indexOf(user.email) !== -1) handleUpdateUser(user._id, updateRole);
+            if (selected.indexOf(user.email) !== -1) {
+                updateRole.sort(function (a, b) {
+                    return a - b
+                })
+                handleUpdateUser(user._id, updateRole);
+            }
         });
     };
 
@@ -98,17 +96,17 @@ const EnhancedTableToolbar = (props) => {
     };
 
     const handleOpenCreateUserDialog = () => {
-        setOpenCreaterUserDialog(true)
+        setOpenCreaterUserDialog(true);
     }
 
     const handleOpenUpdateUserDialog = () => {
-        setOpenUpdateUserDialog(true)
+        setOpenUpdateUserDialog(true);
     }
 
     const handleCloseCreateUserDialog = () => {
-        clearField(initialState)
-        setErrorEmail(false)
-        setErrorRole(false)
+        clearField(initialState);
+        setErrorEmail(false);
+        setErrorRole(false);
         setOpenCreaterUserDialog(false);
     }
 
@@ -118,28 +116,28 @@ const EnhancedTableToolbar = (props) => {
 
     const handleOnBlurEmailField = () => {
         if (userData.email === '') {
-            setErrorEmail(true)
+            setErrorEmail(true);
         }
 
         else if (validateEmail(userData.email) === false) {
-            setErrorEmail(true)
+            setErrorEmail(true);
 
         } else {
-            setErrorEmail(false)
+            setErrorEmail(false);
         }
     }
 
     const handleOnBlueRole = () => {
         if (userData.role.length === 0) {
-            setErrorRole(true)
+            setErrorRole(true);
         } else {
-            setErrorRole(false)
+            setErrorRole(false);
 
         }
     }
 
     const handleChangeEmail = (e) => {
-        setUserData({ ...userData, email: e.target.value })
+        setUserData({ ...userData, email: e.target.value });
     }
 
 
@@ -151,8 +149,12 @@ const EnhancedTableToolbar = (props) => {
     const handleOnSubmit = (e) => {
         e.preventDefault();
         if (userData.email !== '' && validateEmail(userData.email) === true && userData.role.length > 0) {
+
             setErrorEmail(false)
             setErrorRole(false)
+            userData.role.sort(function (a, b) {
+                return a - b
+            })
             dispatch(userCreate(userData))
             clearField();
             handleCloseCreateUserDialog();
@@ -160,7 +162,7 @@ const EnhancedTableToolbar = (props) => {
     }
 
     const clearField = () => {
-        setUserData(initialState)
+        setUserData(initialState);
     }
 
     return (
@@ -180,7 +182,7 @@ const EnhancedTableToolbar = (props) => {
                 {numSelected > 0 ?
                     <>
                         <Typography
-                            className={css.title}
+                            className={css.selectedTitle}
                             color="inherit"
                             variant="subtitle1"
                             component="div"
@@ -314,8 +316,8 @@ const EnhancedTableToolbar = (props) => {
     );
 };
 
-EnhancedTableToolbar.propTypes = {
+UserTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };
 
-export default EnhancedTableToolbar;
+export default UserTableToolbar;
