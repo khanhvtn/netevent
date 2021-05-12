@@ -902,11 +902,7 @@ const Facility = () => {
                 <div className={css.filterWrapper}>
                     <Typography variant="h6">Filter List</Typography>
                     <div className={css.filterInputs}>
-                        <FormControl
-                            fullWidth
-                            variant="outlined"
-                            className={css.formControl}
-                        >
+                        <FormControl fullWidth variant="outlined">
                             <InputLabel id="statusFilterLabel">
                                 Status
                             </InputLabel>

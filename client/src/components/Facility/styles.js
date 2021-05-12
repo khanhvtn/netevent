@@ -90,10 +90,6 @@ export default makeStyles((theme) => ({
     dialogActions: {
         marginRight: '20px',
     },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 120,
-    },
     filterActions: {
         marginTop: '20px',
         display: 'flex',
