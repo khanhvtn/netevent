@@ -21,14 +21,6 @@ import { USER_CREATE_SUCCESSFUL, USER_UPDATE_SUCCESSFUL } from '../../constants'
 import { Button, Checkbox, ClickAwayListener, CssBaseline, DialogActions, Divider, Fade, Chip, FormControlLabel, FormGroup, Popper, Typography } from '@material-ui/core';
 import UserTable from "../../components/users/userTable/UserTable"
 
-const initialState = {
-    email: '',
-    password: '',
-    role: [],
-};
-
-const roles = ['1', '2', '3', '4'];
-
 const userCreateState = {
     isAlertSuccess: false
 }
@@ -38,14 +30,6 @@ const filterState = [
     { key: 2, checked: false, label: 'Reviewer', role: '2' },
     { key: 3, checked: false, label: 'Creator', role: '3' },
     { key: 4, checked: false, label: 'Team Member', role: '4' }
-]
-
-
-const chipFilterData = [
-    { key: 1, label: 'Admin' },
-    { key: 2, label: 'Creator' },
-    { key: 3, label: 'Reviewer' },
-    { key: 4, label: 'Team Member' },
 ]
 
 const Dashboard = () => {
