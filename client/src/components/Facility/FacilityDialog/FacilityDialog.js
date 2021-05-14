@@ -108,6 +108,7 @@ const FacilityDialog = ({
                         <FormControl fullWidth variant="outlined">
                             <InputLabel id="statusLabel">Status</InputLabel>
                             <Select
+                                disabled={isLoading ? true : false}
                                 labelId="statusLabel"
                                 id="status"
                                 value={status}
