@@ -22,12 +22,28 @@ const setFacilityIsLoading = (status, dispatch) => {
     });
 };
 
-export const getFacilities = (search, take, page, status) => async (
-    dispatch
-) => {
+export const getFacilities = (
+    search,
+    take,
+    page,
+    status,
+    createdFrom,
+    createdTo,
+    updatedFrom,
+    updatedTo
+) => async (dispatch) => {
     setFacilityIsLoading(true, dispatch);
     try {
-        const data = await getFacilitiesAPI(search, take, page, status);
+        const data = await getFacilitiesAPI(
+            search,
+            take,
+            page,
+            status,
+            createdFrom,
+            createdTo,
+            updatedFrom,
+            updatedTo
+        );
         dispatch({
             type: FACILITY_GET_ALL,
             payload: data,

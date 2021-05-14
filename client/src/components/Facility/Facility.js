@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { format, parseISO } from 'date-fns';
+import moment from 'moment';
+import Moment from 'react-moment';
+import momentTimezone from 'moment-timezone';
 import {
     Paper,
     AppBar,
@@ -36,6 +40,12 @@ import {
     InputLabel,
     FormControl,
 } from '@material-ui/core';
+// import DateFnsUtils from '@date-io/date-fns';
+import MomentUtils from '@date-io/moment';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
 import { Pagination, Alert } from '@material-ui/lab';
 import { FilterList, Delete, Create, Edit } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
@@ -102,6 +112,18 @@ const headCells = [
         numeric: false,
         disablePadding: false,
         label: 'Status',
+    },
+    {
+        id: 'createdAt',
+        numeric: false,
+        disablePadding: false,
+        label: 'Created At',
+    },
+    {
+        id: 'updatedAt',
+        numeric: false,
+        disablePadding: false,
+        label: 'Updated At',
     },
 ];
 
@@ -287,17 +309,27 @@ const initialState = {
     name: '',
     code: '',
     type: '',
+    status: '',
     openAlert: false,
     openDeleteDialog: false,
     openDeleteSnackBar: false,
     openUpdateSnackBar: false,
+    openCreateSnackBar: false,
     isCreateMode: true,
     openFilter: false,
-    status: '',
+    statusFilter: '',
+    createdFrom: null,
+    createdTo: null,
+    updatedFrom: null,
+    updatedTo: null,
 };
 
 const filterState = {
     statusFilter: '',
+    createdFrom: null,
+    createdTo: null,
+    updatedFrom: null,
+    updatedTo: null,
 };
 
 const Facility = () => {
@@ -328,18 +360,67 @@ const Facility = () => {
     const [orderBy, setOrderBy] = useState('calories');
     const [selected, setSelected] = useState([]);
 
-    //refreshTable func is to reload all data
-    const refreshTable = () => {
-        setState((prevState) => ({
-            ...prevState,
-            search: '',
-            take: 5,
-            page: 1,
-        }));
-    };
-    //useEffect for update sucess.
+    // //useEffect for update sucess.
+    // useEffect(() => {
+    //     //clear all fields in form creating and toggle Snackbar
+    //     setState((prevState) => ({
+    //         ...prevState,
+    //         openUpdateSnackBar: updateSuccess,
+    //         openCreateAndUpdateDialog: false,
+    //         isCreateMode: true,
+    //         name: '',
+    //         code: '',
+    //         type: '',
+    //     }));
+    //     //clear selected item
+    //     setSelected(() => []);
+    // }, [updateSuccess]);
+    // // //useEffect for delete sucess.
+    // useEffect(() => {
+    //     //toggle Snackbar
+    //     setState((prevState) => ({
+    //         ...prevState,
+    //         openDeleteSnackBar: deleteSuccess,
+    //         openDeleteDialog: false,
+    //     }));
+    //     //clear selected item
+    //     setSelected(() => []);
+    // }, [deleteSuccess]);
+
+    // // //useEffect for enable alert success and clear form for form creating.
+    // useEffect(() => {
+    //     //clear all fields in form creating and toggle Snackbar
+    //     setState((prevState) => ({
+    //         ...prevState,
+    //         openAlert: createSuccess,
+    //         name: '',
+    //         code: '',
+    //         type: '',
+    //     }));
+    // }, [createSuccess]);
+
+    //useEffect
     useEffect(() => {
-        //clear all fields in form creating and toggle Snackbar
+        // const filterDate = {
+        //     createdFrom: state.createdFrom ? state.createdFrom : '',
+        //     createdTo: state.createdTo ? state.createdTo : '',
+        //     updatedFrom: state.updatedFrom ? state.updatedFrom : '',
+        //     updatedTo: state.updatedTo ? state.updatedTo : '',
+        // };
+        const filterDate = {
+            createdFrom: state.createdFrom
+                ? format(Date.parse(state.createdFrom), 'yyyy-MM-dd')
+                : '',
+            createdTo: state.createdTo
+                ? format(Date.parse(state.createdTo), 'yyyy-MM-dd')
+                : '',
+            updatedFrom: state.updatedFrom
+                ? format(Date.parse(state.updatedFrom), 'yyyy-MM-dd')
+                : '',
+            updatedTo: state.updatedTo
+                ? format(Date.parse(state.updatedTo), 'yyyy-MM-dd')
+                : '',
+        };
         setState((prevState) => ({
             ...prevState,
             openUpdateSnackBar: updateSuccess,
@@ -348,45 +429,25 @@ const Facility = () => {
             name: '',
             code: '',
             type: '',
-        }));
-        //clear selected item
-        setSelected(() => []);
-
-        //refresh table
-        refreshTable();
-    }, [updateSuccess]);
-    //useEffect for delete sucess.
-    useEffect(() => {
-        //toggle Snackbar
-        setState((prevState) => ({
-            ...prevState,
+            openAlert: createSuccess,
             openDeleteSnackBar: deleteSuccess,
+            openCreateSnackBar: createSuccess,
             openDeleteDialog: false,
         }));
         //clear selected item
         setSelected(() => []);
-        //refresh Table
-        refreshTable();
-    }, [deleteSuccess]);
 
-    //useEffect for enable alert success and clear form for form creating.
-    useEffect(() => {
-        //clear all fields in form creating and toggle Snackbar
-        setState((prevState) => ({
-            ...prevState,
-            openAlert: createSuccess,
-            name: '',
-            code: '',
-            type: '',
-        }));
-        //refresh Table
-        refreshTable();
-    }, [createSuccess]);
-
-    //useEffect
-    useEffect(() => {
         dispatch(
-            getFacilities(state.search, state.take, state.page, state.status)
+            getFacilities(
+                state.search,
+                state.take,
+                state.page,
+                state.statusFilter,
+                filterDate.createdFrom,
+                filterDate.createdTo,
+                filterDate.updatedFrom,
+                filterDate.updatedTo
+            )
         );
         return () => {
             dispatch({
@@ -394,7 +455,20 @@ const Facility = () => {
                 payload: null,
             });
         };
-    }, [dispatch, state.search, state.take, state.page, state.status]);
+    }, [
+        dispatch,
+        state.search,
+        state.take,
+        state.page,
+        state.statusFilter,
+        state.createdFrom,
+        state.createdTo,
+        state.updatedFrom,
+        state.updatedTo,
+        updateSuccess,
+        createSuccess,
+        deleteSuccess,
+    ]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -466,7 +540,7 @@ const Facility = () => {
     };
 
     const handleCreateAndUpdate = () => {
-        const { name, code, type } = state;
+        const { name, code, type, status } = state;
         //create
         if (state.isCreateMode) {
             const userReq = {
@@ -481,7 +555,7 @@ const Facility = () => {
         dispatch(
             updateFacility({
                 filter: selected[0],
-                update: { name, code, type },
+                update: { name, code, type, status },
             })
         );
     };
@@ -496,7 +570,6 @@ const Facility = () => {
 
     const handleToggleDialogCreateAndUpdate = (event, mode) => {
         let targetEdit;
-        console.log(mode);
         if (mode) {
             targetEdit = facilities.find(
                 (facility) => facility.name === selected[0]
@@ -507,6 +580,7 @@ const Facility = () => {
             name: mode ? targetEdit.name : prevState.name,
             code: mode ? targetEdit.code : prevState.code,
             type: mode ? targetEdit.type : prevState.type,
+            status: mode ? targetEdit.status : prevState.status,
             openCreateAndUpdateDialog: !prevState.openCreateAndUpdateDialog,
             isCreateMode: mode ? false : true,
         }));
@@ -531,7 +605,7 @@ const Facility = () => {
     const handleApplyFilter = () => {
         setState((prevState) => ({
             ...prevState,
-            status: filters.statusFilter,
+            ...filters,
             openFilter: !prevState.openFilter,
         }));
     };
@@ -540,11 +614,11 @@ const Facility = () => {
     const handleClearFilter = () => {
         setFilters((prevState) => ({
             ...prevState,
-            statusFilter: '',
+            ...filterState,
         }));
         setState((prevState) => ({
             ...prevState,
-            status: '',
+            ...filterState,
             openFilter: !prevState.openFilter,
         }));
     };
@@ -613,14 +687,17 @@ const Facility = () => {
                                             rowCount={facilities.length}
                                         />
                                         <TableBody>
-                                            {isLoading ? (
+                                            {isLoading ||
+                                            createSuccess ||
+                                            updateSuccess ||
+                                            deleteSuccess ? (
                                                 <TableRow
                                                     style={{
                                                         height: 50 * state.take,
                                                     }}
                                                 >
                                                     <TableCell
-                                                        colSpan={5}
+                                                        colSpan={7}
                                                         align="center"
                                                     >
                                                         <CircularProgress />
@@ -633,7 +710,7 @@ const Facility = () => {
                                                     }}
                                                 >
                                                     <TableCell
-                                                        colSpan={5}
+                                                        colSpan={7}
                                                         align="center"
                                                     >
                                                         <Typography>
@@ -699,6 +776,34 @@ const Facility = () => {
                                                                 {row.status
                                                                     ? 'Active'
                                                                     : 'Expired'}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {/* {format(
+                                                                    parseISO(
+                                                                        row.createdAt
+                                                                    ),
+                                                                    'dd/MM/yyyy'
+                                                                )} */}
+                                                                <Moment format="DD-MM-YYYY">
+                                                                    {
+                                                                        row.createdAt
+                                                                    }
+                                                                </Moment>
+                                                                {/* {row.createdAt} */}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {/* {format(
+                                                                    parseISO(
+                                                                        row.updatedAt
+                                                                    ),
+                                                                    'dd/MM/yyyy'
+                                                                )} */}
+                                                                <Moment format="DD-MM-YYYY">
+                                                                    {
+                                                                        row.updatedAt
+                                                                    }
+                                                                </Moment>
+                                                                {/* {row.updatedAt} */}
                                                             </TableCell>
                                                         </TableRow>
                                                     );
@@ -813,6 +918,26 @@ const Facility = () => {
                         type="text"
                         fullWidth
                     />
+                    {!state.isCreateMode ? (
+                        <FormControl fullWidth variant="outlined">
+                            <InputLabel id="statusLabel">Status</InputLabel>
+                            <Select
+                                labelId="statusLabel"
+                                id="status"
+                                value={state.status}
+                                onChange={handleChange}
+                                label="Status"
+                                inputProps={{
+                                    name: 'status',
+                                }}
+                            >
+                                <MenuItem value={true}>Active</MenuItem>
+                                <MenuItem value={false}>Expired</MenuItem>
+                            </Select>
+                        </FormControl>
+                    ) : (
+                        ''
+                    )}
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
                     <Button
@@ -891,6 +1016,13 @@ const Facility = () => {
             >
                 <Alert severity="success">Update Sucess</Alert>
             </Snackbar>
+            {/* Snackbar UpdCreateate Success */}
+            <Snackbar
+                TransitionComponent={Slide}
+                open={state.openCreateSnackBar}
+            >
+                <Alert severity="success">Create Sucess</Alert>
+            </Snackbar>
 
             {/* Filter Sidebar */}
 
@@ -902,7 +1034,7 @@ const Facility = () => {
                 <div className={css.filterWrapper}>
                     <Typography variant="h6">Filter List</Typography>
                     <div className={css.filterInputs}>
-                        <FormControl fullWidth variant="outlined">
+                        <FormControl fullWidth variant="standard">
                             <InputLabel id="statusFilterLabel">
                                 Status
                             </InputLabel>
@@ -923,6 +1055,82 @@ const Facility = () => {
                                 <MenuItem value={false}>Expired</MenuItem>
                             </Select>
                         </FormControl>
+                        <MuiPickersUtilsProvider utils={MomentUtils}>
+                            <Grid container justify="space-around">
+                                <KeyboardDatePicker
+                                    size="small"
+                                    fullWidth
+                                    margin="normal"
+                                    id="createdFrom"
+                                    label="Created From"
+                                    format="MM/DD/YYYY"
+                                    value={filters.createdFrom}
+                                    onChange={(date) => {
+                                        setFilters((prevState) => ({
+                                            ...prevState,
+                                            createdFrom: date.toDate(),
+                                        }));
+                                    }}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                                <KeyboardDatePicker
+                                    size="small"
+                                    fullWidth
+                                    margin="normal"
+                                    id="createdTo"
+                                    label="Created To"
+                                    format="MM/DD/YYYY"
+                                    value={filters.createdTo}
+                                    onChange={(date) => {
+                                        setFilters((prevState) => ({
+                                            ...prevState,
+                                            createdTo: date.toDate(),
+                                        }));
+                                    }}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                                <KeyboardDatePicker
+                                    size="small"
+                                    fullWidth
+                                    margin="normal"
+                                    id="updatedFrom"
+                                    label="Updated From"
+                                    format="MM/DD/YYYY"
+                                    value={filters.updatedFrom}
+                                    onChange={(date) => {
+                                        setFilters((prevState) => ({
+                                            ...prevState,
+                                            updatedFrom: date.toDate(),
+                                        }));
+                                    }}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                                <KeyboardDatePicker
+                                    size="small"
+                                    fullWidth
+                                    margin="normal"
+                                    id="updatedTo"
+                                    label="Updated To"
+                                    format="MM/DD/YYYY"
+                                    value={filters.updatedTo}
+                                    onChange={(date) => {
+                                        setFilters((prevState) => ({
+                                            ...prevState,
+                                            updatedTo: date.toDate(),
+                                        }));
+                                    }}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                            </Grid>
+                        </MuiPickersUtilsProvider>
                     </div>
                     <div className={css.filterActions}>
                         <Button

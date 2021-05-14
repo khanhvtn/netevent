@@ -25,15 +25,39 @@ const createFacility = async (req, res, next) => {
 };
 
 const filter = async (req, res, next) => {
-    let options = {
-        search: '',
-        take: 5,
-        type: '',
-        status: {
-            $in: [false, true],
-        },
-    };
     try {
+        //get max date and min date of updatedAt and createdAt
+        const createdMaxDate = await Facility.find()
+            .sort({ createdAt: -1 })
+            .limit(1);
+        const createdMinDate = await Facility.find()
+            .sort({ createdAt: 1 })
+            .limit(1);
+        const updatedMaxDate = await Facility.find()
+            .sort({ updatedAt: -1 })
+            .limit(1);
+        const updatedMinDate = await Facility.find()
+            .sort({ updatedAt: 1 })
+            .limit(1);
+        const listRangeDate = await Promise.all([
+            createdMaxDate,
+            createdMinDate,
+            updatedMaxDate,
+            updatedMinDate,
+        ]);
+
+        let options = {
+            search: '',
+            take: 5,
+            type: '',
+            status: {
+                $in: [false, true],
+            },
+            createdMaxDate: listRangeDate[0][0].createdAt,
+            createdMinDate: listRangeDate[1][0].createdAt,
+            updatedMaxDate: listRangeDate[2][0].updatedAt,
+            updatedMinDate: listRangeDate[3][0].updatedAt,
+        };
         //adding search
         if (req.query.search) {
             options = {
@@ -55,12 +79,57 @@ const filter = async (req, res, next) => {
 
         /* 
         Add status filter
-        Default status is empty
+        Default status will match all
          */
         if (req.query.status) {
             options = {
                 ...options,
                 status: req.query.status === 'true',
+            };
+        }
+
+        /* 
+        Add createdFrom filter
+         */
+
+        if (req.query.createdFrom) {
+            options = {
+                ...options,
+                createdMinDate: req.query.createdFrom,
+                // createdMinDate: new Date(req.query.createdFrom),
+            };
+        }
+        /* 
+        Add createdTo filter
+         */
+
+        if (req.query.createdTo) {
+            options = {
+                ...options,
+                createdMaxDate: req.query.createdTo,
+                // createdMaxDate: new Date(req.query.createdTo),
+            };
+        }
+        /* 
+        Add updatedFrom filter
+         */
+
+        if (req.query.updatedFrom) {
+            options = {
+                ...options,
+                updatedMinDate: req.query.updatedFrom,
+                // updatedMinDate: new Date(req.query.updatedFrom),
+            };
+        }
+        /* 
+        Add updatedTo filter
+         */
+
+        if (req.query.updatedTo) {
+            options = {
+                ...options,
+                updatedMaxDate: req.query.updatedTo,
+                // updatedMaxDate: new Date(req.query.updatedTo),
             };
         }
 
@@ -79,6 +148,14 @@ const filter = async (req, res, next) => {
                 { code: new RegExp(options.search, 'i') },
             ],
             status: options.status,
+            createdAt: {
+                $gte: options.createdMinDate,
+                $lte: options.createdMaxDate,
+            },
+            updatedAt: {
+                $gte: options.updatedMinDate,
+                $lte: options.updatedMaxDate,
+            },
         }).countDocuments();
 
         let totalPages = (totalFacilities / options.take)
@@ -95,7 +172,16 @@ const filter = async (req, res, next) => {
                 { code: new RegExp(options.search, 'i') },
             ],
             status: options.status,
+            createdAt: {
+                $gte: options.createdMinDate,
+                $lte: options.createdMaxDate,
+            },
+            updatedAt: {
+                $gte: options.updatedMinDate,
+                $lte: options.updatedMaxDate,
+            },
         })
+            .sort({ updatedAt: -1 })
             .skip((page - 1) * options.take)
             .limit(options.take);
 
@@ -123,8 +209,6 @@ const deleteFacilities = async (req, res, next) => {
             );
             return cusResponse(res, 200, deletedFacilities, null);
         }
-
-        // const newFacility = await Facility.create(userReq);
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
