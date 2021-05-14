@@ -41,13 +41,7 @@ export default makeStyles((theme) => ({
     root: {
         width: '100%',
     },
-    paper1: {
-        width: '100%',
-        marginBottom: theme.spacing(2),
-    },
-    table: {
-        minWidth: 750,
-    },
+
     visuallyHidden: {
         border: 0,
         clip: 'rect(0 0 0 0)',
@@ -59,36 +53,12 @@ export default makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
-    pagination: { marginRight: '10px' },
-    selectRowNum: {
-        marginLeft: '10px',
-        backgroundColor: 'transparent',
-        outline: 'none',
-    },
-    selectRowNumWrapper: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: '20px',
-    },
-    paginationWrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        marginBottom: '20px',
-    },
     [theme.breakpoints.down('xs')]: {
         paginationWrapper: {
             flexDirection: 'column',
             alignItems: 'flex-end',
             justifyContent: 'center',
         },
-    },
-    textField: {
-        marginBottom: '20px',
-    },
-    dialogActions: {
-        marginRight: '20px',
     },
     filterActions: {
         marginTop: '20px',
