@@ -1,17 +1,15 @@
-const { Facility } = require('../models');
+const { EventType } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
-const createFacility = async (req, res, next) => {
+const createEventType = async (req, res, next) => {
     try {
-        const facility = new Facility(req.body);
+        const eventType = new EventType(req.body);
         //validate user request fields.
-        await facility.validate();
+        await eventType.validate();
 
-        //create new facility
-        const newFacility = await facility.save();
-        return cusResponse(res, 200, newFacility, null);
-
-        // const newFacility = await Facility.create(userReq);
+        //create new eventType
+        const newEventType = await eventType.save();
+        return cusResponse(res, 200, newEventType, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
@@ -27,16 +25,16 @@ const createFacility = async (req, res, next) => {
 const filter = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
-        const createdMaxDate = await Facility.find()
+        const createdMaxDate = await EventType.find()
             .sort({ createdAt: -1 })
             .limit(1);
-        const createdMinDate = await Facility.find()
+        const createdMinDate = await EventType.find()
             .sort({ createdAt: 1 })
             .limit(1);
-        const updatedMaxDate = await Facility.find()
+        const updatedMaxDate = await EventType.find()
             .sort({ updatedAt: -1 })
             .limit(1);
-        const updatedMinDate = await Facility.find()
+        const updatedMinDate = await EventType.find()
             .sort({ updatedAt: 1 })
             .limit(1);
         const listRangeDate = await Promise.all([
@@ -45,14 +43,20 @@ const filter = async (req, res, next) => {
             updatedMaxDate,
             updatedMinDate,
         ]);
+        //return empty result to client if database has no data.
+        if (
+            !createdMaxDate.length ||
+            !createdMinDate.length ||
+            !updatedMaxDate.length ||
+            !updatedMinDate.length
+        ) {
+            return cusResponse(res, 200, [], null);
+        }
 
         let options = {
             search: '',
             take: 5,
             type: '',
-            status: {
-                $in: [false, true],
-            },
             createdMaxDate: listRangeDate[0][0].createdAt,
             createdMinDate: listRangeDate[1][0].createdAt,
             updatedMaxDate: listRangeDate[2][0].updatedAt,
@@ -74,17 +78,6 @@ const filter = async (req, res, next) => {
             options = {
                 ...options,
                 take: parseInt(req.query.take.toString()),
-            };
-        }
-
-        /* 
-        Add status filter
-        Default status will match all
-         */
-        if (req.query.status) {
-            options = {
-                ...options,
-                status: req.query.status === 'true',
             };
         }
 
@@ -129,24 +122,19 @@ const filter = async (req, res, next) => {
             options = {
                 ...options,
                 updatedMaxDate: req.query.updatedTo,
-                // updatedMaxDate: new Date(req.query.updatedTo),
             };
         }
+
         /* 
         Variable page default is 1
          */
         const page = parseInt(req.query.page) || 1;
 
         /* 
-        Variable total facility based on search and filter
+        Variable total eventType based on search and filter
          */
-        const totalFacilities = await Facility.find({
-            $or: [
-                { name: new RegExp(options.search, 'i') },
-                { type: new RegExp(options.search, 'i') },
-                { code: new RegExp(options.search, 'i') },
-            ],
-            status: options.status,
+        const totalEventType = await EventType.find({
+            $or: [{ name: new RegExp(options.search, 'i') }],
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -157,20 +145,15 @@ const filter = async (req, res, next) => {
             },
         }).countDocuments();
 
-        let totalPages = (totalFacilities / options.take)
+        let totalPages = (totalEventType / options.take)
             .toString()
             .includes('.')
-            ? Math.ceil(totalFacilities / options.take)
-            : totalFacilities / options.take;
+            ? Math.ceil(totalEventType / options.take)
+            : totalEventType / options.take;
 
         //return data to client
-        const facilities = await Facility.find({
-            $or: [
-                { name: new RegExp(options.search, 'i') },
-                { type: new RegExp(options.search, 'i') },
-                { code: new RegExp(options.search, 'i') },
-            ],
-            status: options.status,
+        const eventTypes = await EventType.find({
+            $or: [{ name: new RegExp(options.search, 'i') }],
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -184,52 +167,45 @@ const filter = async (req, res, next) => {
             .skip((page - 1) * options.take)
             .limit(options.take);
 
-        return cusResponse(res, 200, facilities, null, totalPages);
+        return cusResponse(res, 200, eventTypes, null, totalPages);
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
 };
 
-const deleteFacilities = async (req, res, next) => {
+const deleteEventType = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
         if (deleteList.length === 1) {
-            const deletedFacility = await Facility.findOneAndDelete({
+            const deletedEventType = await EventType.findOneAndDelete({
                 name: deleteList[0],
             });
-            return cusResponse(res, 200, deletedFacility, null);
+            return cusResponse(res, 200, deletedEventType, null);
         } else {
-            const deletedFacilities = await Promise.all(
+            const deletedEventType = await Promise.all(
                 deleteList.map(async (name) => {
-                    return await Facility.findOneAndDelete({
+                    return await EventType.findOneAndDelete({
                         name,
                     });
                 })
             );
-            return cusResponse(res, 200, deletedFacilities, null);
+            return cusResponse(res, 200, deletedEventType, null);
         }
     } catch (error) {
-        if (error.name == 'ValidationError') {
-            let errors = {};
-            for (field in error.errors) {
-                errors = { ...errors, [field]: error.errors[field].message };
-            }
-            return next(new CustomError(500, errors));
-        }
         return next(new CustomError(500, error.message));
     }
 };
 
-const updateFacility = async (req, res, next) => {
+const updateEventType = async (req, res, next) => {
     try {
         const userReq = req.body;
-        const updatedFacility = await Facility.findOneAndUpdate(
+        const updatedEventType = await EventType.findOneAndUpdate(
             { name: userReq.filter },
             userReq.update,
             { runValidators: true, context: 'query' }
         );
 
-        return cusResponse(res, 200, updatedFacility, null);
+        return cusResponse(res, 200, updatedEventType, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
@@ -241,10 +217,19 @@ const updateFacility = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+const getAllEventType = async (req, res, next) => {
+    try {
+        const eventTypes = await EventType.find({});
+        return cusResponse(res, 200, eventTypes, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
 
 module.exports = {
-    createFacility,
+    createEventType,
     filter,
-    deleteFacilities,
-    updateFacility,
+    deleteEventType,
+    updateEventType,
+    getAllEventType,
 };

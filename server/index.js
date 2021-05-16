@@ -1,7 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const { userRoutes, linkRoutes, facilityRoutes } = require('./routes');
+const {
+    userRoutes,
+    linkRoutes,
+    facilityRoutes,
+    eventTypeRoutes,
+} = require('./routes');
 const cors = require('cors');
 const { errorHandler } = require('./middlewares');
 const cookieParser = require('cookie-parser');
@@ -19,6 +24,7 @@ app.get('/', (req, res) => {
 app.use('/api/user', userRoutes);
 app.use('/api/facility', facilityRoutes);
 app.use('/api/link', linkRoutes);
+app.use('/api/eventType', eventTypeRoutes);
 
 //error handler
 app.use(errorHandler);
@@ -32,6 +38,7 @@ mongoose.connect(
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
+        useCreateIndex: true,
     },
     (err) => {
         if (err) {

@@ -2,10 +2,12 @@
 const userRoutes = require('./userRoutes');
 const facilityRoutes = require('./facilityRoutes');
 const linkRoutes = require('./linkRoutes');
+const eventTypeRoutes = require('./eventTypeRoutes');
 
 module.exports = {
     //add routes here
     userRoutes,
     facilityRoutes,
     linkRoutes,
+    eventTypeRoutes,
 };
