@@ -214,10 +214,10 @@ export const updateUser = (updateUser) => async (dispatch) => {
     setUserIsLoading(false, dispatch)
 };
 
-export const deleteUsers = (id) => async (dispatch) => {
+export const deleteUsers = (userReq) => async (dispatch) => {
     setUserIsLoading(true, dispatch);
     try {
-        await api.deleteUsersAPI(id);
+        await api.deleteUsersAPI(userReq);
         dispatch({
             type: USER_DELETE_SUCCESS,
             payload: true,

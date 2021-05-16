@@ -120,7 +120,7 @@ const deleteUser = async (req, res, next) => {
         const { deleteList } = req.body;
         if (deleteList.length === 1) {
             const deletedUser = await User.findOneAndDelete({
-                name: deleteList[0],
+                email: deleteList[0],
             });
             return cusResponse(res, 200, deletedUser, null);
         } else {
@@ -131,7 +131,7 @@ const deleteUser = async (req, res, next) => {
                     });
                 })
             );
-            return cusResponse(res, 200, deletedFacilities, null);
+            return cusResponse(res, 200, deletedUsers, null);
         }
     } catch (error) {
         if (error.name == 'ValidationError') {
@@ -297,8 +297,9 @@ const filterUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
     try {
         const userReq = req.body;
+        console.log(userReq)
         const updatedUser = await User.findOneAndUpdate(
-            { name: userReq.filterUser },
+            { email: userReq.filter },
             userReq.update,
             { runValidators: true, context: 'query' }
         );

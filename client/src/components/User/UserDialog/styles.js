@@ -7,4 +7,8 @@ export default makeStyles(() => ({
     dialogActions: {
         marginRight: '20px',
     },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
 }));

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom'
 import {
     CircularProgress,
     Button,
-    Select,
     MenuItem,
     Dialog,
     DialogTitle,
@@ -12,8 +12,8 @@ import {
     Collapse,
     DialogContentText,
     Slide,
-    InputLabel,
     FormControl,
+    Chip,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useSelector } from 'react-redux';
@@ -23,6 +23,24 @@ import useStyles from './styles';
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const rolesDisplay = [
+    '1',
+    '2',
+    '3',
+    '4'
+];
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
 const UserDialog = ({
     openCreateAndUpdateDialog,
@@ -43,6 +61,7 @@ const UserDialog = ({
         errors: state.error.errors,
         isCreated: state.user.isCreated,
     }));
+
     return (
         <div>
             {/* Dialog Create and Update */}
@@ -77,6 +96,34 @@ const UserDialog = ({
                         type="email"
                         fullWidth
                     />
+                    <TextField
+                        fullWidth
+                        disabled={isLoading || isCreated ? true : false}
+                        className={css.textField}
+                        select
+                        name="role"
+                        variant="outlined"
+                        label="Role"
+                        SelectProps={{
+                            multiple: true,
+                            value: role,
+                            onChange: handleChange,
+                            MenuProps: MenuProps,
+                            renderValue: (selected) => (
+                                <div className={css.chips}>
+                                    {selected.map((value) => (
+                                        <Chip key={value} label={value === "1" ? "Admin" : value === "2" ? "Reviewer" : value === "3" ? "Creator" : "Team Member"} className={css.chip} />
+                                    ))}
+                                </div>
+                            )
+                        }}
+                    >
+                        {rolesDisplay.map((role) => (
+                            <MenuItem key={role} value={role}>
+                                {role === "1" ? "Admin" : role === "2" ? "Reviewer" : role === "3" ? "Creator" : "Team Member"}
+                            </MenuItem>
+                        ))}
+                    </TextField>
 
 
                 </DialogContent>

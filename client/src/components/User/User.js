@@ -33,7 +33,7 @@ const initialState = {
     page: 1,
     openCreateAndUpdateDialog: false,
     email: '',
-    role: '',
+    roles: [],
     openAlert: false,
     openDeleteDialog: false,
     openDeleteSnackBar: false,
@@ -106,7 +106,7 @@ const User = () => {
             openCreateAndUpdateDialog: false,
             isCreateMode: true,
             email: '',
-            role: '',
+            role: [],
             openAlert: isCreated,
             openDeleteSnackBar: isDeleted,
             openCreateSnackBar: isCreated,
@@ -181,11 +181,12 @@ const User = () => {
     };
 
     const handleCreateAndUpdate = () => {
-        const { email } = state;
+        const { email, role } = state;
         //create
         if (state.isCreateMode) {
             const userReq = {
-                email
+                email,
+                role
             };
             dispatch(createUser(userReq));
             return;
@@ -194,7 +195,7 @@ const User = () => {
         dispatch(
             updateUser({
                 filter: selected[0],
-                update: { email },
+                update: { email, role },
             })
         );
     };
@@ -213,15 +214,11 @@ const User = () => {
             targetEdit = users.find(
                 (user) => user.email === selected[0]
             );
-            setState((prevState) => ({
-                ...prevState,
-                email: mode ? targetEdit.email : prevState.email,
-                isCreateMode: mode ? false : true,
-            }));
         }
         setState((prevState) => ({
             ...prevState,
             email: mode ? targetEdit.email : prevState.email,
+            role: mode ? targetEdit.role : prevState.role,
             openCreateAndUpdateDialog: !prevState.openCreateAndUpdateDialog,
             isCreateMode: mode ? false : true,
         }));

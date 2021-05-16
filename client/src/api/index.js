@@ -9,10 +9,11 @@ const AXIOS = axios.create({
 export const userCheckingAPI = () => AXIOS.get(`/user/userCheck`);
 export const userLoginAPI = (userReq) => AXIOS.post(`/user/login`, userReq);
 export const userLogoutAPI = () => AXIOS.get(`/user/logout`);
+
 export const createUserAPI = (newUser) =>
     AXIOS.post(`/user/create`, newUser);
-export const deleteUsersAPI = () =>
-    AXIOS.delete(`/user/delete`);
+export const deleteUsersAPI = (userReq) =>
+    AXIOS.delete(`/user/delete`, { data: userReq });
 export const updateUserAPI = (newUpdateUser) =>
     AXIOS.patch(`/user/update`, newUpdateUser);
 export const getUsersAPI = (
