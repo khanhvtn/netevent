@@ -52,7 +52,8 @@ const App = () => {
                                 path="/dashboard/user"
                                 render={() => (
                                     <DashboardLayout>
-                                        <Dashboard />
+                                        {/* <Dashboard /> */}
+                                        Hello
                                     </DashboardLayout>
                                 )}
                             />

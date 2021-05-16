@@ -50,7 +50,8 @@ const FacilityDialog = ({
                 TransitionComponent={Transition}
                 maxWidth="sm"
                 open={openCreateAndUpdateDialog}
-                onClose={handleToggleDialogCreateAndUpdate}
+
+                onClose={(e) => handleToggleDialogCreateAndUpdate(e)}
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitle id="form-dialog-title">
