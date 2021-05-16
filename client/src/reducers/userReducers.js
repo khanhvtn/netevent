@@ -12,61 +12,61 @@ import {
     DELETE_USER,
     USER_LOGOUT,
     USER_PICK_ROLE,
-    USER_CREATE_SUCCESSFUL,
-    USER_UPDATE_SUCCESSFUL
+    USER_CREATE_SUCCESS,
+    USER_UPDATE_SUCCESS,
+    USER_DELETE_SUCCESS
 } from '../constants';
 
 const initialState = {
     isUserChecking: false,
     isLoading: false,
     isConfirm: false,
-    user: null,
     pickedRoleNum: null,
     users: [],
+    user: null,
+    totalPages: null,
     isCreated: false,
     isUpdated: false,
+    isDeleted: false
 };
 
 export default function userReducers(state = initialState, action) {
     switch (action.type) {
-        case USER_CHECK:
-            return { ...state, user: action.payload };
-        case USER_CREATE:
-            return { ...state, user: action.payload };
-        case USER_CREATE_SUCCESSFUL:
-            return { ...state, isCreated: action.payload }
-        case USER_CONFIRM:
-            return { ...state, user: action.payload }
-        case USER_IS_CONFIRM:
-            return { ...state, isConfirm: action.payload }
+        // AUTH
         case USER_LOGIN:
             return { ...state, user: action.payload };
         case USER_LOGOUT:
             return initialState;
         case USER_LOADING:
             return { ...state, isLoading: action.payload };
-        case USER_CHECKING:
-            return { ...state, isUserChecking: action.payload };
         case USER_PICK_ROLE:
             return { ...state, pickedRoleNum: action.payload };
+
+        // CONFIRMATION
+        case USER_CONFIRM:
+            return { ...state, user: action.payload }
+        case USER_IS_CONFIRM:
+            return { ...state, isConfirm: action.payload }
+        case USER_CHECK:
+            return { ...state, user: action.payload };
+        case USER_CHECKING:
+            return { ...state, isUserChecking: action.payload };
+
+        // CRUD
         case FETCH_ALL_USERS:
-            return { ...state, users: action.payload.data };
-        case SEARCH_USER:
-            return { ...state, users: action.payload.data };
-        case UPDATE_USER:
             return {
                 ...state,
-                users: state.users.map((user) => action.payload.data._id === user._id ? action.payload.data : user)
-            }
-        case USER_UPDATE_SUCCESSFUL:
-            return { ...state, isUpdated: action.payload }
-        case DELETE_USER:
-            return {
-                ...state,
-                users: state.users.filter(
-                    (user) => user._id !== action.payload
-                ),
+                users: action.payload.data.data,
+                totalPages: action.payload.data.totalPages
             };
+
+        // SNACKBAR
+        case USER_CREATE_SUCCESS:
+            return { ...state, isCreated: action.payload }
+        case USER_UPDATE_SUCCESS:
+            return { ...state, isUpdated: action.payload }
+        case USER_DELETE_SUCCESS:
+            return { ...state, isDeleted: action.payload }
         default:
             return state;
     }

@@ -1,21 +1,23 @@
 import {
+    ERROR,
+    ERROR_CLEAR,
     USER_LOADING,
     USER_LOGIN,
-    ERROR,
+    USER_LOGOUT,
+    USER_PICK_ROLE,
     USER_CHECK,
     USER_CHECKING,
-    USER_CREATE,
     USER_CONFIRM,
     USER_IS_CONFIRM,
     FETCH_ALL_USERS,
+    USER_CREATE,
     DELETE_USER,
-    SEARCH_USER,
-    USER_LOGOUT,
-    USER_CREATE_SUCCESSFUL,
-    USER_UPDATE_SUCCESSFUL,
     UPDATE_USER,
+    SEARCH_USER,
     GET_LINK_COMPLETE,
-    USER_PICK_ROLE,
+    USER_CREATE_SUCCESS,
+    USER_UPDATE_SUCCESS,
+    USER_DELETE_SUCCESS,
 } from '../constants';
 
 import * as api from '../api';
@@ -123,15 +125,6 @@ export const userCheck = (history) => async (dispatch) => {
     setUserIsChecking(false, dispatch);
 };
 
-export const userCreate = (userData) => async (dispatch) => {
-    try {
-        const { data } = await api.createUser(userData);
-        dispatch({ type: USER_CREATE_SUCCESSFUL, payload: true });
-        dispatch({ type: USER_CREATE, payload: data });
-    } catch (error) {
-        console.log(error);
-    }
-};
 
 const sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -154,10 +147,14 @@ export const userConfirm = (id, password, history) => async (dispatch) => {
     }
 };
 
-export const getUsers = () => async (dispatch) => {
+export const getUsers = (search, take, page) => async (dispatch) => {
     setUserIsLoading(true, dispatch);
     try {
-        const { data } = await api.fetchUsers();
+        const data = await api.getUsersAPI(
+            search,
+            take,
+            page
+        );
         dispatch({ type: FETCH_ALL_USERS, payload: data });
     } catch (error) {
         console.log(error);
@@ -165,35 +162,77 @@ export const getUsers = () => async (dispatch) => {
     setUserIsLoading(false, dispatch);
 };
 
-export const searchUsers = (searchString) => async (dispatch) => {
+export const createUser = (userData) => async (dispatch) => {
+    setUserIsLoading(true, dispatch)
+    try {
+        await api.createUserAPI(userData);
+        dispatch({ type: USER_CREATE_SUCCESS, payload: true });
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null,
+        });
+        setTimeout(() => {
+            dispatch({
+                type: USER_CREATE_SUCCESS,
+                payload: false,
+            });
+        }, 3000);
+    } catch (error) {
+        if (error.response.data?.errors) {
+            dispatch({
+                type: ERROR,
+                payload: error.response.data?.errors,
+            });
+        }
+        console.log(error);
+    }
+    setUserIsLoading(false, dispatch)
+};
+
+
+export const updateUser = (updateUser) => async (dispatch) => {
     setUserIsLoading(true, dispatch);
     try {
-        const { data } = await api.searchUsersAPI(searchString);
-        console.log(data);
-        dispatch({ type: SEARCH_USER, payload: data });
+        await api.updateUserAPI(updateUser);
+        dispatch({ type: USER_UPDATE_SUCCESS, payload: true });
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null,
+        });
+        setTimeout(() => {
+            dispatch({ type: USER_UPDATE_SUCCESS, payload: false });
+        }, 3000);
     } catch (error) {
+        if (error.response.data?.errors) {
+            dispatch({
+                type: ERROR,
+                payload: error.response.data?.errors,
+            });
+        }
         console.log(error);
     }
-    setUserIsLoading(false, dispatch);
+    setUserIsLoading(false, dispatch)
 };
 
-export const updateUser = (id, updateUser) => async (dispatch) => {
-    // setUserIsChecking(true, dispatch);
+export const deleteUsers = (id) => async (dispatch) => {
+    setUserIsLoading(true, dispatch);
     try {
-        const { data } = await api.updateUserAPI(id, updateUser);
-        console.log(data);
-        dispatch({ type: UPDATE_USER, payload: data });
-        dispatch({ type: USER_UPDATE_SUCCESSFUL, payload: true });
-    } catch (error) {
-        console.log(error);
-    }
-    // setUserIsLoading(false, dispatch)
-};
+        await api.deleteUsersAPI(id);
+        dispatch({
+            type: USER_DELETE_SUCCESS,
+            payload: true,
+        });
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null,
+        });
 
-export const deleteUser = (id) => async (dispatch) => {
-    try {
-        await api.deleteUser(id);
-        dispatch({ type: DELETE_USER, payload: id });
+        setTimeout(() => {
+            dispatch({
+                type: USER_DELETE_SUCCESS,
+                payload: false,
+            });
+        }, 3000);
     } catch (error) {
         console.log(error);
     }

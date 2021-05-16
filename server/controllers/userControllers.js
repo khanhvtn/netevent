@@ -7,76 +7,8 @@ const CustomError = require('../class/CustomeError');
 const { sendEmail } = require('./misc/mailer');
 const { html } = require('../mail-template/template');
 
-//Get All Users
-const getUsers = async (req, res, next) => {
-    try {
-        const userData = await User.find();
-        if (userData) {
-            return cusResponse(res, 200, userData, null);
-        } else {
-            return cusResponse(res, 404, 'No User Data', null);
-        }
-    } catch (error) {
-        return next(new CustomError(500, { sysError: error.message }));
-    }
-};
 
-//Paginatting
-class APIfeatures {
-    constructor(query, queryString) {
-        this.query = query;
-        this.queryString = queryString;
-    }
 
-    paginating() {
-        const page = this.queryString.page * 1 || 1;
-        const limit = this.queryString.limit * 1 || 9;
-        const skip = (page - 1) * limit;
-        this.query = this.query.skip(skip).limit(limit);
-        return this;
-    }
-}
-
-//Get User List
-const getUser = async (req, res, next) => {
-    try {
-        const features = new APIfeatures(User.find(), req.query).paginating();
-
-        const users = await features.query;
-        return cusResponse(res, 200, users, null);
-    } catch (error) {
-        return next(new CustomError(500, { sysError: error.message }));
-    }
-};
-
-//Create User
-const createUser = async (req, res, next) => {
-    try {
-        const userReq = req.body;
-        //check user is existed or not.
-        const existedUser = await User.findOne({ email: userReq.email });
-
-        if (existedUser) {
-            return next(new CustomError(400, 'Email is already existed'));
-        }
-
-        const newUser = await User.create(userReq);
-        const newLink = {
-            user: newUser._id,
-        };
-
-        const idLink = await Link.create(newLink);
-        await sendEmail(
-            'noreply@netevent.com',
-            userReq.email,
-            'User Confirmation Link',
-            html(userReq.email, idLink._id)
-        );
-        return cusResponse(res, 200, newUser, null);
-    } catch (error) {
-        return next(new CustomError(500, { sysError: error.message }));
-    }
-};
 
 //user login
 const login = async (req, res, next) => {
@@ -134,87 +66,6 @@ const userCheck = async (req, res, next) => {
     }
 };
 
-// const deleteUser = async (req, res) => {
-//     const { id: _id } = req.params;
-//     if (!mongoose.Types.ObjectId.isValid(_id)) {
-//         return res.status(404).send('No user with that id');
-//     }
-//     await User.findByIdAndRemove(_id);
-//     res.json({ message: 'User deleted successfully' });
-// }
-
-//Delete user
-const deleteUser = async (req, res, next) => {
-    try {
-        await User.findByIdAndDelete(req.params.id);
-        res.status(200).json({ msg: 'Deleted a User' });
-    } catch (error) {
-        return next(new CustomError(500, { sysError: error.message }));
-    }
-};
-
-const searchUser = async (req, res, next) => {
-    const { searchString } = req.body;
-
-    if (!searchString) {
-        return next(new CustomError(400, 'Invalid Search'));
-    }
-
-    try {
-        const searchResult = await User.find({
-            email: { $regex: searchString },
-        });
-
-        if (searchResult.length === 0) {
-            return cusResponse(res, 200, searchResult, null);
-        }
-
-        return cusResponse(res, 200, searchResult, null);
-    } catch (error) {
-        return next(new CustomError(500, { sysError: error.message }));
-    }
-};
-
-const filterUser = async (req, res, next) => {
-    const { searchString } = req.body;
-
-    if (!searchString) {
-        return next(new CustomError(400, 'Invalid Search'));
-    }
-
-    try {
-        const searchResult = await User.find({
-            email: { $regex: searchString },
-        });
-
-        if (searchResult.length === 0) {
-            return cusResponse(res, 200, searchResult, null);
-        }
-
-        return cusResponse(res, 200, searchResult, null);
-    } catch (error) {
-        return next(new CustomError(500, { sysError: error.message }));
-    }
-};
-
-const updateUser = async (req, res, next) => {
-    const { id } = req.params;
-    const roleData = req.body;
-
-    try {
-        const newUpdateUser = await User.findByIdAndUpdate(
-            id,
-            { role: roleData },
-            { new: true }
-        );
-        console.log(newUpdateUser);
-        return cusResponse(res, 200, newUpdateUser, null);
-    } catch (error) {
-        console.log(error.message);
-        return next(new CustomError(500), error.message);
-    }
-};
-
 //user login
 const logout = async (req, res, next) => {
     try {
@@ -227,14 +78,250 @@ const logout = async (req, res, next) => {
     }
 };
 
+//Create User
+const createUser = async (req, res, next) => {
+    try {
+        const userReq = req.body;
+        //check user is existed or not.
+        const existedUser = await User.findOne({ email: userReq.email });
+
+        if (existedUser) {
+            return next(new CustomError(400, 'Email is already existed'));
+        }
+
+        const newUser = await User.create(userReq);
+        const newLink = {
+            user: newUser._id,
+        };
+
+        const idLink = await Link.create(newLink);
+        await sendEmail(
+            'noreply@netevent.com',
+            userReq.email,
+            'User Confirmation Link',
+            html(userReq.email, idLink._id)
+        );
+        return cusResponse(res, 200, newUser, null);
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
+        return next(new CustomError(500, error.message));
+    }
+};
+
+//Delete user
+const deleteUser = async (req, res, next) => {
+    try {
+        const { deleteList } = req.body;
+        if (deleteList.length === 1) {
+            const deletedUser = await User.findOneAndDelete({
+                name: deleteList[0],
+            });
+            return cusResponse(res, 200, deletedUser, null);
+        } else {
+            const deletedUsers = await Promise.all(
+                deleteList.map(async (email) => {
+                    return await User.findOneAndDelete({
+                        email,
+                    });
+                })
+            );
+            return cusResponse(res, 200, deletedFacilities, null);
+        }
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
+        return next(new CustomError(500, error.message));
+    }
+};
+
+const filterUser = async (req, res, next) => {
+    try {
+        //get max date and min date of updatedAt and createdAt
+        const createdMaxDate = await User.find()
+            .sort({ createdAt: -1 })
+            .limit(1);
+        const createdMinDate = await User.find()
+            .sort({ createdAt: 1 })
+            .limit(1);
+        const updatedMaxDate = await User.find()
+            .sort({ updatedAt: -1 })
+            .limit(1);
+        const updatedMinDate = await User.find()
+            .sort({ updatedAt: 1 })
+            .limit(1);
+        const listRangeDate = await Promise.all([
+            createdMaxDate,
+            createdMinDate,
+            updatedMaxDate,
+            updatedMinDate,
+        ]);
+
+        let options = {
+            search: '',
+            take: 5,
+            type: '',
+
+            createdMaxDate: listRangeDate[0][0].createdAt,
+            createdMinDate: listRangeDate[1][0].createdAt,
+            updatedMaxDate: listRangeDate[2][0].updatedAt,
+            updatedMinDate: listRangeDate[3][0].updatedAt,
+        };
+        //adding search
+        if (req.query.search) {
+            options = {
+                ...options,
+                search: req.query.search.toString(),
+            };
+        }
+
+        /* 
+        Add take row filter
+        Default take is 5
+         */
+        if (req.query.take) {
+            options = {
+                ...options,
+                take: parseInt(req.query.take.toString()),
+            };
+        }
+
+        /* 
+        Add createdFrom filter
+         */
+
+        if (req.query.createdFrom) {
+            options = {
+                ...options,
+                createdMinDate: req.query.createdFrom,
+                // createdMinDate: new Date(req.query.createdFrom),
+            };
+        }
+        /* 
+        Add createdTo filter
+         */
+
+        if (req.query.createdTo) {
+            options = {
+                ...options,
+                createdMaxDate: req.query.createdTo,
+                // createdMaxDate: new Date(req.query.createdTo),
+            };
+        }
+        /* 
+        Add updatedFrom filter
+         */
+
+        if (req.query.updatedFrom) {
+            options = {
+                ...options,
+                updatedMinDate: req.query.updatedFrom,
+                // updatedMinDate: new Date(req.query.updatedFrom),
+            };
+        }
+        /* 
+        Add updatedTo filter
+         */
+
+        if (req.query.updatedTo) {
+            options = {
+                ...options,
+                updatedMaxDate: req.query.updatedTo,
+                // updatedMaxDate: new Date(req.query.updatedTo),
+            };
+        }
+
+        /* 
+        Variable page default is 1
+         */
+        const page = parseInt(req.query.page) || 1;
+
+        /* 
+        Variable total user based on search and filter
+         */
+        const totalUsers = await User.find({
+            $or: [
+                { email: new RegExp(options.search, 'i') },
+            ],
+            createdAt: {
+                $gte: options.createdMinDate,
+                $lte: options.createdMaxDate,
+            },
+            updatedAt: {
+                $gte: options.updatedMinDate,
+                $lte: options.updatedMaxDate,
+            },
+        }).countDocuments();
+
+        let totalPages = (totalUsers / options.take)
+            .toString()
+            .includes('.')
+            ? Math.ceil(totalUsers / options.take)
+            : totalUsers / options.take;
+
+        //return data to client
+        const users = await User.find({
+            $or: [
+                { email: new RegExp(options.search, 'i') },
+            ],
+            status: options.status,
+            createdAt: {
+                $gte: options.createdMinDate,
+                $lte: options.createdMaxDate,
+            },
+            updatedAt: {
+                $gte: options.updatedMinDate,
+                $lte: options.updatedMaxDate,
+            },
+        })
+            .sort({ updatedAt: -1 })
+            .skip((page - 1) * options.take)
+            .limit(options.take);
+
+        return cusResponse(res, 200, users, null, totalPages);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
+const updateUser = async (req, res, next) => {
+    try {
+        const userReq = req.body;
+        const updatedUser = await User.findOneAndUpdate(
+            { name: userReq.filterUser },
+            userReq.update,
+            { runValidators: true, context: 'query' }
+        );
+
+        return cusResponse(res, 200, updatedUser, null);
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
-    createUser,
     login,
     logout,
     userCheck,
-    getUsers,
-    getUser,
-    deleteUser,
-    searchUser,
+    createUser,
+    filterUser,
     updateUser,
+    deleteUser,
 };
