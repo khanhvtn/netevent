@@ -6,6 +6,7 @@ const {
     linkRoutes,
     facilityRoutes,
     eventTypeRoutes,
+    eventRoutes,
 } = require('./routes');
 const cors = require('cors');
 const { errorHandler } = require('./middlewares');
@@ -25,6 +26,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/facility', facilityRoutes);
 app.use('/api/link', linkRoutes);
 app.use('/api/eventType', eventTypeRoutes);
+app.use('/api/event', eventRoutes);
 
 //error handler
 app.use(errorHandler);
