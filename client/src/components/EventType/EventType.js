@@ -11,21 +11,21 @@ import {
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
 import {
-    getFacilities,
-    createFacility,
-    deleteFacilities,
-    updateFacility,
-} from '../../actions/facilityActions';
+    getEventTypes,
+    createEventType,
+    deleteEventTypes,
+    updateEventType,
+} from '../../actions/eventTypeActions';
 import { useDispatch, useSelector } from 'react-redux';
 
 //import makeStyles in the last
 import useStyles from './styles';
 import { ERROR_CLEAR } from '../../constants';
-import FacilityTable from './FacilityTable/FacilityTable';
-import FacilityFilter from './FacilityFilter/FacilityFilter';
-import FacilityNotification from './FacilityNotification/FacilityNotification';
-import FacilityDialog from './FacilityDialog/FacilityDialog';
-import FacilityPagination from './FacilityPagination/FacilityPagination';
+import DataTable from '../DataTable/DataTable';
+import EventFilter from './EventFilter/EventFilter';
+import Notification from '../Notification/Notification';
+import EventDialog from './EventDialog/EventDialog';
+import PaginationTable from '../PaginationTable/PaginationTable';
 
 const initialState = {
     search: '',
@@ -33,9 +33,6 @@ const initialState = {
     page: 1,
     openCreateAndUpdateDialog: false,
     name: '',
-    code: '',
-    type: '',
-    status: '',
     openAlert: false,
     openDeleteDialog: false,
     openDeleteSnackBar: false,
@@ -43,7 +40,6 @@ const initialState = {
     openCreateSnackBar: false,
     isCreateMode: true,
     openFilter: false,
-    statusFilter: '',
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
@@ -51,29 +47,31 @@ const initialState = {
 };
 
 const filterState = {
-    statusFilter: '',
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
     updatedTo: null,
 };
 
-const Facility = () => {
+const EventType = () => {
     const css = useStyles();
     const dispatch = useDispatch();
     const {
-        facilities,
+        eventTypes,
         createSuccess,
         deleteSuccess,
         updateSuccess,
+        isLoading,
+        totalPages,
+        errors,
     } = useSelector((state) => ({
-        facilities: state.facility.facilities,
-        isLoading: state.facility.isLoading,
-        totalPages: state.facility.totalPages,
+        eventTypes: state.eventType.eventTypes,
+        isLoading: state.eventType.isLoading,
+        totalPages: state.eventType.totalPages,
         errors: state.error.errors,
-        createSuccess: state.facility.createSuccess,
-        deleteSuccess: state.facility.deleteSuccess,
-        updateSuccess: state.facility.updateSuccess,
+        createSuccess: state.eventType.createSuccess,
+        deleteSuccess: state.eventType.deleteSuccess,
+        updateSuccess: state.eventType.updateSuccess,
     }));
 
     const [state, setState] = useState(initialState);
@@ -114,11 +112,10 @@ const Facility = () => {
         setSelected(() => []);
 
         dispatch(
-            getFacilities(
+            getEventTypes(
                 state.search,
                 state.take,
                 state.page,
-                state.statusFilter,
                 filterDate.createdFrom,
                 filterDate.createdTo,
                 filterDate.updatedFrom,
@@ -181,29 +178,27 @@ const Facility = () => {
     };
 
     const handleCreateAndUpdate = () => {
-        const { name, code, type, status } = state;
+        const { name } = state;
         //create
         if (state.isCreateMode) {
             const userReq = {
                 name,
-                code,
-                type,
             };
-            dispatch(createFacility(userReq));
+            dispatch(createEventType(userReq));
             return;
         }
         //edit
         dispatch(
-            updateFacility({
+            updateEventType({
                 filter: selected[0],
-                update: { name, code, type, status },
+                update: { name },
             })
         );
     };
 
     const handleDelete = () => {
         dispatch(
-            deleteFacilities({
+            deleteEventTypes({
                 deleteList: selected,
             })
         );
@@ -212,27 +207,20 @@ const Facility = () => {
     const handleToggleDialogCreateAndUpdate = (event, mode) => {
         let targetEdit;
         if (mode) {
-            targetEdit = facilities.find(
+            targetEdit = eventTypes.find(
                 (facility) => facility.name === selected[0]
             );
-            setState((prevState) => ({
-                ...prevState,
-                name: mode ? targetEdit.name : prevState.name,
-                code: mode ? targetEdit.code : prevState.code,
-                type: mode ? targetEdit.type : prevState.type,
-                status: mode ? targetEdit.status : prevState.status,
-                isCreateMode: mode ? false : true,
-            }));
         }
         setState((prevState) => ({
             ...prevState,
-            name: mode ? targetEdit.name : prevState.name,
-            code: mode ? targetEdit.code : prevState.code,
-            type: mode ? targetEdit.type : prevState.type,
-            status: mode ? targetEdit.status : prevState.status,
+            name: mode ? targetEdit.name : '',
             openCreateAndUpdateDialog: !prevState.openCreateAndUpdateDialog,
             isCreateMode: mode ? false : true,
         }));
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null,
+        });
     };
 
     const handleToggleDialogDelete = () => {
@@ -303,7 +291,7 @@ const Facility = () => {
                                 </IconButton>
                             </Toolbar>
                             {/* Facility Table */}
-                            <FacilityTable
+                            <DataTable
                                 handleToggleDialogCreateAndUpdate={
                                     handleToggleDialogCreateAndUpdate
                                 }
@@ -313,15 +301,42 @@ const Facility = () => {
                                 take={state.take}
                                 selected={selected}
                                 setSelected={setSelected}
+                                data={eventTypes}
+                                isLoading={isLoading}
+                                createSuccess={createSuccess}
+                                deleteSuccess={deleteSuccess}
+                                updateSuccess={updateSuccess}
+                                tableName="Event Type List"
+                                headCells={[
+                                    {
+                                        id: 'name',
+                                        numeric: false,
+                                        disablePadding: false,
+                                        label: 'Name',
+                                    },
+                                    {
+                                        id: 'createdAt',
+                                        numeric: false,
+                                        disablePadding: false,
+                                        label: 'Created At',
+                                    },
+                                    {
+                                        id: 'updatedAt',
+                                        numeric: false,
+                                        disablePadding: false,
+                                        label: 'Updated At',
+                                    },
+                                ]}
                             />
                             {/* Facility Pagination */}
-                            <FacilityPagination
+                            <PaginationTable
                                 page={state.page}
                                 take={state.take}
                                 handleChangeRowsPerPage={
                                     handleChangeRowsPerPage
                                 }
                                 handleChangePage={handleChangePage}
+                                totalPages={totalPages}
                             />
                         </Grid>
                     </AppBar>
@@ -329,35 +344,33 @@ const Facility = () => {
             </Paper>
 
             {/* Facility Dialog */}
-            <FacilityDialog
+            <EventDialog
                 openCreateAndUpdateDialog={state.openCreateAndUpdateDialog}
                 handleToggleDialogCreateAndUpdate={
                     handleToggleDialogCreateAndUpdate
                 }
                 isCreateMode={state.isCreateMode}
-                openAlert={state.openAlert}
                 handleChange={handleChange}
                 name={state.name}
-                code={state.code}
-                type={state.type}
-                status={state.status}
                 openDeleteDialog={state.openDeleteDialog}
                 handleCreateAndUpdate={handleCreateAndUpdate}
                 handleToggleDialogDelete={handleToggleDialogDelete}
                 handleDelete={handleDelete}
+                isLoading={isLoading}
+                errors={errors}
+                createSuccess={createSuccess}
             />
             {/* Notification */}
-            <FacilityNotification
+            <Notification
                 openDeleteSnackBar={state.openDeleteSnackBar}
                 openCreateSnackBar={state.openCreateSnackBar}
                 openUpdateSnackBar={state.openUpdateSnackBar}
             />
 
             {/* Filter Sidebar */}
-            <FacilityFilter
+            <EventFilter
                 openFilter={state.openFilter}
                 handleToggleFilter={handleToggleFilter}
-                statusFilter={filters.statusFilter}
                 handleFilterChange={handleFilterChange}
                 createdFrom={filters.createdFrom}
                 createdTo={filters.createdTo}
@@ -365,9 +378,10 @@ const Facility = () => {
                 updatedTo={filters.updatedTo}
                 handleApplyFilter={handleApplyFilter}
                 handleClearFilter={handleClearFilter}
+                setFilters={setFilters}
             />
         </div>
     );
 };
 
-export default Facility;
+export default EventType;

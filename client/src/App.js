@@ -12,6 +12,7 @@ import Confirmation from './pages/confirmation/Confirmation';
 // import Dashboard from './pages/dashboard/Dashboard';
 import Facility from './components/Facility/Facility';
 import User from './components/User/User';
+import EventType from './components/EventType/EventType';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -35,43 +36,52 @@ const App = () => {
                     />
                 </Grid>
             ) : (
-                    <Switch>
-                        <Route exact path="/" component={Login} />
-                        <Route exact path="/login" component={Login} />
-                        <PrivateRoute exact path="/pickrole" component={PickRole} />
-                        {/* <Route exact path="/404" component={Error} /> */}
-                        <Route
-                            exact
-                            path="/confirmation/:id"
-                            component={Confirmation}
-                        />
+                <Switch>
+                    <Route exact path="/" component={Login} />
+                    <Route exact path="/login" component={Login} />
+                    <PrivateRoute exact path="/pickrole" component={PickRole} />
+                    {/* <Route exact path="/404" component={Error} /> */}
+                    <Route
+                        exact
+                        path="/confirmation/:id"
+                        component={Confirmation}
+                    />
 
-                        {/* Here is the place to add route for dashboard layout */}
-                        <Route>
-                            <Switch>
-                                <Route
-                                    path="/dashboard/user"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            {/* <Dashboard /> */}
-                                            <User />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/facility"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <Facility />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route path="*" component={Error} />
-                            </Switch>
-                        </Route>
-                        <Route path="*" component={Error} />
-                    </Switch>
-                )}
+                    {/* Here is the place to add route for dashboard layout */}
+                    <Route>
+                        <Switch>
+                            <Route
+                                path="/dashboard/user"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <User />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/facility"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <Facility />
+                                    </DashboardLayout>
+                                )}
+                            />
+
+                            {/* Creator Role */}
+                            <Route
+                                path="/dashboard/event-type"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <EventType />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route path="*" component={Error} />
+                        </Switch>
+                    </Route>
+                    <Route path="*" component={Error} />
+                </Switch>
+            )}
         </div>
     );
 };

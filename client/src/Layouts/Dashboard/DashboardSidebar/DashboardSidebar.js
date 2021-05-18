@@ -37,7 +37,18 @@ const roleActions = {
         },
     ],
     2: [],
-    3: [],
+    3: [
+        {
+            title: 'Create Event',
+            icon: null,
+            href: '/dashboard/create-event',
+        },
+        {
+            title: 'Event Type',
+            icon: null,
+            href: '/dashboard/event-type',
+        },
+    ],
     4: [],
 };
 
@@ -81,7 +92,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         if (openMobile && onMobileClose) {
             onMobileClose();
         }
-    }, [location.pathname]);
+    }, [location.pathname, openMobile, onMobileClose]);
 
     const content = (
         <Box className={css.sidebarWrapper}>

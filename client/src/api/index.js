@@ -10,26 +10,18 @@ export const userCheckingAPI = () => AXIOS.get(`/user/userCheck`);
 export const userLoginAPI = (userReq) => AXIOS.post(`/user/login`, userReq);
 export const userLogoutAPI = () => AXIOS.get(`/user/logout`);
 
-export const createUserAPI = (newUser) =>
-    AXIOS.post(`/user/create`, newUser);
+export const createUserAPI = (newUser) => AXIOS.post(`/user/create`, newUser);
 export const deleteUsersAPI = (userReq) =>
     AXIOS.delete(`/user/delete`, { data: userReq });
 export const updateUserAPI = (newUpdateUser) =>
     AXIOS.patch(`/user/update`, newUpdateUser);
-export const getUsersAPI = (
-    search,
-    take,
-    page,
-) =>
+export const getUsersAPI = (search, take, page) =>
     AXIOS.get(`/user/filter?search=${search}&take=${take}&page=${page}`);
-
 
 // Link API
 export const confirmUser = (id, password) =>
     AXIOS.patch(`/link/confirm/${id}`, { password: password });
-export const getLinks = () =>
-    AXIOS.get('/link');
-
+export const getLinks = () => AXIOS.get('/link');
 
 //Facility APIs
 export const getFacilitiesAPI = (
@@ -51,3 +43,23 @@ export const updateFacilityAPI = (userReq) =>
     AXIOS.patch(`/facility/update`, userReq);
 export const deleteFacilitiesAPI = (userReq) =>
     AXIOS.delete(`/facility/delete`, { data: userReq });
+
+//Event Type APIs
+export const getEventTypesAPI = (
+    search,
+    take,
+    page,
+    createdFrom,
+    createdTo,
+    updatedFrom,
+    updatedTo
+) =>
+    AXIOS.get(
+        `/eventType/filter?search=${search}&take=${take}&page=${page}&createdFrom=${createdFrom}&createdTo=${createdTo}&updatedFrom=${updatedFrom}&updatedTo=${updatedTo}`
+    );
+export const createEventTypeAPI = (userReq) =>
+    AXIOS.post(`/eventType/create`, userReq);
+export const updateEventTypeAPI = (userReq) =>
+    AXIOS.patch(`/eventType/update`, userReq);
+export const deleteEventTypesAPI = (userReq) =>
+    AXIOS.delete(`/eventType/delete`, { data: userReq });
