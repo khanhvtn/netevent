@@ -399,7 +399,9 @@ const UserTable = ({
                                                 <TableCell component="th" scope="row">
                                                     {row.email}
                                                 </TableCell>
-                                                <TableCell>{row.role}</TableCell>
+                                                <TableCell>{row.role.map((eachRole) => (
+                                                    eachRole == 1 ? "Admin " : eachRole == 2 ? "Creator " : eachRole == 3 ? "Reviewer " : "Team Member"
+                                                ))}</TableCell>
                                                 <TableCell>
                                                     {row.isConfirmed ? 'Active' : 'Expired'}
                                                 </TableCell>

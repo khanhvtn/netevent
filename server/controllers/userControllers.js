@@ -56,6 +56,25 @@ const login = async (req, res, next) => {
     }
 };
 
+const fetchCurrentUser = async(req, res, next) => {
+    
+    try {
+        const userData = req.body
+        const user = await User.findOne({email: userData.email})
+        if(user){
+            return cusResponse(
+                res,
+                200,
+                user,
+                null
+            );
+            }
+        
+    } catch (error) {
+        return next(new CustomError(500, { sysError: error.message }));
+    }
+}
+
 //user login
 const userCheck = async (req, res, next) => {
     try {
@@ -169,7 +188,7 @@ const filterUser = async (req, res, next) => {
 
         let options = {
             search: '',
-            take: 5,
+            take: 10,
             type: '',
 
             createdMaxDate: listRangeDate[0][0].createdAt,
@@ -325,4 +344,5 @@ module.exports = {
     filterUser,
     updateUser,
     deleteUser,
+    fetchCurrentUser
 };

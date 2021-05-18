@@ -7,6 +7,7 @@ import {
     USER_CONFIRM,
     USER_IS_CONFIRM,
     FETCH_ALL_USERS,
+    FETCH_CURRENT_USER,
     SEARCH_USER,
     UPDATE_USER,
     DELETE_USER,
@@ -59,6 +60,10 @@ export default function userReducers(state = initialState, action) {
                 users: action.payload.data.data,
                 totalPages: action.payload.data.totalPages
             };
+        case FETCH_CURRENT_USER:
+            return {
+                ...state, user: action.payload 
+            }
 
         // SNACKBAR
         case USER_CREATE_SUCCESS:

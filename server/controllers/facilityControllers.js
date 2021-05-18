@@ -48,7 +48,7 @@ const filter = async (req, res, next) => {
 
         let options = {
             search: '',
-            take: 5,
+            take: 10,
             type: '',
             status: {
                 $in: [false, true],

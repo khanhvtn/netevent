@@ -50,7 +50,8 @@ const FacilityDialog = ({
                 TransitionComponent={Transition}
                 maxWidth="sm"
                 open={openCreateAndUpdateDialog}
-
+                fullWidth
+                className={css.dialogCreateUpdateFac}
                 onClose={(e) => handleToggleDialogCreateAndUpdate(e)}
                 aria-labelledby="form-dialog-title"
             >
@@ -159,6 +160,8 @@ const FacilityDialog = ({
                 open={openDeleteDialog}
                 onClose={handleToggleDialogDelete}
                 aria-labelledby="delete-dialog"
+                fullWidth
+                className={css.dialogDeleteFac}
                 aria-describedby="delete-dialog-description"
             >
                 <DialogTitle id="delete-dialog">{'Warning!!!'}</DialogTitle>

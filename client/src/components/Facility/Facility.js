@@ -29,7 +29,7 @@ import FacilityPagination from './FacilityPagination/FacilityPagination';
 
 const initialState = {
     search: '',
-    take: 5,
+    take: 10,
     page: 1,
     openCreateAndUpdateDialog: false,
     name: '',
@@ -406,6 +406,7 @@ const Facility = () => {
                 handleFilterChange={handleFilterChange}
                 createdFrom={filters.createdFrom}
                 createdTo={filters.createdTo}
+                setFilters={setFilters}
                 updatedFrom={filters.updatedFrom}
                 updatedTo={filters.updatedTo}
                 handleApplyFilter={handleApplyFilter}

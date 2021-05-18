@@ -9,7 +9,7 @@ const AXIOS = axios.create({
 export const userCheckingAPI = () => AXIOS.get(`/user/userCheck`);
 export const userLoginAPI = (userReq) => AXIOS.post(`/user/login`, userReq);
 export const userLogoutAPI = () => AXIOS.get(`/user/logout`);
-
+export const fetchCurrentUser = (userReq) => AXIOS.post(`/user/fetchCurrent`, userReq)
 export const createUserAPI = (newUser) =>
     AXIOS.post(`/user/create`, newUser);
 export const deleteUsersAPI = (userReq) =>

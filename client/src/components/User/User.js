@@ -15,6 +15,7 @@ import {
     createUser,
     deleteUsers,
     updateUser,
+    userLogout,
 } from '../../actions/userActions';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -26,10 +27,11 @@ import UserFilter from './UserFilter/UserFilter';
 import UserNotification from './UserNotification/UserNotification';
 import UserDialog from './UserDialog/UserDialog';
 import UserPagination from './UserPagination/UserPagination';
+import { useHistory } from 'react-router-dom';
 
 const initialState = {
     search: '',
-    take: 5,
+    take: 10,
     page: 1,
     openCreateAndUpdateDialog: false,
     email: '',
@@ -58,12 +60,15 @@ const filterState = {
 const User = () => {
     const css = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
     const {
+        user,
         users,
         isCreated,
         isDeleted,
         isUpdated,
     } = useSelector((state) => ({
+        user: state.user.user,
         users: state.user.users,
         isLoading: state.user.isLoading,
         totalPages: state.user.totalPages,
@@ -161,10 +166,10 @@ const User = () => {
         }));
     };
     const handleFilterChange = (e) => {
-        const { email, value } = e.target;
+        const { name, value } = e.target;
         setFilters((prevState) => ({
             ...prevState,
-            [email]: value,
+            [name]: value,
         }));
     };
 
@@ -182,12 +187,17 @@ const User = () => {
 
     const handleCreateAndUpdate = () => {
         const { email, role } = state;
+        //Sort role
+        role.sort(function (a, b) {
+            return a - b
+        })
         //create
         if (state.isCreateMode) {
             const userReq = {
                 email,
                 role
             };
+            
             dispatch(createUser(userReq));
             return;
         }
@@ -196,7 +206,7 @@ const User = () => {
             updateUser({
                 filter: selected[0],
                 update: { email, role },
-            })
+            }, user.email, history)
         );
     };
 
@@ -204,8 +214,9 @@ const User = () => {
         dispatch(
             deleteUsers({
                 deleteList: selected,
-            })
+            }, user.email, history)
         );
+       
     };
 
     const handleToggleDialogCreateAndUpdate = (event, mode) => {
@@ -348,6 +359,7 @@ const User = () => {
                 handleFilterChange={handleFilterChange}
                 createdFrom={filters.createdFrom}
                 createdTo={filters.createdTo}
+                setFilters={setFilters}
                 updatedFrom={filters.updatedFrom}
                 updatedTo={filters.updatedTo}
                 handleApplyFilter={handleApplyFilter}

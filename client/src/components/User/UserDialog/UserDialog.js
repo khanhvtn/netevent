@@ -67,9 +67,9 @@ const UserDialog = ({
             {/* Dialog Create and Update */}
             <Dialog
                 TransitionComponent={Transition}
-                maxWidth="sm"
+                fullWidth
                 open={openCreateAndUpdateDialog}
-
+                className={css.dialogCreateUpdateUser}
                 onClose={(e) => handleToggleDialogCreateAndUpdate(e)}
                 aria-labelledby="form-dialog-title"
             >
@@ -157,6 +157,8 @@ const UserDialog = ({
             <Dialog
                 TransitionComponent={Transition}
                 open={openDeleteDialog}
+                className={css.dialogDeleteUser}
+                fullWidth
                 onClose={handleToggleDialogDelete}
                 aria-labelledby="delete-dialog"
                 aria-describedby="delete-dialog-description"

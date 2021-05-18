@@ -10,6 +10,7 @@ import {
     USER_CONFIRM,
     USER_IS_CONFIRM,
     FETCH_ALL_USERS,
+    FETCH_CURRENT_USER,
     USER_CREATE,
     DELETE_USER,
     UPDATE_USER,
@@ -82,6 +83,21 @@ export const userLogout = (history) => async (dispatch) => {
     }
     setUserIsLoading(false, dispatch);
 };
+
+export const fetchCurrentUser = (currentUser, history) => async (dispatch) => {
+    
+    try {
+        const { data } = await api.fetchCurrentUser({email: currentUser});
+        console.log(data)
+        dispatch({
+            type: FETCH_CURRENT_USER,
+            payload: data.data,
+        });
+        history.push('/pickrole')
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 export const userCheck = (history) => async (dispatch) => {
     setUserIsChecking(true, dispatch);
@@ -190,7 +206,7 @@ export const createUser = (userData) => async (dispatch) => {
 };
 
 
-export const updateUser = (updateUser) => async (dispatch) => {
+export const updateUser = (updateUser, currentUser, history) => async (dispatch) => {
     setUserIsLoading(true, dispatch);
     try {
         await api.updateUserAPI(updateUser);
@@ -202,6 +218,10 @@ export const updateUser = (updateUser) => async (dispatch) => {
         setTimeout(() => {
             dispatch({ type: USER_UPDATE_SUCCESS, payload: false });
         }, 3000);
+
+        if(updateUser.filter === currentUser){
+            dispatch(fetchCurrentUser(currentUser ,history))
+        } 
     } catch (error) {
         if (error.response.data?.errors) {
             dispatch({
@@ -214,7 +234,7 @@ export const updateUser = (updateUser) => async (dispatch) => {
     setUserIsLoading(false, dispatch)
 };
 
-export const deleteUsers = (userReq) => async (dispatch) => {
+export const deleteUsers = (userReq, currentUser, history) => async (dispatch) => {
     setUserIsLoading(true, dispatch);
     try {
         await api.deleteUsersAPI(userReq);
@@ -222,6 +242,7 @@ export const deleteUsers = (userReq) => async (dispatch) => {
             type: USER_DELETE_SUCCESS,
             payload: true,
         });
+
         dispatch({
             type: ERROR_CLEAR,
             payload: null,
@@ -233,6 +254,11 @@ export const deleteUsers = (userReq) => async (dispatch) => {
                 payload: false,
             });
         }, 3000);
+
+
+        if(Object.values(userReq)[0].includes(currentUser)){
+            dispatch(userLogout(history))
+        } 
     } catch (error) {
         console.log(error);
     }

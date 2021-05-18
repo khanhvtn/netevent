@@ -13,7 +13,7 @@ const UserPagination = ({
 }) => {
     const css = useStyles();
     const { totalPages } = useSelector((state) => ({
-        totalPages: state.facility.totalPages,
+        totalPages: state.user.totalPages,
     }));
     return (
         <div className={css.paginationWrapper}>
@@ -29,9 +29,10 @@ const UserPagination = ({
                     name="take"
                     onChange={handleChangeRowsPerPage}
                 >
-                    <MenuItem value={5}>5</MenuItem>
                     <MenuItem value={10}>10</MenuItem>
-                    <MenuItem value={25}>25</MenuItem>
+                    <MenuItem value={20}>20</MenuItem>
+                    <MenuItem value={30}>30</MenuItem>
+
                 </Select>
             </div>
             <div>

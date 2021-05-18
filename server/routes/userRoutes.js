@@ -4,6 +4,7 @@ const { authentication } = require('../middlewares');
 
 // AUTH
 router.post('/login', userControllers.login);
+router.post('/fetchCurrent', userControllers.fetchCurrentUser);
 router.get('/userCheck', authentication, userControllers.userCheck);
 router.get('/logout', userControllers.logout);
 
