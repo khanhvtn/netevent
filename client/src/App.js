@@ -13,6 +13,7 @@ import Confirmation from './pages/confirmation/Confirmation';
 import Facility from './components/Facility/Facility';
 import User from './components/User/User';
 import EventType from './components/EventType/EventType';
+import CreateEvent from './components/CreateEvent/CreateEvent';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -73,6 +74,14 @@ const App = () => {
                                 render={() => (
                                     <DashboardLayout>
                                         <EventType />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/create-event"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <CreateEvent />
                                     </DashboardLayout>
                                 )}
                             />

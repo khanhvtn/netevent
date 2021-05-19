@@ -4,7 +4,7 @@ import { Alert } from '@material-ui/lab';
 //import useStyles in the last
 import useStyles from './styles';
 
-const FacilityNotification = ({
+const SystemNotification = ({
     openDeleteSnackBar,
     openUpdateSnackBar,
     openCreateSnackBar,
@@ -28,4 +28,4 @@ const FacilityNotification = ({
     );
 };
 
-export default FacilityNotification;
+export default SystemNotification;

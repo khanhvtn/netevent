@@ -55,7 +55,13 @@ export const getEventTypesAPI = (
     updatedTo
 ) =>
     AXIOS.get(
-        `/eventType/filter?search=${search}&take=${take}&page=${page}&createdFrom=${createdFrom}&createdTo=${createdTo}&updatedFrom=${updatedFrom}&updatedTo=${updatedTo}`
+        `/eventType/filter?search=${search ? search : ''}&take=${
+            take ? take : ''
+        }&page=${page ? page : ''}&createdFrom=${
+            createdFrom ? createdFrom : ''
+        }&createdTo=${createdTo ? createdTo : ''}&updatedFrom=${
+            updatedFrom ? updatedFrom : ''
+        }&updatedTo=${updatedTo ? updatedTo : ''}`
     );
 export const createEventTypeAPI = (userReq) =>
     AXIOS.post(`/eventType/create`, userReq);
