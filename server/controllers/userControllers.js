@@ -165,6 +165,11 @@ const deleteUser = async (req, res, next) => {
 };
 
 const filterUser = async (req, res, next) => {
+
+    if(req.query.role){
+        console.log("This is: ", req.query.role)
+    }
+
     try {
         //get max date and min date of updatedAt and createdAt
         const createdMaxDate = await User.find()
@@ -189,13 +194,15 @@ const filterUser = async (req, res, next) => {
         let options = {
             search: '',
             take: 10,
-            type: '',
-
+            role:  {
+                $in: ['1', '2', '3', '4'],
+            },
             createdMaxDate: listRangeDate[0][0].createdAt,
             createdMinDate: listRangeDate[1][0].createdAt,
             updatedMaxDate: listRangeDate[2][0].updatedAt,
             updatedMinDate: listRangeDate[3][0].updatedAt,
         };
+
         //adding search
         if (req.query.search) {
             options = {
@@ -214,6 +221,19 @@ const filterUser = async (req, res, next) => {
                 take: parseInt(req.query.take.toString()),
             };
         }
+
+        /* 
+        Add role filter
+        Default role will match all
+         */
+        if (req.query.role) {
+            options = {
+                ...options,
+                role: {$in: [req.query.role]},
+            };
+        }
+
+
 
         /* 
         Add createdFrom filter
@@ -272,6 +292,7 @@ const filterUser = async (req, res, next) => {
             $or: [
                 { email: new RegExp(options.search, 'i') },
             ],
+            role: options.role,
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -293,7 +314,7 @@ const filterUser = async (req, res, next) => {
             $or: [
                 { email: new RegExp(options.search, 'i') },
             ],
-            status: options.status,
+            role: options.role,
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -309,6 +330,8 @@ const filterUser = async (req, res, next) => {
 
         return cusResponse(res, 200, users, null, totalPages);
     } catch (error) {
+        console.log(error.message)
+
         return next(new CustomError(500, error.message));
     }
 };

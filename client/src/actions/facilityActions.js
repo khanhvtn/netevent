@@ -34,6 +34,7 @@ export const getFacilities = (
 ) => async (dispatch) => {
     setFacilityIsLoading(true, dispatch);
     try {
+        console.log(status)
         const data = await getFacilitiesAPI(
             search,
             take,

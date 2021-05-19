@@ -35,7 +35,7 @@ const initialState = {
     page: 1,
     openCreateAndUpdateDialog: false,
     email: '',
-    roles: [],
+    role: [],
     openAlert: false,
     openDeleteDialog: false,
     openDeleteSnackBar: false,
@@ -43,6 +43,7 @@ const initialState = {
     openCreateSnackBar: false,
     isCreateMode: true,
     openFilter: false,
+    rolesFilter: '',
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
@@ -50,7 +51,7 @@ const initialState = {
 };
 
 const filterState = {
-    statusFilter: '',
+    rolesFilter: '',
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
@@ -125,6 +126,7 @@ const User = () => {
                 state.search,
                 state.take,
                 state.page,
+                state.rolesFilter,
                 filterDate.createdFrom,
                 filterDate.createdTo,
                 filterDate.updatedFrom,
@@ -142,6 +144,7 @@ const User = () => {
         state.search,
         state.take,
         state.page,
+        state.rolesFilter,
         state.createdFrom,
         state.createdTo,
         state.updatedFrom,
@@ -355,7 +358,7 @@ const User = () => {
             <UserFilter
                 openFilter={state.openFilter}
                 handleToggleFilter={handleToggleFilter}
-                statusFilter={filters.statusFilter}
+                rolesFilter={filters.rolesFilter}
                 handleFilterChange={handleFilterChange}
                 createdFrom={filters.createdFrom}
                 createdTo={filters.createdTo}

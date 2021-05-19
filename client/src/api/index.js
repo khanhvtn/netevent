@@ -20,8 +20,13 @@ export const getUsersAPI = (
     search,
     take,
     page,
+    role,
+    createdFrom,
+    createdTo,
+    updatedFrom,
+    updatedTo
 ) =>
-    AXIOS.get(`/user/filter?search=${search}&take=${take}&page=${page}`);
+    AXIOS.get(`/user/filter?search=${search}&take=${take}&page=${page}&role=${role}&createdFrom=${createdFrom}&createdTo=${createdTo}&updatedFrom=${updatedFrom}&updatedTo=${updatedTo}`);
 
 
 // Link API

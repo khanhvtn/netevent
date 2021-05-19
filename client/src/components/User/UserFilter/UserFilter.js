@@ -20,7 +20,7 @@ import useStyles from './styles';
 const UserFilter = ({
     openFilter,
     handleToggleFilter,
-    statusFilter,
+    rolesFilter,
     handleFilterChange,
     createdFrom,
     createdTo,
@@ -37,22 +37,24 @@ const UserFilter = ({
                 <Typography variant="h6">Filter List</Typography>
                 <div className={css.filterInputs}>
                     <FormControl fullWidth variant="standard">
-                        <InputLabel id="statusFilterLabel">Status</InputLabel>
+                        <InputLabel id="rolesFilterLabel">Roles</InputLabel>
                         <Select
-                            labelId="statusFilterLabel"
-                            id="statusFiler"
-                            value={statusFilter}
+                            labelId="rolesFilterLabel"
+                            id="rolesFiler"
+                            value={rolesFilter}
                             onChange={handleFilterChange}
-                            label="Status"
+                            label="Roles"
                             inputProps={{
-                                name: 'statusFilter',
+                                name: 'rolesFilter',
                             }}
                         >
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value={true}>Active</MenuItem>
-                            <MenuItem value={false}>Expired</MenuItem>
+                            <MenuItem value={1}>Admin</MenuItem>
+                            <MenuItem value={2}>Reviewer</MenuItem>
+                            <MenuItem value={3}>Creator</MenuItem>
+                            <MenuItem value={4}>Team Member</MenuItem>
                         </Select>
                     </FormControl>
                     <MuiPickersUtilsProvider utils={MomentUtils}>

@@ -163,13 +163,27 @@ export const userConfirm = (id, password, history) => async (dispatch) => {
     }
 };
 
-export const getUsers = (search, take, page) => async (dispatch) => {
+export const getUsers = (
+    search, 
+    take, 
+    page, 
+    role, 
+    createdFrom,
+    createdTo,
+    updatedFrom,
+    updatedTo
+) => async (dispatch) => {
     setUserIsLoading(true, dispatch);
     try {
         const data = await api.getUsersAPI(
             search,
             take,
-            page
+            page,
+            role,
+            createdFrom,
+            createdTo,
+            updatedFrom,
+            updatedTo
         );
         dispatch({ type: FETCH_ALL_USERS, payload: data });
     } catch (error) {
