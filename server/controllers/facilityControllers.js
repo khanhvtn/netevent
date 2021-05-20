@@ -227,7 +227,7 @@ const updateFacility = async (req, res, next) => {
         const updatedFacility = await Facility.findOneAndUpdate(
             { name: userReq.filter },
             userReq.update,
-            { runValidators: true, context: 'query' }
+            { new: true, runValidators: true, context: 'query' }
         );
 
         return cusResponse(res, 200, updatedFacility, null);

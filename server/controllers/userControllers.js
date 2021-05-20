@@ -56,20 +56,20 @@ const login = async (req, res, next) => {
     }
 };
 
-const fetchCurrentUser = async(req, res, next) => {
-    
+const fetchCurrentUser = async (req, res, next) => {
+
     try {
         const userData = req.body
-        const user = await User.findOne({email: userData.email})
-        if(user){
+        const user = await User.findOne({ email: userData.email })
+        if (user) {
             return cusResponse(
                 res,
                 200,
                 user,
                 null
             );
-            }
-        
+        }
+
     } catch (error) {
         return next(new CustomError(500, { sysError: error.message }));
     }
@@ -166,11 +166,12 @@ const deleteUser = async (req, res, next) => {
 
 const filterUser = async (req, res, next) => {
 
-    if(req.query.role){
+    if (req.query.role) {
         console.log("This is: ", req.query.role)
     }
 
     try {
+
         //get max date and min date of updatedAt and createdAt
         const createdMaxDate = await User.find()
             .sort({ createdAt: -1 })
@@ -194,7 +195,7 @@ const filterUser = async (req, res, next) => {
         let options = {
             search: '',
             take: 10,
-            role:  {
+            role: {
                 $in: ['1', '2', '3', '4'],
             },
             createdMaxDate: listRangeDate[0][0].createdAt,
@@ -229,7 +230,7 @@ const filterUser = async (req, res, next) => {
         if (req.query.role) {
             options = {
                 ...options,
-                role: {$in: [req.query.role]},
+                role: { $in: [req.query.role] },
             };
         }
 
@@ -343,7 +344,7 @@ const updateUser = async (req, res, next) => {
         const updatedUser = await User.findOneAndUpdate(
             { email: userReq.filter },
             userReq.update,
-            { runValidators: true, context: 'query' }
+            { new: true, runValidators: true, context: 'query' },
         );
 
         return cusResponse(res, 200, updatedUser, null);
