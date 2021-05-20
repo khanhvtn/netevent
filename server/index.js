@@ -7,14 +7,15 @@ const {
     facilityRoutes,
     eventTypeRoutes,
     eventRoutes,
+    taskRoutes,
 } = require('./routes');
 const cors = require('cors');
 const { errorHandler } = require('./middlewares');
 const cookieParser = require('cookie-parser');
 
 //middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '30mb' }));
+app.use(express.urlencoded({ extended: true, limit: '30mb' }));
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(cookieParser());
 
@@ -27,6 +28,7 @@ app.use('/api/facility', facilityRoutes);
 app.use('/api/link', linkRoutes);
 app.use('/api/eventType', eventTypeRoutes);
 app.use('/api/event', eventRoutes);
+app.use('/api/task', taskRoutes);
 
 //error handler
 app.use(errorHandler);
