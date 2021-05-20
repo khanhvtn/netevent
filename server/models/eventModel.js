@@ -83,7 +83,7 @@ const eventSchema = mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        taskList: {
+        taskListId: {
             type: [String],
             required: [true, 'Task List cannot be blanked'],
         },
