@@ -46,6 +46,16 @@ const filter = async (req, res, next) => {
             updatedMinDate,
         ]);
 
+        //return empty result to client if database has no data.
+        if (
+            !createdMaxDate.length ||
+            !createdMinDate.length ||
+            !updatedMaxDate.length ||
+            !updatedMinDate.length
+        ) {
+            return cusResponse(res, 200, [], null);
+        }
+
         let options = {
             search: '',
             take: 5,
@@ -190,7 +200,7 @@ const filter = async (req, res, next) => {
     }
 };
 
-const deleteFacilities = async (req, res, next) => {
+const deleteFacility = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
         if (deleteList.length === 1) {
@@ -242,9 +252,19 @@ const updateFacility = async (req, res, next) => {
     }
 };
 
+const getAllFacility = async (req, res, next) => {
+    try {
+        const facilities = await Facility.find({});
+        return cusResponse(res, 200, facilities, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
     createFacility,
     filter,
-    deleteFacilities,
+    deleteFacility,
     updateFacility,
+    getAllFacility,
 };

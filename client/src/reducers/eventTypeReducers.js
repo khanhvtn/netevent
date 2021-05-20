@@ -4,6 +4,7 @@ import {
     EVENT_TYPE_CREATE_SUCCESS,
     EVENT_TYPE_UPDATE_SUCCESS,
     EVENT_TYPE_DELETE_SUCCESS,
+    EVENT_TYPE_GET_ALL_FILTER,
 } from '../constants';
 
 const initialState = {
@@ -18,6 +19,11 @@ const initialState = {
 export default function facilityReducers(state = initialState, action) {
     switch (action.type) {
         case EVENT_TYPE_GET_ALL:
+            return {
+                ...state,
+                eventTypes: action.payload.data.data,
+            };
+        case EVENT_TYPE_GET_ALL_FILTER:
             return {
                 ...state,
                 eventTypes: action.payload.data.data,

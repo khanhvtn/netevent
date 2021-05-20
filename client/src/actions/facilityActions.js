@@ -6,12 +6,15 @@ import {
     ERROR,
     ERROR_CLEAR,
     FACILITY_DELETE_SUCCESS,
+    EVENT_TYPE_GET_ALL_FILTER,
+    FACILITY_GET_ALL_FILTER,
 } from '../constants';
 import {
     getFacilitiesAPI,
     createFacilityAPI,
     updateFacilityAPI,
     deleteFacilitiesAPI,
+    getAllFacilitiesAPI,
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -22,6 +25,19 @@ const setFacilityIsLoading = (status, dispatch) => {
     });
 };
 
+export const getAllFacilities = () => async (dispatch) => {
+    setFacilityIsLoading(true, dispatch);
+    try {
+        const data = await getAllFacilitiesAPI();
+        dispatch({
+            type: FACILITY_GET_ALL,
+            payload: data,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+    setFacilityIsLoading(false, dispatch);
+};
 export const getFacilities = (
     search,
     take,
@@ -45,7 +61,7 @@ export const getFacilities = (
             updatedTo
         );
         dispatch({
-            type: FACILITY_GET_ALL,
+            type: FACILITY_GET_ALL_FILTER,
             payload: data,
         });
     } catch (error) {

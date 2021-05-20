@@ -6,12 +6,14 @@ import {
     ERROR,
     ERROR_CLEAR,
     EVENT_TYPE_DELETE_SUCCESS,
+    EVENT_TYPE_GET_ALL_FILTER,
 } from '../constants';
 import {
     getEventTypesAPI,
     createEventTypeAPI,
     updateEventTypeAPI,
     deleteEventTypesAPI,
+    getAllEventTypesAPI,
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -22,6 +24,19 @@ const setEventTypeIsLoading = (status, dispatch) => {
     });
 };
 
+export const getAllEventTypes = () => async (dispatch) => {
+    setEventTypeIsLoading(true, dispatch);
+    try {
+        const data = await getAllEventTypesAPI();
+        dispatch({
+            type: EVENT_TYPE_GET_ALL,
+            payload: data,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+    setEventTypeIsLoading(false, dispatch);
+};
 export const getEventTypes = (
     search,
     take,
@@ -43,7 +58,7 @@ export const getEventTypes = (
             updatedTo
         );
         dispatch({
-            type: EVENT_TYPE_GET_ALL,
+            type: EVENT_TYPE_GET_ALL_FILTER,
             payload: data,
         });
     } catch (error) {

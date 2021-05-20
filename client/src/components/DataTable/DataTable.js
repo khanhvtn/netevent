@@ -22,8 +22,6 @@ import {
 import { Delete, Create, Edit } from '@material-ui/icons';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 
-import { useSelector } from 'react-redux';
-
 //import makeStyles in the last
 import useStyles from './styles';
 
@@ -332,8 +330,11 @@ const DataTable = ({
                                     height: 50 * take,
                                 }}
                             >
-                                <TableCell colSpan={7} align="center">
-                                    <Typography>No Data Matched</Typography>
+                                <TableCell
+                                    colSpan={headCells.length + 1}
+                                    align="center"
+                                >
+                                    <Typography>No Data</Typography>
                                 </TableCell>
                             </TableRow>
                         ) : (
@@ -362,13 +363,14 @@ const DataTable = ({
                                                     }}
                                                 />
                                             </TableCell>
-                                            {headCells.map((cell) => {
+                                            {headCells.map((cell, index) => {
                                                 if (
                                                     cell.id === 'createdAt' ||
-                                                    cell.id === 'updatedAt'
+                                                    cell.id === 'updatedAt' ||
+                                                    cell.id.includes('Date')
                                                 ) {
                                                     return (
-                                                        <TableCell>
+                                                        <TableCell key={index}>
                                                             <Moment format="DD-MM-YYYY">
                                                                 {row[cell.id]}
                                                             </Moment>
@@ -376,7 +378,7 @@ const DataTable = ({
                                                     );
                                                 }
                                                 return (
-                                                    <TableCell>
+                                                    <TableCell key={index}>
                                                         {row[cell.id]}
                                                     </TableCell>
                                                 );

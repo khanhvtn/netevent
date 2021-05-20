@@ -43,6 +43,7 @@ export const updateFacilityAPI = (userReq) =>
     AXIOS.patch(`/facility/update`, userReq);
 export const deleteFacilitiesAPI = (userReq) =>
     AXIOS.delete(`/facility/delete`, { data: userReq });
+export const getAllFacilitiesAPI = () => AXIOS.get(`/facility/all`);
 
 //Event Type APIs
 export const getEventTypesAPI = (
@@ -69,3 +70,4 @@ export const updateEventTypeAPI = (userReq) =>
     AXIOS.patch(`/eventType/update`, userReq);
 export const deleteEventTypesAPI = (userReq) =>
     AXIOS.delete(`/eventType/delete`, { data: userReq });
+export const getAllEventTypesAPI = () => AXIOS.get(`/eventType/all`);

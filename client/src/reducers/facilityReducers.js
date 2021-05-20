@@ -4,6 +4,7 @@ import {
     FACILITY_CREATE_SUCCESS,
     FACILITY_UPDATE_SUCCESS,
     FACILITY_DELETE_SUCCESS,
+    FACILITY_GET_ALL_FILTER,
 } from '../constants';
 
 const initialState = {
@@ -18,6 +19,11 @@ const initialState = {
 export default function facilityReducers(state = initialState, action) {
     switch (action.type) {
         case FACILITY_GET_ALL:
+            return {
+                ...state,
+                facilities: action.payload.data.data,
+            };
+        case FACILITY_GET_ALL_FILTER:
             return {
                 ...state,
                 facilities: action.payload.data.data,
