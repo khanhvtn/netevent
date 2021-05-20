@@ -1,14 +1,45 @@
-const { Event } = require('../models');
+const { Event, Task } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
 const createEvent = async (req, res, next) => {
     try {
+        const { tasks } = req.body;
+        //create tasks to get task list ids
+        const taskResult = await Promise.all(
+            tasks.map(async (task) => {
+                try {
+                    return await Task.create(task);
+                } catch (error) {
+                    throw error;
+                }
+            })
+        );
+        //ad task list id into req.body
+        req.body = {
+            ...req.body,
+            taskListId: taskResult.map((task) => task._id),
+        };
+
         const event = new Event(req.body);
         //validate user request fields.
         await event.validate();
 
         //create new event
         const newEvent = await event.save();
+
+        //update id event back to above task.
+        await Promise.all(
+            taskResult.map(async (task) => {
+                try {
+                    return await Task.findByIdAndUpdate(task._id, {
+                        ...task._doc,
+                        eventId: newEvent._id,
+                    });
+                } catch (error) {
+                    throw error;
+                }
+            })
+        );
         return cusResponse(res, 200, newEvent, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
