@@ -18,6 +18,7 @@ import {
     CircularProgress,
     Button,
     TableFooter,
+    Chip,
 } from '@material-ui/core';
 import { Delete, Create, Edit } from '@material-ui/icons';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -403,7 +404,21 @@ const UserTable = ({
                                                     eachRole == 1 ? "Admin " : eachRole == 2 ? "Reviewer " : eachRole == 3 ? "Creator " : "Team Member"
                                                 ))}</TableCell>
                                                 <TableCell>
-                                                    {row.isConfirmed ? 'Active' : 'Expired'}
+                                                    {row.isConfirmed ?
+                                                        <Chip
+                                                            className={css.fixedWidthChip}
+                                                            size="small"
+                                                            label="Active"
+                                                            color="primary"
+                                                        />
+                                                        :
+                                                        <Chip
+                                                            className={css.fixedWidthChip}
+                                                            size="small"
+                                                            label="Pending"
+                                                            color="default"
+                                                        />
+                                                    }
                                                 </TableCell>
                                                 <TableCell>
                                                     <Moment format="DD-MM-YYYY">

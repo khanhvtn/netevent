@@ -18,6 +18,7 @@ import {
     CircularProgress,
     Button,
     TableFooter,
+    Chip,
 } from '@material-ui/core';
 import { Delete, Create, Edit } from '@material-ui/icons';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -165,13 +166,13 @@ const useToolbarStyles = makeStyles((theme) => ({
     highlight:
         theme.palette.type === 'light'
             ? {
-                  color: theme.palette.secondary.main,
-                  backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-              }
+                color: theme.palette.secondary.main,
+                backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+            }
             : {
-                  color: theme.palette.text.primary,
-                  backgroundColor: theme.palette.secondary.dark,
-              },
+                color: theme.palette.text.primary,
+                backgroundColor: theme.palette.secondary.dark,
+            },
     title: {
         flex: '1 1 100%',
     },
@@ -201,15 +202,15 @@ const EnhancedTableToolbar = (props) => {
                     {numSelected} selected
                 </Typography>
             ) : (
-                <Typography
-                    className={classes.title}
-                    variant="h6"
-                    id="tableTitle"
-                    component="div"
-                >
-                    Facility List
-                </Typography>
-            )}
+                    <Typography
+                        className={classes.title}
+                        variant="h6"
+                        id="tableTitle"
+                        component="div"
+                    >
+                        Facility List
+                    </Typography>
+                )}
 
             {numSelected === 0 ? (
                 <Tooltip title="Create Facility">
@@ -245,15 +246,15 @@ const EnhancedTableToolbar = (props) => {
                     </Button>
                 </>
             ) : (
-                <Button
-                    onClick={handleToggleDialogDelete}
-                    endIcon={<Delete />}
-                    variant="contained"
-                    color="secondary"
-                >
-                    Delete
-                </Button>
-            )}
+                        <Button
+                            onClick={handleToggleDialogDelete}
+                            endIcon={<Delete />}
+                            variant="contained"
+                            color="secondary"
+                        >
+                            Delete
+                        </Button>
+                    )}
         </Toolbar>
     );
 };
@@ -352,92 +353,92 @@ const FacilityTable = ({
                     />
                     <TableBody>
                         {isLoading ||
-                        createSuccess ||
-                        updateSuccess ||
-                        deleteSuccess ? (
-                            <TableRow
-                                style={{
-                                    height: 50 * take,
-                                }}
-                            >
-                                <TableCell colSpan={7} align="center">
-                                    <CircularProgress />
-                                </TableCell>
-                            </TableRow>
-                        ) : facilities.length === 0 ? (
-                            <TableRow
-                                style={{
-                                    height: 50 * take,
-                                }}
-                            >
-                                <TableCell colSpan={7} align="center">
-                                    <Typography>No Data Matched</Typography>
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            stableSort(
-                                facilities,
-                                getComparator(order, orderBy)
-                            ).map((row, index) => {
-                                const isItemSelected = isSelected(row.name);
-                                const labelId = `enhanced-table-checkbox-${index}`;
+                            createSuccess ||
+                            updateSuccess ||
+                            deleteSuccess ? (
+                                <TableRow
+                                    style={{
+                                        height: 50 * take,
+                                    }}
+                                >
+                                    <TableCell colSpan={7} align="center">
+                                        <CircularProgress />
+                                    </TableCell>
+                                </TableRow>
+                            ) : facilities.length === 0 ? (
+                                <TableRow
+                                    style={{
+                                        height: 50 * take,
+                                    }}
+                                >
+                                    <TableCell colSpan={7} align="center">
+                                        <Typography>No Data Matched</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                    stableSort(
+                                        facilities,
+                                        getComparator(order, orderBy)
+                                    ).map((row, index) => {
+                                        const isItemSelected = isSelected(row.name);
+                                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                                return (
-                                    <TableRow
-                                        hover
-                                        onClick={(event) =>
-                                            handleClick(event, row.name)
-                                        }
-                                        role="checkbox"
-                                        aria-checked={isItemSelected}
-                                        tabIndex={-1}
-                                        key={row.name}
-                                        selected={isItemSelected}
-                                    >
-                                        <TableCell padding="checkbox">
-                                            <Checkbox
-                                                checked={isItemSelected}
-                                                inputProps={{
-                                                    'aria-labelledby': labelId,
-                                                }}
-                                            />
-                                        </TableCell>
-                                        <TableCell component="th" scope="row">
-                                            {row.name}
-                                        </TableCell>
-                                        <TableCell>{row.code}</TableCell>
-                                        <TableCell>{row.type}</TableCell>
-                                        <TableCell>
-                                            {row.status ? 'Active' : 'Expired'}
-                                        </TableCell>
-                                        <TableCell>
-                                            {/* {format(
-                                            parseISO(
-                                                row.createdAt
-                                            ),
-                                            'dd/MM/yyyy'
-                                        )} */}
-                                            <Moment format="DD-MM-YYYY">
-                                                {row.createdAt}
-                                            </Moment>
-                                            {/* {row.createdAt} */}
-                                        </TableCell>
-                                        <TableCell>
-                                            {/* {format(
-                                            parseISO(
-                                                row.updatedAt
-                                            ),
-                                            'dd/MM/yyyy'
-                                        )} */}
-                                            <Moment format="DD-MM-YYYY">
-                                                {row.updatedAt}
-                                            </Moment>
-                                            {/* {row.updatedAt} */}
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })
-                        )}
+                                        return (
+                                            <TableRow
+                                                hover
+                                                onClick={(event) =>
+                                                    handleClick(event, row.name)
+                                                }
+                                                role="checkbox"
+                                                aria-checked={isItemSelected}
+                                                tabIndex={-1}
+                                                key={row.name}
+                                                selected={isItemSelected}
+                                            >
+                                                <TableCell padding="checkbox">
+                                                    <Checkbox
+                                                        checked={isItemSelected}
+                                                        inputProps={{
+                                                            'aria-labelledby': labelId,
+                                                        }}
+                                                    />
+                                                </TableCell>
+                                                <TableCell component="th" scope="row">
+                                                    {row.name}
+                                                </TableCell>
+                                                <TableCell>{row.code}</TableCell>
+                                                <TableCell>{row.type}</TableCell>
+                                                <TableCell>
+                                                    {row.status ?
+                                                        <Chip
+                                                            className={css.fixedWidthChip}
+                                                            size="small"
+                                                            label="Active"
+                                                            color="primary"
+                                                        />
+                                                        :
+                                                        <Chip
+                                                            className={css.fixedWidthChip}
+                                                            size="small"
+                                                            label="Expired"
+                                                            color="secondary"
+                                                        />
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Moment format="DD-MM-YYYY">
+                                                        {row.createdAt}
+                                                    </Moment>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Moment format="DD-MM-YYYY">
+                                                        {row.updatedAt}
+                                                    </Moment>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })
+                                )}
                         {emptyRows > 0 && (
                             <TableRow
                                 style={{

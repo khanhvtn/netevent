@@ -8,4 +8,8 @@ export default makeStyles((theme) => ({
     table: {
         minWidth: 750,
     },
+    fixedWidthChip: {
+        minWidth: 60,
+        fontSize: '0.875em'
+    },
 }));
