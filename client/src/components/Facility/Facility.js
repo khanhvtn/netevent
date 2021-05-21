@@ -7,6 +7,7 @@ import {
     InputBase,
     IconButton,
     Grid,
+    Tooltip,
 } from '@material-ui/core';
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
@@ -332,12 +333,14 @@ const Facility = () => {
                                     />
                                 </div>
                                 <div className={css.grow} />
-                                <IconButton
-                                    color="inherit"
-                                    onClick={handleToggleFilter}
-                                >
-                                    <FilterList />
-                                </IconButton>
+                                <Tooltip title="Filter">
+                                    <IconButton
+                                        color="inherit"
+                                        onClick={handleToggleFilter}
+                                    >
+                                        <FilterList />
+                                    </IconButton>
+                                </Tooltip>
                             </Toolbar>
                             {/* Facility Table */}
                             <FacilityTable
