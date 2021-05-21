@@ -231,8 +231,8 @@ const User = () => {
         }
         setState((prevState) => ({
             ...prevState,
-            email: mode ? targetEdit.email : prevState.email,
-            role: mode ? targetEdit.role : prevState.role,
+            email: mode ? targetEdit.email : '',
+            role: mode ? targetEdit.role : [],
             openCreateAndUpdateDialog: !prevState.openCreateAndUpdateDialog,
             isCreateMode: mode ? false : true,
         }));
