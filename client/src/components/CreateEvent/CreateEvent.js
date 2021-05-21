@@ -253,30 +253,58 @@ const CreateEvent = () => {
                 payload: listErrors,
             });
         }
-        setBorrowFacilityState((prevState) => ({
-            ...prevState,
-            borrowFacilities: [
-                ...prevState.borrowFacilities,
-                {
-                    name: prevState.name.name,
-                    borrowDate: prevState.borrowDate,
-                    returnDate: prevState.returnDate,
-                },
-            ],
-            name: '',
-            borrowDate: null,
-            returnDate: null,
-            openCreateAndUpdateDialogBorrowFacility: false,
-        }));
+
+        //generate new update when in edit mode
+        let update;
+        if (!borrowFacilityState.isBorrowFacilityCreateMode) {
+            update = borrowFacilityState.borrowFacilities.filter(
+                (borrowFacility) => borrowFacility.name !== selectedFacility[0]
+            );
+        }
+
+        //create
+        setBorrowFacilityState((prevState) => {
+            update = update ? update : prevState.borrowFacilities;
+            return {
+                ...prevState,
+                borrowFacilities: [
+                    ...update,
+                    {
+                        name: prevState.name.name,
+                        borrowDate: prevState.borrowDate,
+                        returnDate: prevState.returnDate,
+                    },
+                ],
+                name: '',
+                borrowDate: null,
+                returnDate: null,
+                openCreateAndUpdateDialogBorrowFacility: false,
+            };
+        });
+
         //clear error
         dispatch({
             type: ERROR_CLEAR,
             payload: null,
         });
+        setSelectedFacility([]);
     };
 
     const handleDeleteBorrowFacility = () => {
-        console.log('Delete Borrow Facility');
+        setBorrowFacilityState((prevState) => {
+            return {
+                ...prevState,
+                borrowFacilities: prevState.borrowFacilities.filter(
+                    (borrowFacility) =>
+                        !selectedFacility.includes(borrowFacility.name)
+                ),
+                name: '',
+                borrowDate: null,
+                returnDate: null,
+                openDeleteDialogBorrowFacility: false,
+            };
+        });
+        setSelectedFacility([]);
     };
 
     /* Borrow Facility */
@@ -784,17 +812,27 @@ const CreateEvent = () => {
                 isLoading={borrowFacilityState.borrowFacilityLoading}
                 errors={errors}
                 createSuccess={borrowFacilityState.borrowFacilityCreatSucces}
-                availableFacilities={facilities
-                    .filter((facility) => facility.status === true)
-                    .filter((facility) => {
-                        const facilityNames = borrowFacilityState.borrowFacilities.map(
-                            (borrowFacility) => borrowFacility.name
-                        );
+                availableFacilities={
+                    /* 
+                    if isBorrowFacilityCreateMode is true, 
+                    then render facilities that are not in borrow facility table, vice versa.
+                     */
+                    borrowFacilityState.isBorrowFacilityCreateMode
+                        ? facilities
+                              .filter((facility) => facility.status === true)
+                              .filter((facility) => {
+                                  const facilityNames = borrowFacilityState.borrowFacilities.map(
+                                      (borrowFacility) => borrowFacility.name
+                                  );
 
-                        return facilityNames.includes(facility.name)
-                            ? false
-                            : true;
-                    })}
+                                  return facilityNames.includes(facility.name)
+                                      ? false
+                                      : true;
+                              })
+                        : facilities.filter(
+                              (facility) => facility.status === true
+                          )
+                }
             />
             {/* Notification */}
             <SystemNotification openCreateSnackBar={state.openCreateSnackBar} />

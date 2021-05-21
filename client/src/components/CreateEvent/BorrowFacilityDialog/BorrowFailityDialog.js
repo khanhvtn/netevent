@@ -33,6 +33,7 @@ const BorrowFacilityDialog = ({
     handleDelete,
     isLoading,
     errors,
+    name,
     createSuccess,
     setBorrowFacilityState,
     availableFacilities,
@@ -55,6 +56,7 @@ const BorrowFacilityDialog = ({
                 </DialogTitle>
                 <DialogContent>
                     <Autocomplete
+                        value={name}
                         getOptionLabel={(option) => option.name}
                         onChange={(event, newValue) => {
                             setBorrowFacilityState((prevState) => ({
@@ -91,7 +93,9 @@ const BorrowFacilityDialog = ({
                             onChange={(date) => {
                                 setBorrowFacilityState((prevState) => ({
                                     ...prevState,
-                                    borrowDate: date.toDate(),
+                                    borrowDate: date?.toDate()
+                                        ? date?.toDate()
+                                        : null,
                                 }));
                             }}
                             KeyboardButtonProps={{
@@ -113,7 +117,9 @@ const BorrowFacilityDialog = ({
                             onChange={(date) => {
                                 setBorrowFacilityState((prevState) => ({
                                     ...prevState,
-                                    returnDate: date.toDate(),
+                                    returnDate: date?.toDate()
+                                        ? date?.toDate()
+                                        : null,
                                 }));
                             }}
                             KeyboardButtonProps={{
