@@ -352,7 +352,7 @@ const UserTable = ({
                             isUpdated ||
                             isDeleted ?
                             <>
-                                {Array.apply(null, { length: take }).map(() => {
+                                {Array.apply(null, { length: take + 1 }).map(() => {
                                     return (
                                         <>
                                             <TableRow>

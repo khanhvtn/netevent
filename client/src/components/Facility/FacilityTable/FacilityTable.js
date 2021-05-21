@@ -358,7 +358,7 @@ const FacilityTable = ({
                             updateSuccess ||
                             deleteSuccess ?
                             <>
-                                {Array.apply(null, { length: take }).map(() => {
+                                {Array.apply(null, { length: take + 1 }).map(() => {
                                     return (
                                         <>
                                             <TableRow>
@@ -463,7 +463,7 @@ const FacilityTable = ({
                                                 height: 50 * emptyRows,
                                             }}
                                         >
-                                            <TableCell colSpan={6} />
+                                            <TableCell colSpan={7} />
                                         </TableRow>
                                     )}
                                 </>
