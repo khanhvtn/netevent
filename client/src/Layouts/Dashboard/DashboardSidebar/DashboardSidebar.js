@@ -12,7 +12,8 @@ import {
 import { useSelector } from 'react-redux';
 import { LogOut as LogOutIcon } from 'react-feather';
 
-import { DevicesOther, People, PeopleAlt } from '@material-ui/icons';
+import { DevicesOther, People } from '@material-ui/icons';
+import ReplayIcon from '@material-ui/icons/Replay';
 import NavItem from './NavItem';
 import useStyles from './styles';
 
@@ -45,7 +46,7 @@ const defaultActions = [
 
     {
         title: "Switch Role",
-        icon: PeopleAlt,
+        icon: ReplayIcon,
         href: 'pickrole'
     },
     {
