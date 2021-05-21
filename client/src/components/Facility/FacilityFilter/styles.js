@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
     filterActions: {
         marginTop: '24px',
         display: 'flex',
@@ -17,8 +17,12 @@ export default makeStyles(() => ({
     handleFilterButton: {
         textTransform: "none"
     },
-    handleClearButton:{
+    handleClearButton: {
         textTransform: "none",
         textDecoration: 'underline',
+    },
+    filterTitle: {
+        padding: '16px 0',
+        backgroundColor: theme.palette.background.default
     }
 }));

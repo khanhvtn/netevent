@@ -34,8 +34,10 @@ const UserFilter = ({
     const css = useStyles();
     return (
         <Drawer anchor="right" open={openFilter} onClose={handleToggleFilter}>
+            <div className={css.filterTitle}>
+                <Typography style={{ fontWeight: 'bold' }} align="center" variant="h6">Filter User</Typography>
+            </div>
             <div className={css.filterWrapper}>
-                <Typography variant="h6">Filter List</Typography>
                 <div className={css.filterInputs}>
                     <FormControl fullWidth variant="standard">
                         <InputLabel id="rolesFilterLabel">Roles</InputLabel>
@@ -142,7 +144,7 @@ const UserFilter = ({
                         style={{ backgroundColor: 'transparent' }}
                         color="default"
                     >
-                        Clear
+                        Clear all
                     </Button>
                     <Button
                         className={css.handleFilterButton}
