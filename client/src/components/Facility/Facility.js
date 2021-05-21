@@ -260,21 +260,13 @@ const Facility = () => {
             targetEdit = facilities.find(
                 (facility) => facility.name === selected[0]
             );
-            setState((prevState) => ({
-                ...prevState,
-                name: mode ? targetEdit.name : prevState.name,
-                code: mode ? targetEdit.code : prevState.code,
-                type: mode ? targetEdit.type : prevState.type,
-                status: mode ? targetEdit.status : prevState.status,
-                isCreateMode: mode ? false : true,
-            }));
         }
         setState((prevState) => ({
             ...prevState,
-            name: mode ? targetEdit.name : prevState.name,
-            code: mode ? targetEdit.code : prevState.code,
-            type: mode ? targetEdit.type : prevState.type,
-            status: mode ? targetEdit.status : prevState.status,
+            name: mode ? targetEdit.name : '',
+            code: mode ? targetEdit.code : '',
+            type: mode ? targetEdit.type : '',
+            status: mode ? targetEdit.status : '',
             openCreateAndUpdateDialog: !prevState.openCreateAndUpdateDialog,
             isCreateMode: mode ? false : true,
         }));
