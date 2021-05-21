@@ -12,6 +12,7 @@ import {
     Drawer,
     InputLabel,
     FormControl,
+    Divider,
 } from '@material-ui/core';
 import MomentUtils from '@date-io/moment';
 //import useStyles in the last
@@ -136,13 +137,15 @@ const UserFilter = ({
                 </div>
                 <div className={css.filterActions}>
                     <Button
+                        className={css.handleClearButton}
                         onClick={handleClearFilter}
-                        variant="contained"
+                        style={{ backgroundColor: 'transparent' }}
                         color="default"
                     >
-                        Clear Filter
+                        Clear
                     </Button>
                     <Button
+                        className={css.handleFilterButton}
                         onClick={handleApplyFilter}
                         variant="contained"
                         color="primary"

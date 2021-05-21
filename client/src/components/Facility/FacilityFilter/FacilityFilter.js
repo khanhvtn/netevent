@@ -134,13 +134,15 @@ const FacilityFilter = ({
                 </div>
                 <div className={css.filterActions}>
                     <Button
+                        className={css.handleClearButton}
                         onClick={handleClearFilter}
-                        variant="contained"
+                        style={{ backgroundColor: 'transparent' }}
                         color="default"
                     >
-                        Clear Filter
+                        Clear
                     </Button>
                     <Button
+                        className={css.handleFilterButton}
                         onClick={handleApplyFilter}
                         variant="contained"
                         color="primary"
