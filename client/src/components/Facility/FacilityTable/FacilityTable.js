@@ -27,6 +27,7 @@ import { useSelector } from 'react-redux';
 
 //import makeStyles in the last
 import useStyles from './styles';
+import { Skeleton } from '@material-ui/lab';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -355,28 +356,50 @@ const FacilityTable = ({
                         {isLoading ||
                             createSuccess ||
                             updateSuccess ||
-                            deleteSuccess ? (
-                                <TableRow
-                                    style={{
-                                        height: 50 * take,
-                                    }}
-                                >
-                                    <TableCell colSpan={7} align="center">
-                                        <CircularProgress />
-                                    </TableCell>
-                                </TableRow>
-                            ) : facilities.length === 0 ? (
-                                <TableRow
-                                    style={{
-                                        height: 50 * take,
-                                    }}
-                                >
-                                    <TableCell colSpan={7} align="center">
-                                        <Typography>No Data Matched</Typography>
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                    stableSort(
+                            deleteSuccess ?
+                            <>
+                                {Array.apply(null, { length: take }).map(() => {
+                                    return (
+                                        <>
+                                            <TableRow>
+                                                <TableCell>
+                                                    <Skeleton />
+                                                </TableCell>
+                                                {headCells.map(() => {
+                                                    return (
+                                                        <TableCell>
+                                                            <Skeleton />
+                                                        </TableCell>
+                                                    )
+                                                })}
+                                            </TableRow>
+                                        </>
+                                    )
+                                })}
+                            </>
+                            : facilities.length === 0 ?
+                                <>
+                                    <TableRow
+                                        style={{
+                                            height: 50 * take,
+                                        }}
+                                    >
+                                        <TableCell colSpan={7} align="center">
+                                            <Typography>No Data Matched</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                    {emptyRows > 0 && (
+                                        <TableRow
+                                            style={{
+                                                height: 50 * emptyRows,
+                                            }}
+                                        >
+                                            <TableCell colSpan={6} />
+                                        </TableRow>
+                                    )}
+                                </>
+                                : <>
+                                    {stableSort(
                                         facilities,
                                         getComparator(order, orderBy)
                                     ).map((row, index) => {
@@ -437,20 +460,20 @@ const FacilityTable = ({
                                                 </TableCell>
                                             </TableRow>
                                         );
-                                    })
-                                )}
-                        {emptyRows > 0 && (
-                            <TableRow
-                                style={{
-                                    height: 50 * emptyRows,
-                                }}
-                            >
-                                <TableCell colSpan={6} />
-                            </TableRow>
-                        )}
+                                    })}
+                                    {emptyRows > 0 && (
+                                        <TableRow
+                                            style={{
+                                                height: 50 * emptyRows,
+                                            }}
+                                        >
+                                            <TableCell colSpan={6} />
+                                        </TableRow>
+                                    )}
+                                </>
+                        }
                     </TableBody>
                 </Table>
-                <TableFooter></TableFooter>
             </TableContainer>
         </Paper>
     );
