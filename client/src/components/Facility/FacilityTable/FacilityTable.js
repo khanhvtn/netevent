@@ -162,7 +162,7 @@ EnhancedTableHead.propTypes = {
 const useToolbarStyles = makeStyles((theme) => ({
     root: {
         paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(1),
+        paddingRight: theme.spacing(2),
     },
     highlight:
         theme.palette.type === 'light'
@@ -176,6 +176,7 @@ const useToolbarStyles = makeStyles((theme) => ({
             },
     title: {
         flex: '1 1 100%',
+        fontWeight: 'bold'
     },
 }));
 
@@ -209,7 +210,7 @@ const EnhancedTableToolbar = (props) => {
                         id="tableTitle"
                         component="div"
                     >
-                        Facility List
+                        List of facilities
                     </Typography>
                 )}
 
@@ -238,7 +239,7 @@ const EnhancedTableToolbar = (props) => {
                         onClick={(e) =>
                             handleToggleDialogCreateAndUpdate(e, 'edit')
                         }
-                        style={{ marginLeft: '20px' }}
+                        style={{ marginLeft: '8px' }}
                         endIcon={<Edit />}
                         variant="contained"
                         color="primary"
