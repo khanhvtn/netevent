@@ -13,7 +13,7 @@ import {
 import MomentUtils from '@date-io/moment';
 import {
     MuiPickersUtilsProvider,
-    KeyboardDatePicker,
+    KeyboardDateTimePicker,
 } from '@material-ui/pickers';
 import { Autocomplete } from '@material-ui/lab';
 //import useStyles in the last
@@ -76,7 +76,7 @@ const BorrowFacilityDialog = ({
                         )}
                     />
                     <MuiPickersUtilsProvider utils={MomentUtils}>
-                        <KeyboardDatePicker
+                        <KeyboardDateTimePicker
                             error={errors?.borrowDate ? true : false}
                             helperText={
                                 errors?.borrowDate ? errors.borrowDate : ''
@@ -86,7 +86,7 @@ const BorrowFacilityDialog = ({
                             fullWidth
                             id="borrowDate"
                             label="Borrow Date"
-                            format="MM/DD/YYYY"
+                            format="DD/MM/YYYY, h:mm a"
                             value={borrowDate}
                             onChange={(date) => {
                                 setBorrowFacilityState((prevState) => ({
@@ -98,7 +98,7 @@ const BorrowFacilityDialog = ({
                                 'aria-label': 'change date',
                             }}
                         />
-                        <KeyboardDatePicker
+                        <KeyboardDateTimePicker
                             error={errors?.returnDate ? true : false}
                             helperText={
                                 errors?.returnDate ? errors.returnDate : ''
@@ -108,7 +108,7 @@ const BorrowFacilityDialog = ({
                             fullWidth
                             id="returnDate"
                             label="Return Date"
-                            format="MM/DD/YYYY"
+                            format="DD/MM/YYYY, h:mm a"
                             value={returnDate}
                             onChange={(date) => {
                                 setBorrowFacilityState((prevState) => ({

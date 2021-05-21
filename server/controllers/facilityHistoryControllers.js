@@ -1,73 +1,15 @@
-const { Event, Task, FacilityHistory } = require('../models');
+const { FacilityHistory } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
-const createEvent = async (req, res, next) => {
+const createFacilityHistory = async (req, res, next) => {
     try {
-        const { tasks, borrowFacilities } = req.body;
-        //create tasks to get task list ids
-        const taskResult = await Promise.all(
-            tasks.map(async (task) => {
-                try {
-                    return await Task.create(task);
-                } catch (error) {
-                    throw error;
-                }
-            })
-        );
-
-        //create facility histories to get their ids
-        const facilityHistoryResult = await Promise.all(
-            borrowFacilities.map(async (facilityHistory) => {
-                try {
-                    return await FacilityHistory.create(facilityHistory);
-                } catch (error) {
-                    throw error;
-                }
-            })
-        );
-        //ad task list id into req.body
-        req.body = {
-            ...req.body,
-            taskListId: taskResult.map((task) => task._id),
-            facilityHistoryListId: facilityHistoryResult.map(
-                (facilityHistory) => facilityHistory._id
-            ),
-        };
-
-        const event = new Event(req.body);
+        const facilityHistory = new FacilityHistory(req.body);
         //validate user request fields.
-        await event.validate();
+        await facilityHistory.validate();
 
-        //create new event
-        const newEvent = await event.save();
-
-        //update id event back to above tasks.
-        await Promise.all(
-            taskResult.map(async (task) => {
-                try {
-                    return await Task.findByIdAndUpdate(task._id, {
-                        ...task._doc,
-                        eventId: newEvent._id,
-                    });
-                } catch (error) {
-                    throw error;
-                }
-            })
-        );
-        //update id event back to above facility histories.
-        await Promise.all(
-            facilityHistoryResult.map(async (facilityHistory) => {
-                try {
-                    return await Task.findByIdAndUpdate(facilityHistory._id, {
-                        ...facilityHistory._doc,
-                        eventId: newEvent._id,
-                    });
-                } catch (error) {
-                    throw error;
-                }
-            })
-        );
-        return cusResponse(res, 200, newEvent, null);
+        //create new facilityHistory
+        const newFacilityHistory = await facilityHistory.save();
+        return cusResponse(res, 200, newFacilityHistory, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
@@ -83,16 +25,16 @@ const createEvent = async (req, res, next) => {
 const filter = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
-        const createdMaxDate = await Event.find()
+        const createdMaxDate = await FacilityHistory.find()
             .sort({ createdAt: -1 })
             .limit(1);
-        const createdMinDate = await Event.find()
+        const createdMinDate = await FacilityHistory.find()
             .sort({ createdAt: 1 })
             .limit(1);
-        const updatedMaxDate = await Event.find()
+        const updatedMaxDate = await FacilityHistory.find()
             .sort({ updatedAt: -1 })
             .limit(1);
-        const updatedMinDate = await Event.find()
+        const updatedMinDate = await FacilityHistory.find()
             .sort({ updatedAt: 1 })
             .limit(1);
         const listRangeDate = await Promise.all([
@@ -189,10 +131,10 @@ const filter = async (req, res, next) => {
         const page = parseInt(req.query.page) || 1;
 
         /* 
-        Variable total event based on search and filter
+        Variable total facilityHistory based on search and filter
          */
-        const totalEvent = await Event.find({
-            $or: [{ eventName: new RegExp(options.search, 'i') }],
+        const totalFacilityHistory = await FacilityHistory.find({
+            $or: [{ name: new RegExp(options.search, 'i') }],
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -203,13 +145,15 @@ const filter = async (req, res, next) => {
             },
         }).countDocuments();
 
-        let totalPages = (totalEvent / options.take).toString().includes('.')
-            ? Math.ceil(totalEvent / options.take)
-            : totalEvent / options.take;
+        let totalPages = (totalFacilityHistory / options.take)
+            .toString()
+            .includes('.')
+            ? Math.ceil(totalFacilityHistory / options.take)
+            : totalFacilityHistory / options.take;
 
         //return data to client
-        const events = await Event.find({
-            $or: [{ eventName: new RegExp(options.search, 'i') }],
+        const facilityHistories = await FacilityHistory.find({
+            $or: [{ name: new RegExp(options.search, 'i') }],
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -223,29 +167,31 @@ const filter = async (req, res, next) => {
             .skip((page - 1) * options.take)
             .limit(options.take);
 
-        return cusResponse(res, 200, events, null, totalPages);
+        return cusResponse(res, 200, facilityHistories, null, totalPages);
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
 };
 
-const deleteEvent = async (req, res, next) => {
+const deleteFacilityHistory = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
         if (deleteList.length === 1) {
-            const deletedEvent = await Event.findOneAndDelete({
-                eventName: deleteList[0],
-            });
-            return cusResponse(res, 200, deletedEvent, null);
+            const deletedFacilityHistory = await FacilityHistory.findOneAndDelete(
+                {
+                    _id: deleteList[0],
+                }
+            );
+            return cusResponse(res, 200, deletedFacilityHistory, null);
         } else {
-            const deletedEvent = await Promise.all(
-                deleteList.map(async (eventName) => {
-                    return await Event.findOneAndDelete({
-                        eventName,
+            const deletedFacilityHistory = await Promise.all(
+                deleteList.map(async (_id) => {
+                    return await FacilityHistory.findOneAndDelete({
+                        _id,
                     });
                 })
             );
-            return cusResponse(res, 200, deletedEvent, null);
+            return cusResponse(res, 200, deletedFacilityHistory, null);
         }
     } catch (error) {
         if (error.name == 'ValidationError') {
@@ -259,16 +205,16 @@ const deleteEvent = async (req, res, next) => {
     }
 };
 
-const updateEvent = async (req, res, next) => {
+const updateFacilityHistory = async (req, res, next) => {
     try {
         const userReq = req.body;
-        const updatedEvent = await Event.findOneAndUpdate(
-            { eventName: userReq.filter },
+        const updatedFacilityHistory = await FacilityHistory.findOneAndUpdate(
+            { _id: userReq.filter },
             userReq.update,
             { runValidators: true, context: 'query' }
         );
 
-        return cusResponse(res, 200, updatedEvent, null);
+        return cusResponse(res, 200, updatedFacilityHistory, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
@@ -281,23 +227,22 @@ const updateEvent = async (req, res, next) => {
     }
 };
 
-const getAllEvent = async (req, res, next) => {
+const getAllFacilityHistory = async (req, res, next) => {
     try {
-        const events = await Event.find({})
-            .populate([{ path: 'taskListId facilityHistoryListId' }])
-            .populate({
-                path: 'eventTypeId ownerId',
-            });
-        return cusResponse(res, 200, events, null);
+        const facilityHistories = await FacilityHistory.find({}).populate({
+            path: 'facilityId eventId',
+            populate: [{ path: 'taskListId' }],
+        });
+        return cusResponse(res, 200, facilityHistories, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
 };
 
 module.exports = {
-    createEvent,
+    createFacilityHistory,
     filter,
-    deleteEvent,
-    updateEvent,
-    getAllEvent,
+    deleteFacilityHistory,
+    updateFacilityHistory,
+    getAllFacilityHistory,
 };

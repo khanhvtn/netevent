@@ -7,9 +7,6 @@ const CustomError = require('../class/CustomeError');
 const { sendEmail } = require('./misc/mailer');
 const { html } = require('../mail-template/template');
 
-
-
-
 //user login
 const login = async (req, res, next) => {
     try {
@@ -21,6 +18,12 @@ const login = async (req, res, next) => {
         if (!existedUser) {
             return next(new CustomError(400, { email: 'Email is invalid' }));
         }
+
+        //check user email already is verified or not.
+        if (!existedUser.isConfirmed) {
+            return next(new CustomError(400, { email: 'Email is invalid' }));
+        }
+
         //check password
         const result = await bcrypt.compare(
             userReq.password,
@@ -34,7 +37,11 @@ const login = async (req, res, next) => {
 
         //gen token
         const token = jwt.sign(
-            { email: existedUser.email, role: existedUser.role },
+            {
+                id: existedUser._id,
+                email: existedUser.email,
+                role: existedUser.role,
+            },
             'netevent',
             { expiresIn: '1h' }
         );
@@ -48,7 +55,11 @@ const login = async (req, res, next) => {
         return cusResponse(
             res,
             200,
-            { email: existedUser.email, role: existedUser.role },
+            {
+                id: existedUser._id,
+                email: existedUser.email,
+                role: existedUser.role,
+            },
             null
         );
     } catch (error) {
@@ -250,9 +261,7 @@ const filterUser = async (req, res, next) => {
         Variable total user based on search and filter
          */
         const totalUsers = await User.find({
-            $or: [
-                { email: new RegExp(options.search, 'i') },
-            ],
+            $or: [{ email: new RegExp(options.search, 'i') }],
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -263,17 +272,13 @@ const filterUser = async (req, res, next) => {
             },
         }).countDocuments();
 
-        let totalPages = (totalUsers / options.take)
-            .toString()
-            .includes('.')
+        let totalPages = (totalUsers / options.take).toString().includes('.')
             ? Math.ceil(totalUsers / options.take)
             : totalUsers / options.take;
 
         //return data to client
         const users = await User.find({
-            $or: [
-                { email: new RegExp(options.search, 'i') },
-            ],
+            $or: [{ email: new RegExp(options.search, 'i') }],
             status: options.status,
             createdAt: {
                 $gte: options.createdMinDate,
@@ -297,7 +302,7 @@ const filterUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
     try {
         const userReq = req.body;
-        console.log(userReq)
+        console.log(userReq);
         const updatedUser = await User.findOneAndUpdate(
             { email: userReq.filter },
             userReq.update,

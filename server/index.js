@@ -8,6 +8,7 @@ const {
     eventTypeRoutes,
     eventRoutes,
     taskRoutes,
+    facilityHistoryRoutes,
 } = require('./routes');
 const cors = require('cors');
 const { errorHandler } = require('./middlewares');
@@ -29,6 +30,7 @@ app.use('/api/link', linkRoutes);
 app.use('/api/eventType', eventTypeRoutes);
 app.use('/api/event', eventRoutes);
 app.use('/api/task', taskRoutes);
+app.use('/api/facilityHistory', facilityHistoryRoutes);
 
 //error handler
 app.use(errorHandler);

@@ -14,7 +14,8 @@ const eventSchema = mongoose.Schema(
             trim: true,
         },
         eventTypeId: {
-            type: mongoose.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'EventType',
             required: [true, 'Event Type Id cannot be blanked'],
         },
         mode: {
@@ -59,7 +60,8 @@ const eventSchema = mongoose.Schema(
             trim: true,
         },
         ownerId: {
-            type: mongoose.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
             required: [true, 'Owner Id cannot be blanked'],
         },
         budget: {
@@ -76,7 +78,8 @@ const eventSchema = mongoose.Schema(
             required: [true, 'Please upload image'],
         },
         reviewerId: {
-            type: mongoose.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Reviewer',
             default: null,
         },
         isFinished: {
@@ -84,8 +87,14 @@ const eventSchema = mongoose.Schema(
             default: false,
         },
         taskListId: {
-            type: [mongoose.Types.ObjectId],
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: 'Task',
             required: [true, 'Task cannot be blanked'],
+        },
+        facilityHistoryListId: {
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: 'FacilityHistory',
+            required: [true, 'Facility History cannot be blanked'],
         },
     },
     { timestamps: true }

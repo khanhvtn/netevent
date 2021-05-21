@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Grid,
     Typography,
@@ -17,7 +17,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import { AddAPhoto } from '@material-ui/icons';
+import { AddAPhoto, DeleteForever } from '@material-ui/icons';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 import blankPhoto from '../../images/blankPhoto.png';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,20 +27,20 @@ import {
 } from '../../actions/eventTypeActions';
 
 import { getAllFacilities } from '../../actions/facilityActions';
-
-//import useStyles in the last
-import useStyles from './styles';
 import SystemNotification from '../Notification/Notification';
 import DataTable from '../DataTable/DataTable';
 import CreateEventTypeDialog from './CreateEventTypeDialog/CreateEventTypeDialog';
 import BorrowFacilityDialog from './BorrowFacilityDialog/BorrowFailityDialog';
 import { ERROR, ERROR_CLEAR } from '../../constants';
 
-let tags = [];
+import { convertBase64 } from '../../utils';
+//import useStyles in the last
+import useStyles from './styles';
+
+let tagList = [];
 
 const initialState = {
     //create new event
-    tags: [],
     eventName: '',
     eventTypeId: '',
     language: '',
@@ -53,7 +53,9 @@ const initialState = {
     maxParticipants: '',
     description: '',
     budget: '',
-    image: '',
+    image: null,
+    tasks: [],
+    borrowFacilities: [],
     // create event type
     openDialogCreateEventType: false,
     eventTypeTarget: '',
@@ -77,6 +79,7 @@ const initialBorrowFacilityState = {
 const filter = createFilterOptions();
 const CreateEvent = () => {
     const css = useStyles();
+    const fileInput = useRef(null);
     const dispatch = useDispatch();
     const {
         eventTypes,
@@ -84,7 +87,9 @@ const CreateEvent = () => {
         eventTypeIsLoading,
         createSuccess,
         facilities,
+        user,
     } = useSelector((state) => ({
+        user: state.user.user,
         eventTypes: state.eventType.eventTypes,
         errors: state.error.errors,
         eventTypeIsLoading: state.eventType.isLoading,
@@ -130,7 +135,58 @@ const CreateEvent = () => {
         }));
     };
     const handleCreateEvent = () => {
-        console.log({ ...state, tags });
+        const {
+            eventName,
+            language,
+            mode,
+            location,
+            accommodation,
+            registrationCloseDate,
+            startDate,
+            endDate,
+            maxParticipants,
+            description,
+            budget,
+            image,
+            eventTypeTarget,
+        } = state;
+        //generate valid data to send request to the server
+        const templateRequest = {
+            eventName,
+            language,
+            eventTypeId: eventTypeTarget
+                ? eventTypes.find(
+                      (eventType) => eventType.name === eventTypeTarget
+                  )._id
+                : '',
+            mode,
+            location,
+            accommodation,
+            registrationCloseDate,
+            startDate,
+            endDate,
+            maxParticipants,
+            tags: tagList,
+            description,
+            ownerId: user.id,
+            budget,
+            image,
+            tasks: [],
+            borrowFacilities: borrowFacilityState.borrowFacilities.map(
+                (borrowFacility) => {
+                    const { borrowDate, returnDate, name } = borrowFacility;
+                    const targetFacility = facilities.find(
+                        (facility) => facility.name === name
+                    );
+                    return {
+                        facilityId: targetFacility._id,
+                        borrowDate,
+                        returnDate,
+                    };
+                }
+            ),
+        };
+        console.log(templateRequest);
     };
 
     /* Borrow Facility */
@@ -224,6 +280,15 @@ const CreateEvent = () => {
     };
 
     /* Borrow Facility */
+
+    //handle change photo
+    const handleChangePhoto = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const fileBase64 = await convertBase64(file);
+            setState({ ...state, image: fileBase64 });
+        }
+    };
     return (
         <div>
             <Paper style={{ margin: '20px', padding: '20px 20px' }}>
@@ -249,11 +314,8 @@ const CreateEvent = () => {
                         style={{ margin: '20px 0' }}
                     >
                         <CardMedia
-                            image={blankPhoto}
-                            style={{
-                                height: '500px',
-                                width: '100%',
-                            }}
+                            image={!state.image ? blankPhoto : state.image}
+                            className={css.cardMedia}
                             title="Event image"
                         />
                     </Grid>
@@ -270,9 +332,43 @@ const CreateEvent = () => {
                         xs={12}
                         style={{ margin: '20px 0' }}
                     >
-                        <Button startIcon={<AddAPhoto />} variant="contained">
-                            Choose Image
-                        </Button>
+                        <input
+                            ref={fileInput}
+                            accept="image/*"
+                            className={css.inputImage}
+                            id="change-image"
+                            type="file"
+                            onChange={handleChangePhoto}
+                        />
+                        {state.image && (
+                            <Button
+                                className={css.btnRemovePhoto}
+                                onClick={() => {
+                                    setState({
+                                        ...state,
+                                        image: null,
+                                    });
+                                    fileInput.current.value = '';
+                                }}
+                                color="secondary"
+                                startIcon={<DeleteForever />}
+                                variant="contained"
+                            >
+                                Remove
+                            </Button>
+                        )}
+                        <label
+                            className={css.btnChangePhoto}
+                            htmlFor="change-image"
+                        >
+                            <Button
+                                startIcon={<AddAPhoto />}
+                                variant="contained"
+                                component="span"
+                            >
+                                {state.image ? 'Change Image' : 'Choose Image'}
+                            </Button>
+                        </label>
                     </Grid>
 
                     <Grid
@@ -369,7 +465,9 @@ const CreateEvent = () => {
                                     } else {
                                         setState((prevState) => ({
                                             ...prevState,
-                                            eventTypeTarget: newValue.name,
+                                            eventTypeTarget: newValue?.name
+                                                ? newValue?.name
+                                                : '',
                                         }));
                                     }
                                 }}
@@ -445,7 +543,7 @@ const CreateEvent = () => {
                                 type="number"
                                 variant="outlined"
                                 fullWidth
-                                label="Mode"
+                                label="Max Participants"
                                 name="maxParticipants"
                                 value={state.maxParticipants}
                                 onChange={handleChange}
@@ -460,7 +558,7 @@ const CreateEvent = () => {
                                 options={[]}
                                 freeSolo
                                 renderTags={(value, getTagProps) => {
-                                    tags = value;
+                                    tagList = value;
                                     return value.map((option, index) => (
                                         <Chip
                                             color="primary"
@@ -686,9 +784,17 @@ const CreateEvent = () => {
                 isLoading={borrowFacilityState.borrowFacilityLoading}
                 errors={errors}
                 createSuccess={borrowFacilityState.borrowFacilityCreatSucces}
-                availableFacilities={facilities.filter(
-                    (facility) => facility.status === true
-                )}
+                availableFacilities={facilities
+                    .filter((facility) => facility.status === true)
+                    .filter((facility) => {
+                        const facilityNames = borrowFacilityState.borrowFacilities.map(
+                            (borrowFacility) => borrowFacility.name
+                        );
+
+                        return facilityNames.includes(facility.name)
+                            ? false
+                            : true;
+                    })}
             />
             {/* Notification */}
             <SystemNotification openCreateSnackBar={state.openCreateSnackBar} />

@@ -4,6 +4,7 @@ const Facility = require('./facilityModel');
 const EventType = require('./eventTypeModel');
 const Event = require('./eventModel');
 const Task = require('./taskModel');
+const FacilityHistory = require('./facilityHistoryModel');
 
 module.exports = {
     //add models here
@@ -12,4 +13,5 @@ module.exports = {
     EventType,
     Event,
     Task,
+    FacilityHistory,
 };

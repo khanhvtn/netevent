@@ -5,6 +5,7 @@ const linkRoutes = require('./linkRoutes');
 const eventTypeRoutes = require('./eventTypeRoutes');
 const eventRoutes = require('./eventRoutes');
 const taskRoutes = require('./taskRoutes');
+const facilityHistoryRoutes = require('./facilityHistoryRoutes');
 
 module.exports = {
     //add routes here
@@ -14,4 +15,5 @@ module.exports = {
     eventTypeRoutes,
     eventRoutes,
     taskRoutes,
+    facilityHistoryRoutes,
 };
