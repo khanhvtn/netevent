@@ -282,7 +282,7 @@ const User = () => {
                 <div className={css.grow}>
                     <AppBar position="static" color="default">
                         <Grid container direction="column">
-                            <Toolbar>
+                            <Toolbar style={{ borderRadius: 8 }}>
                                 <div className={css.search}>
                                     <div className={css.searchIcon}>
                                         <SearchIcon />

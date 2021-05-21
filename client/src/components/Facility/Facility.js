@@ -7,7 +7,7 @@ import {
     InputBase,
     IconButton,
     Grid,
-    Tooltip,
+    Tooltip
 } from '@material-ui/core';
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
