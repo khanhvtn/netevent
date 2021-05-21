@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Moment from 'react-moment';
+import moment from 'moment';
 import {
     Toolbar,
     Paper,
@@ -15,9 +15,7 @@ import {
     TableSortLabel,
     Typography,
     Tooltip,
-    CircularProgress,
     Button,
-    TableFooter,
     Chip,
 } from '@material-ui/core';
 import { Delete, Create, Edit } from '@material-ui/icons';
@@ -450,14 +448,10 @@ const FacilityTable = ({
                                                     }
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Moment format="DD-MM-YYYY">
-                                                        {row.createdAt}
-                                                    </Moment>
+                                                    {moment(row.createdAt).format('LL')}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Moment format="DD-MM-YYYY">
-                                                        {row.updatedAt}
-                                                    </Moment>
+                                                    {moment(row.updatedAt).format('LL')}
                                                 </TableCell>
                                             </TableRow>
                                         );
