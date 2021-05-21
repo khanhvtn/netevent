@@ -125,13 +125,12 @@ const FacilityDialog = ({
                             </Select>
                         </FormControl>
                     ) : (
-                        ''
-                    )}
+                            ''
+                        )}
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
                     <Button
                         disabled={isLoading || createSuccess ? true : false}
-                        variant="contained"
                         onClick={handleToggleDialogCreateAndUpdate}
                         color="default"
                     >
@@ -148,8 +147,8 @@ const FacilityDialog = ({
                         ) : isCreateMode ? (
                             'Create'
                         ) : (
-                            'Update'
-                        )}
+                                    'Update'
+                                )}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -170,26 +169,21 @@ const FacilityDialog = ({
                         Are you sure with your action ?
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions className={css.dialogActions}>
+                    <Button
+                        disabled={isLoading ? true : false}
+                        onClick={handleToggleDialogDelete}
+                        color="default"
+                    >
+                        Cancel
+                    </Button>
                     <Button
                         disabled={isLoading ? true : false}
                         variant="contained"
                         onClick={handleDelete}
                         color="secondary"
                     >
-                        {isLoading ? (
-                            <CircularProgress size={25} color="inherit" />
-                        ) : (
-                            'Delete'
-                        )}
-                    </Button>
-                    <Button
-                        disabled={isLoading ? true : false}
-                        variant="outlined"
-                        onClick={handleToggleDialogDelete}
-                        color="default"
-                    >
-                        Cancel
+                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Delete'}
                     </Button>
                 </DialogActions>
             </Dialog>

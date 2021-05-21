@@ -5,7 +5,9 @@ export default makeStyles((theme) => ({
         marginBottom: '20px',
     },
     dialogActions: {
-        marginRight: '20px',
+        marginRight: 16,
+        marginBottom: 8,
+        marginTop: 8
     },
 
     dialogCreateUpdateFac: {
