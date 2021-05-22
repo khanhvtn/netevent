@@ -12,8 +12,8 @@ const auth = async (req, res, next) => {
         //verify token of user from own database
         decodedData = jwt.verify(token, 'netevent');
         req.user = {
-            email: decodedData?.email,
-            role: decodedData?.role,
+            email: decodedData.email,
+            role: decodedData.role,
         };
         next();
     } catch (error) {
