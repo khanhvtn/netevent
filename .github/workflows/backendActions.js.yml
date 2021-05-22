@@ -60,3 +60,5 @@ jobs:
     - name: Run the tests
       run: npm test
       working-directory: server
+      env:
+        CI: true
