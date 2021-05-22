@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     strategy:
       matrix:
@@ -34,9 +34,16 @@ jobs:
       uses: supercharge/mongodb-github-action@1.4.0
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
+
+    - name: Use bahmutov/npm-install@v1
+      uses: bahmutov/npm-install@v1
+      with:
+        working-directory: server
         
     - name: Install dependencies
       run: npm install
+      working-directory: server
     
     - name: Run the tests
       run: npm test
+      working-directory: server
