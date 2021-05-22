@@ -324,7 +324,7 @@ const updateUser = async (req, res, next) => {
 
 const getAllUser = async (req, res, next) => {
     try {
-        const users = await User.find({});
+        const users = await User.find({ isConfirmed: true });
         return cusResponse(res, 200, users, null);
     } catch (error) {
         return next(new CustomError(500, error.message));

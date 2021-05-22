@@ -4,6 +4,27 @@ const CustomError = require('../class/CustomeError');
 const createEvent = async (req, res, next) => {
     try {
         const { tasks, borrowFacilities } = req.body;
+        let event = new Event(req.body);
+
+        //validate user request fields.
+        await event.validate();
+
+        //validate tasks list
+        if (Object.keys(tasks).length === 0) {
+            return next(
+                new CustomError(500, { taskListId: 'Task cannot be blanked' })
+            );
+        }
+
+        //validate borrow facilities list
+        if (Object.keys(borrowFacilities).length === 0) {
+            return next(
+                new CustomError(500, {
+                    facilityHistoryListId: 'Borrow Facility cannot be blanked',
+                })
+            );
+        }
+
         //create tasks to get task list ids
         const taskResult = await Promise.all(
             tasks.map(async (task) => {
@@ -34,9 +55,8 @@ const createEvent = async (req, res, next) => {
             ),
         };
 
-        const event = new Event(req.body);
-        //validate user request fields.
-        await event.validate();
+        //renew event instance
+        event = new Event(req.body);
 
         //create new event
         const newEvent = await event.save();

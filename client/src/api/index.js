@@ -72,3 +72,6 @@ export const updateEventTypeAPI = (userReq) =>
 export const deleteEventTypesAPI = (userReq) =>
     AXIOS.delete(`/eventType/delete`, { data: userReq });
 export const getAllEventTypesAPI = () => AXIOS.get(`/eventType/all`);
+
+// Event APIs
+export const createEventAPI = (userReq) => AXIOS.post(`/event/create`, userReq);

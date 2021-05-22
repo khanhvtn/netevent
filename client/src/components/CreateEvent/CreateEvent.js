@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+
 import {
     Grid,
     Typography,
@@ -11,6 +12,8 @@ import {
     Select,
     MenuItem,
     Chip,
+    FormHelperText,
+    CircularProgress,
 } from '@material-ui/core';
 import MomentUtils from '@date-io/moment';
 import {
@@ -28,6 +31,7 @@ import {
 
 import { getAllFacilities } from '../../actions/facilityActions';
 import { getAllUsers } from '../../actions/userActions';
+import { createEvent } from '../../actions/eventActions';
 import SystemNotification from '../Notification/Notification';
 import DataTable from '../DataTable/DataTable';
 import CreateEventTypeDialog from './CreateEventTypeDialog/CreateEventTypeDialog';
@@ -38,9 +42,10 @@ import { convertBase64 } from '../../utils';
 //import useStyles in the last
 import useStyles from './styles';
 import TaskDialog from './TaskDialog/TaskDialog';
+import RichTextEditor from './RichTextEditor/RichTextEditor';
 
 let tagList = [];
-
+const defaultContent = `{"blocks":[{"key":"ejhoe","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}`;
 const initialState = {
     //create new event
     eventName: '',
@@ -53,7 +58,7 @@ const initialState = {
     startDate: null,
     endDate: null,
     maxParticipants: '',
-    description: '',
+    description: defaultContent,
     budget: '',
     image: null,
     tasks: [],
@@ -103,17 +108,21 @@ const CreateEvent = () => {
         eventTypes,
         errors,
         eventTypeIsLoading,
-        createSuccess,
+        createEventTypeSuccess,
+        createEventSuccess,
         facilities,
         user,
         users,
+        eventIsLoading,
     } = useSelector((state) => ({
         users: state.user.users,
         user: state.user.user,
         eventTypes: state.eventType.eventTypes,
         errors: state.error.errors,
         eventTypeIsLoading: state.eventType.isLoading,
-        createSuccess: state.eventType.createSuccess,
+        eventIsLoading: state.event.isLoading,
+        createEventTypeSuccess: state.eventType.createSuccess,
+        createEventSuccess: state.event.createSuccess,
         facilities: state.facility.facilities,
     }));
     const [state, setState] = useState(initialState);
@@ -127,17 +136,28 @@ const CreateEvent = () => {
     const [selectedTask, setSelectedTask] = useState([]);
     const [taskState, setTaskState] = useState(initialTaskState);
 
+    //useEffect for create event success
+    useEffect(() => {
+        if (createEventSuccess) {
+            handleClearFields();
+        }
+        setState((prevState) => ({
+            ...prevState,
+            openCreateSnackBar: createEventSuccess,
+        }));
+    }, [dispatch, createEventSuccess]);
+
     //useEffect get status create event type
     useEffect(() => {
         setState((prevState) => ({
             ...prevState,
-            openCreateSnackBar: createSuccess,
+            openCreateSnackBar: createEventTypeSuccess,
             openDialogCreateEventType: false,
         }));
-        if (createSuccess) {
+        if (createEventTypeSuccess) {
             dispatch(getAllEventTypes());
         }
-    }, [dispatch, createSuccess]);
+    }, [dispatch, createEventTypeSuccess]);
 
     //useEffect to get all event type
     useEffect(() => {
@@ -193,7 +213,9 @@ const CreateEvent = () => {
             endDate,
             maxParticipants,
             tags: tagList,
-            description,
+            description: JSON.parse(description).blocks[0].text
+                ? description
+                : '',
             ownerId: user.id,
             budget,
             image,
@@ -231,14 +253,16 @@ const CreateEvent = () => {
                 }
             ),
         };
-        console.log(templateRequest);
+        dispatch(createEvent(templateRequest));
     };
 
     // handle clear all fields
     const handleClearFields = () => {
         setState(initialState);
         setBorrowFacilityState(initialBorrowFacilityState);
+        setTaskState(initialTaskState);
         setSelectedFacility([]);
+        tagList = [];
         fileInput.current.value = '';
     };
 
@@ -536,6 +560,11 @@ const CreateEvent = () => {
                             className={css.cardMedia}
                             title="Event image"
                         />
+                        <FormControl error={errors?.image ? true : false}>
+                            <FormHelperText>
+                                {errors?.image ? errors?.image : ''}
+                            </FormHelperText>
+                        </FormControl>
                     </Grid>
 
                     <Grid
@@ -560,6 +589,7 @@ const CreateEvent = () => {
                         />
                         {state.image && (
                             <Button
+                                disabled={eventIsLoading}
                                 className={css.btnRemovePhoto}
                                 onClick={() => {
                                     setState({
@@ -580,6 +610,7 @@ const CreateEvent = () => {
                             htmlFor="change-image"
                         >
                             <Button
+                                disabled={eventIsLoading}
                                 startIcon={<AddAPhoto />}
                                 variant="contained"
                                 component="span"
@@ -603,6 +634,11 @@ const CreateEvent = () => {
                         {/* Event Name */}
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <TextField
+                                disabled={eventIsLoading}
+                                error={errors?.eventName ? true : false}
+                                helperText={
+                                    errors?.eventName ? errors?.eventName : ''
+                                }
                                 margin="normal"
                                 type="text"
                                 variant="outlined"
@@ -616,6 +652,11 @@ const CreateEvent = () => {
                         {/* Budget */}
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <TextField
+                                disabled={eventIsLoading}
+                                error={errors?.budget ? true : false}
+                                helperText={
+                                    errors?.budget ? errors?.budget : ''
+                                }
                                 margin="normal"
                                 type="number"
                                 variant="outlined"
@@ -629,9 +670,11 @@ const CreateEvent = () => {
                         {/* Language */}
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <FormControl
+                                disabled={eventIsLoading}
                                 margin="normal"
                                 variant="outlined"
                                 fullWidth
+                                error={errors?.language ? true : false}
                             >
                                 <InputLabel id="select-label-language">
                                     Language
@@ -654,11 +697,15 @@ const CreateEvent = () => {
                                         English
                                     </MenuItem>
                                 </Select>
+                                <FormHelperText>
+                                    {errors?.language ? errors?.language : ''}
+                                </FormHelperText>
                             </FormControl>
                         </Grid>
                         {/* Select Type */}
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <Autocomplete
+                                disabled={eventIsLoading}
                                 value={state.eventTypeTarget}
                                 onChange={(event, newValue) => {
                                     if (typeof newValue === 'string') {
@@ -720,6 +767,14 @@ const CreateEvent = () => {
                                 freeSolo
                                 renderInput={(params) => (
                                     <TextField
+                                        error={
+                                            errors?.eventTypeId ? true : false
+                                        }
+                                        helperText={
+                                            errors?.eventTypeId
+                                                ? errors?.eventTypeId
+                                                : ''
+                                        }
                                         margin="normal"
                                         {...params}
                                         label="Event Type"
@@ -731,6 +786,9 @@ const CreateEvent = () => {
                         {/* Mode */}
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <TextField
+                                disabled={eventIsLoading}
+                                error={errors?.mode ? true : false}
+                                helperText={errors?.mode ? errors?.mode : ''}
                                 margin="normal"
                                 type="text"
                                 variant="outlined"
@@ -744,6 +802,13 @@ const CreateEvent = () => {
                         {/* Accommodation */}
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <TextField
+                                disabled={eventIsLoading}
+                                error={errors?.accommodation ? true : false}
+                                helperText={
+                                    errors?.accommodation
+                                        ? errors?.accommodation
+                                        : ''
+                                }
                                 margin="normal"
                                 type="text"
                                 variant="outlined"
@@ -757,6 +822,13 @@ const CreateEvent = () => {
                         {/* Max Participant */}
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <TextField
+                                disabled={eventIsLoading}
+                                error={errors?.maxParticipants ? true : false}
+                                helperText={
+                                    errors?.maxParticipants
+                                        ? errors?.maxParticipants
+                                        : ''
+                                }
                                 margin="normal"
                                 type="number"
                                 variant="outlined"
@@ -770,6 +842,8 @@ const CreateEvent = () => {
                         {/* Tags */}
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <Autocomplete
+                                key={createEventSuccess}
+                                disabled={eventIsLoading}
                                 limitTags={4}
                                 multiple
                                 id="tags-filled"
@@ -788,6 +862,10 @@ const CreateEvent = () => {
                                 }}
                                 renderInput={(params) => (
                                     <TextField
+                                        error={errors?.tags ? true : false}
+                                        helperText={
+                                            errors?.tags ? errors?.tags : ''
+                                        }
                                         margin="normal"
                                         {...params}
                                         variant="outlined"
@@ -801,6 +879,13 @@ const CreateEvent = () => {
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <MuiPickersUtilsProvider utils={MomentUtils}>
                                 <KeyboardDatePicker
+                                    disabled={eventIsLoading}
+                                    error={errors?.startDate ? true : false}
+                                    helperText={
+                                        errors?.startDate
+                                            ? errors?.startDate
+                                            : ''
+                                    }
                                     inputVariant="outlined"
                                     margin="normal"
                                     fullWidth
@@ -824,6 +909,11 @@ const CreateEvent = () => {
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <MuiPickersUtilsProvider utils={MomentUtils}>
                                 <KeyboardDatePicker
+                                    disabled={eventIsLoading}
+                                    error={errors?.endDate ? true : false}
+                                    helperText={
+                                        errors?.endDate ? errors?.endDate : ''
+                                    }
                                     inputVariant="outlined"
                                     margin="normal"
                                     fullWidth
@@ -847,6 +937,17 @@ const CreateEvent = () => {
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <MuiPickersUtilsProvider utils={MomentUtils}>
                                 <KeyboardDatePicker
+                                    disabled={eventIsLoading}
+                                    error={
+                                        errors?.registrationCloseDate
+                                            ? true
+                                            : false
+                                    }
+                                    helperText={
+                                        errors?.registrationCloseDate
+                                            ? errors?.registrationCloseDate
+                                            : ''
+                                    }
                                     inputVariant="outlined"
                                     margin="normal"
                                     fullWidth
@@ -869,6 +970,11 @@ const CreateEvent = () => {
                         {/* Location */}
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <TextField
+                                disabled={eventIsLoading}
+                                error={errors?.location ? true : false}
+                                helperText={
+                                    errors?.location ? errors?.location : ''
+                                }
                                 margin="normal"
                                 type="text"
                                 variant="outlined"
@@ -881,8 +987,9 @@ const CreateEvent = () => {
                         </Grid>
                         {/* Pick Facility Table */}
                         <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
-                            <Paper>
+                            <Paper elevation={3}>
                                 <DataTable
+                                    disabled={eventIsLoading}
                                     handleToggleDialogCreateAndUpdate={
                                         handleToggleDialogCreateAndUpdateBorrowFacility
                                     }
@@ -928,11 +1035,23 @@ const CreateEvent = () => {
                                     ]}
                                 />
                             </Paper>
+                            <FormControl
+                                error={
+                                    errors?.facilityHistoryListId ? true : false
+                                }
+                            >
+                                <FormHelperText>
+                                    {errors?.facilityHistoryListId
+                                        ? errors?.facilityHistoryListId
+                                        : ''}
+                                </FormHelperText>
+                            </FormControl>
                         </Grid>
                         {/* Tasks Table */}
                         <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
-                            <Paper>
+                            <Paper elevation={3}>
                                 <DataTable
+                                    disabled={eventIsLoading}
                                     handleToggleDialogCreateAndUpdate={
                                         handleToggleDialogCreateAndUpdateTask
                                     }
@@ -982,6 +1101,33 @@ const CreateEvent = () => {
                                     ]}
                                 />
                             </Paper>
+                            <FormControl
+                                error={errors?.taskListId ? true : false}
+                            >
+                                <FormHelperText>
+                                    {errors?.taskListId
+                                        ? errors?.taskListId
+                                        : ''}
+                                </FormHelperText>
+                            </FormControl>
+                        </Grid>
+                        {/* Description */}
+                        <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
+                            <RichTextEditor
+                                key={createEventSuccess}
+                                defaultContent={state.description}
+                                disabled={eventIsLoading}
+                                setState={setState}
+                            />
+                            <FormControl
+                                error={errors?.description ? true : false}
+                            >
+                                <FormHelperText>
+                                    {errors?.description
+                                        ? errors?.description
+                                        : ''}
+                                </FormHelperText>
+                            </FormControl>
                         </Grid>
                         {/* Button Control */}
                         <Grid
@@ -997,6 +1143,7 @@ const CreateEvent = () => {
                         >
                             <Grid item>
                                 <Button
+                                    disabled={eventIsLoading}
                                     size="large"
                                     variant="contained"
                                     color="default"
@@ -1007,13 +1154,21 @@ const CreateEvent = () => {
                             </Grid>
                             <Grid item>
                                 <Button
+                                    disabled={eventIsLoading}
                                     style={{ marginLeft: '20px' }}
                                     size="large"
                                     onClick={handleCreateEvent}
                                     variant="contained"
                                     color="primary"
                                 >
-                                    Create
+                                    {eventIsLoading ? (
+                                        <CircularProgress
+                                            size={26}
+                                            color="inherit"
+                                        />
+                                    ) : (
+                                        'Create'
+                                    )}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -1104,13 +1259,12 @@ const CreateEvent = () => {
                 availableUsers={
                     /* 
                     if isTaskCreateMode is true, 
-                    then render user emails that are not in task table or be a current user, vice versa.
+                    then render user emails that are not in task table or a team member, vice versa.
                      */
                     taskState.isTaskCreateMode
                         ? users
-                              .filter(
-                                  (targetUser) =>
-                                      targetUser.email !== user.email
+                              .filter((targetUser) =>
+                                  targetUser.role.includes('4')
                               )
                               .filter((targetUser) => {
                                   const listUserEmails = taskState.tasks.map(

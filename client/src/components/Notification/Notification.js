@@ -20,7 +20,7 @@ const SystemNotification = ({
             <Snackbar TransitionComponent={Slide} open={openUpdateSnackBar}>
                 <Alert severity="success">Update Sucess</Alert>
             </Snackbar>
-            {/* Snackbar UpdCreateate Success */}
+            {/* Snackbar Create Success */}
             <Snackbar TransitionComponent={Slide} open={openCreateSnackBar}>
                 <Alert severity="success">Create Sucess</Alert>
             </Snackbar>

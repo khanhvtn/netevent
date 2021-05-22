@@ -144,6 +144,7 @@ const EnhancedTableToolbar = (props) => {
         handleToggleDialogCreateAndUpdate,
         handleToggleDialogDelete,
         tableName,
+        disabled,
     } = props;
 
     return (
@@ -175,6 +176,7 @@ const EnhancedTableToolbar = (props) => {
             {numSelected === 0 ? (
                 <Tooltip title="Create Facility">
                     <Button
+                        disabled={disabled ? disabled : false}
                         onClick={handleToggleDialogCreateAndUpdate}
                         endIcon={<Create />}
                         variant="contained"
@@ -236,6 +238,7 @@ const DataTable = ({
     updateSuccess,
     headCells,
     tableName,
+    disabled,
 }) => {
     const css = useStyles();
 
@@ -289,6 +292,7 @@ const DataTable = ({
                 handleToggleDialogDelete={handleToggleDialogDelete}
                 numSelected={selected.length}
                 tableName={tableName}
+                disabled={disabled}
             />
             <TableContainer>
                 <Table

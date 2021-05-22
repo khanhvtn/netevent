@@ -52,7 +52,12 @@ const eventSchema = mongoose.Schema(
         },
         tags: {
             type: [String],
-            required: [true, 'Tags cannot be blanked'],
+            validate: {
+                validator: function (v) {
+                    return v.length > 0;
+                },
+                message: () => `Tags cannot be blanked`,
+            },
         },
         description: {
             type: String,
@@ -89,12 +94,22 @@ const eventSchema = mongoose.Schema(
         taskListId: {
             type: [mongoose.Schema.Types.ObjectId],
             ref: 'Task',
-            required: [true, 'Task cannot be blanked'],
+            // validate: {
+            //     validator: function (v) {
+            //         return v.lenght > 0;
+            //     },
+            //     message: () => `Task cannot be blanked'`,
+            // },
         },
         facilityHistoryListId: {
             type: [mongoose.Schema.Types.ObjectId],
-            ref: 'FacilityHistory',
-            required: [true, 'Facility History cannot be blanked'],
+            // ref: 'FacilityHistory',
+            // validate: {
+            //     validator: function (v) {
+            //         return v.lenght > 0;
+            //     },
+            //     message: () => `Borrow Facility cannot be blanked'`,
+            // },
         },
     },
     { timestamps: true }
