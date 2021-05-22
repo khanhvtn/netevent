@@ -322,6 +322,15 @@ const updateUser = async (req, res, next) => {
     }
 };
 
+const getAllUser = async (req, res, next) => {
+    try {
+        const users = await User.find({});
+        return cusResponse(res, 200, users, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
     login,
     logout,
@@ -330,4 +339,5 @@ module.exports = {
     filterUser,
     updateUser,
     deleteUser,
+    getAllUser,
 };

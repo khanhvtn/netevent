@@ -18,6 +18,7 @@ import {
     USER_CREATE_SUCCESS,
     USER_UPDATE_SUCCESS,
     USER_DELETE_SUCCESS,
+    GET_ALL_USERS,
 } from '../constants';
 
 import * as api from '../api';
@@ -125,7 +126,6 @@ export const userCheck = (history) => async (dispatch) => {
     setUserIsChecking(false, dispatch);
 };
 
-
 const sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
@@ -150,12 +150,18 @@ export const userConfirm = (id, password, history) => async (dispatch) => {
 export const getUsers = (search, take, page) => async (dispatch) => {
     setUserIsLoading(true, dispatch);
     try {
-        const data = await api.getUsersAPI(
-            search,
-            take,
-            page
-        );
+        const data = await api.getUsersAPI(search, take, page);
         dispatch({ type: FETCH_ALL_USERS, payload: data });
+    } catch (error) {
+        console.log(error);
+    }
+    setUserIsLoading(false, dispatch);
+};
+export const getAllUsers = () => async (dispatch) => {
+    setUserIsLoading(true, dispatch);
+    try {
+        const data = await api.getAllUsersAPI();
+        dispatch({ type: GET_ALL_USERS, payload: data });
     } catch (error) {
         console.log(error);
     }
@@ -163,7 +169,7 @@ export const getUsers = (search, take, page) => async (dispatch) => {
 };
 
 export const createUser = (userData) => async (dispatch) => {
-    setUserIsLoading(true, dispatch)
+    setUserIsLoading(true, dispatch);
     try {
         await api.createUserAPI(userData);
         dispatch({ type: USER_CREATE_SUCCESS, payload: true });
@@ -186,9 +192,8 @@ export const createUser = (userData) => async (dispatch) => {
         }
         console.log(error);
     }
-    setUserIsLoading(false, dispatch)
+    setUserIsLoading(false, dispatch);
 };
-
 
 export const updateUser = (updateUser) => async (dispatch) => {
     setUserIsLoading(true, dispatch);
@@ -211,7 +216,7 @@ export const updateUser = (updateUser) => async (dispatch) => {
         }
         console.log(error);
     }
-    setUserIsLoading(false, dispatch)
+    setUserIsLoading(false, dispatch);
 };
 
 export const deleteUsers = (userReq) => async (dispatch) => {

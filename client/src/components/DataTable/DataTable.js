@@ -367,7 +367,8 @@ const DataTable = ({
                                                 if (
                                                     cell.id === 'createdAt' ||
                                                     cell.id === 'updatedAt' ||
-                                                    cell.id.includes('Date')
+                                                    cell.id.includes('Date') ||
+                                                    cell.id.includes('Time')
                                                 ) {
                                                     return (
                                                         <TableCell key={index}>

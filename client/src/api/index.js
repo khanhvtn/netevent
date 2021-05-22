@@ -17,6 +17,7 @@ export const updateUserAPI = (newUpdateUser) =>
     AXIOS.patch(`/user/update`, newUpdateUser);
 export const getUsersAPI = (search, take, page) =>
     AXIOS.get(`/user/filter?search=${search}&take=${take}&page=${page}`);
+export const getAllUsersAPI = () => AXIOS.get(`/user/all`);
 
 // Link API
 export const confirmUser = (id, password) =>

@@ -27,6 +27,7 @@ import {
 } from '../../actions/eventTypeActions';
 
 import { getAllFacilities } from '../../actions/facilityActions';
+import { getAllUsers } from '../../actions/userActions';
 import SystemNotification from '../Notification/Notification';
 import DataTable from '../DataTable/DataTable';
 import CreateEventTypeDialog from './CreateEventTypeDialog/CreateEventTypeDialog';
@@ -36,6 +37,7 @@ import { ERROR, ERROR_CLEAR } from '../../constants';
 import { convertBase64 } from '../../utils';
 //import useStyles in the last
 import useStyles from './styles';
+import TaskDialog from './TaskDialog/TaskDialog';
 
 let tagList = [];
 
@@ -76,6 +78,22 @@ const initialBorrowFacilityState = {
     openDeleteDialogBorrowFacility: false,
 };
 
+const initialTaskState = {
+    tasks: [],
+    isLoading: false,
+    taskCreatSucces: false,
+    taskDeleteSucces: false,
+    taskUpdateSucces: false,
+    name: '',
+    email: '',
+    type: '',
+    startTime: null,
+    endTime: null,
+    openCreateAndUpdateDialogTask: false,
+    openDeleteDialogTask: false,
+    isTaskCreateMode: true,
+};
+
 const filter = createFilterOptions();
 const CreateEvent = () => {
     const css = useStyles();
@@ -88,7 +106,9 @@ const CreateEvent = () => {
         createSuccess,
         facilities,
         user,
+        users,
     } = useSelector((state) => ({
+        users: state.user.users,
         user: state.user.user,
         eventTypes: state.eventType.eventTypes,
         errors: state.error.errors,
@@ -97,11 +117,16 @@ const CreateEvent = () => {
         facilities: state.facility.facilities,
     }));
     const [state, setState] = useState(initialState);
-    //facility table
+    //borrow facility table
     const [selectedFacility, setSelectedFacility] = useState([]);
     const [borrowFacilityState, setBorrowFacilityState] = useState(
         initialBorrowFacilityState
     );
+
+    //task table
+    const [selectedTask, setSelectedTask] = useState([]);
+    const [taskState, setTaskState] = useState(initialTaskState);
+
     //useEffect get status create event type
     useEffect(() => {
         setState((prevState) => ({
@@ -118,6 +143,7 @@ const CreateEvent = () => {
     useEffect(() => {
         dispatch(getAllEventTypes());
         dispatch(getAllFacilities());
+        dispatch(getAllUsers());
     }, [dispatch]);
     const handleChange = (e) => {
         setState((prevState) => ({
@@ -171,7 +197,26 @@ const CreateEvent = () => {
             ownerId: user.id,
             budget,
             image,
-            tasks: [],
+            tasks: taskState.tasks.map((task) => {
+                const {
+                    name,
+                    email,
+                    type,
+                    startTime: startDate,
+                    endTime: endDate,
+                } = task;
+
+                const { _id: userId } = users.find(
+                    (user) => user.email === email
+                );
+                return {
+                    name,
+                    userId,
+                    type,
+                    startDate,
+                    endDate,
+                };
+            }),
             borrowFacilities: borrowFacilityState.borrowFacilities.map(
                 (borrowFacility) => {
                     const { borrowDate, returnDate, name } = borrowFacility;
@@ -187,6 +232,14 @@ const CreateEvent = () => {
             ),
         };
         console.log(templateRequest);
+    };
+
+    // handle clear all fields
+    const handleClearFields = () => {
+        setState(initialState);
+        setBorrowFacilityState(initialBorrowFacilityState);
+        setSelectedFacility([]);
+        fileInput.current.value = '';
     };
 
     /* Borrow Facility */
@@ -308,6 +361,143 @@ const CreateEvent = () => {
     };
 
     /* Borrow Facility */
+
+    /* Task Table */
+    const handleChangeTask = (e) => {
+        setTaskState((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value,
+        }));
+    };
+    const handleToggleDialogCreateAndUpdateTask = (event, mode) => {
+        let targetEdit;
+        if (mode) {
+            targetEdit = taskState.tasks.find(
+                (task) => task.name === selectedTask[0]
+            );
+        }
+        setTaskState((prevState) => ({
+            ...prevState,
+            name: mode ? targetEdit.name : '',
+            email: mode ? targetEdit : '',
+            type: mode ? targetEdit.type : '',
+            startTime: mode ? targetEdit.startTime : null,
+            endTime: mode ? targetEdit.endTime : null,
+            openCreateAndUpdateDialogTask: !prevState.openCreateAndUpdateDialogTask,
+            isTaskCreateMode: mode ? false : true,
+        }));
+        //clear Error
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null,
+        });
+    };
+
+    const handleToggleDialogDeleteTask = () => {
+        setTaskState((prevState) => ({
+            ...prevState,
+            openDeleteDialogTask: !prevState.openDeleteDialogTask,
+        }));
+    };
+
+    const handleCreateAndUpdateTask = () => {
+        const { name, email, type, startTime, endTime } = taskState;
+        let listErrors = {};
+        if (!name) {
+            listErrors = {
+                ...listErrors,
+                name: 'Name cannot be blanked.',
+            };
+        }
+        if (!email) {
+            listErrors = {
+                ...listErrors,
+                email: 'Email cannot be blanked.',
+            };
+        }
+        if (!type) {
+            listErrors = {
+                ...listErrors,
+                type: 'Type cannot be blanked.',
+            };
+        }
+        if (!startTime) {
+            listErrors = {
+                ...listErrors,
+                startTime: 'Start Time cannot be blanked.',
+            };
+        }
+        if (!endTime) {
+            listErrors = {
+                ...listErrors,
+                endTime: 'End Time cannot be blanked.',
+            };
+        }
+        if (Object.keys(listErrors).length !== 0) {
+            return dispatch({
+                type: ERROR,
+                payload: listErrors,
+            });
+        }
+
+        //generate new update when in edit mode
+        let update;
+        if (!taskState.isTaskCreateMode) {
+            update = taskState.tasks.filter(
+                (task) => task.name !== selectedTask[0]
+            );
+        }
+
+        //create
+        setTaskState((prevState) => {
+            update = update ? update : prevState.tasks;
+            return {
+                ...prevState,
+                tasks: [
+                    ...update,
+                    {
+                        name: prevState.name,
+                        email: prevState.email.email,
+                        type: prevState.type,
+                        startTime: prevState.startTime,
+                        endTime: prevState.endTime,
+                    },
+                ],
+                name: '',
+                email: '',
+                type: '',
+                startTime: null,
+                endTime: null,
+                openCreateAndUpdateDialogTask: false,
+            };
+        });
+
+        //clear error
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null,
+        });
+        setSelectedTask([]);
+    };
+
+    const handleDeleteTask = () => {
+        setTaskState((prevState) => {
+            return {
+                ...prevState,
+                tasks: prevState.tasks.filter(
+                    (task) => !selectedTask.includes(task.name)
+                ),
+                name: '',
+                email: '',
+                type: '',
+                startTime: null,
+                endTime: null,
+                openDeleteDialogTask: false,
+            };
+        });
+        setSelectedTask([]);
+    };
+    /* Task Table */
 
     //handle change photo
     const handleChangePhoto = async (e) => {
@@ -739,6 +929,60 @@ const CreateEvent = () => {
                                 />
                             </Paper>
                         </Grid>
+                        {/* Tasks Table */}
+                        <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
+                            <Paper>
+                                <DataTable
+                                    handleToggleDialogCreateAndUpdate={
+                                        handleToggleDialogCreateAndUpdateTask
+                                    }
+                                    handleToggleDialogDelete={
+                                        handleToggleDialogDeleteTask
+                                    }
+                                    take={1}
+                                    selected={selectedTask}
+                                    setSelected={setSelectedTask}
+                                    data={taskState.tasks}
+                                    isLoading={taskState.isLoading}
+                                    createSuccess={taskState.taskCreatSucces}
+                                    deleteSuccess={taskState.taskDeleteSucces}
+                                    updateSuccess={taskState.taskUpdateSucces}
+                                    tableName="Task List"
+                                    headCells={[
+                                        {
+                                            id: 'name',
+                                            numeric: false,
+                                            disablePadding: false,
+                                            label: 'Name',
+                                        },
+                                        {
+                                            id: 'email',
+                                            numeric: false,
+                                            disablePadding: false,
+                                            label: 'Email',
+                                        },
+                                        {
+                                            id: 'type',
+                                            numeric: false,
+                                            disablePadding: false,
+                                            label: 'Type',
+                                        },
+                                        {
+                                            id: 'startTime',
+                                            numeric: false,
+                                            disablePadding: false,
+                                            label: 'Start Time',
+                                        },
+                                        {
+                                            id: 'endTime',
+                                            numeric: false,
+                                            disablePadding: false,
+                                            label: 'End Time',
+                                        },
+                                    ]}
+                                />
+                            </Paper>
+                        </Grid>
                         {/* Button Control */}
                         <Grid
                             container
@@ -756,8 +1000,9 @@ const CreateEvent = () => {
                                     size="large"
                                     variant="contained"
                                     color="default"
+                                    onClick={handleClearFields}
                                 >
-                                    Close
+                                    Clear
                                 </Button>
                             </Grid>
                             <Grid item>
@@ -825,12 +1070,59 @@ const CreateEvent = () => {
                                       (borrowFacility) => borrowFacility.name
                                   );
 
-                                  return facilityNames.includes(facility.name)
-                                      ? false
-                                      : true;
+                                  return !facilityNames.includes(facility.name);
                               })
                         : facilities.filter(
                               (facility) => facility.status === true
+                          )
+                }
+            />
+            {/* Borrow Facility Dialog */}
+
+            <TaskDialog
+                openCreateAndUpdateDialog={
+                    taskState.openCreateAndUpdateDialogTask
+                }
+                handleToggleDialogCreateAndUpdate={
+                    handleToggleDialogCreateAndUpdateTask
+                }
+                isCreateMode={taskState.isTaskCreateMode}
+                handleChange={handleChangeTask}
+                setTaskState={setTaskState}
+                name={taskState.name}
+                email={taskState.email}
+                type={taskState.type}
+                startTime={taskState.startTime}
+                endTime={taskState.endTime}
+                openDeleteDialog={taskState.openDeleteDialogTask}
+                handleCreateAndUpdate={handleCreateAndUpdateTask}
+                handleToggleDialogDelete={handleToggleDialogDeleteTask}
+                handleDelete={handleDeleteTask}
+                isLoading={taskState.isLoading}
+                errors={errors}
+                createSuccess={taskState.taskCreatSucces}
+                availableUsers={
+                    /* 
+                    if isTaskCreateMode is true, 
+                    then render user emails that are not in task table or be a current user, vice versa.
+                     */
+                    taskState.isTaskCreateMode
+                        ? users
+                              .filter(
+                                  (targetUser) =>
+                                      targetUser.email !== user.email
+                              )
+                              .filter((targetUser) => {
+                                  const listUserEmails = taskState.tasks.map(
+                                      (task) => task.email
+                                  );
+
+                                  return !listUserEmails.includes(
+                                      targetUser.email
+                                  );
+                              })
+                        : users.filter(
+                              (targetUser) => targetUser.email !== user.email
                           )
                 }
             />

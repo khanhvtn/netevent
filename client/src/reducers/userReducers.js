@@ -14,7 +14,8 @@ import {
     USER_PICK_ROLE,
     USER_CREATE_SUCCESS,
     USER_UPDATE_SUCCESS,
-    USER_DELETE_SUCCESS
+    USER_DELETE_SUCCESS,
+    GET_ALL_USERS,
 } from '../constants';
 
 const initialState = {
@@ -27,7 +28,7 @@ const initialState = {
     totalPages: null,
     isCreated: false,
     isUpdated: false,
-    isDeleted: false
+    isDeleted: false,
 };
 
 export default function userReducers(state = initialState, action) {
@@ -44,9 +45,9 @@ export default function userReducers(state = initialState, action) {
 
         // CONFIRMATION
         case USER_CONFIRM:
-            return { ...state, user: action.payload }
+            return { ...state, user: action.payload };
         case USER_IS_CONFIRM:
-            return { ...state, isConfirm: action.payload }
+            return { ...state, isConfirm: action.payload };
         case USER_CHECK:
             return { ...state, user: action.payload };
         case USER_CHECKING:
@@ -57,16 +58,21 @@ export default function userReducers(state = initialState, action) {
             return {
                 ...state,
                 users: action.payload.data.data,
-                totalPages: action.payload.data.totalPages
+                totalPages: action.payload.data.totalPages,
+            };
+        case GET_ALL_USERS:
+            return {
+                ...state,
+                users: action.payload.data.data,
             };
 
         // SNACKBAR
         case USER_CREATE_SUCCESS:
-            return { ...state, isCreated: action.payload }
+            return { ...state, isCreated: action.payload };
         case USER_UPDATE_SUCCESS:
-            return { ...state, isUpdated: action.payload }
+            return { ...state, isUpdated: action.payload };
         case USER_DELETE_SUCCESS:
-            return { ...state, isDeleted: action.payload }
+            return { ...state, isDeleted: action.payload };
         default:
             return state;
     }

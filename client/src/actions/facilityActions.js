@@ -6,7 +6,6 @@ import {
     ERROR,
     ERROR_CLEAR,
     FACILITY_DELETE_SUCCESS,
-    EVENT_TYPE_GET_ALL_FILTER,
     FACILITY_GET_ALL_FILTER,
 } from '../constants';
 import {
