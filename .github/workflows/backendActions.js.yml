@@ -5,7 +5,8 @@ name: NetEvent Backend CI/CD Github Actions
 
 on:
   push:
-    branches: [ feature/userTableUpdate ]
+    branches:
+      - feature/userTableUpdate
 
 jobs:
   build:
