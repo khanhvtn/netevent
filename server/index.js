@@ -25,7 +25,7 @@ app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 // const MONGO_URI = `mongodb+srv://khanhvtn93:khanhvtn93123@cluster0.zjom9.mongodb.net/netEvent?authSource=admin&replicaSet=atlas-l3xb7s-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true`;
-const MONGO_URI = `mongodb://localhost:27017`;
+const MONGO_URI = `mongodb://localhost:27017`; 
 mongoose.connect(
     MONGO_URI,
     {
