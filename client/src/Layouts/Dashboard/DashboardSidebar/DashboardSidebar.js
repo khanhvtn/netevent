@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { LogOut as LogOutIcon } from 'react-feather';
 
 import { DevicesOther, People } from '@material-ui/icons';
+import ReplayIcon from '@material-ui/icons/Replay';
 import NavItem from './NavItem';
 import useStyles from './styles';
 
@@ -53,11 +54,19 @@ const roleActions = {
 };
 
 const defaultActions = [
+
+    {
+        title: "Switch Role",
+        icon: ReplayIcon,
+        href: 'pickrole'
+    },
     {
         title: 'Logout',
         icon: LogOutIcon,
         href: 'logout',
     },
+
+   
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {

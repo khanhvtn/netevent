@@ -250,7 +250,7 @@ const updateFacilityHistory = async (req, res, next) => {
         const updatedFacilityHistory = await FacilityHistory.findOneAndUpdate(
             { _id: userReq.filter },
             userReq.update,
-            { runValidators: true, context: 'query' }
+            { new: true, runValidators: true, context: 'query' }
         );
 
         return cusResponse(res, 200, updatedFacilityHistory, null);

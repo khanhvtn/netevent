@@ -1,6 +1,21 @@
 const { Facility } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
+
+/**
+ *  =====================================
+ *          FACILITY CONTROLLER
+ *  =====================================
+ */
+
+
+/**
+ * @decsription Create new facility with following request
+ * @method POST 
+ * @route /api/facility/login
+ * 
+ * @version 1.0
+ */
 const createFacility = async (req, res, next) => {
     try {
         const facility = new Facility(req.body);
@@ -24,6 +39,14 @@ const createFacility = async (req, res, next) => {
     }
 };
 
+
+/**
+ * @decsription Get, search and filter facilities (included paging)
+ * @method GET
+ * @route /api/facility/filter
+ * 
+ * @version 1.0
+ */
 const filter = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
@@ -58,7 +81,7 @@ const filter = async (req, res, next) => {
 
         let options = {
             search: '',
-            take: 5,
+            take: 10,
             type: '',
             status: {
                 $in: [false, true],
@@ -200,6 +223,44 @@ const filter = async (req, res, next) => {
     }
 };
 
+
+/**
+ * @decsription Update facility by new request update
+ * @method PATCH
+ * @route /api/facility/update
+ * 
+ * @version 1.0
+ */
+const updateFacility = async (req, res, next) => {
+    try {
+        const userReq = req.body;
+        const updatedFacility = await Facility.findOneAndUpdate(
+            { name: userReq.filter },
+            userReq.update,
+            { new: true, runValidators: true, context: 'query' }
+        );
+
+        return cusResponse(res, 200, updatedFacility, null);
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
+        return next(new CustomError(500, error.message));
+    }
+};
+
+
+/**
+ * @decsription Delete facilities from the request names
+ * @method DELETE
+ * @route /api/facility/delete
+ * 
+ * @version 1.0
+ */
 const deleteFacility = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
@@ -230,27 +291,6 @@ const deleteFacility = async (req, res, next) => {
     }
 };
 
-const updateFacility = async (req, res, next) => {
-    try {
-        const userReq = req.body;
-        const updatedFacility = await Facility.findOneAndUpdate(
-            { name: userReq.filter },
-            userReq.update,
-            { runValidators: true, context: 'query' }
-        );
-
-        return cusResponse(res, 200, updatedFacility, null);
-    } catch (error) {
-        if (error.name == 'ValidationError') {
-            let errors = {};
-            for (field in error.errors) {
-                errors = { ...errors, [field]: error.errors[field].message };
-            }
-            return next(new CustomError(500, errors));
-        }
-        return next(new CustomError(500, error.message));
-    }
-};
 
 const getAllFacility = async (req, res, next) => {
     try {

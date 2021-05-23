@@ -3,7 +3,12 @@ export default makeStyles((theme) => ({
     grow: {
         flexGrow: 1,
     },
-    paper: { margin: '20px' },
+    paper: { 
+        margin: '18px 80px',
+        [theme.breakpoints.down('md')]: {
+            margin: '20px',
+        },
+    },
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,

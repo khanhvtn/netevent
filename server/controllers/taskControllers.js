@@ -246,7 +246,7 @@ const updateTask = async (req, res, next) => {
         const updatedTask = await Task.findOneAndUpdate(
             { _id: userReq.filter },
             userReq.update,
-            { runValidators: true, context: 'query' }
+            { new: true, runValidators: true, context: 'query' }
         );
 
         return cusResponse(res, 200, updatedTask, null);

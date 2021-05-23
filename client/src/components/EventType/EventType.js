@@ -21,11 +21,11 @@ import { useDispatch, useSelector } from 'react-redux';
 //import makeStyles in the last
 import useStyles from './styles';
 import { ERROR_CLEAR } from '../../constants';
-import DataTable from '../DataTable/DataTable';
+import DataTable from '../MainTable/DataTable/DataTable';
 import EventFilter from './EventFilter/EventFilter';
 import Notification from '../Notification/Notification';
 import EventDialog from './EventDialog/EventDialog';
-import PaginationTable from '../PaginationTable/PaginationTable';
+import PaginationTable from '../MainTable/PaginationTable/PaginationTable';
 
 const initialState = {
     search: '',

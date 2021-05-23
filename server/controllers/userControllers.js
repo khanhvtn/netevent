@@ -7,7 +7,20 @@ const CustomError = require('../class/CustomeError');
 const { sendEmail } = require('./misc/mailer');
 const { html } = require('../mail-template/template');
 
-//user login
+/**
+ *  =====================================
+ *            USER CONTROLLER
+ *  =====================================
+ */
+
+
+/**
+ * @decsription Authorize and login user
+ * @method POST 
+ * @route /api/user/login
+ * 
+ * @version 1.0
+ */
 const login = async (req, res, next) => {
     try {
         const userReq = req.body;
@@ -30,9 +43,7 @@ const login = async (req, res, next) => {
             existedUser.password
         );
         if (!result) {
-            return next(
-                new CustomError(400, { password: 'Password is invalid' })
-            );
+            return next(new CustomError(400, { password: 'Password is invalid' }));
         }
 
         //gen token
@@ -67,7 +78,35 @@ const login = async (req, res, next) => {
     }
 };
 
-//user login
+
+/**
+ * @decsription Checking and retủn user data if authorized
+ * @method POST 
+ * @route /api/user/fetchCurrent
+ * 
+ * @version 1.0
+ */
+const fetchCurrentUser = async (req, res, next) => {
+
+    try {
+        const userData = req.body;
+        const user = await User.findOne({ email: userData.email });
+        if (user) {
+            return cusResponse(res, 200, user, null);
+        }
+    } catch (error) {
+        return next(new CustomError(500, { sysError: error.message }));
+    }
+}
+
+
+/**
+ * @decsription Checking and return user data if authorized
+ * @method GET 
+ * @route /api/user/userCheck
+ * 
+ * @version 1.0
+ */
 const userCheck = async (req, res, next) => {
     try {
         //response user info to client
@@ -77,7 +116,14 @@ const userCheck = async (req, res, next) => {
     }
 };
 
-//user login
+
+/**
+ * @decsription Checking and return user data if authorized
+ * @method POST 
+ * @route /api/user/userCheck
+ * 
+ * @version 1.0
+ */
 const logout = async (req, res, next) => {
     try {
         //clear token
@@ -89,10 +135,18 @@ const logout = async (req, res, next) => {
     }
 };
 
-//Create User
+
+/**
+ * @decsription Create and return new user for client
+ * @method POST 
+ * @route /api/user/create
+ * 
+ * @version 1.0
+ */
 const createUser = async (req, res, next) => {
     try {
         const userReq = req.body;
+
         //check user is existed or not.
         const existedUser = await User.findOne({ email: userReq.email });
 
@@ -100,18 +154,24 @@ const createUser = async (req, res, next) => {
             return next(new CustomError(400, 'Email is already existed'));
         }
 
+        //create new user
         const newUser = await User.create(userReq);
         const newLink = {
             user: newUser._id,
         };
 
+        //create new link
         const idLink = await Link.create(newLink);
+
+        //send email
         await sendEmail(
             'noreply@netevent.com',
             userReq.email,
             'User Confirmation Link',
             html(userReq.email, idLink._id)
         );
+
+        //response new user to client
         return cusResponse(res, 200, newUser, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
@@ -125,37 +185,14 @@ const createUser = async (req, res, next) => {
     }
 };
 
-//Delete user
-const deleteUser = async (req, res, next) => {
-    try {
-        const { deleteList } = req.body;
-        if (deleteList.length === 1) {
-            const deletedUser = await User.findOneAndDelete({
-                email: deleteList[0],
-            });
-            return cusResponse(res, 200, deletedUser, null);
-        } else {
-            const deletedUsers = await Promise.all(
-                deleteList.map(async (email) => {
-                    return await User.findOneAndDelete({
-                        email,
-                    });
-                })
-            );
-            return cusResponse(res, 200, deletedUsers, null);
-        }
-    } catch (error) {
-        if (error.name == 'ValidationError') {
-            let errors = {};
-            for (field in error.errors) {
-                errors = { ...errors, [field]: error.errors[field].message };
-            }
-            return next(new CustomError(500, errors));
-        }
-        return next(new CustomError(500, error.message));
-    }
-};
 
+/**
+ * @decsription Get, search and filter users (included paging)
+ * @method GET
+ * @route /api/user/filter
+ * 
+ * @version 1.0
+ */
 const filterUser = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
@@ -178,16 +215,28 @@ const filterUser = async (req, res, next) => {
             updatedMinDate,
         ]);
 
+        //return empty result to client if database has no data.
+        if (
+            !createdMaxDate.length ||
+            !createdMinDate.length ||
+            !updatedMaxDate.length ||
+            !updatedMinDate.length
+        ) {
+            return cusResponse(res, 200, [], null);
+        }
+
         let options = {
             search: '',
-            take: 5,
-            type: '',
-
+            take: 10,
+            role: {
+                $in: ['1', '2', '3', '4'],
+            },
             createdMaxDate: listRangeDate[0][0].createdAt,
             createdMinDate: listRangeDate[1][0].createdAt,
             updatedMaxDate: listRangeDate[2][0].updatedAt,
             updatedMinDate: listRangeDate[3][0].updatedAt,
         };
+
         //adding search
         if (req.query.search) {
             options = {
@@ -206,6 +255,19 @@ const filterUser = async (req, res, next) => {
                 take: parseInt(req.query.take.toString()),
             };
         }
+
+        /* 
+        Add role filter
+        Default role will match all
+         */
+        if (req.query.role) {
+            options = {
+                ...options,
+                role: { $in: [req.query.role] },
+            };
+        }
+
+
 
         /* 
         Add createdFrom filter
@@ -261,7 +323,10 @@ const filterUser = async (req, res, next) => {
         Variable total user based on search and filter
          */
         const totalUsers = await User.find({
-            $or: [{ email: new RegExp(options.search, 'i') }],
+            $or: [
+                { email: new RegExp(options.search, 'i') },
+            ],
+            role: options.role,
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -278,8 +343,10 @@ const filterUser = async (req, res, next) => {
 
         //return data to client
         const users = await User.find({
-            $or: [{ email: new RegExp(options.search, 'i') }],
-            status: options.status,
+            $or: [
+                { email: new RegExp(options.search, 'i') },
+            ],
+            role: options.role,
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -299,14 +366,21 @@ const filterUser = async (req, res, next) => {
     }
 };
 
+
+/**
+ * @decsription Update user by new request update
+ * @method PATCH
+ * @route /api/user/update
+ * 
+ * @version 1.0
+ */
 const updateUser = async (req, res, next) => {
     try {
         const userReq = req.body;
-        console.log(userReq);
         const updatedUser = await User.findOneAndUpdate(
             { email: userReq.filter },
             userReq.update,
-            { runValidators: true, context: 'query' }
+            { new: true, runValidators: true, context: 'query' },
         );
 
         return cusResponse(res, 200, updatedUser, null);
@@ -321,6 +395,45 @@ const updateUser = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+
+
+/**
+ * @decsription Delete users from the request emails
+ * @method DELETE
+ * @route /api/user/delete
+ * 
+ * @version 1.0
+ */
+const deleteUser = async (req, res, next) => {
+    try {
+        const { deleteList } = req.body;
+        if (deleteList.length === 1) {
+            const deletedUser = await User.findOneAndDelete({
+                email: deleteList[0],
+            });
+            return cusResponse(res, 200, deletedUser, null);
+        } else {
+            const deletedUsers = await Promise.all(
+                deleteList.map(async (email) => {
+                    return await User.findOneAndDelete({
+                        email,
+                    });
+                })
+            );
+            return cusResponse(res, 200, deletedUsers, null);
+        }
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
+        return next(new CustomError(500, error.message));
+    }
+};
+
 
 const getAllUser = async (req, res, next) => {
     try {
@@ -340,4 +453,5 @@ module.exports = {
     updateUser,
     deleteUser,
     getAllUser,
+    fetchCurrentUser
 };
