@@ -1,6 +1,21 @@
 const { EventType } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
+
+/**
+ *  =====================================
+ *          EVENT TYPE CONTROLLER
+ *  =====================================
+ */
+
+
+/**
+* @decsription Create new event type with following request
+* @method POST 
+* @route /api/eventType/create
+* 
+* @version 1.0
+*/
 const createEventType = async (req, res, next) => {
     try {
         const eventType = new EventType(req.body);
@@ -22,6 +37,14 @@ const createEventType = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Get, search and filter eventTypes (included paging)
+* @method GET 
+* @route /api/eventType/filter
+* 
+* @version 1.0
+*/
 const filter = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
@@ -173,6 +196,14 @@ const filter = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Delete events from the request list of eventType's name
+* @method POST 
+* @route /api/eventType/delete
+* 
+* @version 1.0
+*/
 const deleteEventType = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
@@ -196,6 +227,14 @@ const deleteEventType = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Update eventType by new request update
+* @method PATCH 
+* @route /api/eventType/update
+* 
+* @version 1.0
+*/
 const updateEventType = async (req, res, next) => {
     try {
         const userReq = req.body;
@@ -217,6 +256,15 @@ const updateEventType = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+
+
+/**
+* @decsription Get all events
+* @method GET
+* @route /api/eventType/all
+* 
+* @version 1.0
+*/
 const getAllEventType = async (req, res, next) => {
     try {
         const eventTypes = await EventType.find({});

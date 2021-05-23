@@ -1,6 +1,22 @@
 const { Event, Task, FacilityHistory, Facility } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
+
+
+/**
+ *  =====================================
+ *          EVENT CONTROLLER
+ *  =====================================
+ */
+
+
+/**
+* @decsription Create new event with following request
+* @method POST 
+* @route /api/event/create
+* 
+* @version 1.0
+*/
 const createEvent = async (req, res, next) => {
     try {
         const { tasks, borrowFacilities } = req.body;
@@ -115,6 +131,14 @@ const createEvent = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Get, search and filter events (included paging)
+* @method GET 
+* @route /api/event/filter
+* 
+* @version 1.0
+*/
 const filter = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
@@ -264,6 +288,14 @@ const filter = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Delete events from the request list of eventName
+* @method DELETE 
+* @route /api/event/delete
+* 
+* @version 1.0
+*/
 const deleteEvent = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
@@ -294,6 +326,14 @@ const deleteEvent = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Update event by new request update
+* @method PATCH 
+* @route /api/event/filter
+* 
+* @version 1.0
+*/
 const updateEvent = async (req, res, next) => {
     try {
         const userReq = req.body;
@@ -316,6 +356,14 @@ const updateEvent = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Get all events
+* @method GET
+* @route /api/event/all
+* 
+* @version 1.0
+*/
 const getAllEvent = async (req, res, next) => {
     try {
         const events = await Event.find({})
@@ -328,6 +376,7 @@ const getAllEvent = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+
 
 module.exports = {
     createEvent,

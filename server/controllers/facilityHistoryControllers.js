@@ -1,6 +1,21 @@
 const { FacilityHistory } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
+
+/**
+ *  =====================================
+ *       FACILITY HISTORY CONTROLLER
+ *  =====================================
+ */
+
+
+/**
+* @decsription Create new facility history with following request
+* @method POST 
+* @route /api/facilityHistory/create
+* 
+* @version 1.0
+*/
 const createFacilityHistory = async (req, res, next) => {
     try {
         const facilityHistory = new FacilityHistory(req.body);
@@ -22,6 +37,14 @@ const createFacilityHistory = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Get, search and filter facilityHistory (included paging)
+* @method GET 
+* @route /api/facilityHistory/filter
+* 
+* @version 1.0
+*/
 const filter = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
@@ -173,6 +196,14 @@ const filter = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Delete events from the request list of facilityHistory's id
+* @method DELETE 
+* @route /api/facilityHistory/delete
+* 
+* @version 1.0
+*/
 const deleteFacilityHistory = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
@@ -205,6 +236,14 @@ const deleteFacilityHistory = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Update eventType by new request update
+* @method PATCH 
+* @route /api/facilityHistory/update
+* 
+* @version 1.0
+*/
 const updateFacilityHistory = async (req, res, next) => {
     try {
         const userReq = req.body;
@@ -227,6 +266,14 @@ const updateFacilityHistory = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Get all facilityHistory
+* @method GET 
+* @route /api/facilityHistory/all
+* 
+* @version 1.0
+*/
 const getAllFacilityHistory = async (req, res, next) => {
     try {
         const facilityHistories = await FacilityHistory.find({}).populate({
@@ -238,6 +285,7 @@ const getAllFacilityHistory = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+
 
 module.exports = {
     createFacilityHistory,

@@ -1,6 +1,21 @@
 const { Task } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
+
+/**
+ *  =====================================
+ *            TASK CONTROLLER
+ *  =====================================
+ */
+
+
+/**
+* @decsription Create new task with following request
+* @method POST 
+* @route /api/task/create
+* 
+* @version 1.0
+*/
 const createTask = async (req, res, next) => {
     try {
         const task = new Task(req.body);
@@ -22,6 +37,14 @@ const createTask = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Get, search and filter tasks (included paging)
+* @method GET 
+* @route /api/task/filter
+* 
+* @version 1.0
+*/
 const filter = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
@@ -171,6 +194,14 @@ const filter = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Delete events from the request list of task's id
+* @method DELETE 
+* @route /api/task/delete
+* 
+* @version 1.0
+*/
 const deleteTask = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
@@ -201,6 +232,14 @@ const deleteTask = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Update task by new request update
+* @method PATCH 
+* @route /api/task/update
+* 
+* @version 1.0
+*/
 const updateTask = async (req, res, next) => {
     try {
         const userReq = req.body;
@@ -223,6 +262,14 @@ const updateTask = async (req, res, next) => {
     }
 };
 
+
+/**
+* @decsription Get all tasks
+* @method GET 
+* @route /api/task/all
+* 
+* @version 1.0
+*/
 const getAllTask = async (req, res, next) => {
     try {
         const tasks = await Task.find({});
@@ -231,6 +278,7 @@ const getAllTask = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+
 
 module.exports = {
     createTask,
