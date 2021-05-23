@@ -9,15 +9,26 @@ const AXIOS = axios.create({
 export const userCheckingAPI = () => AXIOS.get(`/user/userCheck`);
 export const userLoginAPI = (userReq) => AXIOS.post(`/user/login`, userReq);
 export const userLogoutAPI = () => AXIOS.get(`/user/logout`);
-
-export const createUserAPI = (newUser) => AXIOS.post(`/user/create`, newUser);
+export const fetchCurrentUser = (userReq) => AXIOS.post(`/user/fetchCurrent`, userReq)
+export const createUserAPI = (newUser) =>
+    AXIOS.post(`/user/create`, newUser);
 export const deleteUsersAPI = (userReq) =>
     AXIOS.delete(`/user/delete`, { data: userReq });
 export const updateUserAPI = (newUpdateUser) =>
     AXIOS.patch(`/user/update`, newUpdateUser);
-export const getUsersAPI = (search, take, page) =>
-    AXIOS.get(`/user/filter?search=${search}&take=${take}&page=${page}`);
 export const getAllUsersAPI = () => AXIOS.get(`/user/all`);
+export const getUsersAPI = (
+    search,
+    take,
+    page,
+    role,
+    createdFrom,
+    createdTo,
+    updatedFrom,
+    updatedTo
+) =>
+    AXIOS.get(`/user/filter?search=${search}&take=${take}&page=${page}&role=${role}&createdFrom=${createdFrom}&createdTo=${createdTo}&updatedFrom=${updatedFrom}&updatedTo=${updatedTo}`);
+
 
 // Link API
 export const confirmUser = (id, password) =>

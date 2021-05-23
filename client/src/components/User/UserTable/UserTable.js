@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Moment from 'react-moment';
+import moment from 'moment'
 import {
     Toolbar,
     Paper,
@@ -15,9 +15,8 @@ import {
     TableSortLabel,
     Typography,
     Tooltip,
-    CircularProgress,
     Button,
-    TableFooter,
+    Chip,
 } from '@material-ui/core';
 import { Delete, Create, Edit } from '@material-ui/icons';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -26,6 +25,7 @@ import { useSelector } from 'react-redux';
 
 //import makeStyles in the last
 import useStyles from './styles';
+import { Skeleton } from '@material-ui/lab';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -121,6 +121,7 @@ function EnhancedTableHead(props) {
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
                         <TableSortLabel
+                            style={{ fontWeight: 'bold' }}
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}
                             onClick={createSortHandler(headCell.id)}
@@ -154,7 +155,7 @@ EnhancedTableHead.propTypes = {
 const useToolbarStyles = makeStyles((theme) => ({
     root: {
         paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(1),
+        paddingRight: theme.spacing(2),
     },
     highlight:
         theme.palette.type === 'light'
@@ -168,6 +169,7 @@ const useToolbarStyles = makeStyles((theme) => ({
             },
     title: {
         flex: '1 1 100%',
+        fontWeight: 'bold'
     },
 }));
 
@@ -201,7 +203,7 @@ const EnhancedTableToolbar = (props) => {
                         id="tableTitle"
                         component="div"
                     >
-                        User List
+                        List of Users
                     </Typography>
                 )}
 
@@ -230,7 +232,7 @@ const EnhancedTableToolbar = (props) => {
                         onClick={(e) =>
                             handleToggleDialogCreateAndUpdate(e, 'edit')
                         }
-                        style={{ marginLeft: '20px' }}
+                        style={{ marginLeft: '8px' }}
                         endIcon={<Edit />}
                         variant="contained"
                         color="primary"
@@ -348,28 +350,51 @@ const UserTable = ({
                         {isLoading ||
                             isCreated ||
                             isUpdated ||
-                            isDeleted ? (
-                                <TableRow
-                                    style={{
-                                        height: 50 * take,
-                                    }}
-                                >
-                                    <TableCell colSpan={7} align="center">
-                                        <CircularProgress />
-                                    </TableCell>
-                                </TableRow>
-                            ) : users.length === 0 ? (
-                                <TableRow
-                                    style={{
-                                        height: 50 * take,
-                                    }}
-                                >
-                                    <TableCell colSpan={7} align="center">
-                                        <Typography>No Data Matched</Typography>
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                    stableSort(
+                            isDeleted ?
+                            <>
+                                {Array.apply(null, { length: take + 1 }).map(() => {
+                                    return (
+                                        <>
+                                            <TableRow>
+                                                <TableCell>
+                                                    <Skeleton />
+                                                </TableCell>
+                                                {headCells.map(() => {
+                                                    return (
+                                                        <TableCell>
+                                                            <Skeleton />
+                                                        </TableCell>
+                                                    )
+                                                })}
+                                            </TableRow>
+                                        </>
+                                    )
+                                })}
+                            </>
+                            : users.length === 0 ?
+                                <>
+                                    <TableRow
+                                        style={{
+                                            height: 50 * take,
+                                        }}
+                                    >
+                                        <TableCell colSpan={7} align="center">
+                                            <Typography>No Data Matched</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                    {emptyRows > 0 && (
+                                        <TableRow
+                                            style={{
+                                                height: 50 * emptyRows,
+                                            }}
+                                        >
+                                            <TableCell colSpan={6} />
+                                        </TableRow>
+                                    )}
+                                </>
+                                :
+                                <>
+                                    {stableSort(
                                         users,
                                         getComparator(order, orderBy)
                                     ).map((row, index) => {
@@ -399,33 +424,46 @@ const UserTable = ({
                                                 <TableCell component="th" scope="row">
                                                     {row.email}
                                                 </TableCell>
-                                                <TableCell>{row.role}</TableCell>
+                                                <TableCell>{row.role.map((eachRole) => (
+                                                    eachRole == 1 ? "Admin " : eachRole == 2 ? "Reviewer " : eachRole == 3 ? "Creator " : "Team Member"
+                                                ))}</TableCell>
                                                 <TableCell>
-                                                    {row.isConfirmed ? 'Active' : 'Expired'}
+                                                    {row.isConfirmed ?
+                                                        <Chip
+                                                            className={css.fixedWidthChip}
+                                                            size="small"
+                                                            label="Active"
+                                                            color="primary"
+                                                        />
+                                                        :
+                                                        <Chip
+                                                            className={css.fixedWidthChip}
+                                                            size="small"
+                                                            label="Pending"
+                                                            color="default"
+                                                        />
+                                                    }
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Moment format="DD-MM-YYYY">
-                                                        {row.createdAt}
-                                                    </Moment>
+                                                    {moment(row.createdAt).format('LL')}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Moment format="DD-MM-YYYY">
-                                                        {row.updatedAt}
-                                                    </Moment>
+                                                    {moment(row.updatedAt).format('LL')}
                                                 </TableCell>
                                             </TableRow>
                                         );
-                                    })
-                                )}
-                        {emptyRows > 0 && (
-                            <TableRow
-                                style={{
-                                    height: 50 * emptyRows,
-                                }}
-                            >
-                                <TableCell colSpan={6} />
-                            </TableRow>
-                        )}
+                                    })}
+                                    {emptyRows > 0 && (
+                                        <TableRow
+                                            style={{
+                                                height: 50 * emptyRows,
+                                            }}
+                                        >
+                                            <TableCell colSpan={6} />
+                                        </TableRow>
+                                    )}
+                                </>
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>

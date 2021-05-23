@@ -7,6 +7,12 @@ const eventRoutes = require('./eventRoutes');
 const taskRoutes = require('./taskRoutes');
 const facilityHistoryRoutes = require('./facilityHistoryRoutes');
 
+/**
+ *  =====================================
+ *          ALL ROUTES EXPORT
+ *  =====================================
+ */
+
 module.exports = {
     //add routes here
     userRoutes,

@@ -12,6 +12,7 @@ import {
     Drawer,
     InputLabel,
     FormControl,
+    Divider,
 } from '@material-ui/core';
 import MomentUtils from '@date-io/moment';
 //import useStyles in the last
@@ -20,7 +21,7 @@ import useStyles from './styles';
 const UserFilter = ({
     openFilter,
     handleToggleFilter,
-    statusFilter,
+    rolesFilter,
     handleFilterChange,
     createdFrom,
     createdTo,
@@ -33,26 +34,30 @@ const UserFilter = ({
     const css = useStyles();
     return (
         <Drawer anchor="right" open={openFilter} onClose={handleToggleFilter}>
+            <div className={css.filterTitle}>
+                <Typography style={{ fontWeight: 'bold' }} align="center" variant="h6">Filter User</Typography>
+            </div>
             <div className={css.filterWrapper}>
-                <Typography variant="h6">Filter List</Typography>
                 <div className={css.filterInputs}>
                     <FormControl fullWidth variant="standard">
-                        <InputLabel id="statusFilterLabel">Status</InputLabel>
+                        <InputLabel id="rolesFilterLabel">Roles</InputLabel>
                         <Select
-                            labelId="statusFilterLabel"
-                            id="statusFiler"
-                            value={statusFilter}
+                            labelId="rolesFilterLabel"
+                            id="rolesFiler"
+                            value={rolesFilter}
                             onChange={handleFilterChange}
-                            label="Status"
+                            label="Roles"
                             inputProps={{
-                                name: 'statusFilter',
+                                name: 'rolesFilter',
                             }}
                         >
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value={true}>Active</MenuItem>
-                            <MenuItem value={false}>Expired</MenuItem>
+                            <MenuItem value={1}>Admin</MenuItem>
+                            <MenuItem value={2}>Reviewer</MenuItem>
+                            <MenuItem value={3}>Creator</MenuItem>
+                            <MenuItem value={4}>Team Member</MenuItem>
                         </Select>
                     </FormControl>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -134,13 +139,15 @@ const UserFilter = ({
                 </div>
                 <div className={css.filterActions}>
                     <Button
+                        className={css.handleClearButton}
                         onClick={handleClearFilter}
-                        variant="contained"
+                        style={{ backgroundColor: 'transparent' }}
                         color="default"
                     >
-                        Clear Filter
+                        Clear all
                     </Button>
                     <Button
+                        className={css.handleFilterButton}
                         onClick={handleApplyFilter}
                         variant="contained"
                         color="primary"
