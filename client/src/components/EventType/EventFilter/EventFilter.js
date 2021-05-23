@@ -28,6 +28,7 @@ const EventFilter = ({
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <Grid container justify="space-around">
                             <KeyboardDatePicker
+                                inputVariant="outlined"
                                 size="small"
                                 fullWidth
                                 margin="normal"
@@ -46,6 +47,7 @@ const EventFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
+                                inputVariant="outlined"
                                 size="small"
                                 fullWidth
                                 margin="normal"
@@ -64,6 +66,7 @@ const EventFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
+                                inputVariant="outlined"
                                 size="small"
                                 fullWidth
                                 margin="normal"
@@ -82,6 +85,7 @@ const EventFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
+                                inputVariant="outlined"
                                 size="small"
                                 fullWidth
                                 margin="normal"

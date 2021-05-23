@@ -36,7 +36,7 @@ const FacilityFilter = ({
             <div className={css.filterWrapper}>
                 <Typography variant="h6">Filter List</Typography>
                 <div className={css.filterInputs}>
-                    <FormControl fullWidth variant="standard">
+                    <FormControl size="small" fullWidth variant="outlined">
                         <InputLabel id="statusFilterLabel">Status</InputLabel>
                         <Select
                             labelId="statusFilterLabel"
@@ -58,6 +58,7 @@ const FacilityFilter = ({
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <Grid container justify="space-around">
                             <KeyboardDatePicker
+                                inputVariant="outlined"
                                 size="small"
                                 fullWidth
                                 margin="normal"
@@ -76,6 +77,7 @@ const FacilityFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
+                                inputVariant="outlined"
                                 size="small"
                                 fullWidth
                                 margin="normal"
@@ -94,6 +96,7 @@ const FacilityFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
+                                inputVariant="outlined"
                                 size="small"
                                 fullWidth
                                 margin="normal"
@@ -112,6 +115,7 @@ const FacilityFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
+                                inputVariant="outlined"
                                 size="small"
                                 fullWidth
                                 margin="normal"

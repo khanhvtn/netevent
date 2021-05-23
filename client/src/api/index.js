@@ -36,7 +36,13 @@ export const getFacilitiesAPI = (
     updatedTo
 ) =>
     AXIOS.get(
-        `/facility/filter?search=${search}&take=${take}&page=${page}&status=${status}&createdFrom=${createdFrom}&createdTo=${createdTo}&updatedFrom=${updatedFrom}&updatedTo=${updatedTo}`
+        `/facility/filter?search=${search ? search : ''}&take=${
+            take ? take : ''
+        }&page=${page ? page : ''}&status=${status ? status : ''}&createdFrom=${
+            createdFrom ? createdFrom : ''
+        }&createdTo=${createdTo ? createdTo : ''}&updatedFrom=${
+            updatedFrom ? updatedFrom : ''
+        }&updatedTo=${updatedTo ? updatedTo : ''}`
     );
 export const createFacilityAPI = (userReq) =>
     AXIOS.post(`/facility/create`, userReq);

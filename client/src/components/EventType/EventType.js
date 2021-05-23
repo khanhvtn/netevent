@@ -79,6 +79,76 @@ const EventType = () => {
 
     const [selected, setSelected] = useState([]);
 
+    //useEffect to toggle notification for create success
+    useEffect(() => {
+        let defaultAction = {
+            openCreateAndUpdateDialog: createSuccess,
+            isCreateMode: true,
+            name: '',
+            code: '',
+            type: '',
+            openCreateSnackBar: createSuccess,
+        };
+        if (createSuccess) {
+            dispatch(getEventTypes());
+            defaultAction = {
+                ...defaultAction,
+                openCreateAndUpdateDialog: false,
+            };
+        }
+        setState((prevState) => ({
+            ...prevState,
+            ...defaultAction,
+        }));
+        //clear selected item
+        setSelected(() => []);
+    }, [dispatch, createSuccess]);
+    //useEffect to toggle notification for update success
+    useEffect(() => {
+        let defaultAction = {
+            openCreateAndUpdateDialog: updateSuccess,
+            isCreateMode: true,
+            name: '',
+            code: '',
+            type: '',
+            openUpdateSnackBar: updateSuccess,
+        };
+        if (updateSuccess) {
+            dispatch(getEventTypes());
+            defaultAction = {
+                ...defaultAction,
+                openCreateAndUpdateDialog: false,
+            };
+        }
+        setState((prevState) => ({
+            ...prevState,
+            ...defaultAction,
+        }));
+        //clear selected item
+        setSelected(() => []);
+    }, [dispatch, updateSuccess]);
+    //useEffect to toggle notification for delete success
+    useEffect(() => {
+        let defaultAction = {
+            openDeleteDialog: deleteSuccess,
+            isCreateMode: true,
+            name: '',
+            code: '',
+            type: '',
+            openDeleteSnackBar: deleteSuccess,
+        };
+        if (deleteSuccess) {
+            dispatch(getEventTypes());
+            defaultAction = { ...defaultAction, openDeleteDialog: false };
+        }
+        setState((prevState) => ({
+            ...prevState,
+            ...defaultAction,
+        }));
+        //clear selected item
+        setSelected(() => []);
+    }, [dispatch, deleteSuccess]);
+
     //useEffect
     useEffect(() => {
         const filterDate = {
@@ -95,19 +165,6 @@ const EventType = () => {
                 ? format(Date.parse(state.updatedTo), 'yyyy-MM-dd')
                 : '',
         };
-        setState((prevState) => ({
-            ...prevState,
-            openUpdateSnackBar: updateSuccess,
-            openCreateAndUpdateDialog: false,
-            isCreateMode: true,
-            name: '',
-            code: '',
-            type: '',
-            openAlert: createSuccess,
-            openDeleteSnackBar: deleteSuccess,
-            openCreateSnackBar: createSuccess,
-            openDeleteDialog: false,
-        }));
         //clear selected item
         setSelected(() => []);
 
@@ -138,9 +195,6 @@ const EventType = () => {
         state.createdTo,
         state.updatedFrom,
         state.updatedTo,
-        updateSuccess,
-        createSuccess,
-        deleteSuccess,
     ]);
 
     const handleChange = (e) => {

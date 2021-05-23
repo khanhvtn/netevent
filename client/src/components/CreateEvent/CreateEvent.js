@@ -45,7 +45,6 @@ import TaskDialog from './TaskDialog/TaskDialog';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 
 let tagList = [];
-const defaultContent = `{"blocks":[{"key":"ejhoe","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}`;
 const initialState = {
     //create new event
     eventName: '',
@@ -58,7 +57,7 @@ const initialState = {
     startDate: null,
     endDate: null,
     maxParticipants: '',
-    description: defaultContent,
+    description: '',
     budget: '',
     image: null,
     tasks: [],
@@ -1115,7 +1114,6 @@ const CreateEvent = () => {
                         <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
                             <RichTextEditor
                                 key={createEventSuccess}
-                                defaultContent={state.description}
                                 disabled={eventIsLoading}
                                 setState={setState}
                             />

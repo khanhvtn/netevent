@@ -27,14 +27,13 @@ Object.assign(defaultTheme, {
     },
 });
 
-const RichTextEditor = ({ setState, disabled, defaultContent }) => {
+const RichTextEditor = ({ setState, disabled }) => {
     const css = useStyles();
     const richTextEditorRef = useRef(null);
     return (
         <Paper elevation={3}>
             <MuiThemeProvider theme={defaultTheme}>
                 <MUIRichTextEditor
-                    // defaultValue={defaultContent}
                     readOnly={disabled}
                     label="Type description here..."
                     onSave={(content) =>
