@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
+/**
+ *  =====================================
+ *            FACILITY MODEL
+ *  =====================================
+ */
+
 const facilitySchema = mongoose.Schema(
     {
         name: {

@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { cusResponse } = require('../utils');
+
+
 const auth = async (req, res, next) => {
     try {
         /* If clients request without authorization, then request will be denied. */

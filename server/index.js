@@ -6,6 +6,12 @@ const cors = require('cors');
 const { errorHandler } = require('./middlewares');
 const cookieParser = require('cookie-parser');
 
+/**
+ *  =====================================
+ *          NETEVENT APP SERVER
+ *  =====================================
+ */
+
 //middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -44,5 +50,5 @@ mongoose.connect(
     }
 );
 
-module.exports = app
+module.exports = app;
 

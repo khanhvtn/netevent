@@ -85,9 +85,9 @@ export const userLogout = (history) => async (dispatch) => {
 };
 
 export const fetchCurrentUser = (currentUser, history) => async (dispatch) => {
-    
+
     try {
-        const { data } = await api.fetchCurrentUser({email: currentUser});
+        const { data } = await api.fetchCurrentUser({ email: currentUser });
         console.log(data)
         dispatch({
             type: FETCH_CURRENT_USER,
@@ -164,10 +164,10 @@ export const userConfirm = (id, password, history) => async (dispatch) => {
 };
 
 export const getUsers = (
-    search, 
-    take, 
-    page, 
-    role, 
+    search,
+    take,
+    page,
+    role,
     createdFrom,
     createdTo,
     updatedFrom,
@@ -233,9 +233,9 @@ export const updateUser = (updateUser, currentUser, history) => async (dispatch)
             dispatch({ type: USER_UPDATE_SUCCESS, payload: false });
         }, 3000);
 
-        if(updateUser.filter === currentUser){
-            dispatch(fetchCurrentUser(currentUser ,history))
-        } 
+        if (updateUser.filter === currentUser) {
+            dispatch(fetchCurrentUser(currentUser, history))
+        }
     } catch (error) {
         if (error.response.data?.errors) {
             dispatch({
@@ -270,9 +270,9 @@ export const deleteUsers = (userReq, currentUser, history) => async (dispatch) =
         }, 3000);
 
 
-        if(Object.values(userReq)[0].includes(currentUser)){
+        if (Object.values(userReq)[0].includes(currentUser)) {
             dispatch(userLogout(history))
-        } 
+        }
     } catch (error) {
         console.log(error);
     }

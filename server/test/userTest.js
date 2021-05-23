@@ -1,19 +1,25 @@
-let mongoose = require("mongoose");
-
-let User = require('../models/userModel');
+const User = require('../models/userModel');
 //Require the dev-dependencies
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../index');
-let should = chai.should();
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../index');
+const should = chai.should();
+
+/**
+ *  =====================================
+ *             USER TESTING
+ *  =====================================
+ */
 
 // you can use a global variable if tests span many files
 let currentResponse = null;
 
 chai.use(chaiHttp);
-//Our parent block
+
+//Testing block for user
 describe('Users', () => {
-    beforeEach((done) => { //Before each test we empty the database
+    //Before each test we empty the database
+    beforeEach((done) => { 
         User.remove({}, (err) => {
             done();
         });
@@ -130,6 +136,7 @@ describe('Users', () => {
         });
     });
 
+    //After each we console log the error or response (Only for debug)
     afterEach(function () {
         const errorBody = currentResponse && currentResponse.body;
 

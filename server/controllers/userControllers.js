@@ -7,10 +7,20 @@ const CustomError = require('../class/CustomeError');
 const { sendEmail } = require('./misc/mailer');
 const { html } = require('../mail-template/template');
 
+/**
+ *  =====================================
+ *            USER CONTROLLER
+ *  =====================================
+ */
 
 
-
-//user login
+/**
+ * @decsription Authorize and login user
+ * @method POST 
+ * @route /api/user/login
+ * 
+ * @version 1.0
+ */
 const login = async (req, res, next) => {
     try {
         const userReq = req.body;
@@ -27,9 +37,7 @@ const login = async (req, res, next) => {
             existedUser.password
         );
         if (!result) {
-            return next(
-                new CustomError(400, { password: 'Password is invalid' })
-            );
+            return next(new CustomError(400, { password: 'Password is invalid' }));
         }
 
         //gen token
@@ -56,26 +64,35 @@ const login = async (req, res, next) => {
     }
 };
 
+
+/**
+ * @decsription Checking and retủn user data if authorized
+ * @method POST 
+ * @route /api/user/fetchCurrent
+ * 
+ * @version 1.0
+ */
 const fetchCurrentUser = async (req, res, next) => {
 
     try {
-        const userData = req.body
-        const user = await User.findOne({ email: userData.email })
+        const userData = req.body;
+        const user = await User.findOne({ email: userData.email });
         if (user) {
-            return cusResponse(
-                res,
-                200,
-                user,
-                null
-            );
+            return cusResponse(res, 200, user, null);
         }
-
     } catch (error) {
         return next(new CustomError(500, { sysError: error.message }));
     }
 }
 
-//user login
+
+/**
+ * @decsription Checking and return user data if authorized
+ * @method GET 
+ * @route /api/user/userCheck
+ * 
+ * @version 1.0
+ */
 const userCheck = async (req, res, next) => {
     try {
         //response user info to client
@@ -85,7 +102,14 @@ const userCheck = async (req, res, next) => {
     }
 };
 
-//user login
+
+/**
+ * @decsription Checking and return user data if authorized
+ * @method POST 
+ * @route /api/user/userCheck
+ * 
+ * @version 1.0
+ */
 const logout = async (req, res, next) => {
     try {
         //clear token
@@ -97,10 +121,18 @@ const logout = async (req, res, next) => {
     }
 };
 
-//Create User
+
+/**
+ * @decsription Create and return new user for client
+ * @method POST 
+ * @route /api/user/create
+ * 
+ * @version 1.0
+ */
 const createUser = async (req, res, next) => {
     try {
         const userReq = req.body;
+
         //check user is existed or not.
         const existedUser = await User.findOne({ email: userReq.email });
 
@@ -108,18 +140,24 @@ const createUser = async (req, res, next) => {
             return next(new CustomError(400, 'Email is already existed'));
         }
 
+        //create new user
         const newUser = await User.create(userReq);
         const newLink = {
             user: newUser._id,
         };
 
+        //create new link
         const idLink = await Link.create(newLink);
+
+        //send email
         await sendEmail(
             'noreply@netevent.com',
             userReq.email,
             'User Confirmation Link',
             html(userReq.email, idLink._id)
         );
+
+        //response new user to client
         return cusResponse(res, 200, newUser, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
@@ -133,45 +171,16 @@ const createUser = async (req, res, next) => {
     }
 };
 
-//Delete user
-const deleteUser = async (req, res, next) => {
-    try {
-        const { deleteList } = req.body;
-        if (deleteList.length === 1) {
-            const deletedUser = await User.findOneAndDelete({
-                email: deleteList[0],
-            });
-            return cusResponse(res, 200, deletedUser, null);
-        } else {
-            const deletedUsers = await Promise.all(
-                deleteList.map(async (email) => {
-                    return await User.findOneAndDelete({
-                        email,
-                    });
-                })
-            );
-            return cusResponse(res, 200, deletedUsers, null);
-        }
-    } catch (error) {
-        if (error.name == 'ValidationError') {
-            let errors = {};
-            for (field in error.errors) {
-                errors = { ...errors, [field]: error.errors[field].message };
-            }
-            return next(new CustomError(500, errors));
-        }
-        return next(new CustomError(500, error.message));
-    }
-};
 
+/**
+ * @decsription Get, search and filter users (included paging)
+ * @method GET
+ * @route /api/user/filter
+ * 
+ * @version 1.0
+ */
 const filterUser = async (req, res, next) => {
-
-    if (req.query.role) {
-        console.log("This is: ", req.query.role)
-    }
-
     try {
-
         //get max date and min date of updatedAt and createdAt
         const createdMaxDate = await User.find()
             .sort({ createdAt: -1 })
@@ -331,16 +340,21 @@ const filterUser = async (req, res, next) => {
 
         return cusResponse(res, 200, users, null, totalPages);
     } catch (error) {
-        console.log(error.message)
-
         return next(new CustomError(500, error.message));
     }
 };
 
+
+/**
+ * @decsription Update user by new request update
+ * @method PATCH
+ * @route /api/user/update
+ * 
+ * @version 1.0
+ */
 const updateUser = async (req, res, next) => {
     try {
         const userReq = req.body;
-        console.log(userReq)
         const updatedUser = await User.findOneAndUpdate(
             { email: userReq.filter },
             userReq.update,
@@ -359,6 +373,45 @@ const updateUser = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+
+
+/**
+ * @decsription Delete users from the request emails
+ * @method DELETE
+ * @route /api/user/delete
+ * 
+ * @version 1.0
+ */
+const deleteUser = async (req, res, next) => {
+    try {
+        const { deleteList } = req.body;
+        if (deleteList.length === 1) {
+            const deletedUser = await User.findOneAndDelete({
+                email: deleteList[0],
+            });
+            return cusResponse(res, 200, deletedUser, null);
+        } else {
+            const deletedUsers = await Promise.all(
+                deleteList.map(async (email) => {
+                    return await User.findOneAndDelete({
+                        email,
+                    });
+                })
+            );
+            return cusResponse(res, 200, deletedUsers, null);
+        }
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
+        return next(new CustomError(500, error.message));
+    }
+};
+
 
 module.exports = {
     login,

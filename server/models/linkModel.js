@@ -1,5 +1,11 @@
 const mongoose = require('mongoose')
 
+/**
+ *  =====================================
+ *              LINK MODEL
+ *  =====================================
+ */
+
 const linkSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,

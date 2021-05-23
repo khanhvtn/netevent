@@ -1,17 +1,22 @@
-let mongoose = require("mongoose");
-
-let Facility = require('../models/facilityModel');
+const Facility = require('../models/facilityModel');
 //Require the dev-dependencies
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../index');
-let should = chai.should();
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../index');
+const should = chai.should();
+
+/**
+ *  =====================================
+ *            FACILITY TESTING
+ *  =====================================
+ */
 
 // you can use a global variable if tests span many files
 let currentResponse = null;
 
 chai.use(chaiHttp);
-//Our parent block
+
+//Testing block for facility
 describe('Facilities', () => {
     beforeEach((done) => { //Before each test we empty the database
         Facility.remove({}, (err) => {
@@ -117,8 +122,6 @@ describe('Facilities', () => {
                     .delete('/api/facility/delete')
                     .send(deleteFacility)
                     .end((err, res) => {
-                        currentResponse = res; // update it here
-
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);
@@ -137,6 +140,7 @@ describe('Facilities', () => {
         });
     });
 
+    //After each we console log the error or response (Only for debug)
     afterEach(function () {
         const errorBody = currentResponse && currentResponse.body;
 
