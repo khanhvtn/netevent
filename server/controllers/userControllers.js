@@ -215,6 +215,16 @@ const filterUser = async (req, res, next) => {
             updatedMinDate,
         ]);
 
+        //return empty result to client if database has no data.
+        if (
+            !createdMaxDate.length ||
+            !createdMinDate.length ||
+            !updatedMaxDate.length ||
+            !updatedMinDate.length
+        ) {
+            return cusResponse(res, 200, [], null);
+        }
+
         let options = {
             search: '',
             take: 10,

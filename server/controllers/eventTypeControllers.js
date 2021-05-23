@@ -241,7 +241,7 @@ const updateEventType = async (req, res, next) => {
         const updatedEventType = await EventType.findOneAndUpdate(
             { name: userReq.filter },
             userReq.update,
-            { runValidators: true, context: 'query' }
+            { new: true, runValidators: true, context: 'query' }
         );
 
         return cusResponse(res, 200, updatedEventType, null);

@@ -1,4 +1,4 @@
-const Facility = require('../models/facilityModel');
+const EventType = require('../models/eventTypeModel');
 //Require the dev-dependencies
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -7,7 +7,7 @@ const should = chai.should();
 
 /**
  *  =====================================
- *            FACILITY TESTING
+ *           EVENT TYPE TESTING
  *  =====================================
  */
 
@@ -16,21 +16,21 @@ let currentResponse = null;
 
 chai.use(chaiHttp);
 
-//Testing block for facility
-describe('Facilities', () => {
+//Testing block for eventType
+describe('EventTypes', () => {
     beforeEach((done) => { //Before each test we empty the database
-        Facility.remove({}, (err) => {
+        EventType.remove({}, (err) => {
             done();
         });
     });
 
     /*
-      * Test the /GET facility
+      * Test the /GET eventType
       */
-    describe('/GET/facility/filter facility', () => {
-        it('it should GET all the facilitys', (done) => {
+    describe('/GET/eventType/filter eventType', () => {
+        it('it should GET all the eventTypes', (done) => {
             chai.request(server)
-                .get('/api/facility/filter')
+                .get('/api/eventType/filter')
                 .end((err, res) => {
 
                     res.should.have.status(200);
@@ -44,28 +44,23 @@ describe('Facilities', () => {
     });
 
     /*
-      * Test the /POST facility
+      * Test the /POST eventType
       */
-    describe('/POST/facility/create facility', () => {
-        it('it should POST a facility', (done) => {
-            let facility = {
-                name: "testFacility",
-                code: "testCode",
-                type: "testType"
+    describe('/POST/eventType/create eventType', () => {
+        it('it should POST a eventType', (done) => {
+            let eventType = {
+                name: 'testEventTypeName',
             };
             chai.request(server)
-                .post('/api/facility/create')
-                .send(facility)
+                .post('/api/eventType/create')
+                .send(eventType)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
                     res.body.should.have.property('message').eql('success');
                     res.body.should.have.property('data');
-                    res.body.data.should.have.property('name').eql(facility.name);
-                    res.body.data.should.have.property('code').eql(facility.code);
-                    res.body.data.should.have.property('type').eql(facility.type);
-                    res.body.data.should.have.property('status').eql(true);
+                    res.body.data.should.have.property('name').eql(eventType.name);
                     res.body.data.should.have.property('_id');
                     res.body.data.should.have.property('createdAt');
                     res.body.data.should.have.property('updatedAt');
@@ -75,33 +70,28 @@ describe('Facilities', () => {
     });
 
     /*
-      * Test the /PATCH facility
+      * Test the /PATCH eventType
       */
-    describe('/PUT/facility/update facility', () => {
-        it('it should UPDATE a facility', (done) => {
-            let facility = new Facility({ name: "testFacility", code: "testCode", type: "testType" });
-            let updateFacility = {
-                filter: facility.name,
+    describe('/PUT/eventType/update eventType', () => {
+        it('it should UPDATE a eventType', (done) => {
+            let eventType = new EventType({ name: 'testEventTypeName' });
+            let updateEventType = {
+                filter: eventType.name,
                 update: {
-                    name: "newFacilityTest",
-                    code: "newCodeTest",
-                    type: "newTypeTest"
+                    name: 'newEventTypeTestName',
                 }
             };
-            facility.save((err, facility) => {
+            eventType.save((err, eventType) => {
                 chai.request(server)
-                    .patch('/api/facility/update')
-                    .send(updateFacility)
+                    .patch('/api/eventType/update')
+                    .send(updateEventType)
                     .end((err, res) => {
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);
                         res.body.should.have.property('message').eql('success');
                         res.body.should.have.property('data');
-                        res.body.data.should.have.property('name').eql(updateFacility.update.name);
-                        res.body.data.should.have.property('code').eql(updateFacility.update.code);
-                        res.body.data.should.have.property('type').eql(updateFacility.update.type);
-                        res.body.data.should.have.property('status').eql(true);
+                        res.body.data.should.have.property('name').eql(updateEventType.update.name);
                         res.body.data.should.have.property('_id');
                         res.body.data.should.have.property('createdAt');
                         res.body.data.should.have.property('updatedAt');
@@ -112,29 +102,26 @@ describe('Facilities', () => {
     });
 
     /*
-     * Test the /DELETE facility
+     * Test the /DELETE eventType
      */
-    describe('/DELETE/facility/delete facility', () => {
-        it('it should DELETE a facility', (done) => {
-            let facility = new Facility({ name: "testFacility", code: "testCode", type: "testType" });
-            let deleteFacility = {
-                deleteList: ["testFacility"]
+    describe('/DELETE/eventType/delete eventType', () => {
+        it('it should DELETE a eventType', (done) => {
+            let eventType = new EventType({ name: 'testEventTypeName' });
+            let deleteEventType = {
+                deleteList: ['testEventTypeName']
             };
-            facility.save((err, facility) => {
+            eventType.save((err, eventType) => {
                 chai.request(server)
-                    .delete('/api/facility/delete')
-                    .send(deleteFacility)
+                    .delete('/api/eventType/delete')
+                    .send(deleteEventType)
                     .end((err, res) => {
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);
                         res.body.should.have.property('message').eql('success');
                         res.body.should.have.property('data');
-                        res.body.data.should.have.property('name').eql(facility.name);
-                        res.body.data.should.have.property('code').eql(facility.code);
-                        res.body.data.should.have.property('type').eql(facility.type);
+                        res.body.data.should.have.property('name').eql(eventType.name);
                         res.body.data.should.have.property('_id');
-                        res.body.data.should.have.property('status').eql(true);
                         res.body.data.should.have.property('createdAt');
                         res.body.data.should.have.property('updatedAt');
                         done();
@@ -148,7 +135,7 @@ describe('Facilities', () => {
         const errorBody = currentResponse && currentResponse.body;
 
         if (this.currentTest.state === 'failed' && errorBody) {
-            console.log("This is a response: ", errorBody);
+            console.log('This is a response: ', errorBody);
         }
 
         currentResponse = null;

@@ -19,7 +19,7 @@ chai.use(chaiHttp);
 //Testing block for user
 describe('Users', () => {
     //Before each test we empty the database
-    beforeEach((done) => { 
+    beforeEach((done) => {
         User.remove({}, (err) => {
             done();
         });
@@ -33,8 +33,11 @@ describe('Users', () => {
             chai.request(server)
                 .get('/api/user/filter')
                 .end((err, res) => {
-                    res.should.have.status(500);
+                    res.should.have.status(200);
                     res.body.should.be.a('object');
+                    res.body.should.have.property('code').eql(200);
+                    res.body.should.have.property('message').eql('success');
+                    res.body.should.have.property('data');
                     done();
                 });
         });
@@ -75,14 +78,14 @@ describe('Users', () => {
       */
     describe('/PUT/user/update user', () => {
         it('it should UPDATE a user', (done) => {
-            let user = new User({ email: "test@gmail.com", role: ['1'] })
+            let user = new User({ email: "test@gmail.com", role: ['1'] });
             let updateUser = {
                 filter: user.email,
                 update: {
                     email: user.email,
                     role: ['1', '2', '3', '4']
                 }
-            }
+            };
             user.save((err, user) => {
                 chai.request(server)
                     .patch('/api/user/update')
@@ -110,10 +113,10 @@ describe('Users', () => {
      */
     describe('/DELETE/user/delete user', () => {
         it('it should DELETE a user', (done) => {
-            let user = new User({ email: "test@gmail.com", role: ['1'] })
+            let user = new User({ email: "test@gmail.com", role: ['1'] });
             let deleteUser = {
                 deleteList: ["test@gmail.com"]
-            }
+            };
             user.save((err, user) => {
                 chai.request(server)
                     .delete('/api/user/delete')

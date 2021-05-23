@@ -12,7 +12,7 @@ const CustomError = require('../class/CustomeError');
 
 /**
 * @decsription Create new event with following request
-* @method POST 
+* @method POST
 * @route /api/event/create
 * 
 * @version 1.0
@@ -340,7 +340,7 @@ const updateEvent = async (req, res, next) => {
         const updatedEvent = await Event.findOneAndUpdate(
             { eventName: userReq.filter },
             userReq.update,
-            { runValidators: true, context: 'query' }
+            { new: true, runValidators: true, context: 'query' }
         );
 
         return cusResponse(res, 200, updatedEvent, null);
