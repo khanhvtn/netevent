@@ -1,4 +1,4 @@
-const { Event, Task, FacilityHistory } = require('../models');
+const { Event, Task, FacilityHistory, Facility } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
 const createEvent = async (req, res, next) => {
@@ -82,6 +82,21 @@ const createEvent = async (req, res, next) => {
                         ...facilityHistory._doc,
                         eventId: newEvent._id,
                     });
+                } catch (error) {
+                    throw error;
+                }
+            })
+        );
+        //update facility status
+        await Promise.all(
+            facilityHistoryResult.map(async (facilityHistory) => {
+                try {
+                    return await Facility.findByIdAndUpdate(
+                        facilityHistory.facilityId,
+                        {
+                            $set: { status: false },
+                        }
+                    );
                 } catch (error) {
                     throw error;
                 }

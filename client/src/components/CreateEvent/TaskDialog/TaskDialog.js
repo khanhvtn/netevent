@@ -44,6 +44,8 @@ const TaskDialog = ({
     createSuccess,
     setTaskState,
     availableUsers,
+    maxDate,
+    minDate,
 }) => {
     const css = useStyles();
     return (
@@ -113,10 +115,13 @@ const TaskDialog = ({
                     </FormControl>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <KeyboardDateTimePicker
+                            disablePast
                             error={errors?.startTime ? true : false}
                             helperText={
                                 errors?.startTime ? errors.startTime : ''
                             }
+                            maxDate={maxDate ? Date.parse(maxDate) : undefined}
+                            minDate={minDate ? Date.parse(minDate) : undefined}
                             inputVariant="outlined"
                             margin="normal"
                             fullWidth
@@ -137,6 +142,8 @@ const TaskDialog = ({
                             }}
                         />
                         <KeyboardDateTimePicker
+                            disablePast
+                            disabled={!startTime}
                             error={errors?.endTime ? true : false}
                             helperText={errors?.endTime ? errors.endTime : ''}
                             inputVariant="outlined"
@@ -144,6 +151,10 @@ const TaskDialog = ({
                             fullWidth
                             id="endTime"
                             label="End Time"
+                            maxDate={maxDate ? Date.parse(maxDate) : undefined}
+                            minDate={
+                                startTime ? Date.parse(startTime) : undefined
+                            }
                             format="DD/MM/YYYY, h:mm a"
                             value={endTime}
                             onChange={(date) => {

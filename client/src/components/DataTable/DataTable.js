@@ -145,8 +145,8 @@ const EnhancedTableToolbar = (props) => {
         handleToggleDialogDelete,
         tableName,
         disabled,
+        constrainRangeDate,
     } = props;
-
     return (
         <Toolbar
             className={clsx(classes.root, {
@@ -176,7 +176,9 @@ const EnhancedTableToolbar = (props) => {
             {numSelected === 0 ? (
                 <Tooltip title="Create Facility">
                     <Button
-                        disabled={disabled ? disabled : false}
+                        disabled={
+                            !constrainRangeDate ? true : disabled ? true : false
+                        }
                         onClick={handleToggleDialogCreateAndUpdate}
                         endIcon={<Create />}
                         variant="contained"
@@ -239,6 +241,7 @@ const DataTable = ({
     headCells,
     tableName,
     disabled,
+    constrainRangeDate,
 }) => {
     const css = useStyles();
 
@@ -293,6 +296,7 @@ const DataTable = ({
                 numSelected={selected.length}
                 tableName={tableName}
                 disabled={disabled}
+                constrainRangeDate={constrainRangeDate}
             />
             <TableContainer>
                 <Table

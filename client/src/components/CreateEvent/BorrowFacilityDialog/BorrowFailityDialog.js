@@ -37,6 +37,7 @@ const BorrowFacilityDialog = ({
     createSuccess,
     setBorrowFacilityState,
     availableFacilities,
+    maxBorrowDate,
 }) => {
     const css = useStyles();
     return (
@@ -79,9 +80,15 @@ const BorrowFacilityDialog = ({
                     />
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <KeyboardDateTimePicker
+                            disablePast
                             error={errors?.borrowDate ? true : false}
                             helperText={
                                 errors?.borrowDate ? errors.borrowDate : ''
+                            }
+                            maxDate={
+                                maxBorrowDate
+                                    ? Date.parse(maxBorrowDate)
+                                    : undefined
                             }
                             inputVariant="outlined"
                             margin="normal"
@@ -103,9 +110,14 @@ const BorrowFacilityDialog = ({
                             }}
                         />
                         <KeyboardDateTimePicker
+                            disabled={!borrowDate}
+                            disablePast
                             error={errors?.returnDate ? true : false}
                             helperText={
                                 errors?.returnDate ? errors.returnDate : ''
+                            }
+                            minDate={
+                                borrowDate ? Date.parse(borrowDate) : undefined
                             }
                             inputVariant="outlined"
                             margin="normal"

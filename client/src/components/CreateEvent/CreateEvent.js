@@ -139,6 +139,9 @@ const CreateEvent = () => {
     useEffect(() => {
         if (createEventSuccess) {
             handleClearFields();
+            dispatch(getAllEventTypes());
+            dispatch(getAllFacilities());
+            dispatch(getAllUsers());
         }
         setState((prevState) => ({
             ...prevState,
@@ -853,7 +856,7 @@ const CreateEvent = () => {
                                     return value.map((option, index) => (
                                         <Chip
                                             color="primary"
-                                            variant="outlined"
+                                            variant="default"
                                             label={option}
                                             {...getTagProps({ index })}
                                         />
@@ -878,6 +881,7 @@ const CreateEvent = () => {
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <MuiPickersUtilsProvider utils={MomentUtils}>
                                 <KeyboardDatePicker
+                                    disablePast
                                     disabled={eventIsLoading}
                                     error={errors?.startDate ? true : false}
                                     helperText={
@@ -895,7 +899,9 @@ const CreateEvent = () => {
                                     onChange={(date) => {
                                         setState((prevState) => ({
                                             ...prevState,
-                                            startDate: date.toDate(),
+                                            startDate: date?.toDate()
+                                                ? date?.toDate()
+                                                : null,
                                         }));
                                     }}
                                     KeyboardButtonProps={{
@@ -908,10 +914,22 @@ const CreateEvent = () => {
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <MuiPickersUtilsProvider utils={MomentUtils}>
                                 <KeyboardDatePicker
-                                    disabled={eventIsLoading}
+                                    disablePast
                                     error={errors?.endDate ? true : false}
                                     helperText={
                                         errors?.endDate ? errors?.endDate : ''
+                                    }
+                                    disabled={
+                                        !state.startDate
+                                            ? true
+                                            : eventIsLoading
+                                            ? true
+                                            : false
+                                    }
+                                    minDate={
+                                        state.startDate
+                                            ? Date.parse(state.startDate)
+                                            : undefined
                                     }
                                     inputVariant="outlined"
                                     margin="normal"
@@ -923,7 +941,9 @@ const CreateEvent = () => {
                                     onChange={(date) => {
                                         setState((prevState) => ({
                                             ...prevState,
-                                            endDate: date.toDate(),
+                                            endDate: date?.toDate()
+                                                ? date?.toDate()
+                                                : null,
                                         }));
                                     }}
                                     KeyboardButtonProps={{
@@ -936,7 +956,26 @@ const CreateEvent = () => {
                         <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                             <MuiPickersUtilsProvider utils={MomentUtils}>
                                 <KeyboardDatePicker
-                                    disabled={eventIsLoading}
+                                    disablePast
+                                    disabled={
+                                        !state.startDate
+                                            ? true
+                                            : !state.endDate
+                                            ? true
+                                            : eventIsLoading
+                                            ? true
+                                            : false
+                                    }
+                                    minDate={
+                                        state.startDate
+                                            ? Date.parse(state.startDate)
+                                            : undefined
+                                    }
+                                    maxDate={
+                                        state.endDate
+                                            ? Date.parse(state.endDate)
+                                            : undefined
+                                    }
                                     error={
                                         errors?.registrationCloseDate
                                             ? true
@@ -957,7 +996,9 @@ const CreateEvent = () => {
                                     onChange={(date) => {
                                         setState((prevState) => ({
                                             ...prevState,
-                                            registrationCloseDate: date.toDate(),
+                                            registrationCloseDate: date?.toDate()
+                                                ? date?.toDate()
+                                                : null,
                                         }));
                                     }}
                                     KeyboardButtonProps={{
@@ -989,6 +1030,7 @@ const CreateEvent = () => {
                             <Paper elevation={3}>
                                 <DataTable
                                     disabled={eventIsLoading}
+                                    constrainRangeDate={!!state.endDate}
                                     handleToggleDialogCreateAndUpdate={
                                         handleToggleDialogCreateAndUpdateBorrowFacility
                                     }
@@ -1050,6 +1092,9 @@ const CreateEvent = () => {
                         <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
                             <Paper elevation={3}>
                                 <DataTable
+                                    constrainRangeDate={
+                                        !!state.startDate && !!state.endDate
+                                    }
                                     disabled={eventIsLoading}
                                     handleToggleDialogCreateAndUpdate={
                                         handleToggleDialogCreateAndUpdateTask
@@ -1187,6 +1232,7 @@ const CreateEvent = () => {
             />
             {/* Borrow Facility Dialog */}
             <BorrowFacilityDialog
+                maxBorrowDate={state.endDate}
                 openCreateAndUpdateDialog={
                     borrowFacilityState.openCreateAndUpdateDialogBorrowFacility
                 }
@@ -1245,6 +1291,8 @@ const CreateEvent = () => {
                 name={taskState.name}
                 email={taskState.email}
                 type={taskState.type}
+                maxDate={state.endDate}
+                minDate={state.startDate}
                 startTime={taskState.startTime}
                 endTime={taskState.endTime}
                 openDeleteDialog={taskState.openDeleteDialogTask}
