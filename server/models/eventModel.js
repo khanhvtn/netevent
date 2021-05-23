@@ -48,6 +48,12 @@ const eventSchema = mongoose.Schema(
         maxParticipants: {
             type: String,
             required: [true, 'Max Participants cannot be blanked'],
+            validate: {
+                validator: function (v) {
+                    return parseInt(v) > 0;
+                },
+                message: () => `Max Participants cannot be equal to 0`,
+            },
             trim: true,
         },
         tags: {
@@ -72,11 +78,17 @@ const eventSchema = mongoose.Schema(
         budget: {
             type: String,
             required: [true, 'Budget cannot be blanked'],
+            validate: {
+                validator: function (v) {
+                    return parseInt(v) > 0;
+                },
+                message: () => `Budget cannot be equal to 0`,
+            },
             trim: true,
         },
         isApproved: {
             type: Boolean,
-            default: false,
+            default: null,
         },
         image: {
             type: String,
@@ -94,22 +106,9 @@ const eventSchema = mongoose.Schema(
         taskListId: {
             type: [mongoose.Schema.Types.ObjectId],
             ref: 'Task',
-            // validate: {
-            //     validator: function (v) {
-            //         return v.lenght > 0;
-            //     },
-            //     message: () => `Task cannot be blanked'`,
-            // },
         },
         facilityHistoryListId: {
             type: [mongoose.Schema.Types.ObjectId],
-            // ref: 'FacilityHistory',
-            // validate: {
-            //     validator: function (v) {
-            //         return v.lenght > 0;
-            //     },
-            //     message: () => `Borrow Facility cannot be blanked'`,
-            // },
         },
     },
     { timestamps: true }
