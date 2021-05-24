@@ -9,6 +9,7 @@ import {
     FormControl,
     FormHelperText,
     CircularProgress,
+    Divider,
 } from '@material-ui/core';
 import { AddAPhoto, DeleteForever } from '@material-ui/icons';
 import blankPhoto from '../../images/blankPhoto.png';
@@ -226,8 +227,8 @@ const CreateEvent = () => {
             language,
             eventTypeId: eventTypeTarget
                 ? eventTypes.find(
-                      (eventType) => eventType.name === eventTypeTarget
-                  )._id
+                    (eventType) => eventType.name === eventTypeTarget
+                )._id
                 : '',
             mode,
             location,
@@ -562,7 +563,7 @@ const CreateEvent = () => {
     };
     return (
         <div>
-            <Paper style={{ margin: '20px', padding: '20px 20px' }}>
+            <Paper className={css.paper} elevation={3}>
                 <Grid
                     container
                     justify="center"
@@ -570,7 +571,7 @@ const CreateEvent = () => {
                     direction="column"
                 >
                     <Grid item>
-                        <Typography variant="h3">Create An Event</Typography>
+                        <Typography style={{ fontWeight: 'bold' }} variant="h3">Event Form</Typography>
                     </Grid>
                     <Grid
                         container
@@ -595,7 +596,6 @@ const CreateEvent = () => {
                             </FormHelperText>
                         </FormControl>
                     </Grid>
-
                     <Grid
                         container
                         justify="center"
@@ -606,7 +606,6 @@ const CreateEvent = () => {
                         xl={12}
                         sm={12}
                         xs={12}
-                        style={{ margin: '20px 0' }}
                     >
                         <input
                             ref={fileInput}
@@ -630,6 +629,7 @@ const CreateEvent = () => {
                                 color="secondary"
                                 startIcon={<DeleteForever />}
                                 variant="contained"
+                                style={{ textTransform: 'none' }}
                             >
                                 Remove
                             </Button>
@@ -638,16 +638,30 @@ const CreateEvent = () => {
                             className={css.btnChangePhoto}
                             htmlFor="change-image"
                         >
-                            <Button
-                                disabled={eventIsLoading}
-                                startIcon={<AddAPhoto />}
-                                variant="contained"
-                                component="span"
-                            >
-                                {state.image ? 'Change Image' : 'Choose Image'}
-                            </Button>
+                            {state.image ?
+                                <Button
+                                    disabled={eventIsLoading}
+                                    startIcon={<AddAPhoto />}
+                                    variant="contained"
+                                    style={{ textTransform: 'none' }}
+                                    color="primary"
+                                    component="span"
+                                >
+                                    Change Image
+                                </Button>
+                                :
+                                <Button
+                                    disabled={eventIsLoading}
+                                    startIcon={<AddAPhoto />}
+                                    style={{ backgroundColor: 'transparent', textTransform: 'none' }}
+                                    component="span"
+                                >
+                                    Choose Image
+                                </Button>
+                            }
                         </label>
                     </Grid>
+
 
                     <Grid
                         container
@@ -671,9 +685,52 @@ const CreateEvent = () => {
                             createEventSuccess={createEventSuccess}
                             updateTagList={handleUpdateTaglist}
                         />
-                        {/* Pick Facility Table */}
+
+                        <Grid style={{ marginTop: 36 }} item md={12} lg={12} xl={12} sm={12} xs={12}>
+                            <Typography style={{ fontWeight: 'bold' }} variant="h6">Task & Facility</Typography>
+                            <Divider />
+                        </Grid>
+
+                        {/* Tasks Table */}
                         <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
-                            <Paper elevation={3}>
+                            <Paper className={css.paper1} elevation={3}>
+                                <DataTable
+                                    constrainRangeDate={
+                                        !!state.startDate && !!state.endDate
+                                    }
+                                    disabled={eventIsLoading}
+                                    handleToggleDialogCreateAndUpdate={
+                                        handleToggleDialogCreateAndUpdateTask
+                                    }
+                                    handleToggleDialogDelete={
+                                        handleToggleDialogDeleteTask
+                                    }
+                                    take={1}
+                                    selected={selectedTask}
+                                    setSelected={setSelectedTask}
+                                    data={taskState.tasks}
+                                    isLoading={taskState.isLoading}
+                                    createSuccess={taskState.taskCreatSucces}
+                                    deleteSuccess={taskState.taskDeleteSucces}
+                                    updateSuccess={taskState.taskUpdateSucces}
+                                    tableName="Task Assign"
+                                    headCells={headCells}
+                                />
+                            </Paper>
+                            <FormControl
+                                error={errors?.taskListId ? true : false}
+                            >
+                                <FormHelperText>
+                                    {errors?.taskListId
+                                        ? errors?.taskListId
+                                        : ''}
+                                </FormHelperText>
+                            </FormControl>
+                        </Grid>
+
+                        {/* Pick Facility Table */}
+                        <Grid style={{ marginTop: 24 }} item md={12} lg={12} xl={12} sm={12} xs={12}>
+                            <Paper className={css.paper1} elevation={3}>
                                 <DataTable
                                     disabled={eventIsLoading}
                                     constrainRangeDate={!!state.endDate}
@@ -699,7 +756,7 @@ const CreateEvent = () => {
                                     updateSuccess={
                                         borrowFacilityState.borrowFacilityUpdateSucces
                                     }
-                                    tableName="Borrow Facility List"
+                                    tableName="Borrow Facility"
                                     headCells={[
                                         {
                                             id: 'name',
@@ -734,42 +791,12 @@ const CreateEvent = () => {
                                 </FormHelperText>
                             </FormControl>
                         </Grid>
-                        {/* Tasks Table */}
-                        <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
-                            <Paper elevation={3}>
-                                <DataTable
-                                    constrainRangeDate={
-                                        !!state.startDate && !!state.endDate
-                                    }
-                                    disabled={eventIsLoading}
-                                    handleToggleDialogCreateAndUpdate={
-                                        handleToggleDialogCreateAndUpdateTask
-                                    }
-                                    handleToggleDialogDelete={
-                                        handleToggleDialogDeleteTask
-                                    }
-                                    take={1}
-                                    selected={selectedTask}
-                                    setSelected={setSelectedTask}
-                                    data={taskState.tasks}
-                                    isLoading={taskState.isLoading}
-                                    createSuccess={taskState.taskCreatSucces}
-                                    deleteSuccess={taskState.taskDeleteSucces}
-                                    updateSuccess={taskState.taskUpdateSucces}
-                                    tableName="Task List"
-                                    headCells={headCells}
-                                />
-                            </Paper>
-                            <FormControl
-                                error={errors?.taskListId ? true : false}
-                            >
-                                <FormHelperText>
-                                    {errors?.taskListId
-                                        ? errors?.taskListId
-                                        : ''}
-                                </FormHelperText>
-                            </FormControl>
+
+                        <Grid style={{ marginTop: 24 }} item md={12} lg={12} xl={12} sm={12} xs={12}>
+                            <Typography style={{ fontWeight: 'bold' }} variant="h6">Event Description</Typography>
+                            <Divider />
                         </Grid>
+
                         {/* Description */}
                         <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
                             <RichTextEditor
@@ -801,19 +828,20 @@ const CreateEvent = () => {
                         >
                             <Grid item>
                                 <Button
+                                    className={css.clearAllButton}
                                     disabled={eventIsLoading}
                                     size="large"
-                                    variant="contained"
                                     color="default"
+                                    style={{ backgroundColor: 'transparent' }}
                                     onClick={handleClearFields}
                                 >
-                                    Clear
+                                    Clear all
                                 </Button>
                             </Grid>
                             <Grid item>
                                 <Button
                                     disabled={eventIsLoading}
-                                    style={{ marginLeft: '20px' }}
+                                    style={{ marginLeft: '20px', textTransform: 'none' }}
                                     size="large"
                                     onClick={handleCreateEvent}
                                     variant="contained"
@@ -825,8 +853,8 @@ const CreateEvent = () => {
                                             color="inherit"
                                         />
                                     ) : (
-                                        'Create'
-                                    )}
+                                            'Create Event'
+                                        )}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -878,17 +906,17 @@ const CreateEvent = () => {
                      */
                     borrowFacilityState.isBorrowFacilityCreateMode
                         ? facilities
-                              .filter((facility) => facility.status === true)
-                              .filter((facility) => {
-                                  const facilityNames = borrowFacilityState.borrowFacilities.map(
-                                      (borrowFacility) => borrowFacility.name
-                                  );
+                            .filter((facility) => facility.status === true)
+                            .filter((facility) => {
+                                const facilityNames = borrowFacilityState.borrowFacilities.map(
+                                    (borrowFacility) => borrowFacility.name
+                                );
 
-                                  return !facilityNames.includes(facility.name);
-                              })
+                                return !facilityNames.includes(facility.name);
+                            })
                         : facilities.filter(
-                              (facility) => facility.status === true
-                          )
+                            (facility) => facility.status === true
+                        )
                 }
             />
             {/* Borrow Facility Dialog */}
@@ -924,21 +952,21 @@ const CreateEvent = () => {
                      */
                     taskState.isTaskCreateMode
                         ? users
-                              .filter((targetUser) =>
-                                  targetUser.role.includes('4')
-                              )
-                              .filter((targetUser) => {
-                                  const listUserEmails = taskState.tasks.map(
-                                      (task) => task.email
-                                  );
+                            .filter((targetUser) =>
+                                targetUser.role.includes('4')
+                            )
+                            .filter((targetUser) => {
+                                const listUserEmails = taskState.tasks.map(
+                                    (task) => task.email
+                                );
 
-                                  return !listUserEmails.includes(
-                                      targetUser.email
-                                  );
-                              })
+                                return !listUserEmails.includes(
+                                    targetUser.email
+                                );
+                            })
                         : users.filter(
-                              (targetUser) => targetUser.email !== user.email
-                          )
+                            (targetUser) => targetUser.email !== user.email
+                        )
                 }
             />
             {/* Notification */}

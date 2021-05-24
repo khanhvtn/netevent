@@ -53,7 +53,6 @@ const CreateEventTypeDialog = ({
             <DialogActions className={css.dialogActions}>
                 <Button
                     disabled={eventTypeIsLoading ? true : false}
-                    variant="contained"
                     onClick={handleToggleDialogCreateEventType}
                     color="default"
                 >

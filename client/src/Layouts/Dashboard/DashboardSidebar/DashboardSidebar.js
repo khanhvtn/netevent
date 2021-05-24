@@ -11,7 +11,8 @@ import {
 } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { LogOut as LogOutIcon } from 'react-feather';
-
+import EventIcon from '@material-ui/icons/Event';
+import EventNoteIcon from '@material-ui/icons/EventNote';
 import { DevicesOther, People } from '@material-ui/icons';
 import ReplayIcon from '@material-ui/icons/Replay';
 import NavItem from './NavItem';
@@ -41,12 +42,12 @@ const roleActions = {
     3: [
         {
             title: 'Create Event',
-            icon: null,
+            icon: EventIcon,
             href: '/dashboard/create-event',
         },
         {
             title: 'Event Type',
-            icon: null,
+            icon: EventNoteIcon,
             href: '/dashboard/event-type',
         },
     ],
