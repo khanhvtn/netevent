@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography, Select, MenuItem } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
-import { useSelector } from 'react-redux';
 //import useStyles in the last
 import useStyles from './styles';
 

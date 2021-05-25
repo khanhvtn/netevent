@@ -416,7 +416,7 @@ const UserTable = ({
                                                     {row.email}
                                                 </TableCell>
                                                 <TableCell>{row.role.map((eachRole) => (
-                                                    eachRole == 1 ? "Admin " : eachRole == 2 ? "Reviewer " : eachRole == 3 ? "Creator " : "Team Member"
+                                                    eachRole === 1 ? "Admin " : eachRole === 2 ? "Reviewer " : eachRole === 3 ? "Creator " : "Team Member"
                                                 ))}</TableCell>
                                                 <TableCell>
                                                     {row.isConfirmed ?

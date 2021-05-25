@@ -38,14 +38,14 @@ const UserFilter = ({
             </div>
             <div className={css.filterWrapper}>
                 <div className={css.filterInputs}>
-                    <FormControl fullWidth variant="standard">
+                    <FormControl size="small" fullWidth variant="outlined">
                         <InputLabel id="rolesFilterLabel">Roles</InputLabel>
                         <Select
-                            labelId="rolesFilterLabel"
                             id="rolesFiler"
+                            label="Roles"
+                            labelId="rolesFilterLabel"
                             value={rolesFilter}
                             onChange={handleFilterChange}
-                            label="Roles"
                             inputProps={{
                                 name: 'rolesFilter',
                             }}
@@ -62,13 +62,14 @@ const UserFilter = ({
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <Grid container justify="space-around">
                             <KeyboardDatePicker
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="createdFrom"
                                 label="Created From"
-                                format="MM/DD/YYYY"
                                 value={createdFrom}
+                                size="small"
+                                margin="normal"
+                                format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
@@ -80,13 +81,14 @@ const UserFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="createdTo"
                                 label="Created To"
-                                format="MM/DD/YYYY"
                                 value={createdTo}
+                                size="small"
+                                margin="normal"
+                                format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
@@ -98,12 +100,13 @@ const UserFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="updatedFrom"
                                 label="Updated From"
+                                size="small"
+                                margin="normal"
                                 format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 value={updatedFrom}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
@@ -116,12 +119,13 @@ const UserFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="updatedTo"
                                 label="Updated To"
+                                size="small"
+                                margin="normal"
                                 format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 value={updatedTo}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({

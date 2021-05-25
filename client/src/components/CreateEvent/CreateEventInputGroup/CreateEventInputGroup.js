@@ -289,7 +289,7 @@ const CreateEventInputGroup = ({
 
             <Grid style={{ marginTop: 36 }} item md={12} lg={12} xl={12} sm={12} xs={12}>
                 <Typography style={{ fontWeight: 'bold' }} variant="h6">Time & Location</Typography>
-                <Divider />
+                <Divider style={{ height: 2 }} />
             </Grid>
 
             {/* Start Date  */}

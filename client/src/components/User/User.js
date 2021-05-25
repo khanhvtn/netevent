@@ -16,7 +16,6 @@ import {
     createUser,
     deleteUsers,
     updateUser,
-    userLogout,
 } from '../../actions/userActions';
 import { useDispatch, useSelector } from 'react-redux';
 

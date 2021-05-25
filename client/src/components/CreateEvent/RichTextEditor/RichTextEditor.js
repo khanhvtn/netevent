@@ -3,7 +3,7 @@ import MUIRichTextEditor from 'mui-rte';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 //import useStyles in the last
 import useStyles from './styles';
-import { Divider, Paper } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 //customize theme for RichTextEditor
 const defaultTheme = createMuiTheme();
 
