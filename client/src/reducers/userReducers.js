@@ -3,13 +3,10 @@ import {
     USER_LOGIN,
     USER_LOADING,
     USER_CHECKING,
-    USER_CREATE,
     USER_CONFIRM,
     USER_IS_CONFIRM,
     FETCH_ALL_USERS,
-    SEARCH_USER,
-    UPDATE_USER,
-    DELETE_USER,
+    FETCH_CURRENT_USER,
     USER_LOGOUT,
     USER_PICK_ROLE,
     USER_CREATE_SUCCESS,
@@ -65,6 +62,10 @@ export default function userReducers(state = initialState, action) {
                 ...state,
                 users: action.payload.data.data,
             };
+        case FETCH_CURRENT_USER:
+            return {
+                ...state, user: action.payload
+            }
 
         // SNACKBAR
         case USER_CREATE_SUCCESS:

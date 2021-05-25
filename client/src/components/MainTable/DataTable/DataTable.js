@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Moment from 'react-moment';
+import moment from 'moment';
 import {
     Toolbar,
     Paper,
@@ -15,15 +15,14 @@ import {
     TableSortLabel,
     Typography,
     Tooltip,
-    CircularProgress,
     Button,
-    TableFooter,
 } from '@material-ui/core';
 import { Delete, Create, Edit } from '@material-ui/icons';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 
 //import makeStyles in the last
 import useStyles from './styles';
+import { Skeleton } from '@material-ui/lab';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -87,6 +86,7 @@ function EnhancedTableHead(props) {
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
                         <TableSortLabel
+                            style={{ fontWeight: 'bold' }}
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}
                             onClick={createSortHandler(headCell.id)}
@@ -120,20 +120,21 @@ EnhancedTableHead.propTypes = {
 const useToolbarStyles = makeStyles((theme) => ({
     root: {
         paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(1),
+        paddingRight: theme.spacing(2),
     },
     highlight:
         theme.palette.type === 'light'
             ? {
-                  color: theme.palette.secondary.main,
-                  backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-              }
+                color: theme.palette.secondary.main,
+                backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+            }
             : {
-                  color: theme.palette.text.primary,
-                  backgroundColor: theme.palette.secondary.dark,
-              },
+                color: theme.palette.text.primary,
+                backgroundColor: theme.palette.secondary.dark,
+            },
     title: {
         flex: '1 1 100%',
+        fontWeight: 'bold'
     },
 }));
 
@@ -163,15 +164,15 @@ const EnhancedTableToolbar = (props) => {
                     {numSelected} selected
                 </Typography>
             ) : (
-                <Typography
-                    className={classes.title}
-                    variant="h6"
-                    id="tableTitle"
-                    component="div"
-                >
-                    {tableName}
-                </Typography>
-            )}
+                    <Typography
+                        className={classes.title}
+                        variant="h6"
+                        id="tableTitle"
+                        component="div"
+                    >
+                        {tableName}
+                    </Typography>
+                )}
 
             {numSelected === 0 ? (
                 <Tooltip title="Create Facility">
@@ -208,7 +209,7 @@ const EnhancedTableToolbar = (props) => {
                         onClick={(e) =>
                             handleToggleDialogCreateAndUpdate(e, 'edit')
                         }
-                        style={{ marginLeft: '20px' }}
+                        style={{ marginLeft: '8px' }}
                         endIcon={<Edit />}
                         variant="contained"
                         color="primary"
@@ -217,15 +218,15 @@ const EnhancedTableToolbar = (props) => {
                     </Button>
                 </>
             ) : (
-                <Button
-                    onClick={handleToggleDialogDelete}
-                    endIcon={<Delete />}
-                    variant="contained"
-                    color="secondary"
-                >
-                    Delete
-                </Button>
-            )}
+                        <Button
+                            onClick={handleToggleDialogDelete}
+                            endIcon={<Delete />}
+                            variant="contained"
+                            color="secondary"
+                        >
+                            Delete
+                        </Button>
+                    )}
         </Toolbar>
     );
 };
@@ -323,98 +324,107 @@ const DataTable = ({
                     />
                     <TableBody>
                         {isLoading ||
-                        createSuccess ||
-                        updateSuccess ||
-                        deleteSuccess ? (
-                            <TableRow
-                                style={{
-                                    height: 50 * take,
-                                }}
-                            >
-                                <TableCell
-                                    colSpan={headCells.length + 1}
-                                    align="center"
-                                >
-                                    <CircularProgress />
-                                </TableCell>
-                            </TableRow>
-                        ) : data.length === 0 ? (
-                            <TableRow
-                                style={{
-                                    height: 50 * take,
-                                }}
-                            >
-                                <TableCell
-                                    colSpan={headCells.length + 1}
-                                    align="center"
-                                >
-                                    <Typography>No Data</Typography>
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            stableSort(data, getComparator(order, orderBy)).map(
-                                (row, index) => {
-                                    const isItemSelected = isSelected(row.name);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
-
+                            createSuccess ||
+                            updateSuccess ||
+                            deleteSuccess ?
+                            <>
+                                {Array.apply(null, { length: take + 1 }).map(() => {
                                     return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event) =>
-                                                handleClick(event, row.name)
-                                            }
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
-                                            key={row.name}
-                                            selected={isItemSelected}
-                                        >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    checked={isItemSelected}
-                                                    inputProps={{
-                                                        'aria-labelledby': labelId,
-                                                    }}
-                                                />
-                                            </TableCell>
-                                            {headCells.map((cell, index) => {
-                                                if (
-                                                    cell.id === 'createdAt' ||
-                                                    cell.id === 'updatedAt' ||
-                                                    cell.id.includes('Date') ||
-                                                    cell.id.includes('Time')
-                                                ) {
+                                        <>
+                                            <TableRow>
+                                                <TableCell>
+                                                    <Skeleton />
+                                                </TableCell>
+                                                {headCells.map(() => {
                                                     return (
-                                                        <TableCell key={index}>
-                                                            <Moment format="DD-MM-YYYY">
-                                                                {row[cell.id]}
-                                                            </Moment>
+                                                        <TableCell>
+                                                            <Skeleton />
                                                         </TableCell>
-                                                    );
-                                                }
-                                                return (
-                                                    <TableCell key={index}>
-                                                        {row[cell.id]}
+                                                    )
+                                                })}
+                                            </TableRow>
+                                        </>
+                                    )
+                                })}
+                            </>
+                            : data.length === 0 ?
+                                <>
+                                    <TableRow
+                                        style={{
+                                            height: 50 * take,
+                                        }}
+                                    >
+                                        <TableCell
+                                            colSpan={headCells.length + 1}
+                                            align="center"
+                                        >
+                                            <Typography>No Data Matched</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                </>
+                                :
+                                <>
+                                    {stableSort(data, getComparator(order, orderBy)).map(
+                                        (row, index) => {
+                                            const isItemSelected = isSelected(row.name);
+                                            const labelId = `enhanced-table-checkbox-${index}`;
+
+                                            return (
+                                                <TableRow
+                                                    hover
+                                                    onClick={(event) =>
+                                                        handleClick(event, row.name)
+                                                    }
+                                                    role="checkbox"
+                                                    aria-checked={isItemSelected}
+                                                    tabIndex={-1}
+                                                    key={row.name}
+                                                    selected={isItemSelected}
+                                                >
+                                                    <TableCell padding="checkbox">
+                                                        <Checkbox
+                                                            checked={isItemSelected}
+                                                            inputProps={{
+                                                                'aria-labelledby': labelId,
+                                                            }}
+                                                        />
                                                     </TableCell>
-                                                );
-                                            })}
+                                                    {headCells.map((cell, index) => {
+                                                        if (
+                                                            cell.id === 'createdAt' ||
+                                                            cell.id === 'updatedAt' ||
+                                                            cell.id.includes('Date') ||
+                                                            cell.id.includes('Time')
+                                                        ) {
+                                                            return (
+                                                                <TableCell key={index}>
+                                                                    {moment(row[cell.id]).format('LL')}
+                                                                </TableCell>
+                                                            );
+                                                        }
+                                                        return (
+                                                            <TableCell key={index}>
+                                                                {row[cell.id]}
+                                                            </TableCell>
+                                                        );
+                                                    })}
+                                                </TableRow>
+                                            );
+                                        }
+                                    )}
+                                    {emptyRows > 0 && (
+                                        <TableRow
+                                            style={{
+                                                height: 50 * emptyRows,
+                                            }}
+                                        >
+                                            <TableCell colSpan={headCells.length + 1} />
                                         </TableRow>
-                                    );
-                                }
-                            )
-                        )}
-                        {emptyRows > 0 && (
-                            <TableRow
-                                style={{
-                                    height: 50 * emptyRows,
-                                }}
-                            >
-                                <TableCell colSpan={6} />
-                            </TableRow>
-                        )}
+                                    )}
+                                </>
+                        }
                     </TableBody>
                 </Table>
-                <TableFooter></TableFooter>
             </TableContainer>
         </Paper>
     );

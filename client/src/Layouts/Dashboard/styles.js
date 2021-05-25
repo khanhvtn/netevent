@@ -13,7 +13,7 @@ export default makeStyles((theme) => ({
         flex: '1 1 auto',
         overflow: 'hidden',
         paddingTop: 64,
-        
+
         [theme.breakpoints.up('lg')]: {
             paddingLeft: 256
         }

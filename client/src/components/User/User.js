@@ -7,6 +7,7 @@ import {
     InputBase,
     IconButton,
     Grid,
+    Tooltip,
 } from '@material-ui/core';
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
@@ -26,14 +27,15 @@ import UserFilter from './UserFilter/UserFilter';
 import UserNotification from './UserNotification/UserNotification';
 import UserDialog from './UserDialog/UserDialog';
 import UserPagination from './UserPagination/UserPagination';
+import { useHistory } from 'react-router-dom';
 
 const initialState = {
     search: '',
-    take: 5,
+    take: 10,
     page: 1,
     openCreateAndUpdateDialog: false,
     email: '',
-    roles: [],
+    role: [],
     openAlert: false,
     openDeleteDialog: false,
     openDeleteSnackBar: false,
@@ -41,6 +43,7 @@ const initialState = {
     openCreateSnackBar: false,
     isCreateMode: true,
     openFilter: false,
+    rolesFilter: '',
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
@@ -48,7 +51,7 @@ const initialState = {
 };
 
 const filterState = {
-    statusFilter: '',
+    rolesFilter: '',
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
@@ -58,12 +61,15 @@ const filterState = {
 const User = () => {
     const css = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
     const {
+        user,
         users,
         isCreated,
         isDeleted,
         isUpdated,
     } = useSelector((state) => ({
+        user: state.user.user,
         users: state.user.users,
         isLoading: state.user.isLoading,
         totalPages: state.user.totalPages,
@@ -120,6 +126,7 @@ const User = () => {
                 state.search,
                 state.take,
                 state.page,
+                state.rolesFilter,
                 filterDate.createdFrom,
                 filterDate.createdTo,
                 filterDate.updatedFrom,
@@ -137,6 +144,7 @@ const User = () => {
         state.search,
         state.take,
         state.page,
+        state.rolesFilter,
         state.createdFrom,
         state.createdTo,
         state.updatedFrom,
@@ -161,10 +169,10 @@ const User = () => {
         }));
     };
     const handleFilterChange = (e) => {
-        const { email, value } = e.target;
+        const { name, value } = e.target;
         setFilters((prevState) => ({
             ...prevState,
-            [email]: value,
+            [name]: value,
         }));
     };
 
@@ -182,12 +190,17 @@ const User = () => {
 
     const handleCreateAndUpdate = () => {
         const { email, role } = state;
+        //Sort role
+        role.sort(function (a, b) {
+            return a - b
+        })
         //create
         if (state.isCreateMode) {
             const userReq = {
                 email,
                 role
             };
+
             dispatch(createUser(userReq));
             return;
         }
@@ -196,7 +209,7 @@ const User = () => {
             updateUser({
                 filter: selected[0],
                 update: { email, role },
-            })
+            }, user.email, history)
         );
     };
 
@@ -204,8 +217,9 @@ const User = () => {
         dispatch(
             deleteUsers({
                 deleteList: selected,
-            })
+            }, user.email, history)
         );
+
     };
 
     const handleToggleDialogCreateAndUpdate = (event, mode) => {
@@ -217,8 +231,8 @@ const User = () => {
         }
         setState((prevState) => ({
             ...prevState,
-            email: mode ? targetEdit.email : prevState.email,
-            role: mode ? targetEdit.role : prevState.role,
+            email: mode ? targetEdit.email : '',
+            role: mode ? targetEdit.role : [],
             openCreateAndUpdateDialog: !prevState.openCreateAndUpdateDialog,
             isCreateMode: mode ? false : true,
         }));
@@ -284,12 +298,14 @@ const User = () => {
                                     />
                                 </div>
                                 <div className={css.grow} />
-                                <IconButton
-                                    color="inherit"
-                                    onClick={handleToggleFilter}
-                                >
-                                    <FilterList />
-                                </IconButton>
+                                <Tooltip title="Filter">
+                                    <IconButton
+                                        color="inherit"
+                                        onClick={handleToggleFilter}
+                                    >
+                                        <FilterList />
+                                    </IconButton>
+                                </Tooltip>
                             </Toolbar>
                             {/* User Table */}
                             <UserTable
@@ -344,10 +360,11 @@ const User = () => {
             <UserFilter
                 openFilter={state.openFilter}
                 handleToggleFilter={handleToggleFilter}
-                statusFilter={filters.statusFilter}
+                rolesFilter={filters.rolesFilter}
                 handleFilterChange={handleFilterChange}
                 createdFrom={filters.createdFrom}
                 createdTo={filters.createdTo}
+                setFilters={setFilters}
                 updatedFrom={filters.updatedFrom}
                 updatedTo={filters.updatedTo}
                 handleApplyFilter={handleApplyFilter}

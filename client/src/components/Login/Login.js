@@ -5,17 +5,15 @@ import {
     TextField,
     Button,
     CardMedia,
-    Collapse,
     CircularProgress,
 } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import logo from '../../images/logo.png';
 import { userLogin } from '../../actions/userActions';
 
 import makeStyles from './styles';
-import { ERROR_CLEAR, USER_PICK_ROLE } from '../../constants';
+import { ERROR_CLEAR } from '../../constants';
 
 const initialState = {
     email: '',
@@ -105,8 +103,8 @@ const Login = () => {
                                 {user.isLoading ? (
                                     <CircularProgress color="inherit" />
                                 ) : (
-                                    'Login'
-                                )}
+                                        'Login'
+                                    )}
                             </Button>
                         </form>
                     </Paper>

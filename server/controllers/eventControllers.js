@@ -12,7 +12,7 @@ const CustomError = require('../class/CustomeError');
 
 /**
 * @decsription Create new event with following request
-* @method POST 
+* @method POST
 * @route /api/event/create
 * 
 * @version 1.0
@@ -62,7 +62,8 @@ const createEvent = async (req, res, next) => {
                 }
             })
         );
-        //ad task list id into req.body
+
+        //add task list id into req.body
         req.body = {
             ...req.body,
             taskListId: taskResult.map((task) => task._id),
@@ -90,6 +91,7 @@ const createEvent = async (req, res, next) => {
                 }
             })
         );
+
         //update id event back to above facility histories.
         await Promise.all(
             facilityHistoryResult.map(async (facilityHistory) => {
@@ -103,6 +105,7 @@ const createEvent = async (req, res, next) => {
                 }
             })
         );
+
         //update facility status
         await Promise.all(
             facilityHistoryResult.map(async (facilityHistory) => {
@@ -118,7 +121,9 @@ const createEvent = async (req, res, next) => {
                 }
             })
         );
+
         return cusResponse(res, 200, newEvent, null);
+        
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
@@ -340,7 +345,7 @@ const updateEvent = async (req, res, next) => {
         const updatedEvent = await Event.findOneAndUpdate(
             { eventName: userReq.filter },
             userReq.update,
-            { runValidators: true, context: 'query' }
+            { new: true, runValidators: true, context: 'query' }
         );
 
         return cusResponse(res, 200, updatedEvent, null);

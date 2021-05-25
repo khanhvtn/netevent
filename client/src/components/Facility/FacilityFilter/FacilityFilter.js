@@ -33,17 +33,19 @@ const FacilityFilter = ({
     const css = useStyles();
     return (
         <Drawer anchor="right" open={openFilter} onClose={handleToggleFilter}>
+            <div className={css.filterTitle}>
+                <Typography style={{ fontWeight: 'bold' }} align="center" variant="h6">Filter Facility</Typography>
+            </div>
             <div className={css.filterWrapper}>
-                <Typography variant="h6">Filter List</Typography>
                 <div className={css.filterInputs}>
                     <FormControl size="small" fullWidth variant="outlined">
                         <InputLabel id="statusFilterLabel">Status</InputLabel>
                         <Select
-                            labelId="statusFilterLabel"
                             id="statusFiler"
+                            label="Status"
+                            labelId="statusFilterLabel"
                             value={statusFilter}
                             onChange={handleFilterChange}
-                            label="Status"
                             inputProps={{
                                 name: 'statusFilter',
                             }}
@@ -58,14 +60,14 @@ const FacilityFilter = ({
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <Grid container justify="space-around">
                             <KeyboardDatePicker
-                                inputVariant="outlined"
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="createdFrom"
                                 label="Created From"
-                                format="MM/DD/YYYY"
                                 value={createdFrom}
+                                size="small"
+                                margin="normal"
+                                format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
@@ -77,14 +79,14 @@ const FacilityFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                inputVariant="outlined"
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="createdTo"
                                 label="Created To"
-                                format="MM/DD/YYYY"
                                 value={createdTo}
+                                size="small"
+                                margin="normal"
+                                format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
@@ -96,13 +98,13 @@ const FacilityFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                inputVariant="outlined"
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="updatedFrom"
                                 label="Updated From"
+                                size="small"
+                                margin="normal"
                                 format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 value={updatedFrom}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
@@ -115,13 +117,13 @@ const FacilityFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                inputVariant="outlined"
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="updatedTo"
                                 label="Updated To"
+                                size="small"
+                                margin="normal"
                                 format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 value={updatedTo}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
@@ -138,13 +140,15 @@ const FacilityFilter = ({
                 </div>
                 <div className={css.filterActions}>
                     <Button
+                        className={css.handleClearButton}
                         onClick={handleClearFilter}
-                        variant="contained"
+                        style={{ backgroundColor: 'transparent' }}
                         color="default"
                     >
-                        Clear Filter
+                        Clear all
                     </Button>
                     <Button
+                        className={css.handleFilterButton}
                         onClick={handleApplyFilter}
                         variant="contained"
                         color="primary"

@@ -5,6 +5,7 @@ import linkReducers from './linkReducers';
 import facilityReducers from './facilityReducers';
 import eventTypeReducers from './eventTypeReducers';
 import eventReducers from './eventReducers';
+
 const rootReducers = combineReducers({
     user: userReducers,
     error: errorReducers,
@@ -13,4 +14,5 @@ const rootReducers = combineReducers({
     eventType: eventTypeReducers,
     event: eventReducers,
 });
+
 export default rootReducers;

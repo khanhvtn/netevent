@@ -66,7 +66,7 @@ const TaskDialog = ({
                         fullWidth
                         variant="outlined"
                         margin="normal"
-                        label="Name"
+                        label="Task Name"
                         type="text"
                         value={name}
                         name="name"
@@ -89,7 +89,8 @@ const TaskDialog = ({
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="User"
+                                label="Member"
+                                margin="normal"
                                 variant="outlined"
                                 error={errors?.email ? true : false}
                                 helperText={errors?.email ? errors.email : ''}
@@ -102,6 +103,7 @@ const TaskDialog = ({
                             labelId="select-label-type"
                             id="select-type"
                             name="type"
+                            margin="normal"
                             value={type}
                             onChange={handleChange}
                             label="Type"
@@ -174,7 +176,6 @@ const TaskDialog = ({
                 <DialogActions className={css.dialogActions}>
                     <Button
                         disabled={isLoading || createSuccess ? true : false}
-                        variant="contained"
                         onClick={handleToggleDialogCreateAndUpdate}
                         color="default"
                     >
@@ -191,8 +192,8 @@ const TaskDialog = ({
                         ) : isCreateMode ? (
                             'Create'
                         ) : (
-                            'Update'
-                        )}
+                                    'Update'
+                                )}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -214,23 +215,18 @@ const TaskDialog = ({
                 <DialogActions>
                     <Button
                         disabled={isLoading ? true : false}
-                        variant="contained"
-                        onClick={handleDelete}
-                        color="secondary"
-                    >
-                        {isLoading ? (
-                            <CircularProgress size={25} color="inherit" />
-                        ) : (
-                            'Delete'
-                        )}
-                    </Button>
-                    <Button
-                        disabled={isLoading ? true : false}
-                        variant="outlined"
                         onClick={handleToggleDialogDelete}
                         color="default"
                     >
                         Cancel
+                    </Button>
+                    <Button
+                        disabled={isLoading ? true : false}
+                        variant="contained"
+                        onClick={handleDelete}
+                        color="secondary"
+                    >
+                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Delete'}
                     </Button>
                 </DialogActions>
             </Dialog>

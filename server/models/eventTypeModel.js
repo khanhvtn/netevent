@@ -1,5 +1,12 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
+
+/**
+ *  =====================================
+ *            EVENT TYPE MODEL
+ *  =====================================
+ */
+
 const eventTypeSchema = mongoose.Schema(
     {
         name: {

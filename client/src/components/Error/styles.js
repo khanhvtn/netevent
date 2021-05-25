@@ -7,7 +7,7 @@ export default makeStyles(() => ({
         flexDirection: 'column',
         height: '100%',
         justifyContent: 'center',
-        margin:200
+        margin: 200
     },
     imageAlign: {
         textAlign: 'center'
@@ -19,4 +19,3 @@ export default makeStyles(() => ({
         width: 560
     }
 }));
-

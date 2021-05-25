@@ -20,7 +20,7 @@ import useStyles from './styles';
 const UserFilter = ({
     openFilter,
     handleToggleFilter,
-    statusFilter,
+    rolesFilter,
     handleFilterChange,
     createdFrom,
     createdTo,
@@ -33,38 +33,43 @@ const UserFilter = ({
     const css = useStyles();
     return (
         <Drawer anchor="right" open={openFilter} onClose={handleToggleFilter}>
+            <div className={css.filterTitle}>
+                <Typography style={{ fontWeight: 'bold' }} align="center" variant="h6">Filter User</Typography>
+            </div>
             <div className={css.filterWrapper}>
-                <Typography variant="h6">Filter List</Typography>
                 <div className={css.filterInputs}>
-                    <FormControl fullWidth variant="standard">
-                        <InputLabel id="statusFilterLabel">Status</InputLabel>
+                    <FormControl size="small" fullWidth variant="outlined">
+                        <InputLabel id="rolesFilterLabel">Roles</InputLabel>
                         <Select
-                            labelId="statusFilterLabel"
-                            id="statusFiler"
-                            value={statusFilter}
+                            id="rolesFiler"
+                            label="Roles"
+                            labelId="rolesFilterLabel"
+                            value={rolesFilter}
                             onChange={handleFilterChange}
-                            label="Status"
                             inputProps={{
-                                name: 'statusFilter',
+                                name: 'rolesFilter',
                             }}
                         >
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value={true}>Active</MenuItem>
-                            <MenuItem value={false}>Expired</MenuItem>
+                            <MenuItem value={1}>Admin</MenuItem>
+                            <MenuItem value={2}>Reviewer</MenuItem>
+                            <MenuItem value={3}>Creator</MenuItem>
+                            <MenuItem value={4}>Team Member</MenuItem>
                         </Select>
                     </FormControl>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <Grid container justify="space-around">
                             <KeyboardDatePicker
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="createdFrom"
                                 label="Created From"
-                                format="MM/DD/YYYY"
                                 value={createdFrom}
+                                size="small"
+                                margin="normal"
+                                format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
@@ -76,13 +81,14 @@ const UserFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="createdTo"
                                 label="Created To"
-                                format="MM/DD/YYYY"
                                 value={createdTo}
+                                size="small"
+                                margin="normal"
+                                format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
@@ -94,12 +100,13 @@ const UserFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="updatedFrom"
                                 label="Updated From"
+                                size="small"
+                                margin="normal"
                                 format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 value={updatedFrom}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
@@ -112,12 +119,13 @@ const UserFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="updatedTo"
                                 label="Updated To"
+                                size="small"
+                                margin="normal"
                                 format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 value={updatedTo}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
@@ -134,11 +142,12 @@ const UserFilter = ({
                 </div>
                 <div className={css.filterActions}>
                     <Button
+                        className={css.handleClearButton}
                         onClick={handleClearFilter}
-                        variant="contained"
+                        style={{ backgroundColor: 'transparent' }}
                         color="default"
                     >
-                        Clear Filter
+                        Clear all
                     </Button>
                     <Button
                         onClick={handleApplyFilter}

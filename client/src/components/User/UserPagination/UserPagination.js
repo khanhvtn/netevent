@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Select, MenuItem } from '@material-ui/core';
+import { Typography, Select, MenuItem, Toolbar } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import { useSelector } from 'react-redux';
 //import useStyles in the last
@@ -13,10 +13,10 @@ const UserPagination = ({
 }) => {
     const css = useStyles();
     const { totalPages } = useSelector((state) => ({
-        totalPages: state.facility.totalPages,
+        totalPages: state.user.totalPages,
     }));
     return (
-        <div className={css.paginationWrapper}>
+        <Toolbar className={css.paginationWrapper}>
             <div className={css.selectRowNumWrapper}>
                 <Typography>Rows per page: </Typography>
                 <Select
@@ -29,9 +29,10 @@ const UserPagination = ({
                     name="take"
                     onChange={handleChangeRowsPerPage}
                 >
-                    <MenuItem value={5}>5</MenuItem>
                     <MenuItem value={10}>10</MenuItem>
-                    <MenuItem value={25}>25</MenuItem>
+                    <MenuItem value={20}>20</MenuItem>
+                    <MenuItem value={30}>30</MenuItem>
+
                 </Select>
             </div>
             <div>
@@ -45,7 +46,7 @@ const UserPagination = ({
                     onChange={handleChangePage}
                 />
             </div>
-        </div>
+        </Toolbar>
     );
 };
 

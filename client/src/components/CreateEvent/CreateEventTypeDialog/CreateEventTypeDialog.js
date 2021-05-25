@@ -53,7 +53,6 @@ const CreateEventTypeDialog = ({
             <DialogActions className={css.dialogActions}>
                 <Button
                     disabled={eventTypeIsLoading ? true : false}
-                    variant="contained"
                     onClick={handleToggleDialogCreateEventType}
                     color="default"
                 >
@@ -64,11 +63,7 @@ const CreateEventTypeDialog = ({
                     onClick={handleCreateEventType}
                     color="primary"
                 >
-                    {eventTypeIsLoading ? (
-                        <CircularProgress size={25} color="inherit" />
-                    ) : (
-                        'Create'
-                    )}
+                    {eventTypeIsLoading ? <CircularProgress size={25} color="inherit" /> : 'Create'}
                 </Button>
             </DialogActions>
         </Dialog>

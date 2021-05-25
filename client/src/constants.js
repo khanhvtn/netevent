@@ -16,6 +16,7 @@ export const USER_IS_CONFIRM = 'USER_IS_CONFIRM';
 
 export const FETCH_ALL_USERS = 'FETCH_ALL_USERS';
 export const GET_ALL_USERS = 'GET_ALL_USERS';
+export const FETCH_CURRENT_USER = 'FETCH_CURRENT_USER';
 export const DELETE_USER = 'DELETE_USER';
 export const SEARCH_USER = 'SEARCH_USER';
 export const UPDATE_USER = 'UPDATE_USER';
