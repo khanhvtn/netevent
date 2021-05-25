@@ -1,0 +1,1183 @@
+{
+  "stats": {
+    "suites": 26,
+    "tests": 20,
+    "passes": 20,
+    "pending": 0,
+    "failures": 0,
+    "start": "2021-05-23T18:39:51.422Z",
+    "end": "2021-05-23T18:39:51.810Z",
+    "duration": 388,
+    "testsRegistered": 20,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "dc2e1b7b-d286-4969-84b8-01c08884fd74",
+      "title": "",
+      "fullFile": "",
+      "file": "",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "35f4eb9c-9e3d-4eeb-9836-aeec1dab5534",
+          "title": "Events",
+          "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\eventTest.js",
+          "file": "\\test\\eventTest.js",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook in \"Events\"",
+              "fullTitle": "Events \"before each\" hook in \"Events\"",
+              "timedOut": false,
+              "duration": 1,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//Before each test we empty the database\n       Event.remove({}, (err) => {\n           done();\n       });",
+              "err": {},
+              "uuid": "84c34bf9-0f6e-45aa-9a4c-9de512988bf0",
+              "parentUUID": "35f4eb9c-9e3d-4eeb-9836-aeec1dab5534",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"Events\"",
+              "fullTitle": "Events \"after each\" hook in \"Events\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const errorBody = currentResponse && currentResponse.body;\nif (this.currentTest.state === 'failed' && errorBody) {\n    console.log(\"This is a response: \", errorBody);\n}\ncurrentResponse = null;",
+              "err": {},
+              "uuid": "62eda231-327f-4594-aa1b-290a2c422d56",
+              "parentUUID": "35f4eb9c-9e3d-4eeb-9836-aeec1dab5534",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "b426be8d-ca55-4eca-894d-703d1ad68c0e",
+              "title": "/GET/event/filter event",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\eventTest.js",
+              "file": "\\test\\eventTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should GET all the events",
+                  "fullTitle": "Events /GET/event/filter event it should GET all the events",
+                  "timedOut": false,
+                  "duration": 30,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "chai.request(server)\n    .get('/api/event/filter')\n    .end((err, res) => {\n        res.should.have.status(200);\n        res.body.should.be.a('object');\n        res.body.should.have.property('code').eql(200);\n        res.body.should.have.property('message').eql('success');\n        res.body.should.have.property('data');\n        done();\n    });",
+                  "err": {},
+                  "uuid": "a4fb30c4-69ca-4ecb-b06a-413e64073f6f",
+                  "parentUUID": "b426be8d-ca55-4eca-894d-703d1ad68c0e",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "a4fb30c4-69ca-4ecb-b06a-413e64073f6f"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 30,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "9724f15d-dfb0-4d4e-93fb-ef612fc622f3",
+              "title": "/POST/event/create event",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\eventTest.js",
+              "file": "\\test\\eventTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should POST a event",
+                  "fullTitle": "Events /POST/event/create event it should POST a event",
+                  "timedOut": false,
+                  "duration": 64,
+                  "state": "passed",
+                  "speed": "medium",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let eventType = new EventType({ name: 'testEventTypeName' });\nlet user = new User({ email: \"test@gmail.com\", role: ['1'] });\nlet facility = new Facility({ name: \"testFacility\", code: \"testCode\", type: \"testType\" });\nlet event = {\n    eventName: 'testEventName',\n    language: 'testLanguage',\n    mode: 'testMode',\n    location: 'testLocation',\n    accommodation: 'testAccommodation',\n    registrationCloseDate: Date.now(),\n    startDate: Date.now(),\n    endDate: Date.now(),\n    maxParticipants: '20',\n    tags: ['TEST', 'TAG'],\n    description: 'testDescription',\n    budget: '10000',\n    ownerId: user._id,\n    eventTypeId: eventType._id,\n    tasks: [{\n        name: 'testTaskName',\n        type: 'testTaskType',\n        startDate: Date.now(),\n        endDate: Date.now(),\n        userId: user._id\n    }],\n    borrowFacilities: [{\n        facilityId: facility._id,\n        borrowDate: Date.now(),\n        returnDate: Date.now(),\n    }]\n};\nchai.request(server)\n    .post('/api/event/create')\n    .send(event)\n    .end((err, res) => {\n        currentResponse = res;\n        res.should.have.status(200);\n        res.body.should.be.a('object');\n        res.body.should.have.property('code').eql(200);\n        res.body.should.have.property('message').eql('success');\n        res.body.should.have.property('data');\n        res.body.data.should.have.property('eventName').eql(event.eventName);\n        res.body.data.should.have.property('language').eql(event.language);\n        res.body.data.should.have.property('mode').eql(event.mode);\n        res.body.data.should.have.property('_id');\n        res.body.data.should.have.property('createdAt');\n        res.body.data.should.have.property('updatedAt');\n        done();\n    });",
+                  "err": {},
+                  "uuid": "e297f94e-0ead-4f7e-99ff-fcd07db20435",
+                  "parentUUID": "9724f15d-dfb0-4d4e-93fb-ef612fc622f3",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "e297f94e-0ead-4f7e-99ff-fcd07db20435"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 64,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 10000
+        },
+        {
+          "uuid": "bf56e920-154f-4265-a5a7-a94aa80af89c",
+          "title": "EventTypes",
+          "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\eventTypeTest.js",
+          "file": "\\test\\eventTypeTest.js",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook in \"EventTypes\"",
+              "fullTitle": "EventTypes \"before each\" hook in \"EventTypes\"",
+              "timedOut": false,
+              "duration": 1,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//Before each test we empty the database\n       EventType.remove({}, (err) => {\n           done();\n       });",
+              "err": {},
+              "uuid": "0f1b5864-3325-4300-8a53-265637928b92",
+              "parentUUID": "bf56e920-154f-4265-a5a7-a94aa80af89c",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"EventTypes\"",
+              "fullTitle": "EventTypes \"after each\" hook in \"EventTypes\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const errorBody = currentResponse && currentResponse.body;\nif (this.currentTest.state === 'failed' && errorBody) {\n    console.log('This is a response: ', errorBody);\n}\ncurrentResponse = null;",
+              "err": {},
+              "uuid": "fb4e00e6-ccf7-48af-a4cf-0d40c5483dbe",
+              "parentUUID": "bf56e920-154f-4265-a5a7-a94aa80af89c",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "bc749aba-cd0f-457f-be8f-c42b9cc13168",
+              "title": "/GET/eventType/filter eventType",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\eventTypeTest.js",
+              "file": "\\test\\eventTypeTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should GET all the eventTypes",
+                  "fullTitle": "EventTypes /GET/eventType/filter eventType it should GET all the eventTypes",
+                  "timedOut": false,
+                  "duration": 10,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "chai.request(server)\n    .get('/api/eventType/filter')\n    .end((err, res) => {\n        res.should.have.status(200);\n        res.body.should.be.a('object');\n        res.body.should.have.property('code').eql(200);\n        res.body.should.have.property('message').eql('success');\n        res.body.should.have.property('data');\n        done();\n    });",
+                  "err": {},
+                  "uuid": "fc7b0dff-e1ea-4c3f-9628-538e76a98187",
+                  "parentUUID": "bc749aba-cd0f-457f-be8f-c42b9cc13168",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "fc7b0dff-e1ea-4c3f-9628-538e76a98187"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 10,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "0ff59e14-af30-4644-a23c-71d53798c8a8",
+              "title": "/POST/eventType/create eventType",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\eventTypeTest.js",
+              "file": "\\test\\eventTypeTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should POST a eventType",
+                  "fullTitle": "EventTypes /POST/eventType/create eventType it should POST a eventType",
+                  "timedOut": false,
+                  "duration": 11,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let eventType = {\n    name: 'testEventTypeName',\n};\nchai.request(server)\n    .post('/api/eventType/create')\n    .send(eventType)\n    .end((err, res) => {\n        res.should.have.status(200);\n        res.body.should.be.a('object');\n        res.body.should.have.property('code').eql(200);\n        res.body.should.have.property('message').eql('success');\n        res.body.should.have.property('data');\n        res.body.data.should.have.property('name').eql(eventType.name);\n        res.body.data.should.have.property('_id');\n        res.body.data.should.have.property('createdAt');\n        res.body.data.should.have.property('updatedAt');\n        done();\n    });",
+                  "err": {},
+                  "uuid": "c2335d43-87e3-4a73-b362-c5558b704440",
+                  "parentUUID": "0ff59e14-af30-4644-a23c-71d53798c8a8",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "c2335d43-87e3-4a73-b362-c5558b704440"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 11,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "5dc91cf0-a1dc-4b4c-8386-578d8d13b122",
+              "title": "/PUT/eventType/update eventType",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\eventTypeTest.js",
+              "file": "\\test\\eventTypeTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should UPDATE a eventType",
+                  "fullTitle": "EventTypes /PUT/eventType/update eventType it should UPDATE a eventType",
+                  "timedOut": false,
+                  "duration": 14,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let eventType = new EventType({ name: 'testEventTypeName' });\nlet updateEventType = {\n    filter: eventType.name,\n    update: {\n        name: 'newEventTypeTestName',\n    }\n};\neventType.save((err, eventType) => {\n    chai.request(server)\n        .patch('/api/eventType/update')\n        .send(updateEventType)\n        .end((err, res) => {\n            res.should.have.status(200);\n            res.body.should.be.a('object');\n            res.body.should.have.property('code').eql(200);\n            res.body.should.have.property('message').eql('success');\n            res.body.should.have.property('data');\n            res.body.data.should.have.property('name').eql(updateEventType.update.name);\n            res.body.data.should.have.property('_id');\n            res.body.data.should.have.property('createdAt');\n            res.body.data.should.have.property('updatedAt');\n            done();\n        });\n});",
+                  "err": {},
+                  "uuid": "630b50e7-d076-40e6-ac60-7f276f8e4c83",
+                  "parentUUID": "5dc91cf0-a1dc-4b4c-8386-578d8d13b122",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "630b50e7-d076-40e6-ac60-7f276f8e4c83"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 14,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "417de904-3810-4554-a200-321989eb9819",
+              "title": "/DELETE/eventType/delete eventType",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\eventTypeTest.js",
+              "file": "\\test\\eventTypeTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should DELETE a eventType",
+                  "fullTitle": "EventTypes /DELETE/eventType/delete eventType it should DELETE a eventType",
+                  "timedOut": false,
+                  "duration": 10,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let eventType = new EventType({ name: 'testEventTypeName' });\nlet deleteEventType = {\n    deleteList: ['testEventTypeName']\n};\neventType.save((err, eventType) => {\n    chai.request(server)\n        .delete('/api/eventType/delete')\n        .send(deleteEventType)\n        .end((err, res) => {\n            res.should.have.status(200);\n            res.body.should.be.a('object');\n            res.body.should.have.property('code').eql(200);\n            res.body.should.have.property('message').eql('success');\n            res.body.should.have.property('data');\n            res.body.data.should.have.property('name').eql(eventType.name);\n            res.body.data.should.have.property('_id');\n            res.body.data.should.have.property('createdAt');\n            res.body.data.should.have.property('updatedAt');\n            done();\n        });\n});",
+                  "err": {},
+                  "uuid": "8ec6b267-d94a-4012-8f07-783cc70ada88",
+                  "parentUUID": "417de904-3810-4554-a200-321989eb9819",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "8ec6b267-d94a-4012-8f07-783cc70ada88"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 10,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 10000
+        },
+        {
+          "uuid": "43550932-cf4d-4086-a2e9-1c9fd32e68f6",
+          "title": "Facility Histories",
+          "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\facilityHistoryTest.js",
+          "file": "\\test\\facilityHistoryTest.js",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook in \"Facility Histories\"",
+              "fullTitle": "Facility Histories \"before each\" hook in \"Facility Histories\"",
+              "timedOut": false,
+              "duration": 1,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//Before each test we empty the database\n       FacilityHistory.remove({}, (err) => {\n           done();\n       });",
+              "err": {},
+              "uuid": "a1941269-ee1b-452f-b22b-28a8dc8e48b7",
+              "parentUUID": "43550932-cf4d-4086-a2e9-1c9fd32e68f6",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"Facility Histories\"",
+              "fullTitle": "Facility Histories \"after each\" hook in \"Facility Histories\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const errorBody = currentResponse && currentResponse.body;\nif (this.currentTest.state === 'failed' && errorBody) {\n    console.log(\"This is a response: \", errorBody);\n}\ncurrentResponse = null;",
+              "err": {},
+              "uuid": "eb362583-928e-4f85-82c2-2c8077ebad53",
+              "parentUUID": "43550932-cf4d-4086-a2e9-1c9fd32e68f6",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "077b196b-93f5-4800-b289-239a33f6c0b5",
+              "title": "/GET/facilityHisotry/filter facilityHisotry",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\facilityHistoryTest.js",
+              "file": "\\test\\facilityHistoryTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should GET all the facilityHistories",
+                  "fullTitle": "Facility Histories /GET/facilityHisotry/filter facilityHisotry it should GET all the facilityHistories",
+                  "timedOut": false,
+                  "duration": 7,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "chai.request(server)\n    .get('/api/facilityHistory/filter')\n    .end((err, res) => {\n        res.should.have.status(200);\n        res.body.should.be.a('object');\n        res.body.should.have.property('code').eql(200);\n        res.body.should.have.property('message').eql('success');\n        res.body.should.have.property('data');\n        done();\n    });",
+                  "err": {},
+                  "uuid": "f93e6caf-4a6d-40c8-af86-dd71bf1f2935",
+                  "parentUUID": "077b196b-93f5-4800-b289-239a33f6c0b5",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "f93e6caf-4a6d-40c8-af86-dd71bf1f2935"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 7,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "32c00d1f-b4c7-4c60-a4ae-ce4f0de7bc9c",
+              "title": "/POST/facilityHistory/create facilityHistory",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\facilityHistoryTest.js",
+              "file": "\\test\\facilityHistoryTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should POST a facilityHistory",
+                  "fullTitle": "Facility Histories /POST/facilityHistory/create facilityHistory it should POST a facilityHistory",
+                  "timedOut": false,
+                  "duration": 13,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let event = new Event({ eventName: 'testEventName', language: 'testLanguage', mode: 'testMode' });\nlet facility = new Facility({ name: \"testFacilityName\", code: \"testCode\", type: \"testType\" });\nlet facilityHistory = {\n    facilityId: facility._id,\n    eventId: event._id,\n    borrowDate: Date.now(),\n    returnDate: Date.now()\n};\nchai.request(server)\n    .post('/api/facilityHistory/create')\n    .send(facilityHistory)\n    .end((err, res) => {\n        res.should.have.status(200);\n        res.body.should.be.a('object');\n        res.body.should.have.property('code').eql(200);\n        res.body.should.have.property('message').eql('success');\n        res.body.should.have.property('data');\n        res.body.data.should.have.property('facilityId').eql(facilityHistory.facilityId.toString());\n        res.body.data.should.have.property('eventId').eql(facilityHistory.eventId.toString());\n        res.body.data.should.have.property('_id');\n        res.body.data.should.have.property('createdAt');\n        res.body.data.should.have.property('updatedAt');\n        done();\n    });",
+                  "err": {},
+                  "uuid": "0b6a4218-728b-4a55-ab0b-8d82b2aa7b60",
+                  "parentUUID": "32c00d1f-b4c7-4c60-a4ae-ce4f0de7bc9c",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "0b6a4218-728b-4a55-ab0b-8d82b2aa7b60"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 13,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "0c1ba343-4dce-4161-8c34-0965a687402e",
+              "title": "/DELETE/facility/delete facility",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\facilityHistoryTest.js",
+              "file": "\\test\\facilityHistoryTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should DELETE a facility",
+                  "fullTitle": "Facility Histories /DELETE/facility/delete facility it should DELETE a facility",
+                  "timedOut": false,
+                  "duration": 11,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let event = new Event({ eventName: 'testEventName', language: 'testLanguage', mode: 'testMode' });\nlet facility = new Facility({ name: \"testFacilityName\", code: \"testCode\", type: \"testType\" });\nlet facilityHistory = new FacilityHistory({\n    facilityId: facility._id,\n    eventId: event._id,\n    borrowDate: Date.now(),\n    returnDate: Date.now()\n});\n\nlet deleteFacility = {\n    deleteList: [facilityHistory._id]\n}\nfacilityHistory.save((err, facilityHistory) => {\n    chai.request(server)\n        .delete('/api/facilityHistory/delete')\n        .send(deleteFacility)\n        .end((err, res) => {\n            res.should.have.status(200);\n            res.body.should.be.a('object');\n            res.body.should.have.property('code').eql(200);\n            res.body.should.have.property('message').eql('success');\n            res.body.should.have.property('data');\n            res.body.data.should.have.property('facilityId').eql(facilityHistory.facilityId.toString());\n            res.body.data.should.have.property('eventId').eql(facilityHistory.eventId.toString());\n            res.body.data.should.have.property('_id');\n            res.body.data.should.have.property('createdAt');\n            res.body.data.should.have.property('updatedAt');\n            done();\n        });\n});",
+                  "err": {},
+                  "uuid": "e2bbae66-414e-41a2-9f11-9f525bd612e3",
+                  "parentUUID": "0c1ba343-4dce-4161-8c34-0965a687402e",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "e2bbae66-414e-41a2-9f11-9f525bd612e3"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 11,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 10000
+        },
+        {
+          "uuid": "826f3902-f570-46f3-bb6d-f9500f2e24e2",
+          "title": "Facilities",
+          "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\facilityTest.js",
+          "file": "\\test\\facilityTest.js",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook in \"Facilities\"",
+              "fullTitle": "Facilities \"before each\" hook in \"Facilities\"",
+              "timedOut": false,
+              "duration": 1,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//Before each test we empty the database\n       Facility.remove({}, (err) => {\n           done();\n       });",
+              "err": {},
+              "uuid": "8231383c-3d60-4ae2-ad6a-f0ba1462b4d8",
+              "parentUUID": "826f3902-f570-46f3-bb6d-f9500f2e24e2",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"Facilities\"",
+              "fullTitle": "Facilities \"after each\" hook in \"Facilities\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const errorBody = currentResponse && currentResponse.body;\nif (this.currentTest.state === 'failed' && errorBody) {\n    console.log(\"This is a response: \", errorBody);\n}\ncurrentResponse = null;",
+              "err": {},
+              "uuid": "66c687c9-e5b9-4203-b001-0e315addf099",
+              "parentUUID": "826f3902-f570-46f3-bb6d-f9500f2e24e2",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "620723d9-4424-4c0b-9f49-e9756b97d936",
+              "title": "/GET/facility/filter facility",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\facilityTest.js",
+              "file": "\\test\\facilityTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should GET all the facilitys",
+                  "fullTitle": "Facilities /GET/facility/filter facility it should GET all the facilitys",
+                  "timedOut": false,
+                  "duration": 8,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "chai.request(server)\n    .get('/api/facility/filter')\n    .end((err, res) => {\n        res.should.have.status(200);\n        res.body.should.be.a('object');\n        res.body.should.have.property('code').eql(200);\n        res.body.should.have.property('message').eql('success');\n        res.body.should.have.property('data');\n        done();\n    });",
+                  "err": {},
+                  "uuid": "6b45fbfc-3b14-475e-b946-0418c67f8b60",
+                  "parentUUID": "620723d9-4424-4c0b-9f49-e9756b97d936",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "6b45fbfc-3b14-475e-b946-0418c67f8b60"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 8,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "0b666fe0-39dd-45f3-9202-300d31050a7b",
+              "title": "/POST/facility/create facility",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\facilityTest.js",
+              "file": "\\test\\facilityTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should POST a facility",
+                  "fullTitle": "Facilities /POST/facility/create facility it should POST a facility",
+                  "timedOut": false,
+                  "duration": 10,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let facility = {\n    name: \"testFacility\",\n    code: \"testCode\",\n    type: \"testType\"\n};\nchai.request(server)\n    .post('/api/facility/create')\n    .send(facility)\n    .end((err, res) => {\n        res.should.have.status(200);\n        res.body.should.be.a('object');\n        res.body.should.have.property('code').eql(200);\n        res.body.should.have.property('message').eql('success');\n        res.body.should.have.property('data');\n        res.body.data.should.have.property('name').eql(facility.name);\n        res.body.data.should.have.property('code').eql(facility.code);\n        res.body.data.should.have.property('type').eql(facility.type);\n        res.body.data.should.have.property('status').eql(true);\n        res.body.data.should.have.property('_id');\n        res.body.data.should.have.property('createdAt');\n        res.body.data.should.have.property('updatedAt');\n        done();\n    });",
+                  "err": {},
+                  "uuid": "1d78bcc8-137b-40e6-bca8-99f659c5b44b",
+                  "parentUUID": "0b666fe0-39dd-45f3-9202-300d31050a7b",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "1d78bcc8-137b-40e6-bca8-99f659c5b44b"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 10,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "638e813f-0486-4a86-9836-8be4254be1a9",
+              "title": "/PUT/facility/update facility",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\facilityTest.js",
+              "file": "\\test\\facilityTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should UPDATE a facility",
+                  "fullTitle": "Facilities /PUT/facility/update facility it should UPDATE a facility",
+                  "timedOut": false,
+                  "duration": 14,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let facility = new Facility({ name: \"testFacility\", code: \"testCode\", type: \"testType\" });\nlet updateFacility = {\n    filter: facility.name,\n    update: {\n        name: \"newFacilityTest\",\n        code: \"newCodeTest\",\n        type: \"newTypeTest\"\n    }\n};\nfacility.save((err, facility) => {\n    chai.request(server)\n        .patch('/api/facility/update')\n        .send(updateFacility)\n        .end((err, res) => {\n            res.should.have.status(200);\n            res.body.should.be.a('object');\n            res.body.should.have.property('code').eql(200);\n            res.body.should.have.property('message').eql('success');\n            res.body.should.have.property('data');\n            res.body.data.should.have.property('name').eql(updateFacility.update.name);\n            res.body.data.should.have.property('code').eql(updateFacility.update.code);\n            res.body.data.should.have.property('type').eql(updateFacility.update.type);\n            res.body.data.should.have.property('status').eql(true);\n            res.body.data.should.have.property('_id');\n            res.body.data.should.have.property('createdAt');\n            res.body.data.should.have.property('updatedAt');\n            done();\n        });\n});",
+                  "err": {},
+                  "uuid": "a132f32c-cc3b-49ac-b459-dfab366881a9",
+                  "parentUUID": "638e813f-0486-4a86-9836-8be4254be1a9",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "a132f32c-cc3b-49ac-b459-dfab366881a9"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 14,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "ca119237-2cf2-4958-97ca-b1a0faab95e3",
+              "title": "/DELETE/facility/delete facility",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\facilityTest.js",
+              "file": "\\test\\facilityTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should DELETE a facility",
+                  "fullTitle": "Facilities /DELETE/facility/delete facility it should DELETE a facility",
+                  "timedOut": false,
+                  "duration": 11,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let facility = new Facility({ name: \"testFacility\", code: \"testCode\", type: \"testType\" });\nlet deleteFacility = {\n    deleteList: [\"testFacility\"]\n};\nfacility.save((err, facility) => {\n    chai.request(server)\n        .delete('/api/facility/delete')\n        .send(deleteFacility)\n        .end((err, res) => {\n            res.should.have.status(200);\n            res.body.should.be.a('object');\n            res.body.should.have.property('code').eql(200);\n            res.body.should.have.property('message').eql('success');\n            res.body.should.have.property('data');\n            res.body.data.should.have.property('name').eql(facility.name);\n            res.body.data.should.have.property('code').eql(facility.code);\n            res.body.data.should.have.property('type').eql(facility.type);\n            res.body.data.should.have.property('_id');\n            res.body.data.should.have.property('status').eql(true);\n            res.body.data.should.have.property('createdAt');\n            res.body.data.should.have.property('updatedAt');\n            done();\n        });\n});",
+                  "err": {},
+                  "uuid": "3f65784f-c3ee-4574-ac4e-5cf55da3a0db",
+                  "parentUUID": "ca119237-2cf2-4958-97ca-b1a0faab95e3",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "3f65784f-c3ee-4574-ac4e-5cf55da3a0db"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 11,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 10000
+        },
+        {
+          "uuid": "3acaedaa-7c41-4ea8-826c-f2d0d3ba3956",
+          "title": "Tasks",
+          "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\taskTest.js",
+          "file": "\\test\\taskTest.js",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook in \"Tasks\"",
+              "fullTitle": "Tasks \"before each\" hook in \"Tasks\"",
+              "timedOut": false,
+              "duration": 1,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//Before each test we empty the database\n       Task.remove({}, (err) => {\n           done();\n       });",
+              "err": {},
+              "uuid": "de1d7d7b-9e73-49a0-bbae-7ab63169e8cb",
+              "parentUUID": "3acaedaa-7c41-4ea8-826c-f2d0d3ba3956",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"Tasks\"",
+              "fullTitle": "Tasks \"after each\" hook in \"Tasks\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const errorBody = currentResponse && currentResponse.body;\nif (this.currentTest.state === 'failed' && errorBody) {\n    console.log('This is a response: ', errorBody);\n}\ncurrentResponse = null;",
+              "err": {},
+              "uuid": "21c7d54b-11c6-4006-859a-b989ef983f58",
+              "parentUUID": "3acaedaa-7c41-4ea8-826c-f2d0d3ba3956",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "fe66cbad-343f-4500-a537-dceba493b1ca",
+              "title": "/GET/task/filter task",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\taskTest.js",
+              "file": "\\test\\taskTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should GET all the tasks",
+                  "fullTitle": "Tasks /GET/task/filter task it should GET all the tasks",
+                  "timedOut": false,
+                  "duration": 9,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "chai.request(server)\n    .get('/api/task/filter')\n    .end((err, res) => {\n        res.should.have.status(200);\n        res.body.should.be.a('object');\n        res.body.should.have.property('code').eql(200);\n        res.body.should.have.property('message').eql('success');\n        res.body.should.have.property('data');\n        done();\n    });",
+                  "err": {},
+                  "uuid": "5af8baf8-39f7-4fbc-8ee5-6bf573582992",
+                  "parentUUID": "fe66cbad-343f-4500-a537-dceba493b1ca",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "5af8baf8-39f7-4fbc-8ee5-6bf573582992"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 9,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "b9206a20-2036-49ec-bf74-59f3290fc8fc",
+              "title": "/POST/task/create task",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\taskTest.js",
+              "file": "\\test\\taskTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should POST a task",
+                  "fullTitle": "Tasks /POST/task/create task it should POST a task",
+                  "timedOut": false,
+                  "duration": 11,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let event = new Event({ eventName: 'testEventName', language: 'testLanguage', mode: 'testMode' })\nlet user = new User({ email: 'test@gmail.com', role: ['1'] })\nlet task = new Task({\n    name: 'testTaskName',\n    type: 'testTaskType',\n    startDate: Date.now(),\n    endDate: Date.now(),\n    userId: user._id,\n    eventId: event._id\n})\nchai.request(server)\n    .post('/api/task/create')\n    .send(task)\n    .end((err, res) => {\n        res.should.have.status(200);\n        res.body.should.be.a('object');\n        res.body.should.have.property('code').eql(200);\n        res.body.should.have.property('message').eql('success');\n        res.body.should.have.property('data');\n        res.body.data.should.have.property('name').eql(task.name);\n        res.body.data.should.have.property('type').eql(task.type);\n        res.body.data.should.have.property('userId').eql(task.userId.toString());\n        res.body.data.should.have.property('eventId').eql(task.eventId.toString());\n        res.body.data.should.have.property('_id');\n        res.body.data.should.have.property('createdAt');\n        res.body.data.should.have.property('updatedAt');\n        done();\n    });",
+                  "err": {},
+                  "uuid": "95ebd24a-7dd2-4fa7-afc8-dee78391692d",
+                  "parentUUID": "b9206a20-2036-49ec-bf74-59f3290fc8fc",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "95ebd24a-7dd2-4fa7-afc8-dee78391692d"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 11,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "35b52178-aeee-4cd7-8048-3189f850f07e",
+              "title": "/PUT/task/update task",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\taskTest.js",
+              "file": "\\test\\taskTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should UPDATE a task",
+                  "fullTitle": "Tasks /PUT/task/update task it should UPDATE a task",
+                  "timedOut": false,
+                  "duration": 14,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let event = new Event({ eventName: 'testEventName', language: 'testLanguage', mode: 'testMode' })\nlet user = new User({ email: 'test@gmail.com', role: ['1'] })\nlet task = new Task({\n    name: 'testTaskName',\n    type: 'testTaskType',\n    startDate: Date.now(),\n    endDate: Date.now(),\n    userId: user._id,\n    eventId: event._id\n})\nlet updateTask = {\n    filter: task._id,\n    update: {\n        name: 'newTaskTestName',\n        type: 'newTaskType'\n    }\n}\ntask.save((err, task) => {\n    chai.request(server)\n        .patch('/api/task/update')\n        .send(updateTask)\n        .end((err, res) => {\n            res.should.have.status(200);\n            res.body.should.be.a('object');\n            res.body.should.have.property('code').eql(200);\n            res.body.should.have.property('message').eql('success');\n            res.body.should.have.property('data');\n            res.body.data.should.have.property('name').eql(updateTask.update.name);\n            res.body.data.should.have.property('type').eql(updateTask.update.type);\n            res.body.data.should.have.property('userId').eql(task.userId.toString());\n            res.body.data.should.have.property('eventId').eql(task.eventId.toString());\n            res.body.data.should.have.property('_id');\n            res.body.data.should.have.property('createdAt');\n            res.body.data.should.have.property('updatedAt');\n            done();\n        });\n});",
+                  "err": {},
+                  "uuid": "b0e5e752-1aaa-4d5a-9abb-5af940bbf7b6",
+                  "parentUUID": "35b52178-aeee-4cd7-8048-3189f850f07e",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "b0e5e752-1aaa-4d5a-9abb-5af940bbf7b6"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 14,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "52867bf1-45d5-4bfb-99c1-d0b645991454",
+              "title": "/DELETE/task/delete task",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\taskTest.js",
+              "file": "\\test\\taskTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should DELETE a task",
+                  "fullTitle": "Tasks /DELETE/task/delete task it should DELETE a task",
+                  "timedOut": false,
+                  "duration": 9,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let event = new Event({ eventName: 'testEventName', language: 'testLanguage', mode: 'testMode' });\nlet user = new User({ email: 'test@gmail.com', role: ['1'] });\nlet task = new Task({\n    name: 'testTaskName',\n    type: 'testTaskType',\n    startDate: Date.now(),\n    endDate: Date.now(),\n    userId: user._id,\n    eventId: event._id\n});\nlet deleteTask = {\n    deleteList: [task._id]\n};\ntask.save((err, task) => {\n    chai.request(server)\n        .delete('/api/task/delete')\n        .send(deleteTask)\n        .end((err, res) => {\n            res.should.have.status(200);\n            res.body.should.be.a('object');\n            res.body.should.have.property('code').eql(200);\n            res.body.should.have.property('message').eql('success');\n            res.body.should.have.property('data');\n            res.body.data.should.have.property('name').eql(task.name);\n            res.body.data.should.have.property('type').eql(task.type);\n            res.body.data.should.have.property('userId').eql(task.userId.toString());\n            res.body.data.should.have.property('eventId').eql(task.eventId.toString());\n            res.body.data.should.have.property('_id');\n            res.body.data.should.have.property('createdAt');\n            res.body.data.should.have.property('updatedAt');\n            done();\n        });\n});",
+                  "err": {},
+                  "uuid": "be8cbd14-bde6-40d5-a503-5b4833b373ca",
+                  "parentUUID": "52867bf1-45d5-4bfb-99c1-d0b645991454",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "be8cbd14-bde6-40d5-a503-5b4833b373ca"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 9,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 10000
+        },
+        {
+          "uuid": "1fe35279-826c-46e7-8af1-152e3c687d6d",
+          "title": "Users",
+          "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\userTest.js",
+          "file": "\\test\\userTest.js",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook in \"Users\"",
+              "fullTitle": "Users \"before each\" hook in \"Users\"",
+              "timedOut": false,
+              "duration": 1,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "User.remove({}, (err) => {\n    done();\n});",
+              "err": {},
+              "uuid": "058cd355-0ce1-4c96-8dbf-c46dffad500c",
+              "parentUUID": "1fe35279-826c-46e7-8af1-152e3c687d6d",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"Users\"",
+              "fullTitle": "Users \"after each\" hook in \"Users\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const errorBody = currentResponse && currentResponse.body;\nif (this.currentTest.state === 'failed' && errorBody) {\n    console.log(\"This is a response: \", errorBody);\n}\ncurrentResponse = null;",
+              "err": {},
+              "uuid": "19fcb320-8c77-4387-8b6b-36a08dea93af",
+              "parentUUID": "1fe35279-826c-46e7-8af1-152e3c687d6d",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "c19f649b-2636-4871-b8f2-7fdc70c32ab7",
+              "title": "/GET/user/filter user",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\userTest.js",
+              "file": "\\test\\userTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should GET all the users",
+                  "fullTitle": "Users /GET/user/filter user it should GET all the users",
+                  "timedOut": false,
+                  "duration": 7,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "chai.request(server)\n    .get('/api/user/filter')\n    .end((err, res) => {\n        res.should.have.status(200);\n        res.body.should.be.a('object');\n        res.body.should.have.property('code').eql(200);\n        res.body.should.have.property('message').eql('success');\n        res.body.should.have.property('data');\n        done();\n    });",
+                  "err": {},
+                  "uuid": "b8b0920e-c3cc-45e4-a77d-52c682f04c22",
+                  "parentUUID": "c19f649b-2636-4871-b8f2-7fdc70c32ab7",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "b8b0920e-c3cc-45e4-a77d-52c682f04c22"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 7,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "62f28d8f-bd84-47ce-b5ae-4f4f016c45f4",
+              "title": "/PUT/user/update user",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\userTest.js",
+              "file": "\\test\\userTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should UPDATE a user",
+                  "fullTitle": "Users /PUT/user/update user it should UPDATE a user",
+                  "timedOut": false,
+                  "duration": 11,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let user = new User({ email: \"test@gmail.com\", role: ['1'] });\nlet updateUser = {\n    filter: user.email,\n    update: {\n        email: user.email,\n        role: ['1', '2', '3', '4']\n    }\n};\nuser.save((err, user) => {\n    chai.request(server)\n        .patch('/api/user/update')\n        .send(updateUser)\n        .end((err, res) => {\n            res.should.have.status(200);\n            res.body.should.be.a('object');\n            res.body.should.have.property('code').eql(200);\n            res.body.should.have.property('message').eql('success');\n            res.body.should.have.property('data');\n            res.body.data.should.have.property('role').eql(updateUser.update.role);\n            res.body.data.should.have.property('isConfirmed').eql(false);\n            res.body.data.should.have.property('_id');\n            res.body.data.should.have.property('email').eql(updateUser.update.email);\n            res.body.data.should.have.property('createdAt');\n            res.body.data.should.have.property('updatedAt');\n            done();\n        });\n});",
+                  "err": {},
+                  "uuid": "6cd34ea4-2f50-4c6c-b72e-d33779dc4761",
+                  "parentUUID": "62f28d8f-bd84-47ce-b5ae-4f4f016c45f4",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "6cd34ea4-2f50-4c6c-b72e-d33779dc4761"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 11,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            },
+            {
+              "uuid": "67d876cf-5d2a-4aac-8da7-dde93922805c",
+              "title": "/DELETE/user/delete user",
+              "fullFile": "D:\\Git Clone Here\\NetCompany\\netevent\\server\\test\\userTest.js",
+              "file": "\\test\\userTest.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "it should DELETE a user",
+                  "fullTitle": "Users /DELETE/user/delete user it should DELETE a user",
+                  "timedOut": false,
+                  "duration": 7,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "let user = new User({ email: \"test@gmail.com\", role: ['1'] });\nlet deleteUser = {\n    deleteList: [\"test@gmail.com\"]\n};\nuser.save((err, user) => {\n    chai.request(server)\n        .delete('/api/user/delete')\n        .send(deleteUser)\n        .end((err, res) => {\n            res.should.have.status(200);\n            res.body.should.be.a('object');\n            res.body.should.have.property('code').eql(200);\n            res.body.should.have.property('message').eql('success');\n            res.body.should.have.property('data');\n            res.body.data.should.have.property('role').eql(user.role);\n            res.body.data.should.have.property('isConfirmed').eql(false);\n            res.body.data.should.have.property('_id');\n            res.body.data.should.have.property('email').eql(user.email);\n            res.body.data.should.have.property('createdAt');\n            res.body.data.should.have.property('updatedAt');\n            done();\n        });\n});",
+                  "err": {},
+                  "uuid": "b6cc277d-c7c6-42fd-9efb-b2ea434cfd1c",
+                  "parentUUID": "67d876cf-5d2a-4aac-8da7-dde93922805c",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "b6cc277d-c7c6-42fd-9efb-b2ea434cfd1c"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 7,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 10000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 10000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 10000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "8.4.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "6.2.2"
+    },
+    "marge": {
+      "options": null,
+      "version": "5.2.0"
+    }
+  }
+}

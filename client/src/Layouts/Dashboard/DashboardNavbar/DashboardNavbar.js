@@ -27,21 +27,6 @@ const DashboardNavbar = ({ onMobileNavOpen, onPickRole, ...rest }) => {
                 {...rest}
             >
                 <Toolbar>
-                    {/* <Hidden mdDown>
-                        <div className={css.imageSize} align="center">
-                            <Link to="/">
-                                <img className={css.image} alt="Logo" src={logo} />
-                            </Link>
-                        </div>
-                        <Box className={css.leftSide} />
-
-                        <Typography>{user.email}</Typography>
-                        <IconButton onClick={handleLogout} color="inherit">
-                            <InputIcon />
-                        </IconButton>
-                    </Hidden>
-                    <Hidden lgUp>
-                        <IconButton color="inherit" onClick={onMobileNavOpen}> */}
                     <div className={css.imageSize} align="center">
                         <Link to="/">
                             <img className={css.image} alt="Logo" src={logo} />
@@ -53,15 +38,15 @@ const DashboardNavbar = ({ onMobileNavOpen, onPickRole, ...rest }) => {
                             <InputIcon />
                         </IconButton>
                     ) : (
-                        <Hidden lgUp>
-                            <IconButton
-                                color="inherit"
-                                onClick={onMobileNavOpen}
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                        </Hidden>
-                    )}
+                            <Hidden lgUp>
+                                <IconButton
+                                    color="inherit"
+                                    onClick={onMobileNavOpen}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                            </Hidden>
+                        )}
                 </Toolbar>
             </AppBar>
         </div>

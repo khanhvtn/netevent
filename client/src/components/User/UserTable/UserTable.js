@@ -382,15 +382,6 @@ const UserTable = ({
                                             <Typography>No Data Matched</Typography>
                                         </TableCell>
                                     </TableRow>
-                                    {emptyRows > 0 && (
-                                        <TableRow
-                                            style={{
-                                                height: 50 * emptyRows,
-                                            }}
-                                        >
-                                            <TableCell colSpan={6} />
-                                        </TableRow>
-                                    )}
                                 </>
                                 :
                                 <>
@@ -425,7 +416,7 @@ const UserTable = ({
                                                     {row.email}
                                                 </TableCell>
                                                 <TableCell>{row.role.map((eachRole) => (
-                                                    eachRole == 1 ? "Admin " : eachRole == 2 ? "Reviewer " : eachRole == 3 ? "Creator " : "Team Member"
+                                                    eachRole === 1 ? "Admin " : eachRole === 2 ? "Reviewer " : eachRole === 3 ? "Creator " : "Team Member"
                                                 ))}</TableCell>
                                                 <TableCell>
                                                     {row.isConfirmed ?

@@ -15,14 +15,6 @@ const Error = () => {
                     >
                         404: Page Not Found
                     </Typography>
-                    {/* <Typography
-                        align="center"
-                        color="textPrimary"
-                        variant="subtitle2"
-                    >
-                        You either tried some shady route or you came here by mistake.
-                        Whichever it is, try using the navigation
-                    </Typography> */}
                     <Hidden smDown>
                         <Box className={css.imageAlign}>
                             <img

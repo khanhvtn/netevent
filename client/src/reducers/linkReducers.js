@@ -1,4 +1,4 @@
-import {GET_LINKS, GET_LINK_COMPLETE} from '../constants'
+import { GET_LINKS, GET_LINK_COMPLETE } from '../constants'
 
 const initialState = {
     links: [],
@@ -6,11 +6,11 @@ const initialState = {
 }
 
 export default function linkReducers(state = initialState, action) {
-    switch(action.type){
+    switch (action.type) {
         case GET_LINKS:
-            return {...state, links: action.payload}
+            return { ...state, links: action.payload }
         case GET_LINK_COMPLETE:
-            return {...state, complete: action.payload}
+            return { ...state, complete: action.payload }
         default:
             return state
     }

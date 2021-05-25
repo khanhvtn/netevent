@@ -19,7 +19,7 @@ const NavItem = ({ href, icon: Icon, title, ...rest }) => {
 
         history.push(href);
 
-        if(href === 'pickrole') {
+        if (href === 'pickrole') {
             history.push(`/${href}`)
         }
     };

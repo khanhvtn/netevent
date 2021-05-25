@@ -22,8 +22,10 @@ const EventFilter = ({
     const css = useStyles();
     return (
         <Drawer anchor="right" open={openFilter} onClose={handleToggleFilter}>
+            <div className={css.filterTitle}>
+                <Typography style={{ fontWeight: 'bold' }} align="center" variant="h6">Filter User</Typography>
+            </div>
             <div className={css.filterWrapper}>
-                <Typography variant="h6">Filter List</Typography>
                 <div className={css.filterInputs}>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <Grid container justify="space-around">
@@ -108,11 +110,12 @@ const EventFilter = ({
                 </div>
                 <div className={css.filterActions}>
                     <Button
+                        className={css.handleClearButton}
                         onClick={handleClearFilter}
-                        variant="contained"
+                        style={{ backgroundColor: 'transparent' }}
                         color="default"
                     >
-                        Clear Filter
+                        Clear all
                     </Button>
                     <Button
                         onClick={handleApplyFilter}

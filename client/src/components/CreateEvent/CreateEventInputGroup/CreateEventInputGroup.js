@@ -9,6 +9,8 @@ import {
     MenuItem,
     Chip,
     FormHelperText,
+    Typography,
+    Divider,
 } from '@material-ui/core';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 
@@ -34,13 +36,17 @@ const CreateEventInputGroup = ({
     const css = useStyles();
     return (
         <>
+            <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
+                <Typography style={{ fontWeight: 'bold' }} variant="h6">Event Details</Typography>
+                <Divider />
+            </Grid>
             {/* Event Name */}
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                 <TextField
                     disabled={eventIsLoading}
                     error={errors?.eventName ? true : false}
                     helperText={errors?.eventName ? errors?.eventName : ''}
-                    margin="normal"
+                    size="normal"
                     type="text"
                     variant="outlined"
                     fullWidth
@@ -50,62 +56,7 @@ const CreateEventInputGroup = ({
                     onChange={handleChange}
                 />
             </Grid>
-            {/* Budget */}
-            <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
-                <CurrencyTextField
-                    disabled={eventIsLoading}
-                    error={errors?.budget ? true : false}
-                    helperText={errors?.budget ? errors?.budget : ''}
-                    margin="normal"
-                    variant="outlined"
-                    fullWidth
-                    label="Budget"
-                    name="budget"
-                    value={state.budget}
-                    onChange={(event, value) =>
-                        setState((prevState) => ({
-                            ...prevState,
-                            budget: value,
-                        }))
-                    }
-                    currencySymbol="VND"
-                    outputFormat="string"
-                    decimalCharacter="."
-                    digitGroupSeparator=","
-                    preDefined={{
-                        allowDecimalPadding: false,
-                    }}
-                />
-            </Grid>
-            {/* Language */}
-            <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
-                <FormControl
-                    disabled={eventIsLoading}
-                    margin="normal"
-                    variant="outlined"
-                    fullWidth
-                    error={errors?.language ? true : false}
-                >
-                    <InputLabel id="select-label-language">Language</InputLabel>
-                    <Select
-                        labelId="select-label-language"
-                        id="select-language"
-                        name="language"
-                        value={state.language}
-                        onChange={handleChange}
-                        label="Language"
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={'Vietnamese'}>Vietnamese</MenuItem>
-                        <MenuItem value={'English'}>English</MenuItem>
-                    </Select>
-                    <FormHelperText>
-                        {errors?.language ? errors?.language : ''}
-                    </FormHelperText>
-                </FormControl>
-            </Grid>
+
             {/* Select Type */}
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                 <Autocomplete
@@ -171,7 +122,7 @@ const CreateEventInputGroup = ({
                             helperText={
                                 errors?.eventTypeId ? errors?.eventTypeId : ''
                             }
-                            margin="normal"
+                            size="normal"
                             {...params}
                             label="Event Type"
                             variant="outlined"
@@ -179,69 +130,7 @@ const CreateEventInputGroup = ({
                     )}
                 />
             </Grid>
-            {/* Mode */}
-            <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
-                <TextField
-                    disabled={eventIsLoading}
-                    error={errors?.mode ? true : false}
-                    helperText={errors?.mode ? errors?.mode : ''}
-                    margin="normal"
-                    type="text"
-                    variant="outlined"
-                    fullWidth
-                    label="Mode"
-                    name="mode"
-                    value={state.mode}
-                    onChange={handleChange}
-                />
-            </Grid>
-            {/* Accommodation */}
-            <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
-                <TextField
-                    disabled={eventIsLoading}
-                    error={errors?.accommodation ? true : false}
-                    helperText={
-                        errors?.accommodation ? errors?.accommodation : ''
-                    }
-                    margin="normal"
-                    type="text"
-                    variant="outlined"
-                    fullWidth
-                    label="Accommodation"
-                    name="accommodation"
-                    value={state.accommodation}
-                    onChange={handleChange}
-                />
-            </Grid>
-            {/* Max Participant */}
-            <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
-                <CurrencyTextField
-                    disabled={eventIsLoading}
-                    error={errors?.maxParticipants ? true : false}
-                    helperText={
-                        errors?.maxParticipants ? errors?.maxParticipants : ''
-                    }
-                    margin="normal"
-                    variant="outlined"
-                    fullWidth
-                    label="Max Participants"
-                    name="maxParticipants"
-                    value={state.maxParticipants}
-                    onChange={(event, value) =>
-                        setState((prevState) => ({
-                            ...prevState,
-                            maxParticipants: value,
-                        }))
-                    }
-                    currencySymbol="🚹"
-                    outputFormat="string"
-                    decimalCharacter="."
-                    digitGroupSeparator=","
-                    preDefined={{
-                        decimalPlaces: 0,
-                    }}
-                />
-            </Grid>
+
             {/* Tags */}
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                 <Autocomplete
@@ -267,7 +156,7 @@ const CreateEventInputGroup = ({
                         <TextField
                             error={errors?.tags ? true : false}
                             helperText={errors?.tags ? errors?.tags : ''}
-                            margin="normal"
+                            size="normal"
                             {...params}
                             variant="outlined"
                             label="Tags"
@@ -276,6 +165,133 @@ const CreateEventInputGroup = ({
                     )}
                 />
             </Grid>
+
+            {/* Language */}
+            <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
+                <FormControl
+                    disabled={eventIsLoading}
+                    size="normal"
+                    variant="outlined"
+                    fullWidth
+                    error={errors?.language ? true : false}
+                >
+                    <InputLabel id="select-label-language">Language</InputLabel>
+                    <Select
+                        labelId="select-label-language"
+                        id="select-language"
+                        name="language"
+                        value={state.language}
+                        onChange={handleChange}
+                        label="Language"
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={'Vietnamese'}>Vietnamese</MenuItem>
+                        <MenuItem value={'English'}>English</MenuItem>
+                    </Select>
+                    <FormHelperText>
+                        {errors?.language ? errors?.language : ''}
+                    </FormHelperText>
+                </FormControl>
+            </Grid>
+
+            {/* Mode */}
+            <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
+                <TextField
+                    disabled={eventIsLoading}
+                    error={errors?.mode ? true : false}
+                    helperText={errors?.mode ? errors?.mode : ''}
+                    size="normal"
+                    type="text"
+                    variant="outlined"
+                    fullWidth
+                    label="Mode"
+                    name="mode"
+                    value={state.mode}
+                    onChange={handleChange}
+                />
+            </Grid>
+            {/* Accommodation */}
+            <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
+                <TextField
+                    disabled={eventIsLoading}
+                    error={errors?.accommodation ? true : false}
+                    helperText={
+                        errors?.accommodation ? errors?.accommodation : ''
+                    }
+                    size="normal"
+                    type="text"
+                    variant="outlined"
+                    fullWidth
+                    label="Accommodation"
+                    name="accommodation"
+                    value={state.accommodation}
+                    onChange={handleChange}
+                />
+            </Grid>
+            {/* Max Participant */}
+            <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
+                <CurrencyTextField
+                    disabled={eventIsLoading}
+                    error={errors?.maxParticipants ? true : false}
+                    helperText={
+                        errors?.maxParticipants ? errors?.maxParticipants : ''
+                    }
+                    size="normal"
+                    variant="outlined"
+                    fullWidth
+                    label="Max Participants"
+                    name="maxParticipants"
+                    value={state.maxParticipants}
+                    onChange={(event, value) =>
+                        setState((prevState) => ({
+                            ...prevState,
+                            maxParticipants: value,
+                        }))
+                    }
+                    currencySymbol="🚹"
+                    outputFormat="string"
+                    decimalCharacter="."
+                    digitGroupSeparator=","
+                    preDefined={{
+                        decimalPlaces: 0,
+                    }}
+                />
+            </Grid>
+            {/* Budget */}
+            <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
+                <CurrencyTextField
+                    disabled={eventIsLoading}
+                    error={errors?.budget ? true : false}
+                    helperText={errors?.budget ? errors?.budget : ''}
+                    size="normal"
+                    variant="outlined"
+                    fullWidth
+                    label="Budget"
+                    name="budget"
+                    value={state.budget}
+                    onChange={(event, value) =>
+                        setState((prevState) => ({
+                            ...prevState,
+                            budget: value,
+                        }))
+                    }
+                    currencySymbol="VND"
+                    outputFormat="string"
+                    decimalCharacter="."
+                    digitGroupSeparator=","
+                    preDefined={{
+                        allowDecimalPadding: false,
+                    }}
+                />
+            </Grid>
+
+            <Grid style={{ marginTop: 36 }} item md={12} lg={12} xl={12} sm={12} xs={12}>
+                <Typography style={{ fontWeight: 'bold' }} variant="h6">Time & Location</Typography>
+                <Divider style={{ height: 2 }} />
+            </Grid>
+
             {/* Start Date  */}
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                 <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -285,7 +301,7 @@ const CreateEventInputGroup = ({
                         error={errors?.startDate ? true : false}
                         helperText={errors?.startDate ? errors?.startDate : ''}
                         inputVariant="outlined"
-                        margin="normal"
+                        size="normal"
                         fullWidth
                         id="startDate"
                         label="Start Date"
@@ -316,8 +332,8 @@ const CreateEventInputGroup = ({
                             !state.startDate
                                 ? true
                                 : eventIsLoading
-                                ? true
-                                : false
+                                    ? true
+                                    : false
                         }
                         minDate={
                             state.startDate
@@ -325,7 +341,7 @@ const CreateEventInputGroup = ({
                                 : undefined
                         }
                         inputVariant="outlined"
-                        margin="normal"
+                        size="normal"
                         fullWidth
                         id="endDate"
                         label="End Date"
@@ -352,10 +368,10 @@ const CreateEventInputGroup = ({
                             !state.startDate
                                 ? true
                                 : !state.endDate
-                                ? true
-                                : eventIsLoading
-                                ? true
-                                : false
+                                    ? true
+                                    : eventIsLoading
+                                        ? true
+                                        : false
                         }
                         minDate={
                             state.startDate
@@ -374,7 +390,7 @@ const CreateEventInputGroup = ({
                                 : ''
                         }
                         inputVariant="outlined"
-                        margin="normal"
+                        size="normal"
                         fullWidth
                         id="registrationCloseDate"
                         label="Registration Close Date"
@@ -400,7 +416,7 @@ const CreateEventInputGroup = ({
                     disabled={eventIsLoading}
                     error={errors?.location ? true : false}
                     helperText={errors?.location ? errors?.location : ''}
-                    margin="normal"
+                    size="normal"
                     type="text"
                     variant="outlined"
                     fullWidth

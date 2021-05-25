@@ -46,6 +46,8 @@ const BorrowFacilityDialog = ({
             <Dialog
                 TransitionComponent={Transition}
                 maxWidth="sm"
+                className={css.dialogCreateUpdateFac}
+                fullWidth
                 open={openCreateAndUpdateDialog}
                 onClose={(e) => handleToggleDialogCreateAndUpdate(e)}
                 aria-labelledby="form-dialog-title"
@@ -73,6 +75,7 @@ const BorrowFacilityDialog = ({
                                 {...params}
                                 label="Available Facility"
                                 variant="outlined"
+                                margin="normal"
                                 error={errors?.name ? true : false}
                                 helperText={errors?.name ? errors.name : ''}
                             />
@@ -143,7 +146,6 @@ const BorrowFacilityDialog = ({
                 <DialogActions className={css.dialogActions}>
                     <Button
                         disabled={isLoading || createSuccess ? true : false}
-                        variant="contained"
                         onClick={handleToggleDialogCreateAndUpdate}
                         color="default"
                     >
@@ -160,17 +162,19 @@ const BorrowFacilityDialog = ({
                         ) : isCreateMode ? (
                             'Create'
                         ) : (
-                            'Update'
-                        )}
+                                    'Update'
+                                )}
                     </Button>
                 </DialogActions>
             </Dialog>
 
             {/* Dialog Confirm Delete */}
             <Dialog
+                fullWidth
                 TransitionComponent={Transition}
                 open={openDeleteDialog}
                 onClose={handleToggleDialogDelete}
+                className={css.dialogDeleteFac}
                 aria-labelledby="delete-dialog"
                 aria-describedby="delete-dialog-description"
             >
@@ -183,6 +187,13 @@ const BorrowFacilityDialog = ({
                 <DialogActions>
                     <Button
                         disabled={isLoading ? true : false}
+                        onClick={handleToggleDialogDelete}
+                        color="default"
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        disabled={isLoading ? true : false}
                         variant="contained"
                         onClick={handleDelete}
                         color="secondary"
@@ -190,17 +201,10 @@ const BorrowFacilityDialog = ({
                         {isLoading ? (
                             <CircularProgress size={25} color="inherit" />
                         ) : (
-                            'Delete'
-                        )}
+                                'Delete'
+                            )}
                     </Button>
-                    <Button
-                        disabled={isLoading ? true : false}
-                        variant="outlined"
-                        onClick={handleToggleDialogDelete}
-                        color="default"
-                    >
-                        Cancel
-                    </Button>
+
                 </DialogActions>
             </Dialog>
         </div>

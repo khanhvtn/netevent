@@ -7,9 +7,9 @@ export default makeStyles((theme) => ({
     image: {
         width: 232,
         height: 64,
-        objectFit: 'cover',      
+        objectFit: 'cover',
     },
-    imageSize:{
+    imageSize: {
         width: 232,
         height: 64,
         marginRight: 24,

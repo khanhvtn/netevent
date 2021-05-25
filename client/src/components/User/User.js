@@ -16,7 +16,6 @@ import {
     createUser,
     deleteUsers,
     updateUser,
-    userLogout,
 } from '../../actions/userActions';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -282,7 +281,7 @@ const User = () => {
                 <div className={css.grow}>
                     <AppBar position="static" color="default">
                         <Grid container direction="column">
-                            <Toolbar style={{ borderRadius: 8 }}>
+                            <Toolbar>
                                 <div className={css.search}>
                                     <div className={css.searchIcon}>
                                         <SearchIcon />

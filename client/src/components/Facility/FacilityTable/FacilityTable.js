@@ -388,15 +388,7 @@ const FacilityTable = ({
                                             <Typography>No Data Matched</Typography>
                                         </TableCell>
                                     </TableRow>
-                                    {emptyRows > 0 && (
-                                        <TableRow
-                                            style={{
-                                                height: 50 * emptyRows,
-                                            }}
-                                        >
-                                            <TableCell colSpan={6} />
-                                        </TableRow>
-                                    )}
+
                                 </>
                                 : <>
                                     {stableSort(

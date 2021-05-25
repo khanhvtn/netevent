@@ -41,11 +41,11 @@ const FacilityFilter = ({
                     <FormControl size="small" fullWidth variant="outlined">
                         <InputLabel id="statusFilterLabel">Status</InputLabel>
                         <Select
-                            labelId="statusFilterLabel"
                             id="statusFiler"
+                            label="Status"
+                            labelId="statusFilterLabel"
                             value={statusFilter}
                             onChange={handleFilterChange}
-                            label="Status"
                             inputProps={{
                                 name: 'statusFilter',
                             }}
@@ -60,14 +60,14 @@ const FacilityFilter = ({
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <Grid container justify="space-around">
                             <KeyboardDatePicker
-                                inputVariant="outlined"
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="createdFrom"
                                 label="Created From"
-                                format="MM/DD/YYYY"
                                 value={createdFrom}
+                                size="small"
+                                margin="normal"
+                                format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
@@ -79,14 +79,14 @@ const FacilityFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                inputVariant="outlined"
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="createdTo"
                                 label="Created To"
-                                format="MM/DD/YYYY"
                                 value={createdTo}
+                                size="small"
+                                margin="normal"
+                                format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
@@ -98,13 +98,13 @@ const FacilityFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                inputVariant="outlined"
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="updatedFrom"
                                 label="Updated From"
+                                size="small"
+                                margin="normal"
                                 format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 value={updatedFrom}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
@@ -117,13 +117,13 @@ const FacilityFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                inputVariant="outlined"
-                                size="small"
                                 fullWidth
-                                margin="normal"
                                 id="updatedTo"
                                 label="Updated To"
+                                size="small"
+                                margin="normal"
                                 format="MM/DD/YYYY"
+                                inputVariant="outlined"
                                 value={updatedTo}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({

@@ -7,6 +7,7 @@ import {
     InputBase,
     IconButton,
     Grid,
+    Tooltip,
 } from '@material-ui/core';
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
@@ -337,12 +338,14 @@ const EventType = () => {
                                     />
                                 </div>
                                 <div className={css.grow} />
-                                <IconButton
-                                    color="inherit"
-                                    onClick={handleToggleFilter}
-                                >
-                                    <FilterList />
-                                </IconButton>
+                                <Tooltip title="Filter">
+                                    <IconButton
+                                        color="inherit"
+                                        onClick={handleToggleFilter}
+                                    >
+                                        <FilterList />
+                                    </IconButton>
+                                </Tooltip>
                             </Toolbar>
                             {/* Facility Table */}
                             <DataTable
@@ -360,7 +363,7 @@ const EventType = () => {
                                 createSuccess={createSuccess}
                                 deleteSuccess={deleteSuccess}
                                 updateSuccess={updateSuccess}
-                                tableName="Event Type List"
+                                tableName="List Of Event Types"
                                 headCells={[
                                     {
                                         id: 'name',
