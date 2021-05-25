@@ -46,7 +46,7 @@ const CreateEventInputGroup = ({
                     disabled={eventIsLoading}
                     error={errors?.eventName ? true : false}
                     helperText={errors?.eventName ? errors?.eventName : ''}
-                    size="normal"
+                    size="medium"
                     type="text"
                     variant="outlined"
                     fullWidth
@@ -122,7 +122,7 @@ const CreateEventInputGroup = ({
                             helperText={
                                 errors?.eventTypeId ? errors?.eventTypeId : ''
                             }
-                            size="normal"
+                            size="medium"
                             {...params}
                             label="Event Type"
                             variant="outlined"
@@ -156,7 +156,7 @@ const CreateEventInputGroup = ({
                         <TextField
                             error={errors?.tags ? true : false}
                             helperText={errors?.tags ? errors?.tags : ''}
-                            size="normal"
+                            size="medium"
                             {...params}
                             variant="outlined"
                             label="Tags"
@@ -170,7 +170,7 @@ const CreateEventInputGroup = ({
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                 <FormControl
                     disabled={eventIsLoading}
-                    size="normal"
+                    size="medium"
                     variant="outlined"
                     fullWidth
                     error={errors?.language ? true : false}
@@ -202,7 +202,7 @@ const CreateEventInputGroup = ({
                     disabled={eventIsLoading}
                     error={errors?.mode ? true : false}
                     helperText={errors?.mode ? errors?.mode : ''}
-                    size="normal"
+                    size="medium"
                     type="text"
                     variant="outlined"
                     fullWidth
@@ -220,7 +220,7 @@ const CreateEventInputGroup = ({
                     helperText={
                         errors?.accommodation ? errors?.accommodation : ''
                     }
-                    size="normal"
+                    size="medium"
                     type="text"
                     variant="outlined"
                     fullWidth
@@ -238,7 +238,7 @@ const CreateEventInputGroup = ({
                     helperText={
                         errors?.maxParticipants ? errors?.maxParticipants : ''
                     }
-                    size="normal"
+                    size="medium"
                     variant="outlined"
                     fullWidth
                     label="Max Participants"
@@ -265,7 +265,7 @@ const CreateEventInputGroup = ({
                     disabled={eventIsLoading}
                     error={errors?.budget ? true : false}
                     helperText={errors?.budget ? errors?.budget : ''}
-                    size="normal"
+                    size="medium"
                     variant="outlined"
                     fullWidth
                     label="Budget"
@@ -301,7 +301,7 @@ const CreateEventInputGroup = ({
                         error={errors?.startDate ? true : false}
                         helperText={errors?.startDate ? errors?.startDate : ''}
                         inputVariant="outlined"
-                        size="normal"
+                        size="medium"
                         fullWidth
                         id="startDate"
                         label="Start Date"
@@ -341,7 +341,7 @@ const CreateEventInputGroup = ({
                                 : undefined
                         }
                         inputVariant="outlined"
-                        size="normal"
+                        size="medium"
                         fullWidth
                         id="endDate"
                         label="End Date"
@@ -390,7 +390,7 @@ const CreateEventInputGroup = ({
                                 : ''
                         }
                         inputVariant="outlined"
-                        size="normal"
+                        size="medium"
                         fullWidth
                         id="registrationCloseDate"
                         label="Registration Close Date"
@@ -416,7 +416,7 @@ const CreateEventInputGroup = ({
                     disabled={eventIsLoading}
                     error={errors?.location ? true : false}
                     helperText={errors?.location ? errors?.location : ''}
-                    size="normal"
+                    size="medium"
                     type="text"
                     variant="outlined"
                     fullWidth

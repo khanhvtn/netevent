@@ -18,7 +18,9 @@ chai.use(chaiHttp);
 
 //Testing block for facility
 describe('Facilities', () => {
-    beforeEach((done) => { //Before each test we empty the database
+    
+    //Before each test we empty the database
+    beforeEach((done) => {
         Facility.remove({}, (err) => {
             done();
         });

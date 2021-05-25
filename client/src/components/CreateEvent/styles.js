@@ -41,7 +41,6 @@ export default makeStyles((theme) => ({
     },
     clearAllButton: {
         textTransform: "none",
-        textDecoration: 'underline',
         fontWeight: 'bold'
     },
 }));
