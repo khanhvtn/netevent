@@ -64,7 +64,7 @@ export default function userReducers(state = initialState, action) {
             };
         case FETCH_CURRENT_USER:
             return {
-                ...state, user: action.payload 
+                ...state, user: action.payload
             }
 
         // SNACKBAR

@@ -55,9 +55,8 @@ const roleActions = {
 };
 
 const defaultActions = [
-
     {
-        title: "Switch Role",
+        title: 'Switch Role',
         icon: ReplayIcon,
         href: 'pickrole'
     },
@@ -66,8 +65,6 @@ const defaultActions = [
         icon: LogOutIcon,
         href: 'logout',
     },
-
-   
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
@@ -162,7 +159,7 @@ DashboardSidebar.propTypes = {
 };
 
 DashboardSidebar.defaultProps = {
-    onMobileClose: () => {},
+    onMobileClose: () => { },
     openMobile: false,
 };
 

@@ -3,7 +3,7 @@ export default makeStyles((theme) => ({
     grow: {
         flexGrow: 1,
     },
-    paper: { 
+    paper: {
         margin: '18px 80px',
         [theme.breakpoints.down('md')]: {
             margin: '20px',

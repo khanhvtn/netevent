@@ -17,11 +17,11 @@ export default makeStyles((theme) => ({
     handleFilterButton: {
         textTransform: "none"
     },
-    handleClearButton:{
+    handleClearButton: {
         textTransform: "none",
         textDecoration: 'underline',
     },
-    filterTitle:{
+    filterTitle: {
         padding: '16px 0',
         backgroundColor: theme.palette.background.default
     }

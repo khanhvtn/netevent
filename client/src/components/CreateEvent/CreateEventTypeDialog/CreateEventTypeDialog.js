@@ -63,11 +63,7 @@ const CreateEventTypeDialog = ({
                     onClick={handleCreateEventType}
                     color="primary"
                 >
-                    {eventTypeIsLoading ? (
-                        <CircularProgress size={25} color="inherit" />
-                    ) : (
-                        'Create'
-                    )}
+                    {eventTypeIsLoading ? <CircularProgress size={25} color="inherit" /> : 'Create'}
                 </Button>
             </DialogActions>
         </Dialog>

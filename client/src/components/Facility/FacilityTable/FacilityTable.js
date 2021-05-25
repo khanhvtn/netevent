@@ -388,7 +388,7 @@ const FacilityTable = ({
                                             <Typography>No Data Matched</Typography>
                                         </TableCell>
                                     </TableRow>
-                                    
+
                                 </>
                                 : <>
                                     {stableSort(

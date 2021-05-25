@@ -226,11 +226,7 @@ const TaskDialog = ({
                         onClick={handleDelete}
                         color="secondary"
                     >
-                        {isLoading ? (
-                            <CircularProgress size={25} color="inherit" />
-                        ) : (
-                                'Delete'
-                            )}
+                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Delete'}
                     </Button>
                 </DialogActions>
             </Dialog>

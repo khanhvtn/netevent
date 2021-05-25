@@ -28,15 +28,15 @@ export default makeStyles(() => ({
     errorPasswordText: {
         color: "red",
         fontSize: 14
-    }, 
-    errorDrop: { width: '90%', margin: '0 auto' },
-
-    info : {
+    },
+    errorDrop: {
+        width: '90%',
+        margin: '0 auto'
+    },
+    info: {
         textAlign: "center"
     },
-
     contentWrapper: {
         marginTop: '20%'
     }
-
 }));

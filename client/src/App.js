@@ -40,7 +40,6 @@ const App = () => {
                         <Route exact path="/" component={Login} />
                         <Route exact path="/login" component={Login} />
                         <PrivateRoute exact path="/pickrole" component={PickRole} />
-                        {/* <Route exact path="/404" component={Error} /> */}
                         <Route
                             exact
                             path="/confirmation/:id"
