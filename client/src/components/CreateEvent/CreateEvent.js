@@ -229,7 +229,7 @@ const CreateEvent = () => {
                 ? eventTypes.find(
                       (eventType) => eventType.name === eventTypeTarget
                   )._id
-                : '',
+                : null,
             mode,
             location,
             accommodation,
