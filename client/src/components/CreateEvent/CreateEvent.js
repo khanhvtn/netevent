@@ -227,8 +227,8 @@ const CreateEvent = () => {
             language,
             eventTypeId: eventTypeTarget
                 ? eventTypes.find(
-                    (eventType) => eventType.name === eventTypeTarget
-                )._id
+                      (eventType) => eventType.name === eventTypeTarget
+                  )._id
                 : '',
             mode,
             location,
@@ -292,6 +292,7 @@ const CreateEvent = () => {
         setBorrowFacilityState(initialBorrowFacilityState);
         setTaskState(initialTaskState);
         setSelectedFacility([]);
+        setSelectedTask([]);
         tagList = [];
         fileInput.current.value = '';
     };
@@ -456,6 +457,7 @@ const CreateEvent = () => {
 
     const handleCreateAndUpdateTask = () => {
         const { name, email, type, startTime, endTime } = taskState;
+        console.log(type);
         let listErrors = {};
         if (!name) {
             listErrors = {
@@ -571,7 +573,9 @@ const CreateEvent = () => {
                     direction="column"
                 >
                     <Grid item>
-                        <Typography style={{ fontWeight: 'bold' }} variant="h3">Event Form</Typography>
+                        <Typography style={{ fontWeight: 'bold' }} variant="h3">
+                            Event Form
+                        </Typography>
                     </Grid>
                     <Grid
                         container
@@ -638,7 +642,7 @@ const CreateEvent = () => {
                             className={css.btnChangePhoto}
                             htmlFor="change-image"
                         >
-                            {state.image ?
+                            {state.image ? (
                                 <Button
                                     disabled={eventIsLoading}
                                     startIcon={<AddAPhoto />}
@@ -649,19 +653,21 @@ const CreateEvent = () => {
                                 >
                                     Change Image
                                 </Button>
-                                :
+                            ) : (
                                 <Button
                                     disabled={eventIsLoading}
                                     startIcon={<AddAPhoto />}
-                                    style={{ backgroundColor: 'transparent', textTransform: 'none' }}
+                                    style={{
+                                        backgroundColor: 'transparent',
+                                        textTransform: 'none',
+                                    }}
                                     component="span"
                                 >
                                     Choose Image
                                 </Button>
-                            }
+                            )}
                         </label>
                     </Grid>
-
 
                     <Grid
                         container
@@ -686,8 +692,21 @@ const CreateEvent = () => {
                             updateTagList={handleUpdateTaglist}
                         />
 
-                        <Grid style={{ marginTop: 36 }} item md={12} lg={12} xl={12} sm={12} xs={12}>
-                            <Typography style={{ fontWeight: 'bold' }} variant="h6">Task & Facility</Typography>
+                        <Grid
+                            style={{ marginTop: 36 }}
+                            item
+                            md={12}
+                            lg={12}
+                            xl={12}
+                            sm={12}
+                            xs={12}
+                        >
+                            <Typography
+                                style={{ fontWeight: 'bold' }}
+                                variant="h6"
+                            >
+                                Task & Facility
+                            </Typography>
                             <Divider />
                         </Grid>
 
@@ -729,7 +748,15 @@ const CreateEvent = () => {
                         </Grid>
 
                         {/* Pick Facility Table */}
-                        <Grid style={{ marginTop: 24 }} item md={12} lg={12} xl={12} sm={12} xs={12}>
+                        <Grid
+                            style={{ marginTop: 24 }}
+                            item
+                            md={12}
+                            lg={12}
+                            xl={12}
+                            sm={12}
+                            xs={12}
+                        >
                             <Paper className={css.paper1} elevation={3}>
                                 <DataTable
                                     disabled={eventIsLoading}
@@ -792,8 +819,21 @@ const CreateEvent = () => {
                             </FormControl>
                         </Grid>
 
-                        <Grid style={{ marginTop: 24 }} item md={12} lg={12} xl={12} sm={12} xs={12}>
-                            <Typography style={{ fontWeight: 'bold' }} variant="h6">Event Description</Typography>
+                        <Grid
+                            style={{ marginTop: 24 }}
+                            item
+                            md={12}
+                            lg={12}
+                            xl={12}
+                            sm={12}
+                            xs={12}
+                        >
+                            <Typography
+                                style={{ fontWeight: 'bold' }}
+                                variant="h6"
+                            >
+                                Event Description
+                            </Typography>
                             <Divider />
                         </Grid>
 
@@ -841,7 +881,10 @@ const CreateEvent = () => {
                             <Grid item>
                                 <Button
                                     disabled={eventIsLoading}
-                                    style={{ marginLeft: '20px', textTransform: 'none' }}
+                                    style={{
+                                        marginLeft: '20px',
+                                        textTransform: 'none',
+                                    }}
                                     size="large"
                                     onClick={handleCreateEvent}
                                     variant="contained"
@@ -853,8 +896,8 @@ const CreateEvent = () => {
                                             color="inherit"
                                         />
                                     ) : (
-                                            'Create Event'
-                                        )}
+                                        'Create Event'
+                                    )}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -906,17 +949,17 @@ const CreateEvent = () => {
                      */
                     borrowFacilityState.isBorrowFacilityCreateMode
                         ? facilities
-                            .filter((facility) => facility.status === true)
-                            .filter((facility) => {
-                                const facilityNames = borrowFacilityState.borrowFacilities.map(
-                                    (borrowFacility) => borrowFacility.name
-                                );
+                              .filter((facility) => facility.status === true)
+                              .filter((facility) => {
+                                  const facilityNames = borrowFacilityState.borrowFacilities.map(
+                                      (borrowFacility) => borrowFacility.name
+                                  );
 
-                                return !facilityNames.includes(facility.name);
-                            })
+                                  return !facilityNames.includes(facility.name);
+                              })
                         : facilities.filter(
-                            (facility) => facility.status === true
-                        )
+                              (facility) => facility.status === true
+                          )
                 }
             />
             {/* Borrow Facility Dialog */}
@@ -952,21 +995,21 @@ const CreateEvent = () => {
                      */
                     taskState.isTaskCreateMode
                         ? users
-                            .filter((targetUser) =>
-                                targetUser.role.includes('4')
-                            )
-                            .filter((targetUser) => {
-                                const listUserEmails = taskState.tasks.map(
-                                    (task) => task.email
-                                );
+                              .filter((targetUser) =>
+                                  targetUser.role.includes('4')
+                              )
+                              .filter((targetUser) => {
+                                  const listUserEmails = taskState.tasks.map(
+                                      (task) => task.email
+                                  );
 
-                                return !listUserEmails.includes(
-                                    targetUser.email
-                                );
-                            })
+                                  return !listUserEmails.includes(
+                                      targetUser.email
+                                  );
+                              })
                         : users.filter(
-                            (targetUser) => targetUser.email !== user.email
-                        )
+                              (targetUser) => targetUser.email !== user.email
+                          )
                 }
             />
             {/* Notification */}

@@ -13,6 +13,7 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    FormHelperText,
 } from '@material-ui/core';
 import MomentUtils from '@date-io/moment';
 import {
@@ -97,7 +98,12 @@ const TaskDialog = ({
                             />
                         )}
                     />
-                    <FormControl margin="normal" variant="outlined" fullWidth>
+                    <FormControl
+                        margin="normal"
+                        variant="outlined"
+                        fullWidth
+                        error={errors?.type ? true : false}
+                    >
                         <InputLabel id="select-label-type">Type</InputLabel>
                         <Select
                             labelId="select-label-type"
@@ -114,6 +120,9 @@ const TaskDialog = ({
                             <MenuItem value={'Assignee'}>Assignee</MenuItem>
                             <MenuItem value={'Presenter'}>Presenter</MenuItem>
                         </Select>
+                        <FormHelperText>
+                            {errors?.type ? errors.type : ''}
+                        </FormHelperText>
                     </FormControl>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <KeyboardDateTimePicker
@@ -192,8 +201,8 @@ const TaskDialog = ({
                         ) : isCreateMode ? (
                             'Create'
                         ) : (
-                                    'Update'
-                                )}
+                            'Update'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -226,7 +235,11 @@ const TaskDialog = ({
                         onClick={handleDelete}
                         color="secondary"
                     >
-                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Delete'}
+                        {isLoading ? (
+                            <CircularProgress size={25} color="inherit" />
+                        ) : (
+                            'Delete'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>
