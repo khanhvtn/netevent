@@ -99,7 +99,7 @@ const eventSchema = mongoose.Schema(
         },
         image: {
             type: String,
-            // required: [true, 'Please upload image'],
+            required: [true, 'Please upload image'],
         },
         reviewerId: {
             type: mongoose.Schema.Types.ObjectId,
