@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema(
         isConfirmed: {
             type: Boolean,
             default: false,
-            required: true
+        
         }
     },
     { timestamps: true }
