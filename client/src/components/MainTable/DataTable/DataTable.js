@@ -177,7 +177,14 @@ const EnhancedTableToolbar = (props) => {
                 <Tooltip title="Create Facility">
                     <Button
                         disabled={
-                            !constrainRangeDate ? true : disabled ? true : false
+                            constrainRangeDate === undefined ||
+                            disabled === undefined
+                                ? false
+                                : !constrainRangeDate
+                                ? true
+                                : disabled
+                                ? true
+                                : false
                         }
                         onClick={handleToggleDialogCreateAndUpdate}
                         endIcon={<Create />}
@@ -244,7 +251,6 @@ const DataTable = ({
     constrainRangeDate,
 }) => {
     const css = useStyles();
-
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
 
