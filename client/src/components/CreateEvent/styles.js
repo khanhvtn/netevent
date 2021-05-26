@@ -3,22 +3,22 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
     formControl: { margin: theme.spacing(1) },
     paper: {
-        margin: '18px 180px',
-        padding: '18px 180px',
-        // backgroundColor: theme.palette.background.default,
-        [theme.breakpoints.down('lg')]: {
-            margin: '18px 80px',
-            padding: '18px 80px'
-        },
-        [theme.breakpoints.down('md')]: {
-            margin: '18px',
-            padding: '18px'
-        },
+        margin: '20px',
+        padding: '20px',
+        // // backgroundColor: theme.palette.background.default,
+        // [theme.breakpoints.down('lg')]: {
+        //     margin: '18px 80px',
+        //     padding: '18px 80px'
+        // },
+        // [theme.breakpoints.down('md')]: {
+        //     margin: '18px',
+        //     padding: '18px'
+        // },
     },
     paper1: {
         width: '100%',
         borderStartStartRadius: 16,
-        borderTopRightRadius: 16
+        borderTopRightRadius: 16,
     },
     inputImage: {
         display: 'none',
@@ -30,7 +30,7 @@ export default makeStyles((theme) => ({
         marginRight: '12px',
         [theme.breakpoints.down('lg')]: {
             marginLeft: 0,
-            marginRight: 0
+            marginRight: 0,
         },
     },
     btnRemovePhoto: {
@@ -40,7 +40,7 @@ export default makeStyles((theme) => ({
         marginLeft: '8px',
     },
     clearAllButton: {
-        textTransform: "none",
-        fontWeight: 'bold'
+        textTransform: 'none',
+        fontWeight: 'bold',
     },
 }));

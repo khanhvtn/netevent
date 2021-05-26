@@ -1,0 +1,23 @@
+version: '3'
+services:
+    server-app:
+        container_name: server
+        build:
+            context: .
+            dockerfile: ./server/Dockerfile
+        ports:
+            - '5000:5000'
+        command: npm run dev
+        volumes:
+            - ./server:/app
+
+    client-app:
+        container_name: client
+        build:
+            context: .
+            dockerfile: ./client/Dockerfile
+        ports:
+            - '3000:3000'
+        command: npm start
+        volumes:
+            - ./client:/app

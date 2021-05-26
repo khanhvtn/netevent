@@ -209,15 +209,17 @@ const TaskDialog = ({
 
             {/* Dialog Confirm Delete */}
             <Dialog
+                fullWidth
                 TransitionComponent={Transition}
+                className={css.dialogDeleteTask}
                 open={openDeleteDialog}
                 onClose={handleToggleDialogDelete}
                 aria-labelledby="delete-dialog"
-                aria-describedby="delete-dialog-description"
+                aria-describedby="delete-dialog-task"
             >
                 <DialogTitle id="delete-dialog">{'Warning!!!'}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="delete-dialog-description">
+                    <DialogContentText id="delete-dialog-task">
                         Are you sure with your action ?
                     </DialogContentText>
                 </DialogContent>

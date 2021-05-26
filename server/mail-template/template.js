@@ -1,6 +1,6 @@
+const host = process.env.DEFAULT_HOST || 'http://localhost:3000';
 const html = (email, id) => {
-    return (
-        `
+    return `
         <!doctype html>
 <html>
   <head>
@@ -361,7 +361,7 @@ const html = (email, id) => {
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                   <tbody>
                                     <tr>
-                                      <td> <a href="http://localhost:3000/confirmation/${id}" target="_blank">Confirm</a> </td>
+                                      <td> <a href="${host}/confirmation/${id}" target="_blank">Confirm</a> </td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -400,10 +400,9 @@ const html = (email, id) => {
     </table>
   </body>
 </html>
-        `
-    )
-}
+        `;
+};
 
 module.exports = {
-  html
-}
+    html,
+};

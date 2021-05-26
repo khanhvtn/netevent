@@ -10,7 +10,6 @@ import {
     Chip,
     FormHelperText,
     Typography,
-    Divider,
 } from '@material-ui/core';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 
@@ -37,8 +36,9 @@ const CreateEventInputGroup = ({
     return (
         <>
             <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
-                <Typography style={{ fontWeight: 'bold' }} variant="h6">Event Details</Typography>
-                <Divider />
+                <Typography style={{ fontWeight: 'bold' }} variant="h6">
+                    Event Details
+                </Typography>
             </Grid>
             {/* Event Name */}
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
@@ -287,9 +287,18 @@ const CreateEventInputGroup = ({
                 />
             </Grid>
 
-            <Grid style={{ marginTop: 36 }} item md={12} lg={12} xl={12} sm={12} xs={12}>
-                <Typography style={{ fontWeight: 'bold' }} variant="h6">Time & Location</Typography>
-                <Divider style={{ height: 2 }} />
+            <Grid
+                style={{ marginTop: 36 }}
+                item
+                md={12}
+                lg={12}
+                xl={12}
+                sm={12}
+                xs={12}
+            >
+                <Typography style={{ fontWeight: 'bold' }} variant="h6">
+                    Time & Location
+                </Typography>
             </Grid>
 
             {/* Start Date  */}
@@ -332,8 +341,8 @@ const CreateEventInputGroup = ({
                             !state.startDate
                                 ? true
                                 : eventIsLoading
-                                    ? true
-                                    : false
+                                ? true
+                                : false
                         }
                         minDate={
                             state.startDate
@@ -368,10 +377,10 @@ const CreateEventInputGroup = ({
                             !state.startDate
                                 ? true
                                 : !state.endDate
-                                    ? true
-                                    : eventIsLoading
-                                        ? true
-                                        : false
+                                ? true
+                                : eventIsLoading
+                                ? true
+                                : false
                         }
                         minDate={
                             state.startDate

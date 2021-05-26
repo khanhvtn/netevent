@@ -7,13 +7,19 @@ export default makeStyles((theme) => ({
     dialogActions: {
         marginRight: 16,
         marginBottom: 8,
-        marginTop: 8
+        marginTop: 8,
     },
 
     dialogCreateUpdateFac: {
         minWidth: 500,
         [theme.breakpoints.down('sm')]: {
             minWidth: 0,
-        }
+        },
+    },
+    dialogDeleteTask: {
+        minWidth: 500,
+        [theme.breakpoints.down('sm')]: {
+            minWidth: 0,
+        },
     },
 }));

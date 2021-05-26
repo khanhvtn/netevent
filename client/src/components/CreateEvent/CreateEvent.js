@@ -9,7 +9,6 @@ import {
     FormControl,
     FormHelperText,
     CircularProgress,
-    Divider,
 } from '@material-ui/core';
 import { AddAPhoto, DeleteForever } from '@material-ui/icons';
 import blankPhoto from '../../images/blankPhoto.png';
@@ -278,6 +277,7 @@ const CreateEvent = () => {
                 }
             ),
         };
+        console.log(templateRequest);
         dispatch(createEvent(templateRequest));
     };
 
@@ -692,8 +692,9 @@ const CreateEvent = () => {
                             updateTagList={handleUpdateTaglist}
                         />
 
+                        {/* Tasks Table */}
                         <Grid
-                            style={{ marginTop: 36 }}
+                            style={{ marginTop: 24 }}
                             item
                             md={12}
                             lg={12}
@@ -701,17 +702,6 @@ const CreateEvent = () => {
                             sm={12}
                             xs={12}
                         >
-                            <Typography
-                                style={{ fontWeight: 'bold' }}
-                                variant="h6"
-                            >
-                                Task & Facility
-                            </Typography>
-                            <Divider />
-                        </Grid>
-
-                        {/* Tasks Table */}
-                        <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
                             <Paper className={css.paper1} elevation={3}>
                                 <DataTable
                                     constrainRangeDate={
@@ -834,7 +824,6 @@ const CreateEvent = () => {
                             >
                                 Event Description
                             </Typography>
-                            <Divider />
                         </Grid>
 
                         {/* Description */}

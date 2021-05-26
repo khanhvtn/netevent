@@ -2,43 +2,42 @@ const { Event, Task, FacilityHistory, Facility } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
 
-
 /**
  *  =====================================
  *          EVENT CONTROLLER
  *  =====================================
  */
 
-
 /**
-* @decsription Create new event with following request
-* @method POST
-* @route /api/event/create
-* 
-* @version 1.0
-*/
+ * @decsription Create new event with following request
+ * @method POST
+ * @route /api/event/create
+ *
+ * @version 1.0
+ */
 const createEvent = async (req, res, next) => {
+    let errors = {};
     try {
         const { tasks, borrowFacilities } = req.body;
         let event = new Event(req.body);
-
-        //validate user request fields.
-        await event.validate();
-
         //validate tasks list
         if (Object.keys(tasks).length === 0) {
-            return next(
-                new CustomError(500, { taskListId: 'Task cannot be blanked' })
-            );
+            errors = { ...errors, taskListId: 'Task cannot be blanked' };
         }
 
         //validate borrow facilities list
         if (Object.keys(borrowFacilities).length === 0) {
-            return next(
-                new CustomError(500, {
-                    facilityHistoryListId: 'Borrow Facility cannot be blanked',
-                })
-            );
+            errors = {
+                ...errors,
+                facilityHistoryListId: 'Borrow Facility cannot be blanked',
+            };
+        }
+
+        //validate user request fields.
+        await event.validate();
+
+        if (Object.keys(errors).length !== 0) {
+            return next(new CustomError(500, errors));
         }
 
         //create tasks to get task list ids
@@ -123,10 +122,8 @@ const createEvent = async (req, res, next) => {
         );
 
         return cusResponse(res, 200, newEvent, null);
-        
     } catch (error) {
         if (error.name == 'ValidationError') {
-            let errors = {};
             for (field in error.errors) {
                 errors = { ...errors, [field]: error.errors[field].message };
             }
@@ -136,14 +133,13 @@ const createEvent = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Get, search and filter events (included paging)
-* @method GET 
-* @route /api/event/filter
-* 
-* @version 1.0
-*/
+ * @decsription Get, search and filter events (included paging)
+ * @method GET
+ * @route /api/event/filter
+ *
+ * @version 1.0
+ */
 const filter = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
@@ -293,14 +289,13 @@ const filter = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Delete events from the request list of eventName
-* @method DELETE 
-* @route /api/event/delete
-* 
-* @version 1.0
-*/
+ * @decsription Delete events from the request list of eventName
+ * @method DELETE
+ * @route /api/event/delete
+ *
+ * @version 1.0
+ */
 const deleteEvent = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
@@ -331,14 +326,13 @@ const deleteEvent = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Update event by new request update
-* @method PATCH 
-* @route /api/event/filter
-* 
-* @version 1.0
-*/
+ * @decsription Update event by new request update
+ * @method PATCH
+ * @route /api/event/filter
+ *
+ * @version 1.0
+ */
 const updateEvent = async (req, res, next) => {
     try {
         const userReq = req.body;
@@ -361,14 +355,13 @@ const updateEvent = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Get all events
-* @method GET
-* @route /api/event/all
-* 
-* @version 1.0
-*/
+ * @decsription Get all events
+ * @method GET
+ * @route /api/event/all
+ *
+ * @version 1.0
+ */
 const getAllEvent = async (req, res, next) => {
     try {
         const events = await Event.find({})
@@ -381,7 +374,6 @@ const getAllEvent = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
-
 
 module.exports = {
     createEvent,
