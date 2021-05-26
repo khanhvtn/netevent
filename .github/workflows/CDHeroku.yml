@@ -29,7 +29,7 @@ jobs:
               with:
                   ref: feature/createEvent
             - name: Update Heroku
-              run: sudo apt update && sudo apt install heroku
+              run: sudo apt update && sudo snap install --classic heroku
 
             # Runs a single command using the runners shell
             - name: Login to Heroku Container registry
