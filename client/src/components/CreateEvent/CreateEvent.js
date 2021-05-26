@@ -884,6 +884,7 @@ const CreateEvent = () => {
                                     style={{
                                         marginLeft: '20px',
                                         textTransform: 'none',
+                                        width: '140px',
                                     }}
                                     size="large"
                                     onClick={handleCreateEvent}
