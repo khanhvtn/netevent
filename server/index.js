@@ -33,7 +33,9 @@ app.use(
 app.use(cookieParser());
 
 //routes
-app.get('/', (req, res) => {
+
+//test route
+app.get('/test', (req, res) => {
     res.status(200).json({ message: 'success' });
 });
 app.use('/api/user', userRoutes);
