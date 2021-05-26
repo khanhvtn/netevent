@@ -24,7 +24,12 @@ const cookieParser = require('cookie-parser');
 //middlewares
 app.use(express.json({ limit: '30mb' }));
 app.use(express.urlencoded({ extended: true, limit: '30mb' }));
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(
+    cors({
+        credentials: true,
+        origin: process.env.DEFAULT_HOST || 'http://localhost:3000',
+    })
+);
 app.use(cookieParser());
 
 //routes
