@@ -26,7 +26,7 @@ jobs:
               with:
                   ref: feature/createEvent
 
-            # Login to Heroku
+            # Runs a single command using the runners shell
             - name: Login to Heroku Container registry
               env:
                   HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
