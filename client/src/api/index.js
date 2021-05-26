@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const AXIOS = axios.create({
-    baseURL: `http://localhost:5000/api`,
+    // baseURL: `http://localhost:5000/api`,
+    baseURL: `/api`,
     withCredentials: true,
 });
 
@@ -9,9 +10,9 @@ const AXIOS = axios.create({
 export const userCheckingAPI = () => AXIOS.get(`/user/userCheck`);
 export const userLoginAPI = (userReq) => AXIOS.post(`/user/login`, userReq);
 export const userLogoutAPI = () => AXIOS.get(`/user/logout`);
-export const fetchCurrentUser = (userReq) => AXIOS.post(`/user/fetchCurrent`, userReq)
-export const createUserAPI = (newUser) =>
-    AXIOS.post(`/user/create`, newUser);
+export const fetchCurrentUser = (userReq) =>
+    AXIOS.post(`/user/fetchCurrent`, userReq);
+export const createUserAPI = (newUser) => AXIOS.post(`/user/create`, newUser);
 export const deleteUsersAPI = (userReq) =>
     AXIOS.delete(`/user/delete`, { data: userReq });
 export const updateUserAPI = (newUpdateUser) =>
@@ -27,8 +28,9 @@ export const getUsersAPI = (
     updatedFrom,
     updatedTo
 ) =>
-    AXIOS.get(`/user/filter?search=${search}&take=${take}&page=${page}&role=${role}&createdFrom=${createdFrom}&createdTo=${createdTo}&updatedFrom=${updatedFrom}&updatedTo=${updatedTo}`);
-
+    AXIOS.get(
+        `/user/filter?search=${search}&take=${take}&page=${page}&role=${role}&createdFrom=${createdFrom}&createdTo=${createdTo}&updatedFrom=${updatedFrom}&updatedTo=${updatedTo}`
+    );
 
 // Link API
 export const confirmUser = (id, password) =>
