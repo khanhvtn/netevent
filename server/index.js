@@ -38,12 +38,23 @@ app.use('/api/event', eventRoutes);
 app.use('/api/task', taskRoutes);
 app.use('/api/facilityHistory', facilityHistoryRoutes);
 
+// Serve static access an production mode
+if (process.env.NODE_ENV === 'production') {
+    // Have Node serve the files for our built React app
+    app.use(express.static(path.resolve(__dirname, '../client/build')));
+
+    // All other GET requests not handled before will return our React app
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+    });
+}
+
 //error handler
 app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 // const MONGO_URI = `mongodb+srv://khanhvtn93:khanhvtn93123@cluster0.zjom9.mongodb.net/netEvent?authSource=admin&replicaSet=atlas-l3xb7s-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true`;
-const MONGO_URI = `mongodb://localhost:27017`; 
+const MONGO_URI = `mongodb://localhost:27017`;
 mongoose.connect(
     MONGO_URI,
     {
@@ -64,4 +75,3 @@ mongoose.connect(
 );
 
 module.exports = app;
-

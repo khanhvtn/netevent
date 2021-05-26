@@ -99,7 +99,7 @@ const eventSchema = mongoose.Schema(
         },
         image: {
             type: String,
-            // required: [true, 'Please upload image'],
+            required: [true, 'Please upload image'],
         },
         reviewerId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -113,22 +113,22 @@ const eventSchema = mongoose.Schema(
         taskListId: {
             type: [mongoose.Schema.Types.ObjectId],
             ref: 'Task',
-            // validate: {
-            //     validator: function (v) {
-            //         return v.lenght > 0;
-            //     },
-            //     message: () => `Task cannot be blanked'`,
-            // },
+            validate: {
+                validator: function (v) {
+                    return v.lenght > 0;
+                },
+                message: () => `Task cannot be blanked'`,
+            },
         },
         facilityHistoryListId: {
             type: [mongoose.Schema.Types.ObjectId],
             ref: 'FacilityHistory',
-            // validate: {
-            //     validator: function (v) {
-            //         return v.lenght > 0;
-            //     },
-            //     message: () => `Borrow Facility cannot be blanked'`,
-            // },
+            validate: {
+                validator: function (v) {
+                    return v.lenght > 0;
+                },
+                message: () => `Borrow Facility cannot be blanked'`,
+            },
         },
     },
     { timestamps: true }
