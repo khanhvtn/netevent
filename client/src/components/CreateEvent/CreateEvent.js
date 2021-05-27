@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 import {
     Grid,
     Typography,
-    CardMedia,
     Paper,
     Button,
     FormControl,
@@ -157,6 +156,22 @@ const CreateEvent = () => {
     const [selectedTask, setSelectedTask] = useState([]);
     const [taskState, setTaskState] = useState(initialTaskState);
 
+    // handle clear all fields
+    const handleClearFields = useCallback(() => {
+        setState(initialState);
+        setBorrowFacilityState(initialBorrowFacilityState);
+        setTaskState(initialTaskState);
+        setSelectedFacility([]);
+        setSelectedTask([]);
+        tagList = [];
+        fileInput.current.value = '';
+        //clear all error
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null,
+        });
+    }, [dispatch]);
+
     //useEffect for create event success
     useEffect(() => {
         if (createEventSuccess) {
@@ -169,7 +184,7 @@ const CreateEvent = () => {
             ...prevState,
             openCreateSnackBar: createEventSuccess,
         }));
-    }, [dispatch, createEventSuccess]);
+    }, [dispatch, createEventSuccess, handleClearFields]);
 
     //useEffect get status create event type
     useEffect(() => {
@@ -277,29 +292,12 @@ const CreateEvent = () => {
                 }
             ),
         };
-        console.log(templateRequest);
         dispatch(createEvent(templateRequest));
     };
 
     //handle update taglist
     const handleUpdateTaglist = (newTagList) => {
         tagList = newTagList;
-    };
-
-    // handle clear all fields
-    const handleClearFields = () => {
-        setState(initialState);
-        setBorrowFacilityState(initialBorrowFacilityState);
-        setTaskState(initialTaskState);
-        setSelectedFacility([]);
-        setSelectedTask([]);
-        tagList = [];
-        fileInput.current.value = '';
-        //clear all error
-        dispatch({
-            type: ERROR_CLEAR,
-            payload: null,
-        });
     };
 
     /* Borrow Facility */
