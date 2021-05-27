@@ -23,16 +23,6 @@ export default makeStyles((theme) => ({
     inputImage: {
         display: 'none',
     },
-    cardMedia: {
-        height: '345px',
-        width: '100%',
-        marginLeft: '12px',
-        marginRight: '12px',
-        [theme.breakpoints.down('lg')]: {
-            marginLeft: 0,
-            marginRight: 0,
-        },
-    },
     btnRemovePhoto: {
         marginRight: '8px',
     },

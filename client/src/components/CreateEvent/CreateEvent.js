@@ -594,11 +594,18 @@ const CreateEvent = () => {
                         xs={12}
                         style={{ margin: '20px 0' }}
                     >
-                        <CardMedia
-                            image={!state.image ? blankPhoto : state.image}
-                            className={css.cardMedia}
-                            title="Event image"
-                        />
+                        <div
+                            style={{
+                                width: '100%',
+                                height: '500px',
+                                backgroundImage: `url(${
+                                    !state.image ? blankPhoto : state.image
+                                })`,
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'center',
+                                backgroundSize: 'contain',
+                            }}
+                        ></div>
                         <FormControl error={errors?.image ? true : false}>
                             <FormHelperText>
                                 {errors?.image ? errors?.image : ''}
