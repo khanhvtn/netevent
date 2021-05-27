@@ -249,7 +249,9 @@ const CreateEventInputGroup = ({
                             ...prevState,
                             maxParticipants: value
                                 ? value
-                                : event.currentTarget.value,
+                                : event.currentTarget?.value
+                                ? event.currentTarget?.value
+                                : '',
                         }))
                     }
                     currencySymbol="🚹"
@@ -276,7 +278,11 @@ const CreateEventInputGroup = ({
                     onChange={(event, value) => {
                         setState((prevState) => ({
                             ...prevState,
-                            budget: value ? value : event.currentTarget.value,
+                            budget: value
+                                ? value
+                                : event.currentTarget?.value
+                                ? event.currentTarget?.value
+                                : '',
                         }));
                     }}
                     currencySymbol="VND"
