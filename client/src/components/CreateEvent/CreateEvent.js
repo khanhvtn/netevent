@@ -295,6 +295,11 @@ const CreateEvent = () => {
         setSelectedTask([]);
         tagList = [];
         fileInput.current.value = '';
+        //clear all error
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null,
+        });
     };
 
     /* Borrow Facility */
