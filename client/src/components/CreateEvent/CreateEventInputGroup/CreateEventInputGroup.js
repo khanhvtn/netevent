@@ -247,7 +247,7 @@ const CreateEventInputGroup = ({
                     onChange={(event, value) =>
                         setState((prevState) => ({
                             ...prevState,
-                            maxParticipants: value,
+                            maxParticipants: event.currentTarget.value,
                         }))
                     }
                     currencySymbol="🚹"
@@ -271,12 +271,12 @@ const CreateEventInputGroup = ({
                     label="Budget"
                     name="budget"
                     value={state.budget}
-                    onChange={(event, value) =>
+                    onChange={(event, value) => {
                         setState((prevState) => ({
                             ...prevState,
-                            budget: value,
-                        }))
-                    }
+                            budget: event.currentTarget.value,
+                        }));
+                    }}
                     currencySymbol="VND"
                     outputFormat="string"
                     decimalCharacter="."
