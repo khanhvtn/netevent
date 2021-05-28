@@ -322,7 +322,7 @@ const CreateEventInputGroup = ({
                         fullWidth
                         id="startDate"
                         label="Start Date"
-                        format="MM/DD/YYYY"
+                        format="DD/MM/YYYY, h:mm a"
                         value={state.startDate}
                         onChange={(date) => {
                             setState((prevState) => ({
@@ -362,7 +362,7 @@ const CreateEventInputGroup = ({
                         fullWidth
                         id="endDate"
                         label="End Date"
-                        format="MM/DD/YYYY"
+                        format="DD/MM/YYYY, h:mm a"
                         value={state.endDate}
                         onChange={(date) => {
                             setState((prevState) => ({
@@ -411,7 +411,7 @@ const CreateEventInputGroup = ({
                         fullWidth
                         id="registrationCloseDate"
                         label="Registration Close Date"
-                        format="MM/DD/YYYY"
+                        format="DD/MM/YYYY, h:mm a"
                         value={state.registrationCloseDate}
                         onChange={(date) => {
                             setState((prevState) => ({

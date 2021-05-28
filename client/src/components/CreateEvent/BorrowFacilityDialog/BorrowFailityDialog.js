@@ -83,6 +83,8 @@ const BorrowFacilityDialog = ({
                                     borrowDate: date?.toDate()
                                         ? date?.toDate()
                                         : null,
+                                    name: '',
+                                    returnDate: null,
                                 }));
                             }}
                             KeyboardButtonProps={{

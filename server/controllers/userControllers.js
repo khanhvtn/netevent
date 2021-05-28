@@ -13,12 +13,11 @@ const { html } = require('../mail-template/template');
  *  =====================================
  */
 
-
 /**
  * @decsription Authorize and login user
- * @method POST 
+ * @method POST
  * @route /api/user/login
- * 
+ *
  * @version 1.0
  */
 const login = async (req, res, next) => {
@@ -43,7 +42,9 @@ const login = async (req, res, next) => {
             existedUser.password
         );
         if (!result) {
-            return next(new CustomError(400, { password: 'Password is invalid' }));
+            return next(
+                new CustomError(400, { password: 'Password is invalid' })
+            );
         }
 
         //gen token
@@ -78,16 +79,14 @@ const login = async (req, res, next) => {
     }
 };
 
-
 /**
  * @decsription Checking and retủn user data if authorized
- * @method POST 
+ * @method POST
  * @route /api/user/fetchCurrent
- * 
+ *
  * @version 1.0
  */
 const fetchCurrentUser = async (req, res, next) => {
-
     try {
         const userData = req.body;
         const user = await User.findOne({ email: userData.email });
@@ -97,14 +96,13 @@ const fetchCurrentUser = async (req, res, next) => {
     } catch (error) {
         return next(new CustomError(500, { sysError: error.message }));
     }
-}
-
+};
 
 /**
  * @decsription Checking and return user data if authorized
- * @method GET 
+ * @method GET
  * @route /api/user/userCheck
- * 
+ *
  * @version 1.0
  */
 const userCheck = async (req, res, next) => {
@@ -116,12 +114,11 @@ const userCheck = async (req, res, next) => {
     }
 };
 
-
 /**
  * @decsription Checking and return user data if authorized
- * @method POST 
+ * @method POST
  * @route /api/user/userCheck
- * 
+ *
  * @version 1.0
  */
 const logout = async (req, res, next) => {
@@ -135,12 +132,11 @@ const logout = async (req, res, next) => {
     }
 };
 
-
 /**
  * @decsription Create and return new user for client
- * @method POST 
+ * @method POST
  * @route /api/user/create
- * 
+ *
  * @version 1.0
  */
 const createUser = async (req, res, next) => {
@@ -185,12 +181,11 @@ const createUser = async (req, res, next) => {
     }
 };
 
-
 /**
  * @decsription Get, search and filter users (included paging)
  * @method GET
  * @route /api/user/filter
- * 
+ *
  * @version 1.0
  */
 const filterUser = async (req, res, next) => {
@@ -267,8 +262,6 @@ const filterUser = async (req, res, next) => {
             };
         }
 
-
-
         /* 
         Add createdFrom filter
          */
@@ -323,9 +316,7 @@ const filterUser = async (req, res, next) => {
         Variable total user based on search and filter
          */
         const totalUsers = await User.find({
-            $or: [
-                { email: new RegExp(options.search, 'i') },
-            ],
+            $or: [{ email: new RegExp(options.search, 'i') }],
             role: options.role,
             createdAt: {
                 $gte: options.createdMinDate,
@@ -343,9 +334,7 @@ const filterUser = async (req, res, next) => {
 
         //return data to client
         const users = await User.find({
-            $or: [
-                { email: new RegExp(options.search, 'i') },
-            ],
+            $or: [{ email: new RegExp(options.search, 'i') }],
             role: options.role,
             createdAt: {
                 $gte: options.createdMinDate,
@@ -366,12 +355,11 @@ const filterUser = async (req, res, next) => {
     }
 };
 
-
 /**
  * @decsription Update user by new request update
  * @method PATCH
  * @route /api/user/update
- * 
+ *
  * @version 1.0
  */
 const updateUser = async (req, res, next) => {
@@ -380,7 +368,7 @@ const updateUser = async (req, res, next) => {
         const updatedUser = await User.findOneAndUpdate(
             { email: userReq.filter },
             userReq.update,
-            { new: true, runValidators: true, context: 'query' },
+            { new: true, runValidators: true, context: 'query' }
         );
 
         return cusResponse(res, 200, updatedUser, null);
@@ -396,12 +384,11 @@ const updateUser = async (req, res, next) => {
     }
 };
 
-
 /**
  * @decsription Delete users from the request emails
  * @method DELETE
  * @route /api/user/delete
- * 
+ *
  * @version 1.0
  */
 const deleteUser = async (req, res, next) => {
@@ -434,7 +421,6 @@ const deleteUser = async (req, res, next) => {
     }
 };
 
-
 const getAllUser = async (req, res, next) => {
     try {
         const users = await User.find({ isConfirmed: true });
@@ -453,5 +439,5 @@ module.exports = {
     updateUser,
     deleteUser,
     getAllUser,
-    fetchCurrentUser
+    fetchCurrentUser,
 };

@@ -18,6 +18,10 @@ import {
 } from '../../actions/eventTypeActions';
 
 import { getAllFacilities } from '../../actions/facilityActions';
+import {
+    getAllFacilityHistories,
+    getFacilityHistories,
+} from '../../actions/facilityHistoryActions';
 import { getAllUsers } from '../../actions/userActions';
 import { createEvent } from '../../actions/eventActions';
 import SystemNotification from '../Notification/Notification';
@@ -134,6 +138,7 @@ const CreateEvent = () => {
         user,
         users,
         eventIsLoading,
+        facilityHistories,
     } = useSelector((state) => ({
         users: state.user.users,
         user: state.user.user,
@@ -144,6 +149,7 @@ const CreateEvent = () => {
         createEventTypeSuccess: state.eventType.createSuccess,
         createEventSuccess: state.event.createSuccess,
         facilities: state.facility.facilities,
+        facilityHistories: state.facilityHistory.facilityHistories,
     }));
     const [state, setState] = useState(initialState);
     //borrow facility table
@@ -184,6 +190,9 @@ const CreateEvent = () => {
             dispatch(getAllEventTypes());
             dispatch(getAllFacilities());
             dispatch(getAllUsers());
+            dispatch(
+                getFacilityHistories({ returnFrom: new Date(Date.now()) })
+            );
         }
         setState((prevState) => ({
             ...prevState,
@@ -203,11 +212,12 @@ const CreateEvent = () => {
         }
     }, [dispatch, createEventTypeSuccess]);
 
-    //useEffect to get all event type
+    //useEffect to get all needed data for crete event
     useEffect(() => {
         dispatch(getAllEventTypes());
         dispatch(getAllFacilities());
         dispatch(getAllUsers());
+        dispatch(getFacilityHistories({ returnFrom: new Date(Date.now()) }));
     }, [dispatch]);
     const handleChange = (e) => {
         setState((prevState) => ({
@@ -299,7 +309,6 @@ const CreateEvent = () => {
                 }
             ),
         };
-        console.log(templateRequest);
         dispatch(createEvent(templateRequest));
     };
 
@@ -468,7 +477,6 @@ const CreateEvent = () => {
 
     const handleCreateAndUpdateTask = () => {
         const { name, email, type, startTime, endTime } = taskState;
-        console.log(type);
         let listErrors = {};
         if (!name) {
             listErrors = {
@@ -574,6 +582,7 @@ const CreateEvent = () => {
             setState({ ...state, image: fileBase64 });
         }
     };
+
     return (
         <div>
             <Paper className={css.paper} elevation={3}>
@@ -955,9 +964,33 @@ const CreateEvent = () => {
                     if isBorrowFacilityCreateMode is true, 
                     then render facilities that are not in borrow facility table, vice versa.
                      */
-                    borrowFacilityState.isBorrowFacilityCreateMode
+                    !borrowFacilityState.borrowDate
+                        ? []
+                        : borrowFacilityState.isBorrowFacilityCreateMode
                         ? facilities
-                              .filter((facility) => facility.status === true)
+                              .filter((facility) => {
+                                  const targetFacilityHistory = facilityHistories
+                                      .filter(
+                                          (element) =>
+                                              element.facilityId ===
+                                              facility._id
+                                      )
+                                      .sort(
+                                          (a, b) =>
+                                              new Date(b.returnDate) -
+                                              new Date(a.returnDate)
+                                      );
+                                  return !targetFacilityHistory.length
+                                      ? true
+                                      : new Date(
+                                            borrowFacilityState.borrowDate
+                                        ) <
+                                        new Date(
+                                            targetFacilityHistory[0].returnDate
+                                        )
+                                      ? false
+                                      : true;
+                              })
                               .filter((facility) => {
                                   const facilityNames = borrowFacilityState.borrowFacilities.map(
                                       (borrowFacility) => borrowFacility.name

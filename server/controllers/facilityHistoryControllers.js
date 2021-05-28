@@ -8,14 +8,13 @@ const CustomError = require('../class/CustomeError');
  *  =====================================
  */
 
-
 /**
-* @decsription Create new facility history with following request
-* @method POST 
-* @route /api/facilityHistory/create
-* 
-* @version 1.0
-*/
+ * @decsription Create new facility history with following request
+ * @method POST
+ * @route /api/facilityHistory/create
+ *
+ * @version 1.0
+ */
 const createFacilityHistory = async (req, res, next) => {
     try {
         const facilityHistory = new FacilityHistory(req.body);
@@ -37,14 +36,13 @@ const createFacilityHistory = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Get, search and filter facilityHistory (included paging)
-* @method GET 
-* @route /api/facilityHistory/filter
-* 
-* @version 1.0
-*/
+ * @decsription Get, search and filter facilityHistory (included paging)
+ * @method GET
+ * @route /api/facilityHistory/filter
+ *
+ * @version 1.0
+ */
 const filter = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
@@ -60,11 +58,27 @@ const filter = async (req, res, next) => {
         const updatedMinDate = await FacilityHistory.find()
             .sort({ updatedAt: 1 })
             .limit(1);
+        const borrowMaxDate = await FacilityHistory.find()
+            .sort({ borrowDate: -1 })
+            .limit(1);
+        const borrowMinDate = await FacilityHistory.find()
+            .sort({ borrowDate: 1 })
+            .limit(1);
+        const returnMaxDate = await FacilityHistory.find()
+            .sort({ returnDate: -1 })
+            .limit(1);
+        const returnMinDate = await FacilityHistory.find()
+            .sort({ returnDate: 1 })
+            .limit(1);
         const listRangeDate = await Promise.all([
             createdMaxDate,
             createdMinDate,
             updatedMaxDate,
             updatedMinDate,
+            borrowMaxDate,
+            borrowMinDate,
+            returnMaxDate,
+            returnMinDate,
         ]);
 
         //return empty result to client if database has no data.
@@ -72,35 +86,35 @@ const filter = async (req, res, next) => {
             !createdMaxDate.length ||
             !createdMinDate.length ||
             !updatedMaxDate.length ||
-            !updatedMinDate.length
+            !updatedMinDate.length ||
+            !borrowMaxDate ||
+            !borrowMinDate ||
+            !returnMaxDate ||
+            !returnMinDate
         ) {
             return cusResponse(res, 200, [], null);
         }
 
         let options = {
-            search: '',
-            take: 5,
+            take: 0,
             createdMaxDate: listRangeDate[0][0].createdAt,
             createdMinDate: listRangeDate[1][0].createdAt,
             updatedMaxDate: listRangeDate[2][0].updatedAt,
             updatedMinDate: listRangeDate[3][0].updatedAt,
+            borrowMaxDate: listRangeDate[4][0].borrowDate,
+            borrowMinDate: listRangeDate[5][0].borrowDate,
+            returnMaxDate: listRangeDate[6][0].returnDate,
+            returnMinDate: listRangeDate[7][0].returnDate,
         };
-        //adding search
-        if (req.query.search) {
-            options = {
-                ...options,
-                search: req.query.search.toString(),
-            };
-        }
 
         /* 
         Add take row filter
-        Default take is 5
+        Default take is 0 means taking all.
          */
         if (req.query.take) {
             options = {
                 ...options,
-                take: parseInt(req.query.take.toString()),
+                take: req.query.take,
             };
         }
 
@@ -112,7 +126,6 @@ const filter = async (req, res, next) => {
             options = {
                 ...options,
                 createdMinDate: req.query.createdFrom,
-                // createdMinDate: new Date(req.query.createdFrom),
             };
         }
         /* 
@@ -123,7 +136,6 @@ const filter = async (req, res, next) => {
             options = {
                 ...options,
                 createdMaxDate: req.query.createdTo,
-                // createdMaxDate: new Date(req.query.createdTo),
             };
         }
         /* 
@@ -134,7 +146,6 @@ const filter = async (req, res, next) => {
             options = {
                 ...options,
                 updatedMinDate: req.query.updatedFrom,
-                // updatedMinDate: new Date(req.query.updatedFrom),
             };
         }
         /* 
@@ -149,15 +160,55 @@ const filter = async (req, res, next) => {
         }
 
         /* 
+        Add borrowFrom filter
+         */
+
+        if (req.query.borrowFrom) {
+            options = {
+                ...options,
+                borrowMinDate: req.query.borrowFrom,
+            };
+        }
+        /* 
+        Add borrowTo filter
+         */
+
+        if (req.query.borrowTo) {
+            options = {
+                ...options,
+                borrowMaxDate: req.query.borrowTo,
+            };
+        }
+        /* 
+        Add returnFrom filter
+         */
+
+        if (req.query.returnFrom) {
+            options = {
+                ...options,
+                returnMinDate: req.query.returnFrom,
+            };
+        }
+        /* 
+        Add returnTo filter
+         */
+
+        if (req.query.returnTo) {
+            options = {
+                ...options,
+                returnMaxDate: req.query.returnTo,
+            };
+        }
+
+        /* 
         Variable page default is 1
          */
         const page = parseInt(req.query.page) || 1;
 
         /* 
-        Variable total facilityHistory based on search and filter
+        Variable total facilityHistory based on filter
          */
         const totalFacilityHistory = await FacilityHistory.find({
-            $or: [{ name: new RegExp(options.search, 'i') }],
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -166,17 +217,24 @@ const filter = async (req, res, next) => {
                 $gte: options.updatedMinDate,
                 $lte: options.updatedMaxDate,
             },
+            borrowDate: {
+                $gte: options.borrowMinDate,
+                $lte: options.borrowMaxDate,
+            },
+            returnDate: {
+                $gte: options.returnMinDate,
+                $lte: options.returnMaxDate,
+            },
         }).countDocuments();
 
-        let totalPages = (totalFacilityHistory / options.take)
-            .toString()
-            .includes('.')
+        let totalPages = !options.take
+            ? 1
+            : (totalFacilityHistory / options.take).toString().includes('.')
             ? Math.ceil(totalFacilityHistory / options.take)
             : totalFacilityHistory / options.take;
 
         //return data to client
         const facilityHistories = await FacilityHistory.find({
-            $or: [{ name: new RegExp(options.search, 'i') }],
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -184,6 +242,14 @@ const filter = async (req, res, next) => {
             updatedAt: {
                 $gte: options.updatedMinDate,
                 $lte: options.updatedMaxDate,
+            },
+            borrowDate: {
+                $gte: options.borrowMinDate,
+                $lte: options.borrowMaxDate,
+            },
+            returnDate: {
+                $gte: options.returnMinDate,
+                $lte: options.returnMaxDate,
             },
         })
             .sort({ updatedAt: -1 })
@@ -196,14 +262,13 @@ const filter = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Delete events from the request list of facilityHistory's id
-* @method DELETE 
-* @route /api/facilityHistory/delete
-* 
-* @version 1.0
-*/
+ * @decsription Delete events from the request list of facilityHistory's id
+ * @method DELETE
+ * @route /api/facilityHistory/delete
+ *
+ * @version 1.0
+ */
 const deleteFacilityHistory = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
@@ -236,14 +301,13 @@ const deleteFacilityHistory = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Update eventType by new request update
-* @method PATCH 
-* @route /api/facilityHistory/update
-* 
-* @version 1.0
-*/
+ * @decsription Update eventType by new request update
+ * @method PATCH
+ * @route /api/facilityHistory/update
+ *
+ * @version 1.0
+ */
 const updateFacilityHistory = async (req, res, next) => {
     try {
         const userReq = req.body;
@@ -266,14 +330,13 @@ const updateFacilityHistory = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Get all facilityHistory
-* @method GET 
-* @route /api/facilityHistory/all
-* 
-* @version 1.0
-*/
+ * @decsription Get all facilityHistory
+ * @method GET
+ * @route /api/facilityHistory/all
+ *
+ * @version 1.0
+ */
 const getAllFacilityHistory = async (req, res, next) => {
     try {
         const facilityHistories = await FacilityHistory.find({}).populate({
@@ -285,7 +348,6 @@ const getAllFacilityHistory = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
-
 
 module.exports = {
     createFacilityHistory,

@@ -97,3 +97,39 @@ export const getAllEventTypesAPI = () => AXIOS.get(`/eventType/all`);
 
 // Event APIs
 export const createEventAPI = (userReq) => AXIOS.post(`/event/create`, userReq);
+
+// Facility History APIs
+export const getFacilityHistoriesAPI = (userQueries) => {
+    const takeQuery = `take=${userQueries?.take ? userQueries?.take : ''}`;
+    const pageQuery = `page=${userQueries?.page ? userQueries?.page : ''}`;
+    const createdFromQuery = `createdFrom=${
+        userQueries?.createdFrom ? userQueries?.createdFrom : ''
+    }`;
+    const createdToQuery = `createdTo=${
+        userQueries?.createdTo ? userQueries?.createdTo : ''
+    }`;
+    const updatedFromQuery = `updatedFrom=${
+        userQueries?.updatedFrom ? userQueries?.updatedFrom : ''
+    }`;
+    const updatedToQuery = `updatedTo=${
+        userQueries?.updatedTo ? userQueries?.updatedTo : ''
+    }`;
+    const borrowFromQuery = `borrowFrom=${
+        userQueries?.borrowFrom ? userQueries?.borrowFrom : ''
+    }`;
+    const borrowToQuery = `borrowTo=${
+        userQueries?.borrowTo ? userQueries?.borrowTo : ''
+    }`;
+    const returnFromQuery = `returnFrom=${
+        userQueries?.returnFrom ? userQueries?.returnFrom : ''
+    }`;
+    const returnToQuery = `returnTo=${
+        userQueries?.returnTo ? userQueries?.returnTo : ''
+    }`;
+    return AXIOS.get(
+        `/facilityHistory/filter?${takeQuery}&${pageQuery}&${createdFromQuery}&${createdToQuery}&${updatedFromQuery}&${updatedToQuery}&${borrowFromQuery}&${borrowToQuery}&${returnFromQuery}&${returnToQuery}`
+    );
+};
+
+export const getAllFacilityHistoriesAPI = () =>
+    AXIOS.get(`/facilityHistory/all`);
