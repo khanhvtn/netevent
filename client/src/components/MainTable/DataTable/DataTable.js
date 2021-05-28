@@ -14,7 +14,6 @@ import {
     TableHead,
     TableSortLabel,
     Typography,
-    Tooltip,
     Button,
 } from '@material-ui/core';
 import { Delete, Create, Edit } from '@material-ui/icons';
@@ -175,26 +174,24 @@ const EnhancedTableToolbar = (props) => {
             )}
 
             {numSelected === 0 ? (
-                <Tooltip title="Create Facility">
-                    <Button
-                        disabled={
-                            constrainRangeDate === undefined ||
-                            disabled === undefined
-                                ? false
-                                : !constrainRangeDate
-                                ? true
-                                : disabled
-                                ? true
-                                : false
-                        }
-                        onClick={handleToggleDialogCreateAndUpdate}
-                        endIcon={<Create />}
-                        variant="contained"
-                        color="primary"
-                    >
-                        Create
-                    </Button>
-                </Tooltip>
+                <Button
+                    disabled={
+                        constrainRangeDate === undefined ||
+                        disabled === undefined
+                            ? false
+                            : !constrainRangeDate
+                            ? true
+                            : disabled
+                            ? true
+                            : false
+                    }
+                    onClick={handleToggleDialogCreateAndUpdate}
+                    endIcon={<Create />}
+                    variant="contained"
+                    color="primary"
+                >
+                    Create
+                </Button>
             ) : numSelected === 1 ? (
                 <>
                     <Button
