@@ -998,9 +998,26 @@ const CreateEvent = () => {
 
                                   return !facilityNames.includes(facility.name);
                               })
-                        : facilities.filter(
-                              (facility) => facility.status === true
-                          )
+                        : facilities.filter((facility) => {
+                              const targetFacilityHistory = facilityHistories
+                                  .filter(
+                                      (element) =>
+                                          element.facilityId === facility._id
+                                  )
+                                  .sort(
+                                      (a, b) =>
+                                          new Date(b.returnDate) -
+                                          new Date(a.returnDate)
+                                  );
+                              return !targetFacilityHistory.length
+                                  ? true
+                                  : new Date(borrowFacilityState.borrowDate) <
+                                    new Date(
+                                        targetFacilityHistory[0].returnDate
+                                    )
+                                  ? false
+                                  : true;
+                          })
                 }
             />
             {/* Borrow Facility Dialog */}
