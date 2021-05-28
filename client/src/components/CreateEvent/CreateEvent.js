@@ -157,20 +157,25 @@ const CreateEvent = () => {
     const [taskState, setTaskState] = useState(initialTaskState);
 
     // handle clear all fields
-    const handleClearFields = useCallback(() => {
-        setState(initialState);
-        setBorrowFacilityState(initialBorrowFacilityState);
-        setTaskState(initialTaskState);
-        setSelectedFacility([]);
-        setSelectedTask([]);
-        tagList = [];
-        fileInput.current.value = '';
-        //clear all error
-        dispatch({
-            type: ERROR_CLEAR,
-            payload: null,
-        });
-    }, [dispatch]);
+    const handleClearFields = useCallback(
+        (action) => {
+            setState(initialState);
+            setBorrowFacilityState(initialBorrowFacilityState);
+            setTaskState(initialTaskState);
+            setSelectedFacility([]);
+            setSelectedTask([]);
+            tagList = [];
+            fileInput.current.value = '';
+            //clear all error
+            if (action) {
+                dispatch({
+                    type: ERROR_CLEAR,
+                    payload: null,
+                });
+            }
+        },
+        [dispatch]
+    );
 
     //useEffect for create event success
     useEffect(() => {
@@ -252,8 +257,10 @@ const CreateEvent = () => {
             endDate,
             maxParticipants,
             tags: tagList,
-            description: JSON.parse(description).blocks[0].text
-                ? description
+            description: description
+                ? JSON.parse(description).blocks[0].text
+                    ? JSON.parse(description).blocks[0].text
+                    : ''
                 : '',
             ownerId: user.id,
             budget,
@@ -292,6 +299,7 @@ const CreateEvent = () => {
                 }
             ),
         };
+        console.log(templateRequest);
         dispatch(createEvent(templateRequest));
     };
 
@@ -872,7 +880,7 @@ const CreateEvent = () => {
                                     size="large"
                                     color="default"
                                     style={{ backgroundColor: 'transparent' }}
-                                    onClick={handleClearFields}
+                                    onClick={() => handleClearFields(true)}
                                 >
                                     Clear all
                                 </Button>
