@@ -16,7 +16,7 @@ import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 import MomentUtils from '@date-io/moment';
 import {
     MuiPickersUtilsProvider,
-    KeyboardDatePicker,
+    KeyboardDateTimePicker,
 } from '@material-ui/pickers';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 //import useStyles in the last
@@ -312,7 +312,7 @@ const CreateEventInputGroup = ({
             {/* Start Date  */}
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                 <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <KeyboardDatePicker
+                    <KeyboardDateTimePicker
                         disablePast
                         disabled={eventIsLoading}
                         error={errors?.startDate ? true : false}
@@ -341,7 +341,7 @@ const CreateEventInputGroup = ({
             {/* End Date  */}
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                 <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <KeyboardDatePicker
+                    <KeyboardDateTimePicker
                         disablePast
                         error={errors?.endDate ? true : false}
                         helperText={errors?.endDate ? errors?.endDate : ''}
@@ -379,7 +379,7 @@ const CreateEventInputGroup = ({
             {/* Registration Close Date  */}
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                 <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <KeyboardDatePicker
+                    <KeyboardDateTimePicker
                         disablePast
                         disabled={
                             !state.startDate

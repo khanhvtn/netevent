@@ -58,29 +58,6 @@ const BorrowFacilityDialog = ({
                         : 'Update a Borrow Facility'}
                 </DialogTitle>
                 <DialogContent>
-                    <Autocomplete
-                        value={name}
-                        getOptionLabel={(option) => option.name}
-                        onChange={(event, newValue) => {
-                            setBorrowFacilityState((prevState) => ({
-                                ...prevState,
-                                name: newValue,
-                            }));
-                        }}
-                        id="controllable-states-demo"
-                        options={availableFacilities}
-                        fullWidth
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Available Facility"
-                                variant="outlined"
-                                margin="normal"
-                                error={errors?.name ? true : false}
-                                helperText={errors?.name ? errors.name : ''}
-                            />
-                        )}
-                    />
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <KeyboardDateTimePicker
                             disablePast
@@ -142,6 +119,30 @@ const BorrowFacilityDialog = ({
                             }}
                         />
                     </MuiPickersUtilsProvider>
+                    <Autocomplete
+                        disabled={!borrowDate}
+                        value={name}
+                        getOptionLabel={(option) => option.name}
+                        onChange={(event, newValue) => {
+                            setBorrowFacilityState((prevState) => ({
+                                ...prevState,
+                                name: newValue,
+                            }));
+                        }}
+                        id="controllable-states-demo"
+                        options={availableFacilities}
+                        fullWidth
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Available Facility"
+                                variant="outlined"
+                                margin="normal"
+                                error={errors?.name ? true : false}
+                                helperText={errors?.name ? errors.name : ''}
+                            />
+                        )}
+                    />
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
                     <Button
@@ -162,8 +163,8 @@ const BorrowFacilityDialog = ({
                         ) : isCreateMode ? (
                             'Create'
                         ) : (
-                                    'Update'
-                                )}
+                            'Update'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -201,10 +202,9 @@ const BorrowFacilityDialog = ({
                         {isLoading ? (
                             <CircularProgress size={25} color="inherit" />
                         ) : (
-                                'Delete'
-                            )}
+                            'Delete'
+                        )}
                     </Button>
-
                 </DialogActions>
             </Dialog>
         </div>
