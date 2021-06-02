@@ -97,6 +97,8 @@ export const getAllEventTypesAPI = () => AXIOS.get(`/eventType/all`);
 
 // Event APIs
 export const createEventAPI = (userReq) => AXIOS.post(`/event/create`, userReq);
+export const updateEventAPI = (userReq) => AXIOS.patch(`/event/update`, userReq);
+export const deleteEventAPI = (userReq) => AXIOS.delete(`/event/delete`, userReq);
 
 // Facility History APIs
 export const getFacilityHistoriesAPI = (userQueries) => {

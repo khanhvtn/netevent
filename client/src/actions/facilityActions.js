@@ -37,6 +37,7 @@ export const getAllFacilities = () => async (dispatch) => {
     }
     setFacilityIsLoading(false, dispatch);
 };
+
 export const getFacilities = (
     search,
     take,

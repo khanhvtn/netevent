@@ -1,0 +1,39 @@
+import { makeStyles, fade } from '@material-ui/core/styles';
+export default makeStyles((theme) => ({
+    grow: {
+        flexGrow: 1,
+    },
+    paper: {
+        margin: '18px 80px',
+        [theme.breakpoints.down('md')]: {
+            margin: '20px',
+        },
+    },
+    searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    toolbarEventDetail: {
+        marginLeft: 8
+    },
+    detailWrapper: {
+        padding: 96
+    },
+    heading: {
+        fontSize: theme.typography.pxToRem(15),
+        flexBasis: '33.33%',
+        flexShrink: 0,
+    },
+    secondaryHeading: {
+        fontSize: theme.typography.pxToRem(15),
+        color: theme.palette.text.secondary,
+    },
+    expandRoot:{
+        width: '100%',
+    }
+}));

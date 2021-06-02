@@ -13,6 +13,8 @@ import Facility from './components/Facility/Facility';
 import User from './components/User/User';
 import EventType from './components/EventType/EventType';
 import CreateEvent from './components/CreateEvent/CreateEvent';
+import EventManagement from './components/EventManagement/EventManagement';
+import EventDetail from './components/EventManagement/EventDetail/EventDetail';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -67,6 +69,22 @@ const App = () => {
                                 />
 
                                 {/* Creator Role */}
+                                <Route
+                                    path="/dashboard/event-management"
+                                    render={() => (
+                                        <DashboardLayout>
+                                            <EventManagement />
+                                        </DashboardLayout>
+                                    )}
+                                />
+                                <Route
+                                    path="/dashboard/event-detail"
+                                    render={() => (
+                                        <DashboardLayout>
+                                            <EventDetail />
+                                        </DashboardLayout>
+                                    )}
+                                />
                                 <Route
                                     path="/dashboard/event-type"
                                     render={() => (

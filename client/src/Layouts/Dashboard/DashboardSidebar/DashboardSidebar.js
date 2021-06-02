@@ -15,6 +15,7 @@ import EventIcon from '@material-ui/icons/Event';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import { DevicesOther, People } from '@material-ui/icons';
 import ReplayIcon from '@material-ui/icons/Replay';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import NavItem from './NavItem';
 import useStyles from './styles';
 
@@ -40,6 +41,11 @@ const roleActions = {
     ],
     2: [],
     3: [
+        {
+            title: 'Event Management',
+            icon: EventAvailableIcon,
+            href: '/dashboard/event-management',
+        },
         {
             title: 'Create Event',
             icon: EventIcon,
