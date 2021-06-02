@@ -5,15 +5,6 @@ export default makeStyles((theme) => ({
     paper: {
         margin: '20px',
         padding: '20px',
-        // // backgroundColor: theme.palette.background.default,
-        // [theme.breakpoints.down('lg')]: {
-        //     margin: '18px 80px',
-        //     padding: '18px 80px'
-        // },
-        // [theme.breakpoints.down('md')]: {
-        //     margin: '18px',
-        //     padding: '18px'
-        // },
     },
     paper1: {
         width: '100%',

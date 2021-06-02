@@ -1,7 +1,5 @@
 import React from 'react';
-import { Grid, Typography, Button } from '@material-ui/core';
-import { Alarm } from '@material-ui/icons';
-import moment from 'moment';
+import { Grid, Typography } from '@material-ui/core';
 //import useStyles in the last
 import useStyles from './styles';
 
