@@ -42,7 +42,14 @@ const eventSchema = mongoose.Schema(
         },
         registrationCloseDate: {
             type: Date,
-            required: [true, 'Accommodation cannot be blanked'],
+            required: [true, 'Registration Close Date cannot be blanked'],
+            validate: {
+                validator: function (v) {
+                    return new Date(v) > new Date(this.startDate);
+                },
+                message: () =>
+                    `Registration Close Date cannot be smaller than Start Date`,
+            },
         },
         startDate: {
             type: Date,
@@ -51,6 +58,12 @@ const eventSchema = mongoose.Schema(
         endDate: {
             type: Date,
             required: [true, 'End Date cannot be blanked'],
+            validate: {
+                validator: function (v) {
+                    return new Date(v) > new Date(this.startDate);
+                },
+                message: () => `End Date cannot be smaller than Start Date`,
+            },
         },
         maxParticipants: {
             type: String,

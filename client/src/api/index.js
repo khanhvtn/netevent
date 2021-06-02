@@ -133,3 +133,6 @@ export const getFacilityHistoriesAPI = (userQueries) => {
 
 export const getAllFacilityHistoriesAPI = () =>
     AXIOS.get(`/facilityHistory/all`);
+
+//Event APIs
+export const getAllEventAPI = () => AXIOS.get(`/event/all`);

@@ -18,10 +18,7 @@ import {
 } from '../../actions/eventTypeActions';
 
 import { getAllFacilities } from '../../actions/facilityActions';
-import {
-    getAllFacilityHistories,
-    getFacilityHistories,
-} from '../../actions/facilityHistoryActions';
+import { getFacilityHistories } from '../../actions/facilityHistoryActions';
 import { getAllUsers } from '../../actions/userActions';
 import { createEvent } from '../../actions/eventActions';
 import SystemNotification from '../Notification/Notification';
@@ -124,7 +121,9 @@ const initialTaskState = {
     isTaskCreateMode: true,
 };
 
-const CreateEvent = () => {
+const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
+    initialState.startDate = startDate ? startDate : null;
+    initialState.endDate = endDate ? endDate : null;
     const css = useStyles();
     const fileInput = useRef(null);
     const dispatch = useDispatch();
@@ -873,14 +872,9 @@ const CreateEvent = () => {
                         {/* Button Control */}
                         <Grid
                             container
-                            justify="flex-end"
+                            justify="space-between"
                             alignItems="center"
                             item
-                            md={12}
-                            lg={12}
-                            xl={12}
-                            sm={12}
-                            xs={12}
                         >
                             <Grid item>
                                 <Button
@@ -895,6 +889,17 @@ const CreateEvent = () => {
                                 </Button>
                             </Grid>
                             <Grid item>
+                                {handleCloseCreateDialog && (
+                                    <Button
+                                        disabled={eventIsLoading}
+                                        size="large"
+                                        onClick={handleCloseCreateDialog}
+                                        variant="contained"
+                                        color="default"
+                                    >
+                                        Close
+                                    </Button>
+                                )}
                                 <Button
                                     disabled={eventIsLoading}
                                     style={{

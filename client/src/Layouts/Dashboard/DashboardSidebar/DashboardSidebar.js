@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { LogOut as LogOutIcon } from 'react-feather';
 import EventIcon from '@material-ui/icons/Event';
 import EventNoteIcon from '@material-ui/icons/EventNote';
+import { CalendarToday } from '@material-ui/icons';
 import { DevicesOther, People } from '@material-ui/icons';
 import ReplayIcon from '@material-ui/icons/Replay';
 import NavItem from './NavItem';
@@ -50,6 +51,11 @@ const roleActions = {
             icon: EventNoteIcon,
             href: '/dashboard/event-type',
         },
+        {
+            title: 'Calendar',
+            icon: CalendarToday,
+            href: '/dashboard/creator-calendar',
+        },
     ],
     4: [],
 };
@@ -58,7 +64,7 @@ const defaultActions = [
     {
         title: 'Switch Role',
         icon: ReplayIcon,
-        href: 'pickrole'
+        href: 'pickrole',
     },
     {
         title: 'Logout',
@@ -159,7 +165,7 @@ DashboardSidebar.propTypes = {
 };
 
 DashboardSidebar.defaultProps = {
-    onMobileClose: () => { },
+    onMobileClose: () => {},
     openMobile: false,
 };
 
