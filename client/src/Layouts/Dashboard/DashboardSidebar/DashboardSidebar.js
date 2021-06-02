@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { LogOut as LogOutIcon } from 'react-feather';
 import EventIcon from '@material-ui/icons/Event';
 import EventNoteIcon from '@material-ui/icons/EventNote';
+import MailIcon from '@material-ui/icons/Mail';
 import { DevicesOther, People } from '@material-ui/icons';
 import ReplayIcon from '@material-ui/icons/Replay';
 import NavItem from './NavItem';
@@ -49,6 +50,12 @@ const roleActions = {
             title: 'Event Type',
             icon: EventNoteIcon,
             href: '/dashboard/event-type',
+        },
+
+        {
+            title: 'Send Notification',
+            icon: MailIcon,
+            href: '/dashboard/send-notification',
         },
     ],
     4: [],

@@ -13,6 +13,7 @@ import Facility from './components/Facility/Facility';
 import User from './components/User/User';
 import EventType from './components/EventType/EventType';
 import CreateEvent from './components/CreateEvent/CreateEvent';
+import SendNotification from './components/SendNotification/SendNotification';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -36,59 +37,68 @@ const App = () => {
                     />
                 </Grid>
             ) : (
-                    <Switch>
-                        <Route exact path="/" component={Login} />
-                        <Route exact path="/login" component={Login} />
-                        <PrivateRoute exact path="/pickrole" component={PickRole} />
-                        <Route
-                            exact
-                            path="/confirmation/:id"
-                            component={Confirmation}
-                        />
+                <Switch>
+                    <Route exact path="/" component={Login} />
+                    <Route exact path="/login" component={Login} />
+                    <PrivateRoute exact path="/pickrole" component={PickRole} />
+                    <Route
+                        exact
+                        path="/confirmation/:id"
+                        component={Confirmation}
+                    />
 
-                        {/* Here is the place to add route for dashboard layout */}
-                        <Route>
-                            <Switch>
-                                <Route
-                                    path="/dashboard/user"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <User />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/facility"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <Facility />
-                                        </DashboardLayout>
-                                    )}
-                                />
+                    {/* Here is the place to add route for dashboard layout */}
+                    <Route>
+                        <Switch>
+                            <Route
+                                path="/dashboard/user"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <User />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/facility"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <Facility />
+                                    </DashboardLayout>
+                                )}
+                            />
 
-                                {/* Creator Role */}
-                                <Route
-                                    path="/dashboard/event-type"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <EventType />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/create-event"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <CreateEvent />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route path="*" component={Error} />
-                            </Switch>
-                        </Route>
-                        <Route path="*" component={Error} />
-                    </Switch>
-                )}
+                            {/* Creator Role */}
+                            <Route
+                                path="/dashboard/event-type"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <EventType />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/create-event"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <CreateEvent />
+                                    </DashboardLayout>
+                                )}
+                            />
+
+                            <Route
+                                path="/dashboard/send-notification"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <SendNotification />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route path="*" component={Error} />
+                        </Switch>
+                    </Route>
+                    <Route path="*" component={Error} />
+                </Switch>
+            )}
         </div>
     );
 };
