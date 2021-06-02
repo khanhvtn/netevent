@@ -2,13 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Calendar, Views, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import {
-    Paper,
-    Dialog,
-    DialogContent,
-    Button,
-    DialogActions,
-} from '@material-ui/core';
+import { Paper, Dialog } from '@material-ui/core';
 import CreateEvent from '../CreateEvent/CreateEvent';
 
 import { useDispatch, useSelector } from 'react-redux';
