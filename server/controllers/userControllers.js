@@ -156,7 +156,7 @@ const createUser = async (req, res, next) => {
             user: newUser._id,
         };
 
-        //create new link dfdfdf
+        //create new link 
         const idLink = await Link.create(newLink);
 
         //send email
