@@ -11,7 +11,8 @@ import {
     AccordionDetails,
     Tooltip,
     Button,
-    CircularProgress
+    CircularProgress,
+    Chip
 } from '@material-ui/core';
 import useStyles from './styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -190,6 +191,16 @@ const EventDetail = () => {
                             <Grid item>
                                 <Typography style={{ fontWeight: 'bold' }} variant="h5">
                                     {state.event?.eventName}
+                                    {state.event?.isApproved === null ?
+                                        <Chip className={css.chipStatus} variant="outlined" size="small" label="Pending" />
+                                        :
+                                        state.event?.isFinished ?
+                                            <Chip className={css.chipStatus} variant="outlined" size="small" label="Expired" disabled />
+                                            :
+                                            state.event?.isApproved ?
+                                                <Chip className={css.chipStatus} variant="outlined" size="small" label="On-going" color="primary" />
+                                                :
+                                                <Chip className={css.chipStatus} variant="outlined" size="small" label="Rejected" color="secondary" />}
                                 </Typography>
                                 <Typography variant="caption" color="textSecondary">
                                     {`${state.event?.budget} vnd | ${state.event?.maxParticipants} participants`}
@@ -197,7 +208,7 @@ const EventDetail = () => {
                             </Grid>
 
                             {/* Event Language, Type, Mode, Accomodation */}
-                            <Grid style={{ marginTop: 48 }} container item>
+                            <Grid className={css.mt48} container item>
                                 <Grid
                                     className={css.schedule}
                                     direction="row"
@@ -263,7 +274,7 @@ const EventDetail = () => {
                             </Grid>
 
                             {/* Event Task List */}
-                            <Grid style={{ marginTop: 48 }} container item>
+                            <Grid className={css.mt48} container item>
                                 <Typography style={{ fontWeight: 'bold' }} variant="h6">
                                     Tasks
                                 </Typography>
@@ -321,7 +332,7 @@ const EventDetail = () => {
                             </Grid>
 
                             {/* Event Facility List */}
-                            <Grid style={{ marginTop: 48 }} container item>
+                            <Grid className={css.mt48} container item>
                                 <Typography style={{ fontWeight: 'bold' }} variant="h6">
                                     Facilities
                                 </Typography>
@@ -340,7 +351,7 @@ const EventDetail = () => {
                                                         aria-controls="panel2bh-content"
                                                         id="panel2bh-header"
                                                     >
-                                                        <Typography className={css.heading}>{facility.facilityId.name}</Typography>
+                                                        <Typography >{facility.facilityId.name}</Typography>
                                                     </AccordionSummary>
                                                     <AccordionDetails className={css.expandRoot}>
                                                         <Grid className={css.schedule} container >
@@ -378,7 +389,7 @@ const EventDetail = () => {
 
 
                             {/* Event Description */}
-                            <Grid style={{ marginTop: 48 }} item>
+                            <Grid className={css.mt48} item>
                                 <Typography style={{ fontWeight: 'bold' }} variant="h6">
                                     Description
                                 </Typography>
@@ -420,7 +431,7 @@ const EventDetail = () => {
                             </Grid>
 
                             {/* Registration Close Date */}
-                            <Grid style={{ marginTop: 36 }} item>
+                            <Grid className={css.mt36} item>
                                 <Typography style={{ fontWeight: 'bold' }} variant="h6">
                                     Registration deadline
                                 </Typography>
@@ -433,7 +444,7 @@ const EventDetail = () => {
                             </Grid>
 
                             {/* Location */}
-                            <Grid style={{ marginTop: 36 }} item>
+                            <Grid className={css.mt36} item>
                                 <Typography style={{ fontWeight: 'bold' }} variant="h6">
                                     Location
                                 </Typography>
@@ -443,7 +454,7 @@ const EventDetail = () => {
                             </Grid>
 
                             {/* Tags */}
-                            <Grid style={{ marginTop: 36 }} item>
+                            <Grid className={css.mt36} item>
                                 <Typography style={{ fontWeight: 'bold' }} variant="h6">
                                     Tags
                                 </Typography>

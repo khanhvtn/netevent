@@ -42,7 +42,17 @@ export default makeStyles((theme) => ({
         fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary,
     },
-    expandRoot:{
+    expandRoot: {
         width: '100%',
+    },
+    chipStatus: {
+        marginLeft: 8,
+        marginBottom: 4
+    },
+    mt48: {
+        marginTop: 48
+    },
+    mt36: {
+        marginTop: 36
     }
 }));

@@ -21,11 +21,9 @@ import { Skeleton } from '@material-ui/lab';
 const EventCard = ({ onClickEvent, isLoading, event }) => {
     const css = useStyles();
 
-    console.log(event)
-
     // Can only click when finish event loading
     const handleOnClickEvent = (event) => {
-        if (!isLoading){
+        if (!isLoading) {
             onClickEvent(event)
         }
     }
@@ -38,6 +36,7 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                         className={css.root}
                         elevation={3}
                     >
+                        {/* Event Image */}
                         {isLoading ? <Skeleton variant="rect" height={190} style={{ borderRadius: 16 }} />
                             :
                             <CardMedia
@@ -46,6 +45,8 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                 title="Event Image"
                             />
                         }
+
+                        {/* Title, budge and maxParticipants */}
                         <CardContent className={css.content}>
                             <Typography className={css.titleCard} variant="h6">
                                 {isLoading ? <Skeleton variant="text" /> : event.eventName}
@@ -57,8 +58,13 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                 }
                             </Typography>
                         </CardContent>
+
+                        {/* startDate, endDate, tags, location and eventTypeId */}
                         <CardContent className={css.description}>
+                            {/* Divider */}
                             <Divider />
+
+                            {/* startDate and endDate display */}
                             <Grid className={css.schedule} container >
                                 <Grid xs={2} container alignItems="center" justify="center" item>
                                     {isLoading ? <Skeleton variant="circle" width={30} height={30} /> : <ScheduleIcon />}
@@ -81,6 +87,8 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                     </Typography>
                                 </Grid>
                             </Grid>
+
+                            {/* Location and tags display */}
                             <Grid className={css.schedule} container >
                                 <Grid xs={2} container alignItems="center" justify="center" item>
                                     {isLoading ? <Skeleton variant="circle" width={30} height={30} /> : <LocationOnOutlinedIcon />}
@@ -114,6 +122,8 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                     }
                                 </Grid>
                             </Grid>
+
+                            {/* EventTypeId name display */}
                             <Grid className={css.schedule} container >
                                 <Grid xs={2} container alignItems="center" justify="center" item>
                                     {isLoading ? <Skeleton variant="circle" width={30} height={30} /> : <AssignmentIndOutlinedIcon />}
@@ -128,6 +138,8 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                 </Grid>
                             </Grid>
                         </CardContent>
+
+                        {/* Event Status Display */}
                         <div className={css.controls}>
                             {isLoading ? <Skeleton variant="text" width="15%" />
                                 :
