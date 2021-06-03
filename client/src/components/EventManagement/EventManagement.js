@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Paper,
     Typography,
@@ -8,9 +8,10 @@ import {
     InputBase,
     Tooltip,
     IconButton,
+    CircularProgress,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 import useStyles from './styles'
@@ -19,11 +20,12 @@ import EventPagination from './EventPagination/EventPagination';
 import EventCard from './EventCard/EventCard';
 import EventFilter from './EventFilter/EventFilter';
 import { useHistory } from 'react-router-dom';
+import { getEvents } from '../../actions/eventActions';
 
 
 const initialState = {
     search: '',
-    take: 10,
+    take: 3,
     page: 1,
     openFilter: false,
     createdFrom: null,
@@ -44,8 +46,29 @@ const EventManagement = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
+    const {
+        events,
+        isLoading,
+        totalPages
+    } = useSelector((state) => ({
+        events: state.event.events,
+        isLoading: state.event.isLoading,
+        totalPages: state.event.totalPages,
+        errors: state.error.errors
+    }));
+
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
+
+    useEffect(() => {
+        if (!history.location.state) {
+            dispatch(getEvents(
+                state.search,
+                state.take,
+                state.page
+            ))
+        }
+    }, [dispatch, state.search, state.take, state.page])
 
     const handleChangePage = (event, newPage) => {
         setState((prevState) => ({ ...prevState, page: newPage }));
@@ -117,6 +140,8 @@ const EventManagement = () => {
         history.push('/dashboard/event-detail')
     }
 
+    console.log(history)
+
     return (
         <>
             <Paper className={css.paper} color="inherit" elevation={3}>
@@ -166,11 +191,24 @@ const EventManagement = () => {
 
                 {/* Grid view of Event */}
                 <Grid className={css.gridLayout} container justify="flex-start" spacing={2}>
-                    <EventCard onClickEvent={handleOnClickEvent} />
+                    {isLoading ?
+                        Array.apply(null, { length: state.take }).map((skeleton, index) => {
+                            return (
+                                <EventCard key={index} isLoading={isLoading} />
+                            )
+                        })
+                        :
+                        events.map((event, index) => {
+                            return (
+                                <EventCard event={event} key={index} isLoading={isLoading} onClickEvent={handleOnClickEvent} />
+                            )
+                        })
+                    }
                 </Grid>
 
                 {/* Event Pagination */}
                 <EventPagination
+                    totalPages={totalPages}
                     page={state.page}
                     take={state.take}
                     handleChangeRowsPerPage={

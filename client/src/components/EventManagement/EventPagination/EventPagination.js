@@ -6,16 +6,13 @@ import { useSelector } from 'react-redux';
 import useStyles from './styles';
 
 const EventPagination = ({
+    totalPages,
     page,
     take,
     handleChangeRowsPerPage,
     handleChangePage,
 }) => {
     const css = useStyles();
-    const totalPages = '10'
-    // const { totalPages } = useSelector((state) => ({
-    //     totalPages: state.facility.totalPages,
-    // }));
 
     return (
         <Toolbar className={css.paginationWrapper}>
@@ -31,9 +28,9 @@ const EventPagination = ({
                     name="take"
                     onChange={handleChangeRowsPerPage}
                 >
-                    <MenuItem value={10}>10</MenuItem>
-                    <MenuItem value={20}>20</MenuItem>
-                    <MenuItem value={30}>30</MenuItem>
+                    <MenuItem value={3}>3</MenuItem>
+                    <MenuItem value={6}>6</MenuItem>
+                    <MenuItem value={9}>9</MenuItem>
 
                 </Select>
             </div>

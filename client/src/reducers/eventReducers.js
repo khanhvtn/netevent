@@ -1,4 +1,10 @@
-import { EVENT_CREATE_SUCCESS, EVENT_LOADING } from '../constants';
+import {
+    EVENT_LOADING,
+    EVENT_GET_ALL_FILTER,
+    EVENT_CREATE_SUCCESS,
+    EVENT_UPDATE_SUCCESS,
+    EVENT_DELETE_SUCCESS,
+} from '../constants';
 
 const initialState = {
     isLoading: false,
@@ -9,12 +15,22 @@ const initialState = {
     deleteSuccess: false,
 };
 
-export default function facilityReducers(state = initialState, action) {
+export default function eventReducers(state = initialState, action) {
     switch (action.type) {
         case EVENT_LOADING:
             return { ...state, isLoading: action.payload };
+        case EVENT_GET_ALL_FILTER:
+            return {
+                ...state,
+                events: action.payload.data?.data,
+                totalPages: action.payload.data?.totalPages
+            }
         case EVENT_CREATE_SUCCESS:
             return { ...state, createSuccess: action.payload };
+        case EVENT_UPDATE_SUCCESS:
+            return { ...state, updateSuccess: action.payload };
+        case EVENT_DELETE_SUCCESS:
+            return { ...state, deleteSuccess: action.payload };
         default:
             return state;
     }

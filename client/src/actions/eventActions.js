@@ -3,8 +3,9 @@ import {
     EVENT_CREATE_SUCCESS,
     ERROR_CLEAR,
     ERROR,
+    EVENT_GET_ALL_FILTER,
 } from '../constants';
-import { createEventAPI } from '../api';
+import { createEventAPI, getEventsAPI } from '../api';
 
 //setIsLoading func is to set loading status
 const setEventIsLoading = (status, dispatch) => {
@@ -44,3 +45,18 @@ export const createEvent = (userReq) => async (dispatch) => {
     }
     setEventIsLoading(false, dispatch);
 };
+
+export const getEvents = (search, take, page) => async (dispatch) => {
+    setEventIsLoading(true, dispatch);
+    try {
+        const data = await getEventsAPI(search, take, page);
+
+        dispatch({
+            type: EVENT_GET_ALL_FILTER,
+            payload: data
+        })
+    } catch (error) {
+        console.log(error.message)
+    }
+    setEventIsLoading(false, dispatch)
+}

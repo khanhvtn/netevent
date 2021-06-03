@@ -50,7 +50,12 @@ const EventDetail = () => {
     };
 
     const handleOnClickReturn = () => {
-        history.push('/dashboard/event-management')
+        history.push({
+            pathname: '/dashboard/event-management',
+            state: {
+                from: '/dashboard/event-detail'
+            }
+        })
     }
 
     const handleToggleDialogDelete = () => {
@@ -181,7 +186,7 @@ const EventDetail = () => {
                                     <Grid xs={1} container alignItems="center" justify="center" item>
                                         <AssignmentIndOutlinedIcon />
                                     </Grid>
-                                    <Grid xs={5} direction="column" item>
+                                    <Grid xs={5} container direction="column" item>
                                         <Typography variant="caption" color="textSecondary">
                                             Category (type)
                                         </Typography>
@@ -192,7 +197,7 @@ const EventDetail = () => {
                                     <Grid xs={1} container alignItems="center" justify="center" item>
                                         <LanguageIcon />
                                     </Grid>
-                                    <Grid xs={5} direction="column" item>
+                                    <Grid xs={5} container direction="column" item>
                                         <Typography variant="caption" color="textSecondary">
                                             Language
                                         </Typography>
@@ -212,7 +217,7 @@ const EventDetail = () => {
                                     <Grid xs={1} container alignItems="center" justify="center" item>
                                         <ErrorOutlineOutlinedIcon />
                                     </Grid>
-                                    <Grid xs={5} direction="column" item>
+                                    <Grid xs={5} container direction="column" item>
                                         <Typography variant="caption" color="textSecondary">
                                             Mode
                                         </Typography>
@@ -223,7 +228,7 @@ const EventDetail = () => {
                                     <Grid xs={1} container alignItems="center" justify="center" item>
                                         <TimelapseOutlinedIcon />
                                     </Grid>
-                                    <Grid xs={5} direction="column" item>
+                                    <Grid xs={5} container direction="column" item>
                                         <Typography variant="caption" color="textSecondary">
                                             Accomodation
                                         </Typography>

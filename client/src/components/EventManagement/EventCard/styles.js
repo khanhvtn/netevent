@@ -35,11 +35,6 @@ export default makeStyles((theme) => ({
         border: '2px solid',
         fontWeight: 'bold',
     },
-    alignBudget: {
-        display: 'flex',
-        alignItems: 'center',
-        flexWrap: 'wrap'
-    },
     schedule: {
         marginBottom: 10,
         marginTop: 10

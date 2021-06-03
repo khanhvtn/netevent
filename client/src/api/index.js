@@ -96,6 +96,9 @@ export const deleteEventTypesAPI = (userReq) =>
 export const getAllEventTypesAPI = () => AXIOS.get(`/eventType/all`);
 
 // Event APIs
+export const getEventsAPI = (search, take, page) => 
+    AXIOS.get(`/event/filter?search=${search ? search : ''}&take=${take ? take : ''}&page=${page ? page : ''}`);
+
 export const createEventAPI = (userReq) => AXIOS.post(`/event/create`, userReq);
 export const updateEventAPI = (userReq) => AXIOS.patch(`/event/update`, userReq);
 export const deleteEventAPI = (userReq) => AXIOS.delete(`/event/delete`, userReq);

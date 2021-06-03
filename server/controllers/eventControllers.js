@@ -252,7 +252,9 @@ const filter = async (req, res, next) => {
         Variable total event based on search and filter
          */
         const totalEvent = await Event.find({
-            $or: [{ eventName: new RegExp(options.search, 'i') }],
+            $or: [
+                { eventName: new RegExp(options.search, 'i') }
+            ],
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -269,7 +271,9 @@ const filter = async (req, res, next) => {
 
         //return data to client
         const events = await Event.find({
-            $or: [{ eventName: new RegExp(options.search, 'i') }],
+            $or: [
+                { eventName: new RegExp(options.search, 'i') }
+            ],
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
