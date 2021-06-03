@@ -7,7 +7,7 @@ import {
     InputBase,
     IconButton,
     Grid,
-    Tooltip
+    Tooltip,
 } from '@material-ui/core';
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
@@ -16,17 +16,52 @@ import {
     createFacility,
     deleteFacilities,
     updateFacility,
+    recoveryFacilities,
 } from '../../actions/facilityActions';
 import { useDispatch, useSelector } from 'react-redux';
 
 //import makeStyles in the last
 import useStyles from './styles';
 import { ERROR_CLEAR } from '../../constants';
-import FacilityTable from './FacilityTable/FacilityTable';
 import FacilityFilter from './FacilityFilter/FacilityFilter';
 import FacilityNotification from './FacilityNotification/FacilityNotification';
 import FacilityDialog from './FacilityDialog/FacilityDialog';
-import FacilityPagination from './FacilityPagination/FacilityPagination';
+import PaginationTable from '../MainTable/PaginationTable/PaginationTable';
+import DataTable from '../MainTable/DataTable/DataTable';
+import NotificationApp from '../Notification/Notification';
+
+const headCells = [
+    {
+        id: 'name',
+        numeric: false,
+        disablePadding: false,
+        label: 'Name',
+    },
+    {
+        id: 'code',
+        numeric: false,
+        disablePadding: false,
+        label: 'Code',
+    },
+    {
+        id: 'type',
+        numeric: false,
+        disablePadding: false,
+        label: 'Type',
+    },
+    {
+        id: 'createdAt',
+        numeric: false,
+        disablePadding: false,
+        label: 'Created At',
+    },
+    {
+        id: 'updatedAt',
+        numeric: false,
+        disablePadding: false,
+        label: 'Updated At',
+    },
+];
 
 const initialState = {
     search: '',
@@ -36,15 +71,14 @@ const initialState = {
     name: '',
     code: '',
     type: '',
-    status: '',
     openAlert: false,
     openDeleteDialog: false,
     openDeleteSnackBar: false,
     openUpdateSnackBar: false,
     openCreateSnackBar: false,
+    openRecoverySnackBar: false,
     isCreateMode: true,
     openFilter: false,
-    statusFilter: '',
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
@@ -52,7 +86,6 @@ const initialState = {
 };
 
 const filterState = {
-    statusFilter: '',
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
@@ -67,6 +100,9 @@ const Facility = () => {
         createSuccess,
         deleteSuccess,
         updateSuccess,
+        totalPages,
+        isLoading,
+        recoverySuccess,
     } = useSelector((state) => ({
         facilities: state.facility.facilities,
         isLoading: state.facility.isLoading,
@@ -75,12 +111,26 @@ const Facility = () => {
         createSuccess: state.facility.createSuccess,
         deleteSuccess: state.facility.deleteSuccess,
         updateSuccess: state.facility.updateSuccess,
+        recoverySuccess: state.facility.recoverySuccess,
     }));
 
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
 
     const [selected, setSelected] = useState([]);
+
+    //userEffect to toggle notification for recovery success
+    useEffect(() => {
+        if (recoverySuccess) {
+            dispatch(getFacilities());
+            //clear selected item
+            setSelected(() => []);
+        }
+        setState((prevState) => ({
+            ...prevState,
+            openRecoverySnackBar: recoverySuccess,
+        }));
+    }, [dispatch, recoverySuccess]);
 
     //useEffect to toggle notification for create success
     useEffect(() => {
@@ -177,7 +227,6 @@ const Facility = () => {
                 state.search,
                 state.take,
                 state.page,
-                state.statusFilter,
                 filterDate.createdFrom,
                 filterDate.createdTo,
                 filterDate.updatedFrom,
@@ -197,7 +246,6 @@ const Facility = () => {
         state.search,
         state.take,
         state.page,
-        state.statusFilter,
         state.createdFrom,
         state.createdTo,
         state.updatedFrom,
@@ -239,7 +287,7 @@ const Facility = () => {
     };
 
     const handleCreateAndUpdate = () => {
-        const { name, code, type, status } = state;
+        const { name, code, type } = state;
         //create
         if (state.isCreateMode) {
             const userReq = {
@@ -254,7 +302,7 @@ const Facility = () => {
         dispatch(
             updateFacility({
                 filter: selected[0],
-                update: { name, code, type, status },
+                update: { name, code, type },
             })
         );
     };
@@ -263,6 +311,13 @@ const Facility = () => {
         dispatch(
             deleteFacilities({
                 deleteList: selected,
+            })
+        );
+    };
+    const handleRecovery = () => {
+        dispatch(
+            recoveryFacilities({
+                recoveryList: selected,
             })
         );
     };
@@ -279,7 +334,6 @@ const Facility = () => {
             name: mode ? targetEdit.name : '',
             code: mode ? targetEdit.code : '',
             type: mode ? targetEdit.type : '',
-            status: mode ? targetEdit.status : '',
             openCreateAndUpdateDialog: !prevState.openCreateAndUpdateDialog,
             isCreateMode: mode ? false : true,
         }));
@@ -354,8 +408,11 @@ const Facility = () => {
                                     </IconButton>
                                 </Tooltip>
                             </Toolbar>
+
                             {/* Facility Table */}
-                            <FacilityTable
+                            <DataTable
+                                handleRecovery={handleRecovery}
+                                recoveryMode={true}
                                 handleToggleDialogCreateAndUpdate={
                                     handleToggleDialogCreateAndUpdate
                                 }
@@ -365,15 +422,23 @@ const Facility = () => {
                                 take={state.take}
                                 selected={selected}
                                 setSelected={setSelected}
+                                data={facilities}
+                                isLoading={isLoading}
+                                createSuccess={createSuccess}
+                                deleteSuccess={deleteSuccess}
+                                updateSuccess={updateSuccess}
+                                tableName="List of Facilities"
+                                headCells={headCells}
                             />
                             {/* Facility Pagination */}
-                            <FacilityPagination
+                            <PaginationTable
                                 page={state.page}
                                 take={state.take}
                                 handleChangeRowsPerPage={
                                     handleChangeRowsPerPage
                                 }
                                 handleChangePage={handleChangePage}
+                                totalPages={totalPages}
                             />
                         </Grid>
                     </AppBar>
@@ -392,24 +457,28 @@ const Facility = () => {
                 name={state.name}
                 code={state.code}
                 type={state.type}
-                status={state.status}
                 openDeleteDialog={state.openDeleteDialog}
                 handleCreateAndUpdate={handleCreateAndUpdate}
                 handleToggleDialogDelete={handleToggleDialogDelete}
                 handleDelete={handleDelete}
             />
             {/* Notification */}
-            <FacilityNotification
+            {/* <FacilityNotification
                 openDeleteSnackBar={state.openDeleteSnackBar}
                 openCreateSnackBar={state.openCreateSnackBar}
                 openUpdateSnackBar={state.openUpdateSnackBar}
+            /> */}
+            <NotificationApp
+                openDeleteSnackBar={state.openDeleteSnackBar}
+                openCreateSnackBar={state.openCreateSnackBar}
+                openUpdateSnackBar={state.openUpdateSnackBar}
+                openRecoverySnackBar={state.openRecoverySnackBar}
             />
 
             {/* Filter Sidebar */}
             <FacilityFilter
                 openFilter={state.openFilter}
                 handleToggleFilter={handleToggleFilter}
-                statusFilter={filters.statusFilter}
                 handleFilterChange={handleFilterChange}
                 createdFrom={filters.createdFrom}
                 createdTo={filters.createdTo}

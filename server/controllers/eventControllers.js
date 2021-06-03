@@ -299,21 +299,63 @@ const filter = async (req, res, next) => {
 const deleteEvent = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
-        if (deleteList.length === 1) {
-            const deletedEvent = await Event.findOneAndDelete({
-                eventName: deleteList[0],
-            });
-            return cusResponse(res, 200, deletedEvent, null);
-        } else {
-            const deletedEvent = await Promise.all(
-                deleteList.map(async (eventName) => {
-                    return await Event.findOneAndDelete({
-                        eventName,
-                    });
-                })
-            );
-            return cusResponse(res, 200, deletedEvent, null);
+        const deletedEvent = await Event.updateMany(
+            { name: { $in: deleteList } },
+            { $set: { isDeleted: true } }
+        );
+        return cusResponse(res, 200, deletedEvent, null);
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
         }
+        return next(new CustomError(500, error.message));
+    }
+};
+/**
+ * @decsription Delete events from the request names
+ * @method DELETE
+ * @route /api/event/deleteP
+ *
+ * @version 1.0
+ */
+const deleteEventPermanent = async (req, res, next) => {
+    try {
+        const { deleteList } = req.body;
+        const deletedEvent = await Event.deleteMany({
+            name: { $in: deleteList },
+        });
+        return cusResponse(res, 200, deletedEvent, null);
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
+        return next(new CustomError(500, error.message));
+    }
+};
+
+/**
+ * @decsription Recovery events from the request names
+ * @method PATCH
+ * @route /api/event/recovery
+ *
+ * @version 1.0
+ */
+const recoveryEvent = async (req, res, next) => {
+    try {
+        const { recoveryList } = req.body;
+        const recoveryEvent = await Event.updateMany(
+            { name: { $in: recoveryList } },
+            { $set: { isDeleted: false } }
+        );
+        return cusResponse(res, 200, recoveryEvent, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
@@ -381,4 +423,6 @@ module.exports = {
     deleteEvent,
     updateEvent,
     getAllEvent,
+    recoveryEvent,
+    deleteEventPermanent,
 };

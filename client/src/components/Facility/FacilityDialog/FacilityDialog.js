@@ -31,7 +31,6 @@ const FacilityDialog = ({
     name,
     code,
     type,
-    status,
     openDeleteDialog,
     handleCreateAndUpdate,
     handleToggleDialogDelete,
@@ -106,27 +105,6 @@ const FacilityDialog = ({
                         type="text"
                         fullWidth
                     />
-                    {!isCreateMode ? (
-                        <FormControl fullWidth variant="outlined">
-                            <InputLabel id="statusLabel">Status</InputLabel>
-                            <Select
-                                disabled={isLoading ? true : false}
-                                labelId="statusLabel"
-                                id="status"
-                                value={status}
-                                onChange={handleChange}
-                                label="Status"
-                                inputProps={{
-                                    name: 'status',
-                                }}
-                            >
-                                <MenuItem value={true}>Active</MenuItem>
-                                <MenuItem value={false}>Expired</MenuItem>
-                            </Select>
-                        </FormControl>
-                    ) : (
-                            ''
-                        )}
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
                     <Button
@@ -147,8 +125,8 @@ const FacilityDialog = ({
                         ) : isCreateMode ? (
                             'Create'
                         ) : (
-                                    'Update'
-                                )}
+                            'Update'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -183,7 +161,11 @@ const FacilityDialog = ({
                         onClick={handleDelete}
                         color="secondary"
                     >
-                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Delete'}
+                        {isLoading ? (
+                            <CircularProgress size={25} color="inherit" />
+                        ) : (
+                            'Delete'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>
