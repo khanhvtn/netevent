@@ -16,7 +16,7 @@ import {
     Typography,
     Button,
 } from '@material-ui/core';
-import { Delete, Create, Edit } from '@material-ui/icons';
+import { Delete, DeleteForever, Create, Edit } from '@material-ui/icons';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 
 //import makeStyles in the last
@@ -132,7 +132,7 @@ const useToolbarStyles = makeStyles((theme) => ({
                   backgroundColor: theme.palette.secondary.dark,
               },
     title: {
-        flex: '1 1 100%',
+        flexGrow: '1',
         fontWeight: 'bold',
     },
 }));
@@ -146,6 +146,10 @@ const EnhancedTableToolbar = (props) => {
         tableName,
         disabled,
         constrainRangeDate,
+        recoveryMode,
+        setIsRecoveryMode,
+        isRecoveryMode,
+        handleRecovery,
     } = props;
     return (
         <Toolbar
@@ -174,46 +178,95 @@ const EnhancedTableToolbar = (props) => {
             )}
 
             {numSelected === 0 ? (
+                <>
+                    {recoveryMode && (
+                        <Button
+                            disabled={
+                                constrainRangeDate === undefined ||
+                                disabled === undefined
+                                    ? false
+                                    : !constrainRangeDate
+                                    ? true
+                                    : disabled
+                                    ? true
+                                    : false
+                            }
+                            onClick={() =>
+                                setIsRecoveryMode((prevState) => !prevState)
+                            }
+                            endIcon={!isRecoveryMode && <Delete />}
+                            variant="contained"
+                            color={isRecoveryMode ? 'default' : 'secondary'}
+                        >
+                            {isRecoveryMode ? 'Close' : 'Recycle'}
+                        </Button>
+                    )}
+
+                    {!isRecoveryMode && (
+                        <Button
+                            disabled={
+                                constrainRangeDate === undefined ||
+                                disabled === undefined
+                                    ? false
+                                    : !constrainRangeDate
+                                    ? true
+                                    : disabled
+                                    ? true
+                                    : false
+                            }
+                            style={{ marginLeft: '20px' }}
+                            onClick={handleToggleDialogCreateAndUpdate}
+                            endIcon={<Create />}
+                            variant="contained"
+                            color="primary"
+                        >
+                            Create
+                        </Button>
+                    )}
+                </>
+            ) : numSelected === 1 ? (
+                <>
+                    {isRecoveryMode && (
+                        <Button
+                            onClick={handleRecovery}
+                            variant="contained"
+                            color="primary"
+                        >
+                            Recover
+                        </Button>
+                    )}
+                    {!isRecoveryMode && (
+                        <Button
+                            onClick={handleToggleDialogDelete}
+                            endIcon={<DeleteForever />}
+                            variant="contained"
+                            color="secondary"
+                        >
+                            Delete
+                        </Button>
+                    )}
+                    {!isRecoveryMode && (
+                        <Button
+                            onClick={(e) =>
+                                handleToggleDialogCreateAndUpdate(e, 'edit')
+                            }
+                            style={{ marginLeft: '8px' }}
+                            endIcon={<Edit />}
+                            variant="contained"
+                            color="primary"
+                        >
+                            Edit
+                        </Button>
+                    )}
+                </>
+            ) : isRecoveryMode ? (
                 <Button
-                    disabled={
-                        constrainRangeDate === undefined ||
-                        disabled === undefined
-                            ? false
-                            : !constrainRangeDate
-                            ? true
-                            : disabled
-                            ? true
-                            : false
-                    }
-                    onClick={handleToggleDialogCreateAndUpdate}
-                    endIcon={<Create />}
+                    onClick={handleRecovery}
                     variant="contained"
                     color="primary"
                 >
-                    Create
+                    Recover
                 </Button>
-            ) : numSelected === 1 ? (
-                <>
-                    <Button
-                        onClick={handleToggleDialogDelete}
-                        endIcon={<Delete />}
-                        variant="contained"
-                        color="secondary"
-                    >
-                        Delete
-                    </Button>
-                    <Button
-                        onClick={(e) =>
-                            handleToggleDialogCreateAndUpdate(e, 'edit')
-                        }
-                        style={{ marginLeft: '8px' }}
-                        endIcon={<Edit />}
-                        variant="contained"
-                        color="primary"
-                    >
-                        Edit
-                    </Button>
-                </>
             ) : (
                 <Button
                     onClick={handleToggleDialogDelete}
@@ -247,11 +300,17 @@ const DataTable = ({
     tableName,
     disabled,
     constrainRangeDate,
+    recoveryMode,
+    handleRecovery,
 }) => {
     const css = useStyles();
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
+    const [isRecoveryMode, setIsRecoveryMode] = useState(false);
 
+    const dataFilter = isRecoveryMode
+        ? data.filter((facility) => facility.isDeleted === true)
+        : data.filter((facility) => facility.isDeleted === false);
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
@@ -260,7 +319,7 @@ const DataTable = ({
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = data.map((n) => n.name);
+            const newSelecteds = dataFilter.map((n) => n.name);
             setSelected(newSelecteds);
             return;
         }
@@ -289,10 +348,11 @@ const DataTable = ({
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
-    const emptyRows = take - data.length;
+    const emptyRows = take - dataFilter.length;
     return (
         <Paper className={css.paper1} elevation={0}>
             <EnhancedTableToolbar
+                setIsRecoveryMode={setIsRecoveryMode}
                 handleToggleDialogCreateAndUpdate={
                     handleToggleDialogCreateAndUpdate
                 }
@@ -301,6 +361,9 @@ const DataTable = ({
                 tableName={tableName}
                 disabled={disabled}
                 constrainRangeDate={constrainRangeDate}
+                recoveryMode={recoveryMode}
+                isRecoveryMode={isRecoveryMode}
+                handleRecovery={handleRecovery}
             />
             <TableContainer>
                 <Table
@@ -316,7 +379,7 @@ const DataTable = ({
                         orderBy={orderBy}
                         onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
-                        rowCount={data.length}
+                        rowCount={dataFilter.length}
                         headCells={headCells}
                     />
                     <TableBody>
@@ -346,7 +409,7 @@ const DataTable = ({
                                     }
                                 )}
                             </>
-                        ) : data.length === 0 ? (
+                        ) : dataFilter.length === 0 ? (
                             <>
                                 <TableRow
                                     style={{
@@ -364,7 +427,7 @@ const DataTable = ({
                         ) : (
                             <>
                                 {stableSort(
-                                    data,
+                                    dataFilter,
                                     getComparator(order, orderBy)
                                 ).map((row, index) => {
                                     const isItemSelected = isSelected(row.name);

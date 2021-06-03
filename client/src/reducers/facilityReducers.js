@@ -5,6 +5,7 @@ import {
     FACILITY_UPDATE_SUCCESS,
     FACILITY_DELETE_SUCCESS,
     FACILITY_GET_ALL_FILTER,
+    FACILITY_RECOVERY_SUCCESS,
 } from '../constants';
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
     createSuccess: false,
     updateSuccess: false,
     deleteSuccess: false,
+    recoverySuccess: false,
 };
 
 export default function facilityReducers(state = initialState, action) {
@@ -37,6 +39,8 @@ export default function facilityReducers(state = initialState, action) {
             return { ...state, updateSuccess: action.payload };
         case FACILITY_DELETE_SUCCESS:
             return { ...state, deleteSuccess: action.payload };
+        case FACILITY_RECOVERY_SUCCESS:
+            return { ...state, recoverySuccess: action.payload };
         default:
             return state;
     }

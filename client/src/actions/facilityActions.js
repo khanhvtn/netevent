@@ -7,6 +7,7 @@ import {
     ERROR_CLEAR,
     FACILITY_DELETE_SUCCESS,
     FACILITY_GET_ALL_FILTER,
+    FACILITY_RECOVERY_SUCCESS,
 } from '../constants';
 import {
     getFacilitiesAPI,
@@ -14,6 +15,7 @@ import {
     updateFacilityAPI,
     deleteFacilitiesAPI,
     getAllFacilitiesAPI,
+    recoverFacilitiesAPI,
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -49,7 +51,6 @@ export const getFacilities = (
 ) => async (dispatch) => {
     setFacilityIsLoading(true, dispatch);
     try {
-        console.log(status)
         const data = await getFacilitiesAPI(
             search,
             take,
@@ -89,10 +90,10 @@ export const createFacility = (userReq) => async (dispatch) => {
             });
         }, 3000);
     } catch (error) {
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
-                payload: error.response.data?.errors,
+                payload: error.response?.data?.errors,
             });
         }
         console.log(error);
@@ -120,10 +121,35 @@ export const updateFacility = (userReq) => async (dispatch) => {
             });
         }, 3000);
     } catch (error) {
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
-                payload: error.response.data?.errors,
+                payload: error.response?.data?.errors,
+            });
+        }
+        console.log(error);
+    }
+    setFacilityIsLoading(false, dispatch);
+};
+export const recoveryFacilities = (userReq) => async (dispatch) => {
+    setFacilityIsLoading(true, dispatch);
+    try {
+        await recoverFacilitiesAPI(userReq);
+        dispatch({
+            type: FACILITY_RECOVERY_SUCCESS,
+            payload: true,
+        });
+        setTimeout(() => {
+            dispatch({
+                type: FACILITY_RECOVERY_SUCCESS,
+                payload: false,
+            });
+        }, 3000);
+    } catch (error) {
+        if (error.response?.data?.errors) {
+            dispatch({
+                type: ERROR,
+                payload: error.response?.data?.errors,
             });
         }
         console.log(error);
@@ -154,7 +180,7 @@ export const deleteFacilities = (userReq) => async (dispatch) => {
         if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
-                payload: error.response.data?.errors,
+                payload: error.response?.data?.errors,
             });
         }
         console.log(error);

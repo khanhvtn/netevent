@@ -313,9 +313,7 @@ const recoveryFacility = async (req, res, next) => {
     try {
         const { recoveryList } = req.body;
         const recoveryFacilities = await Facility.updateMany(
-            {
-                name: { $in: recoveryList },
-            },
+            { name: { $in: recoveryList } },
             { $set: { isDeleted: false } }
         );
         return cusResponse(res, 200, recoveryFacilities, null);
