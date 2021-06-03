@@ -288,7 +288,7 @@ const deleteFacilityPermanent = async (req, res, next) => {
 };
 /**
  * @decsription Recovery facilities from the request names
- * @method DELETE
+ * @method PATCH
  * @route /api/facility/recovery
  *
  * @version 1.0
