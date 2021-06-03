@@ -9,25 +9,30 @@ export default makeStyles((theme) => ({
             margin: '20px',
         },
     },
-    searchIcon: {
-        padding: theme.spacing(0, 2),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
     toolbarEventDetail: {
-        marginLeft: 8
+        marginLeft: 8,
+        [theme.breakpoints.down('xs')]: {
+            marginLeft: 0,
+            fontSize: '1em'
+        },
+    },
+    eventDetailTitle: {
+        fontWeight: 'bold',
+        marginTop: 16,
+        [theme.breakpoints.down('xs')]: {
+            fontSize: '2.5em'
+        },
+    },
+    imageWrapper: {
+        margin: '16px 0'
     },
     detailWrapper: {
-        padding: 96,
+        padding: '12px 96px 80px 96px',
         [theme.breakpoints.down('md')]: {
-            padding: 48,
+            padding: '12px 48px 48px 48px',
         },
         [theme.breakpoints.down('sm')]: {
-            padding: 24,
+            padding: '12px 24px 24px 24px',
         },
         [theme.breakpoints.down('xs')]: {
             padding: 8,

@@ -162,7 +162,7 @@ const EventManagement = () => {
                                     <InputBase
                                         onChange={handleChange}
                                         className={css.inputInput}
-                                        placeholder="Search by name, code, type"
+                                        placeholder="Search by event name"
                                         name="search"
                                         value={state.search}
                                         inputProps={{

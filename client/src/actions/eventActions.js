@@ -5,6 +5,7 @@ import {
     ERROR,
     EVENT_GET_ALL_FILTER,
     EVENT_GET_FACILITY_AND_TASK,
+    EVENT_DETAIL_LOADING,
 } from '../constants';
 import { createEventAPI, getEventsAPI, getFacilityAndTaskByEventNameAPI } from '../api';
 
@@ -15,6 +16,13 @@ const setEventIsLoading = (status, dispatch) => {
         payload: status,
     });
 };
+
+const setEventDetailIsLoading = (status, dispatch) => {
+    dispatch({
+        type: EVENT_DETAIL_LOADING,
+        payload: status
+    })
+}
 
 export const createEvent = (userReq) => async (dispatch) => {
     setEventIsLoading(true, dispatch);
@@ -63,7 +71,7 @@ export const getEvents = (search, take, page) => async (dispatch) => {
 };
 
 export const getFacilityAndTaskByEventName = (eventName) => async (dispatch) => {
-    setEventIsLoading(true, dispatch);
+    setEventDetailIsLoading(true, dispatch);
     try {
         const data = await getFacilityAndTaskByEventNameAPI(eventName);
         console.log(data)
@@ -74,5 +82,5 @@ export const getFacilityAndTaskByEventName = (eventName) => async (dispatch) => 
     } catch (error) {
         console.log(error.message)
     }
-    setEventIsLoading(false, dispatch);
+    setEventDetailIsLoading(false, dispatch);
 }

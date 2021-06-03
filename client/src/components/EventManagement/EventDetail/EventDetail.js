@@ -64,7 +64,7 @@ const EventDetail = () => {
     const { facilities, tasks, isLoading } = useSelector((state) => ({
         facilities: state.event.eventDetail?.facilityHistoryListId,
         tasks: state.event.eventDetail?.taskListId,
-        isLoading: state.event.isLoading
+        isLoading: state.event.isDetailLoading
     }));
 
     // Handle expand of accordion
@@ -136,7 +136,7 @@ const EventDetail = () => {
                 >
                     {/* Event Header */}
                     <Grid item>
-                        <Typography style={{ fontWeight: 'bold', marginTop: 16 }} variant="h3">
+                        <Typography className={css.eventDetailTitle} variant="h3">
                             Event Detail
                         </Typography>
                     </Grid>
@@ -152,7 +152,7 @@ const EventDetail = () => {
                         xl={12}
                         sm={12}
                         xs={12}
-                        style={{ margin: '20px 0' }}
+                        className={css.imageWrapper}
                     >
                         <div
                             style={{
