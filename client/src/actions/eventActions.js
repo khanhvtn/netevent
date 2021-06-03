@@ -4,8 +4,9 @@ import {
     ERROR_CLEAR,
     ERROR,
     EVENT_GET_ALL_FILTER,
+    EVENT_GET_FACILITY_AND_TASK,
 } from '../constants';
-import { createEventAPI, getEventsAPI } from '../api';
+import { createEventAPI, getEventsAPI, getFacilityAndTaskByEventNameAPI } from '../api';
 
 //setIsLoading func is to set loading status
 const setEventIsLoading = (status, dispatch) => {
@@ -54,9 +55,24 @@ export const getEvents = (search, take, page) => async (dispatch) => {
         dispatch({
             type: EVENT_GET_ALL_FILTER,
             payload: data
-        })
+        });
     } catch (error) {
         console.log(error.message)
     }
-    setEventIsLoading(false, dispatch)
+    setEventIsLoading(false, dispatch);
+};
+
+export const getFacilityAndTaskByEventName = (eventName) => async (dispatch) => {
+    setEventIsLoading(true, dispatch);
+    try {
+        const data = await getFacilityAndTaskByEventNameAPI(eventName);
+        console.log(data)
+        dispatch({
+            type: EVENT_GET_FACILITY_AND_TASK,
+            payload: data
+        });
+    } catch (error) {
+        console.log(error.message)
+    }
+    setEventIsLoading(false, dispatch);
 }

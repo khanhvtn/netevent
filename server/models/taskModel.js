@@ -15,6 +15,7 @@ const taskSchema = mongoose.Schema(
         },
         userId: {
             type: mongoose.Types.ObjectId,
+            ref: 'User',
             required: [true, 'Assignee cannot be blnaked'],
         },
         type: {

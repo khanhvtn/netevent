@@ -4,11 +4,13 @@ import {
     EVENT_CREATE_SUCCESS,
     EVENT_UPDATE_SUCCESS,
     EVENT_DELETE_SUCCESS,
+    EVENT_GET_FACILITY_AND_TASK
 } from '../constants';
 
 const initialState = {
     isLoading: false,
     events: [],
+    eventDetail: null,
     totalPages: null,
     createSuccess: false,
     updateSuccess: false,
@@ -24,6 +26,11 @@ export default function eventReducers(state = initialState, action) {
                 ...state,
                 events: action.payload.data?.data,
                 totalPages: action.payload.data?.totalPages
+            }
+        case EVENT_GET_FACILITY_AND_TASK:
+            return {
+                ...state,
+                eventDetail: action.payload.data?.data
             }
         case EVENT_CREATE_SUCCESS:
             return { ...state, createSuccess: action.payload };

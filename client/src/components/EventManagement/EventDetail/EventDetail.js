@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Paper,
     Typography,
@@ -10,7 +10,8 @@ import {
     AccordionSummary,
     AccordionDetails,
     Tooltip,
-    Button
+    Button,
+    CircularProgress
 } from '@material-ui/core';
 import useStyles from './styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -22,33 +23,55 @@ import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
 import TimelapseOutlinedIcon from '@material-ui/icons/TimelapseOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import EventDeleteDialog from '../EventDialog/EventDeleteDialog';
+import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFacilityAndTaskByEventName } from '../../../actions/eventActions';
+import { Skeleton } from '@material-ui/lab';
 
 const initialState = {
-    eventName: 'Netcompany Presentation Event',
-    budget: '1,000,000',
-    maxParticipants: '20',
-    location: '13 Le Thach, district 4, HCM City',
-    tags: ['RMIT', 'Techonology', 'Netcompany'],
-    registrationCloseDate: '',
-    language: 'English',
-    type: 'NetCompany',
-    mode: 'On-going',
-    accommodation: '1 day',
-    image: 'https://source.unsplash.com/featured/?macbook',
-    description: `Vừa phát triển mạng lưới tiếp thị kỹ thuật số của bạn trong lúc thưởng thức cocktail thủ công, đồ ăn vừa ngon lại còn có rút thăm may mắn xuyên đêm tại Hard Rock Cafe nằm ngay trung tâm Quận 1. Chương trình bắt đầu từ 18:00 chiều thứ Sáu ngày of 28 tháng 05! Đảm bảo rằng bạn đến đúng giờ nhé vì bạn sẽ được giảm giá 50% TẤT CẢ ly thức uống có từ 6 - 9 giờ chiều nữa đó!`,
     openDeleteDialog: false,
 }
 
 const EventDetail = () => {
     const css = useStyles();
     const history = useHistory();
+    const dispatch = useDispatch();
     const [state, setState] = useState(initialState);
     const [expanded, setExpanded] = useState(false);
 
+    // Update new state when getting props from event-management page
+    useEffect(() => {
+        // Return the event-management page when there is no props passing
+        if (!history.location.state) {
+            history.push('/dashboard/event-management')
+        }
+
+        // Set state for the event
+        setState((prevState) => ({
+            ...prevState,
+            event: history.location.state.event
+        }));
+    }, [])
+
+    // Get Facility and Task if state event existed
+    useEffect(() => {
+        if (state.event) {
+            dispatch(getFacilityAndTaskByEventName(state.event.eventName))
+        }
+    }, [state])
+
+    const { facilities, tasks, isLoading } = useSelector((state) => ({
+        facilities: state.event.eventDetail?.facilityHistoryListId,
+        tasks: state.event.eventDetail?.taskListId,
+        isLoading: state.event.isLoading
+    }));
+
+    // Handle expand of accordion
     const handleExpand = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
+    // Return to event-management page with the current path
     const handleOnClickReturn = () => {
         history.push({
             pathname: '/dashboard/event-management',
@@ -134,7 +157,7 @@ const EventDetail = () => {
                             style={{
                                 width: '100%',
                                 height: '345px',
-                                backgroundImage: `url(${!state.image ? blankPhoto : state.image
+                                backgroundImage: `url(${!state.event?.image ? blankPhoto : state.event?.image
                                     })`,
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center',
@@ -166,10 +189,10 @@ const EventDetail = () => {
                             {/* Event Title, Budget and MaxParticipants */}
                             <Grid item>
                                 <Typography style={{ fontWeight: 'bold' }} variant="h5">
-                                    {state.eventName}
+                                    {state.event?.eventName}
                                 </Typography>
                                 <Typography variant="caption" color="textSecondary">
-                                    {`${state.budget} vnd | ${state.maxParticipants} participants`}
+                                    {`${state.event?.budget} vnd | ${state.event?.maxParticipants} participants`}
                                 </Typography>
                             </Grid>
 
@@ -191,7 +214,7 @@ const EventDetail = () => {
                                             Category (type)
                                         </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                            {state.type}
+                                            {state.event?.eventTypeId.name}
                                         </Typography>
                                     </Grid>
                                     <Grid xs={1} container alignItems="center" justify="center" item>
@@ -202,7 +225,7 @@ const EventDetail = () => {
                                             Language
                                         </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                            {state.language}
+                                            {state.event?.language}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -222,7 +245,7 @@ const EventDetail = () => {
                                             Mode
                                         </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                            {state.mode}
+                                            {state.event?.mode}
                                         </Typography>
                                     </Grid>
                                     <Grid xs={1} container alignItems="center" justify="center" item>
@@ -233,7 +256,7 @@ const EventDetail = () => {
                                             Accomodation
                                         </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                            {state.accommodation}
+                                            {state.event?.accommodation}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -245,44 +268,55 @@ const EventDetail = () => {
                                     Tasks
                                 </Typography>
                                 <div className={css.expandRoot}>
-                                    <Accordion expanded={expanded === 'panel1'} onChange={handleExpand('panel1')}>
-                                        <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls="panel1bh-content"
-                                            id="panel1bh-header"
-                                        >
-                                            <Typography className={css.heading}>Introduction</Typography>
-                                            <Typography className={css.secondaryHeading}>lamdoan@gmail.com</Typography>
-                                        </AccordionSummary>
-                                        <AccordionDetails className={css.expandRoot}>
-                                            <Grid className={css.schedule} container >
-                                                <Grid xs container direction="column" justify="center" item>
-                                                    <Typography variant="caption" color="textSecondary" style={{ fontWeight: 'bold' }}>
-                                                        Type
-                                                    </Typography>
-                                                    <Typography variant="body2">
-                                                        Presenter
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid xs container direction="column" item>
-                                                    <Typography variant="caption" color="textSecondary" style={{ fontWeight: 'bold' }}>
-                                                        From
-                                                    </Typography>
-                                                    <Typography variant="body2">
-                                                        08:00 AM
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid xs container direction="column" item>
-                                                    <Typography variant="caption" color="textSecondary" style={{ fontWeight: 'bold' }}>
-                                                        To
-                                                    </Typography>
-                                                    <Typography variant="body2">
-                                                        10:30 AM
-                                                    </Typography>
-                                                </Grid>
-                                            </Grid>
-                                        </AccordionDetails>
-                                    </Accordion>
+                                    {isLoading ?
+                                        <>
+                                            <Skeleton />
+                                            <Skeleton />
+                                        </>
+                                        :
+                                        tasks?.map((task, index) => {
+                                            return (
+                                                <Accordion key={index} expanded={expanded === 'panel1'} onChange={handleExpand('panel1')}>
+                                                    <AccordionSummary
+                                                        expandIcon={<ExpandMoreIcon />}
+                                                        aria-controls="panel1bh-content"
+                                                        id="panel1bh-header"
+                                                    >
+                                                        <Typography className={css.heading}>{task.name}</Typography>
+                                                        <Typography className={css.secondaryHeading}>{task.userId.email}</Typography>
+                                                    </AccordionSummary>
+                                                    <AccordionDetails className={css.expandRoot}>
+                                                        <Grid className={css.schedule} container >
+                                                            <Grid xs container direction="column" justify="center" item>
+                                                                <Typography variant="caption" color="textSecondary" style={{ fontWeight: 'bold' }}>
+                                                                    Type
+                                                            </Typography>
+                                                                <Typography variant="body2">
+                                                                    {task.type}
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid xs container direction="column" item>
+                                                                <Typography variant="caption" color="textSecondary" style={{ fontWeight: 'bold' }}>
+                                                                    From
+                                                            </Typography>
+                                                                <Typography variant="body2">
+                                                                    {`${moment(task.startDate).format('LT')}`}
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid xs container direction="column" item>
+                                                                <Typography variant="caption" color="textSecondary" style={{ fontWeight: 'bold' }}>
+                                                                    To
+                                                            </Typography>
+                                                                <Typography variant="body2">
+                                                                    {`${moment(task.endDate).format('LT')}`}
+                                                                </Typography>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </AccordionDetails>
+                                                </Accordion>
+                                            )
+                                        })
+                                    }
                                 </div>
                             </Grid>
 
@@ -292,41 +326,53 @@ const EventDetail = () => {
                                     Facilities
                                 </Typography>
                                 <div className={css.expandRoot}>
-                                    <Accordion expanded={expanded === 'panel2'} onChange={handleExpand('panel2')}>
-                                        <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls="panel2bh-content"
-                                            id="panel2bh-header"
-                                        >
-                                            <Typography className={css.heading}>Iphone X</Typography>
-                                        </AccordionSummary>
-                                        <AccordionDetails className={css.expandRoot}>
-                                            <Grid className={css.schedule} container >
-                                                <Grid xs container direction="column" item>
-                                                    <Typography variant="caption" color="textSecondary" style={{ fontWeight: 'bold' }}>
-                                                        Borrow date
-                                                    </Typography>
-                                                    <Typography variant="body2">
-                                                        09, March, 2014
-                                                    </Typography>
-                                                    <Typography variant="body2">
-                                                        08:00 AM
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid xs container direction="column" item>
-                                                    <Typography variant="caption" color="textSecondary" style={{ fontWeight: 'bold' }}>
-                                                        Return date
-                                                    </Typography>
-                                                    <Typography variant="body2">
-                                                        09, March, 2014
-                                                    </Typography>
-                                                    <Typography variant="body2" >
-                                                        10:30 AM
-                                                    </Typography>
-                                                </Grid>
-                                            </Grid>
-                                        </AccordionDetails>
-                                    </Accordion>
+                                    {isLoading ?
+                                        <>
+                                            <Skeleton />
+                                            <Skeleton />
+                                        </>
+                                        :
+                                        facilities?.map((facility, index) => {
+                                            return (
+                                                <Accordion key={index} expanded={expanded === 'panel2'} onChange={handleExpand('panel2')}>
+                                                    <AccordionSummary
+                                                        expandIcon={<ExpandMoreIcon />}
+                                                        aria-controls="panel2bh-content"
+                                                        id="panel2bh-header"
+                                                    >
+                                                        <Typography className={css.heading}>{facility.facilityId.name}</Typography>
+                                                    </AccordionSummary>
+                                                    <AccordionDetails className={css.expandRoot}>
+                                                        <Grid className={css.schedule} container >
+                                                            <Grid xs container direction="column" item>
+                                                                <Typography variant="caption" color="textSecondary" style={{ fontWeight: 'bold' }}>
+                                                                    Borrow date
+                                                                </Typography>
+                                                                <Typography variant="body2">
+                                                                    {`${moment(facility.borrowDate).format('DD MMM, YYYY')}`}
+                                                                </Typography>
+                                                                <Typography variant="body2">
+                                                                    {`${moment(facility.borrowDate).format('LT')}`}
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid xs container direction="column" item>
+                                                                <Typography variant="caption" color="textSecondary" style={{ fontWeight: 'bold' }}>
+                                                                    Return date
+                                                                </Typography>
+                                                                <Typography variant="body2">
+                                                                    {`${moment(facility.returnDate).format('DD MMM, YYYY')}`}
+                                                                </Typography>
+                                                                <Typography variant="body2" >
+                                                                    {`${moment(facility.returnDate).format('LT')}`}
+
+                                                                </Typography>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </AccordionDetails>
+                                                </Accordion>
+                                            )
+                                        })
+                                    }
                                 </div>
                             </Grid>
 
@@ -337,7 +383,7 @@ const EventDetail = () => {
                                     Description
                                 </Typography>
                                 <Typography variant="body2" >
-                                    {state.description}
+                                    {state.event?.description}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -360,23 +406,29 @@ const EventDetail = () => {
                                     Date and time
                                 </Typography>
                                 <Typography variant="body2">
-                                    09, March, 2014
+                                    {
+                                        moment(state.event?.startDate).format('DD MMM') === moment(state.event?.endDate).format('DD MMM')
+                                            ?
+                                            `${moment(state.event?.startDate).format('DD MMM, YYYY')}`
+                                            :
+                                            `${moment(state.event?.startDate).format('DD MMM')} - ${moment(state.event?.endDate).format('DD MMM')}`
+                                    }
                                 </Typography>
                                 <Typography variant="body2">
-                                    6:00 PM – 9:00 PM
+                                    {`${moment(state.event?.startDate).format('LT')} - ${moment(state.event?.endDate).format('LT')}`}
                                 </Typography>
                             </Grid>
 
                             {/* Registration Close Date */}
                             <Grid style={{ marginTop: 36 }} item>
                                 <Typography style={{ fontWeight: 'bold' }} variant="h6">
-                                    Registration dealine
+                                    Registration deadline
                                 </Typography>
                                 <Typography variant="body2">
-                                    09, March, 2014
+                                    {`${moment(state.event?.registrationCloseDate).format('DD MMM, YYYY')}`}
                                 </Typography>
                                 <Typography variant="body2">
-                                    6:00 PM
+                                    {`${moment(state.event?.registrationCloseDate).format('LT')}`}
                                 </Typography>
                             </Grid>
 
@@ -386,7 +438,7 @@ const EventDetail = () => {
                                     Location
                                 </Typography>
                                 <Typography variant="body2">
-                                    {state.location}
+                                    {state.event?.location}
                                 </Typography>
                             </Grid>
 
@@ -396,7 +448,7 @@ const EventDetail = () => {
                                     Tags
                                 </Typography>
                                 <Typography variant="body2">
-                                    {state.tags.join(', ')}
+                                    {state.event?.tags.join(', ')}
                                 </Typography>
                             </Grid>
                         </Grid>

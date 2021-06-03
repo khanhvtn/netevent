@@ -60,6 +60,7 @@ const EventManagement = () => {
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
 
+    // Request to get the events data
     useEffect(() => {
         if (!history.location.state) {
             dispatch(getEvents(
@@ -136,11 +137,15 @@ const EventManagement = () => {
         }));
     };
 
-    const handleOnClickEvent = () => {
-        history.push('/dashboard/event-detail')
+    // Push to the event-detail page with event props
+    const handleOnClickEvent = (event) => {
+        history.push({
+            pathname: '/dashboard/event-detail',
+            state: {
+                event: event
+            }
+        })
     }
-
-    console.log(history)
 
     return (
         <>

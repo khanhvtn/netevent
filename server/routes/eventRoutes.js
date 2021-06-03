@@ -12,6 +12,7 @@ const { eventControllers } = require('../controllers');
 router.post('/create', eventControllers.createEvent);
 router.get('/filter', eventControllers.filter);
 router.get('/all', eventControllers.getAllEvent);
+router.get('/detail', eventControllers.getFacilityAndTaskByEventName)
 router.patch('/update', eventControllers.updateEvent);
 router.delete('/delete', eventControllers.deleteEvent);
 

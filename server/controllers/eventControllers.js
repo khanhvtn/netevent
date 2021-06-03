@@ -1,6 +1,7 @@
 const { Event, Task, FacilityHistory, Facility } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
+const { populate } = require('../models/userModel');
 
 /**
  *  =====================================
@@ -382,10 +383,35 @@ const getAllEvent = async (req, res, next) => {
     }
 };
 
+const getFacilityAndTaskByEventName = async (req, res, next) => {
+    try {
+        const event = await Event.findOne({
+            eventName: req.query.eventName
+        })
+            .populate({
+                path: 'taskListId facilityHistoryListId',
+                populate: [
+                    {
+                        path: 'facilityId',
+                        model: 'Facility'
+                    },
+                    {
+                        path: 'userId',
+                        model: 'User'
+                    }
+                ]
+            })
+        return cusResponse(res, 200, event, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message))
+    }
+}
+
 module.exports = {
     createEvent,
     filter,
     deleteEvent,
     updateEvent,
     getAllEvent,
+    getFacilityAndTaskByEventName
 };
