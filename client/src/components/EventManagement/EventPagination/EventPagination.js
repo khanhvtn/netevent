@@ -41,6 +41,7 @@ const EventPagination = ({
                 <Pagination
                     page={page}
                     shape="rounded"
+                    size="small"
                     variant="text"
                     count={parseInt(totalPages)}
                     color="primary"

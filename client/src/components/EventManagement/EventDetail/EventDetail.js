@@ -5,32 +5,38 @@ import {
     AppBar,
     Grid,
     Toolbar,
-    Tooltip,
     IconButton,
-    CardMedia,
-    CardContent,
-    Divider,
     Accordion,
     AccordionSummary,
-    AccordionDetails
+    AccordionDetails,
+    Tooltip,
+    Button
 } from '@material-ui/core';
 import useStyles from './styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import blankPhoto from '../../../images/blankPhoto.png';
 import { useHistory } from 'react-router-dom';
-import ScheduleIcon from '@material-ui/icons/Schedule';
 import AssignmentIndOutlinedIcon from '@material-ui/icons/AssignmentIndOutlined';
 import LanguageIcon from '@material-ui/icons/Language';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
 import TimelapseOutlinedIcon from '@material-ui/icons/TimelapseOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import EventDeleteDialog from '../EventDialog/EventDeleteDialog';
 
 const initialState = {
     eventName: 'Netcompany Presentation Event',
     budget: '1,000,000',
     maxParticipants: '20',
+    location: '13 Le Thach, district 4, HCM City',
+    tags: ['RMIT', 'Techonology', 'Netcompany'],
+    registrationCloseDate: '',
+    language: 'English',
+    type: 'NetCompany',
+    mode: 'On-going',
+    accommodation: '1 day',
     image: 'https://source.unsplash.com/featured/?macbook',
-    description: `Vừa phát triển mạng lưới tiếp thị kỹ thuật số của bạn trong lúc thưởng thức cocktail thủ công, đồ ăn vừa ngon lại còn có rút thăm may mắn xuyên đêm tại Hard Rock Cafe nằm ngay trung tâm Quận 1. Chương trình bắt đầu từ 18:00 chiều thứ Sáu ngày of 28 tháng 05! Đảm bảo rằng bạn đến đúng giờ nhé vì bạn sẽ được giảm giá 50% TẤT CẢ ly thức uống có từ 6 - 9 giờ chiều nữa đó!`
+    description: `Vừa phát triển mạng lưới tiếp thị kỹ thuật số của bạn trong lúc thưởng thức cocktail thủ công, đồ ăn vừa ngon lại còn có rút thăm may mắn xuyên đêm tại Hard Rock Cafe nằm ngay trung tâm Quận 1. Chương trình bắt đầu từ 18:00 chiều thứ Sáu ngày of 28 tháng 05! Đảm bảo rằng bạn đến đúng giờ nhé vì bạn sẽ được giảm giá 50% TẤT CẢ ly thức uống có từ 6 - 9 giờ chiều nữa đó!`,
+    openDeleteDialog: false,
 }
 
 const EventDetail = () => {
@@ -47,6 +53,14 @@ const EventDetail = () => {
         history.push('/dashboard/event-management')
     }
 
+    const handleToggleDialogDelete = () => {
+        console.log(state.openDeleteDialog)
+        setState((prevState) => ({
+            ...prevState,
+            openDeleteDialog: !prevState.openDeleteDialog,
+        }));
+    };
+
     return (
         <>
             <Paper className={css.paper} color="inherit" elevation={3}>
@@ -61,6 +75,24 @@ const EventDetail = () => {
                                 <Typography className={css.toolbarEventDetail} variant="h6">
                                     Event Management
                                 </Typography>
+                                <div className={css.grow} />
+                                <Tooltip title="Delete">
+                                    <Button
+                                        color="inherit"
+                                        onClick={handleToggleDialogDelete}
+                                    >
+                                        Delete
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title="Edit">
+                                    <Button
+                                        color="inherit"
+                                        variant="outlined"
+                                        style={{ margin: '0 8px' }}
+                                    >
+                                        Update
+                                    </Button>
+                                </Tooltip>
                             </Toolbar>
                         </Grid>
                     </AppBar>
@@ -116,7 +148,9 @@ const EventDetail = () => {
                         {/* Left-side Detail */}
                         <Grid
                             className={css.detailWrapper}
-                            xs={8}
+                            xs={12}
+                            sm={12}
+                            md={8}
                             container
                             alignItems="flex-start"
                             justify="center"
@@ -152,7 +186,7 @@ const EventDetail = () => {
                                             Category (type)
                                         </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                            NetCompany
+                                            {state.type}
                                         </Typography>
                                     </Grid>
                                     <Grid xs={1} container alignItems="center" justify="center" item>
@@ -163,7 +197,7 @@ const EventDetail = () => {
                                             Language
                                         </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                            English
+                                            {state.language}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -183,7 +217,7 @@ const EventDetail = () => {
                                             Mode
                                         </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                            On-going
+                                            {state.mode}
                                         </Typography>
                                     </Grid>
                                     <Grid xs={1} container alignItems="center" justify="center" item>
@@ -194,7 +228,7 @@ const EventDetail = () => {
                                             Accomodation
                                         </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                            1 day
+                                            {state.accommodation}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -306,7 +340,9 @@ const EventDetail = () => {
                         {/* Right-side Detail */}
                         <Grid
                             className={css.detailWrapper}
-                            xs={4}
+                            xs={12}
+                            sm={12}
+                            md={4}
                             container
                             alignItems="flex-start"
                             justify="center"
@@ -345,7 +381,7 @@ const EventDetail = () => {
                                     Location
                                 </Typography>
                                 <Typography variant="body2">
-                                    13 Le Thach, district 4, HCM City
+                                    {state.location}
                                 </Typography>
                             </Grid>
 
@@ -355,13 +391,20 @@ const EventDetail = () => {
                                     Tags
                                 </Typography>
                                 <Typography variant="body2">
-                                    RMIT, Techonology, Netcompany
+                                    {state.tags.join(', ')}
                                 </Typography>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
             </Paper>
+
+            {/* Event Delete Dialog */}
+            <EventDeleteDialog
+                openDeleteDialog={state.openDeleteDialog}
+                handleToggleDialogDelete={handleToggleDialogDelete}
+            // handleDelete={handleDelete}
+            />
         </>
     )
 }

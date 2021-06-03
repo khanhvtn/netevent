@@ -22,7 +22,16 @@ export default makeStyles((theme) => ({
         marginLeft: 8
     },
     detailWrapper: {
-        padding: 96
+        padding: 96,
+        [theme.breakpoints.down('md')]: {
+            padding: 48,
+        },
+        [theme.breakpoints.down('sm')]: {
+            padding: 24,
+        },
+        [theme.breakpoints.down('xs')]: {
+            padding: 8,
+        },
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Typography,
     Grid,
@@ -18,8 +18,19 @@ import { useDispatch } from 'react-redux';
 
 import useStyles from './styles'
 
+const initialState = {
+    image: 'https://source.unsplash.com/featured/?macbook',
+    eventName: 'Netcompany Presentation Event',
+    budget: '1,000,000',
+    maxParticipants: '20',
+    location: '13 Le Thach, district 4, HCM City',
+    tags: ['RMIT', 'Technology', 'NetComapny'],
+    type: 'Employer Branding',
+}
+
 const EventCard = ({ onClickEvent }) => {
     const css = useStyles();
+    const [state, setState] = useState(initialState)
 
     return (
         <>
@@ -33,16 +44,16 @@ const EventCard = ({ onClickEvent }) => {
                     >
                         <CardMedia
                             className={css.cover}
-                            image="https://source.unsplash.com/featured/?macbook"
-                            title="Live from space album cover"
+                            image={state.image}
+                            title="Event Image"
                         />
                         <CardContent className={css.content}>
                             <Typography className={css.titleCard} variant="h6">
-                                Netcompany Presentation Event
+                                {state.eventName}
                             </Typography>
                             <div className={css.alignBudget}>
                                 <Typography variant="caption" color="textSecondary">
-                                    1,000,000 vnd | 20 participants
+                                    {`${state.budget} vnd | ${state.maxParticipants} participants`}
                                 </Typography>
                             </div>
                         </CardContent>
@@ -52,7 +63,7 @@ const EventCard = ({ onClickEvent }) => {
                                 <Grid xs={2} container alignItems="center" justify="center" item>
                                     <ScheduleIcon />
                                 </Grid>
-                                <Grid xs={5} direction="column" item>
+                                <Grid xs={5} container direction="column" item>
                                     <Typography variant="caption" color="textSecondary">
                                         From
                                     </Typography>
@@ -60,7 +71,7 @@ const EventCard = ({ onClickEvent }) => {
                                         09, March, 2014
                                     </Typography>
                                 </Grid>
-                                <Grid xs={5} direction="column" item>
+                                <Grid xs={5} container direction="column" item>
                                     <Typography variant="caption" color="textSecondary">
                                         To
                                     </Typography>
@@ -73,12 +84,12 @@ const EventCard = ({ onClickEvent }) => {
                                 <Grid xs={2} container alignItems="center" justify="center" item>
                                     <LocationOnOutlinedIcon />
                                 </Grid>
-                                <Grid xs={10} direction="column" item>
+                                <Grid xs={10} container direction="column" item>
                                     <Typography variant="caption" color="textSecondary">
                                         Location
                                     </Typography>
                                     <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                        13 Le Thach, district 4, HCM City
+                                        {state.location}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -86,14 +97,16 @@ const EventCard = ({ onClickEvent }) => {
                                 <Grid xs={2} container alignItems="center" justify="center" item>
                                     <LocalOfferOutlinedIcon />
                                 </Grid>
-                                <Grid xs={10} direction="column" item>
+                                <Grid xs={10} container direction="column" item>
                                     <Typography variant="caption" color="textSecondary">
                                         Tags
                                     </Typography>
                                     <div className={css.chipRoot}>
-                                        <Chip size="small" label="RMIT" />
-                                        <Chip size="small" label="Technology" />
-                                        <Chip size="small" label="NetCompany" />
+                                        {state.tags.map((tag) => {
+                                            return (
+                                                <Chip size="small" label={tag} />
+                                            )
+                                        })}
                                     </div>
                                 </Grid>
                             </Grid>
@@ -101,12 +114,12 @@ const EventCard = ({ onClickEvent }) => {
                                 <Grid xs={2} container alignItems="center" justify="center" item>
                                     <AssignmentIndOutlinedIcon />
                                 </Grid>
-                                <Grid xs={10} direction="column" item>
+                                <Grid xs={10} container direction="column" item>
                                     <Typography variant="caption" color="textSecondary">
                                         Category (type)
                                     </Typography>
                                     <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                        Employer Branding
+                                        {state.type}
                                     </Typography>
                                 </Grid>
                             </Grid>

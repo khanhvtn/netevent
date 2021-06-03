@@ -31,12 +31,12 @@ const roleActions = {
         {
             title: 'User',
             icon: People,
-            href: '/dashboard/user',
+            href: ['/dashboard/user']
         },
         {
             title: 'Facility',
             icon: DevicesOther,
-            href: '/dashboard/facility',
+            href: ['/dashboard/facility']
         },
     ],
     2: [],
@@ -44,17 +44,17 @@ const roleActions = {
         {
             title: 'Event Management',
             icon: EventAvailableIcon,
-            href: '/dashboard/event-management',
+            href: ['/dashboard/event-management', '/dashboard/event-detail']
         },
         {
             title: 'Create Event',
             icon: EventIcon,
-            href: '/dashboard/create-event',
+            href: ['/dashboard/create-event']
         },
         {
             title: 'Event Type',
             icon: EventNoteIcon,
-            href: '/dashboard/event-type',
+            href: ['/dashboard/event-type']
         },
     ],
     4: [],

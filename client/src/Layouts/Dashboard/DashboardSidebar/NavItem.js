@@ -10,18 +10,17 @@ const NavItem = ({ href, icon: Icon, title, ...rest }) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const css = useStyles();
-    const active = location.pathname === href ? true : false;
+    const active = href.includes(location.pathname) ? true : false;
+
 
     const handleAction = () => {
         if (href === 'logout') {
             return dispatch(userLogout(history));
         }
-
-        history.push(href);
-
         if (href === 'pickrole') {
             history.push(`/${href}`)
         }
+        history.push(href[0]);
     };
 
     return (
