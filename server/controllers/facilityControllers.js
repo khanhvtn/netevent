@@ -8,12 +8,11 @@ const CustomError = require('../class/CustomeError');
  *  =====================================
  */
 
-
 /**
  * @decsription Create new facility with following request
- * @method POST 
+ * @method POST
  * @route /api/facility/login
- * 
+ *
  * @version 1.0
  */
 const createFacility = async (req, res, next) => {
@@ -39,12 +38,11 @@ const createFacility = async (req, res, next) => {
     }
 };
 
-
 /**
  * @decsription Get, search and filter facilities (included paging)
  * @method GET
  * @route /api/facility/filter
- * 
+ *
  * @version 1.0
  */
 const filter = async (req, res, next) => {
@@ -223,12 +221,11 @@ const filter = async (req, res, next) => {
     }
 };
 
-
 /**
  * @decsription Update facility by new request update
  * @method PATCH
  * @route /api/facility/update
- * 
+ *
  * @version 1.0
  */
 const updateFacility = async (req, res, next) => {
@@ -253,32 +250,21 @@ const updateFacility = async (req, res, next) => {
     }
 };
 
-
 /**
  * @decsription Delete facilities from the request names
  * @method DELETE
  * @route /api/facility/delete
- * 
+ *
  * @version 1.0
  */
 const deleteFacility = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
-        if (deleteList.length === 1) {
-            const deletedFacility = await Facility.findOneAndDelete({
-                name: deleteList[0],
-            });
-            return cusResponse(res, 200, deletedFacility, null);
-        } else {
-            const deletedFacilities = await Promise.all(
-                deleteList.map(async (name) => {
-                    return await Facility.findOneAndDelete({
-                        name,
-                    });
-                })
-            );
-            return cusResponse(res, 200, deletedFacilities, null);
-        }
+        const deletedFacilities = await Facility.updateMany(
+            { name: { $in: deleteList } },
+            { $set: { isDeleted: true } }
+        );
+        return cusResponse(res, 200, deletedFacilities, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
@@ -291,6 +277,59 @@ const deleteFacility = async (req, res, next) => {
     }
 };
 
+/**
+ * @decsription Delete facilities from the request names
+ * @method DELETE
+ * @route /api/facility/deleteP
+ *
+ * @version 1.0
+ */
+const deleteFacilityPermanent = async (req, res, next) => {
+    try {
+        const { deleteList } = req.body;
+        const deletedFacilities = await Facility.deleteMany({
+            name: { $in: deleteList },
+        });
+        return cusResponse(res, 200, deletedFacilities, null);
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
+        return next(new CustomError(500, error.message));
+    }
+};
+/**
+ * @decsription Recovery facilities from the request names
+ * @method DELETE
+ * @route /api/facility/recovery
+ *
+ * @version 1.0
+ */
+const recoveryFacility = async (req, res, next) => {
+    try {
+        const { recoveryList } = req.body;
+        const recoveryFacilities = await Facility.updateMany(
+            {
+                name: { $in: recoveryList },
+            },
+            { $set: { isDeleted: false } }
+        );
+        return cusResponse(res, 200, recoveryFacilities, null);
+    } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
+        return next(new CustomError(500, error.message));
+    }
+};
 
 const getAllFacility = async (req, res, next) => {
     try {
@@ -307,4 +346,6 @@ module.exports = {
     deleteFacility,
     updateFacility,
     getAllFacility,
+    deleteFacilityPermanent,
+    recoveryFacility,
 };

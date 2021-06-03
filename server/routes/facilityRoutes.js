@@ -14,5 +14,7 @@ router.get('/filter', facilityControllers.filter);
 router.get('/all', facilityControllers.getAllFacility);
 router.patch('/update', facilityControllers.updateFacility);
 router.delete('/delete', facilityControllers.deleteFacility);
+router.delete('/deleteP', facilityControllers.deleteFacilityPermanent);
+router.patch('/recovery', facilityControllers.recoveryFacility);
 
 module.exports = router;

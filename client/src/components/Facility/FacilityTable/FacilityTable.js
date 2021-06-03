@@ -16,7 +16,6 @@ import {
     Typography,
     Tooltip,
     Button,
-    Chip,
 } from '@material-ui/core';
 import { Delete, Create, Edit } from '@material-ui/icons';
 import { lighten, makeStyles } from '@material-ui/core/styles';
