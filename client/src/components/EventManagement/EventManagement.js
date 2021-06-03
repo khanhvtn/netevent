@@ -28,17 +28,21 @@ const initialState = {
     take: 3,
     page: 1,
     openFilter: false,
-    createdFrom: null,
-    createdTo: null,
-    updatedFrom: null,
-    updatedTo: null,
+    type: '',
+    status: '',
+    budgetRange: null,
+    participantRange: null,
+    startDate: null,
+    endDate: null,
 }
 
 const filterState = {
-    createdFrom: null,
-    createdTo: null,
-    updatedFrom: null,
-    updatedTo: null,
+    type: '',
+    status: '',
+    budgetRange: 2500000,
+    participantRange: 30,
+    startDate: null,
+    endDate: null,
 };
 
 const EventManagement = () => {
@@ -66,7 +70,10 @@ const EventManagement = () => {
             dispatch(getEvents(
                 state.search,
                 state.take,
-                state.page
+                state.page,
+                state.type,
+                state.budgetRange,
+                state.participantRange
             ))
         }
     }, [dispatch, state.search, state.take, state.page])
@@ -123,6 +130,8 @@ const EventManagement = () => {
             openFilter: !prevState.openFilter,
         }));
     };
+
+    console.log(state)
 
     //handle Clear Filter
     const handleClearFilter = () => {
@@ -226,13 +235,14 @@ const EventManagement = () => {
             {/* Event Filter */}
             <EventFilter
                 openFilter={state.openFilter}
-                handleToggleFilter={handleToggleFilter}
-                handleFilterChange={handleFilterChange}
-                createdFrom={filters.createdFrom}
-                createdTo={filters.createdTo}
+                type={filters.type}
+                budgetRange={filters.budgetRange}
+                participantRange={filters.participantRange}
+                startDate={filters.startDate}
+                endDate={filters.endDate}
                 setFilters={setFilters}
-                updatedFrom={filters.updatedFrom}
-                updatedTo={filters.updatedTo}
+                handleFilterChange={handleFilterChange}
+                handleToggleFilter={handleToggleFilter}
                 handleApplyFilter={handleApplyFilter}
                 handleClearFilter={handleClearFilter}
             />

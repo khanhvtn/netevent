@@ -55,10 +55,10 @@ export const createEvent = (userReq) => async (dispatch) => {
     setEventIsLoading(false, dispatch);
 };
 
-export const getEvents = (search, take, page) => async (dispatch) => {
+export const getEvents = (search, take, page, type, budgetRange, participantRange) => async (dispatch) => {
     setEventIsLoading(true, dispatch);
     try {
-        const data = await getEventsAPI(search, take, page);
+        const data = await getEventsAPI(search, take, page, type, budgetRange, participantRange);
 
         dispatch({
             type: EVENT_GET_ALL_FILTER,

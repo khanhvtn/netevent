@@ -19,6 +19,7 @@ import Slider from '@material-ui/core/Slider';
 
 //import useStyles in the last
 import useStyles from './styles';
+import { useSelector } from 'react-redux';
 
 const PrettoSlider = withStyles({
     root: {
@@ -53,18 +54,38 @@ const PrettoSlider = withStyles({
 
 const EventFilter = ({
     openFilter,
-    handleToggleFilter,
-    createdFrom,
-    createdTo,
+    type,
+    budgetRange,
+    participantRange,
+    startDate,
+    endDate,
     setFilters,
+    handleToggleFilter,
+    handleFilterChange,
     handleClearFilter,
     handleApplyFilter,
 }) => {
     const css = useStyles();
-    const [budgetRange, setBudgetRange] = useState(2500000);
 
-    const handleOnChangeBudget = (e, newBudget) => {
-        setBudgetRange(newBudget)
+    const { eventTypes, isLoading } = useSelector((state) => ({
+        eventTypes: state.eventType.eventTypes,
+        isLoading: state.eventType.isLoading
+    }))
+
+    // Set budget state
+    const handleOnChangeBudget = (e, budget) => {
+        setFilters((prevState) => ({
+            ...prevState,
+            budgetRange: budget
+        }));
+    }
+
+    // Set maxParticipants state
+    const handleOnChangeParticipant = (e, participant) => {
+        setFilters((prevState) => ({
+            ...prevState,
+            participantRange: participant
+        }));
     }
 
     return (
@@ -77,25 +98,30 @@ const EventFilter = ({
                     <FormControl size="small" margin="normal" fullWidth variant="outlined">
                         <InputLabel id="typeFilterLabel">Type</InputLabel>
                         <Select
+                            disabled={isLoading}
                             id="typeFilter"
                             label="Type"
                             labelId="typeFilterLabel"
-                            // value={typeFilter}
-                            // onChange={handleFilterChange}
+                            value={type}
+                            onChange={handleFilterChange}
                             inputProps={{
-                                name: 'typeFilter',
+                                name: 'type',
                             }}
                         >
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value={1}>Active</MenuItem>
-                            <MenuItem value={2}>Expired</MenuItem>
+                            {eventTypes.map((eventType) => {
+                                return (
+                                    <MenuItem value={eventType.name}>{eventType.name}</MenuItem>
+                                )
+                            })}
                         </Select>
                     </FormControl>
                     <FormControl size="small" margin="normal" fullWidth>
                         <Typography variant="caption">Bugdet Range: {budgetRange} vnd</Typography>
                         <PrettoSlider
+                            name="budgetRange"
                             valueLabelDisplay="off"
                             aria-label="pretto slider"
                             value={budgetRange}
@@ -108,12 +134,16 @@ const EventFilter = ({
                     <FormControl size="small" margin="normal" fullWidth>
                         <Typography variant="caption">Participant Range</Typography>
                         <PrettoSlider
+                            name="participantRange"
                             valueLabelDisplay="auto"
                             aria-label="pretto slider"
                             defaultValue={30}
+                            value={participantRange}
+                            onChange={handleOnChangeParticipant}
                             step={5}
                             min={10}
                             max={100}
+
                         />
                     </FormControl>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -123,14 +153,14 @@ const EventFilter = ({
                                 size="small"
                                 fullWidth
                                 margin="normal"
-                                id="createdFrom"
+                                id="startDate"
                                 label="Start Date"
                                 format="MM/DD/YYYY"
-                                value={createdFrom}
+                                value={startDate}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        createdFrom: date.toDate(),
+                                        startDate: date.toDate(),
                                     }));
                                 }}
                                 KeyboardButtonProps={{
@@ -142,14 +172,14 @@ const EventFilter = ({
                                 size="small"
                                 fullWidth
                                 margin="normal"
-                                id="createdTo"
+                                id="endDate"
                                 label="End Date"
                                 format="MM/DD/YYYY"
-                                value={createdTo}
+                                value={endDate}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        createdTo: date.toDate(),
+                                        endDate: date.toDate(),
                                     }));
                                 }}
                                 KeyboardButtonProps={{

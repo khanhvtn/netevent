@@ -176,6 +176,9 @@ const filter = async (req, res, next) => {
         let options = {
             search: '',
             take: 5,
+            type: '',
+            budgetRange: '',
+            participantRange: '',
             createdMaxDate: listRangeDate[0][0].createdAt,
             createdMinDate: listRangeDate[1][0].createdAt,
             updatedMaxDate: listRangeDate[2][0].updatedAt,
@@ -201,6 +204,39 @@ const filter = async (req, res, next) => {
         }
 
         /* 
+        Add type filter
+         */
+
+        if (req.query.type) {
+            options = {
+                ...options,
+                type: req.query.type,
+            };
+        }
+
+        /* 
+        Add budgetRange filter
+         */
+
+        if (req.query.budgetRange) {
+            options = {
+                ...options,
+                budgetRange: req.query.budgetRange.toString(),
+            };
+        }
+
+        /* 
+        Add participantRange filter
+         */
+
+        if (req.query.participantRange) {
+            options = {
+                ...options,
+                participantRange: req.query.participantRange.toString(),
+            };
+        }
+
+        /* 
         Add createdFrom filter
          */
 
@@ -208,7 +244,6 @@ const filter = async (req, res, next) => {
             options = {
                 ...options,
                 createdMinDate: req.query.createdFrom,
-                // createdMinDate: new Date(req.query.createdFrom),
             };
         }
         /* 
@@ -219,28 +254,6 @@ const filter = async (req, res, next) => {
             options = {
                 ...options,
                 createdMaxDate: req.query.createdTo,
-                // createdMaxDate: new Date(req.query.createdTo),
-            };
-        }
-        /* 
-        Add updatedFrom filter
-         */
-
-        if (req.query.updatedFrom) {
-            options = {
-                ...options,
-                updatedMinDate: req.query.updatedFrom,
-                // updatedMinDate: new Date(req.query.updatedFrom),
-            };
-        }
-        /* 
-        Add updatedTo filter
-         */
-
-        if (req.query.updatedTo) {
-            options = {
-                ...options,
-                updatedMaxDate: req.query.updatedTo,
             };
         }
 
@@ -275,6 +288,7 @@ const filter = async (req, res, next) => {
             $or: [
                 { eventName: new RegExp(options.search, 'i') }
             ],
+            type: options.type,
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
