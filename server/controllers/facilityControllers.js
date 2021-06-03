@@ -81,9 +81,6 @@ const filter = async (req, res, next) => {
             search: '',
             take: 10,
             type: '',
-            status: {
-                $in: [false, true],
-            },
             createdMaxDate: listRangeDate[0][0].createdAt,
             createdMinDate: listRangeDate[1][0].createdAt,
             updatedMaxDate: listRangeDate[2][0].updatedAt,
@@ -105,17 +102,6 @@ const filter = async (req, res, next) => {
             options = {
                 ...options,
                 take: parseInt(req.query.take.toString()),
-            };
-        }
-
-        /* 
-        Add status filter
-        Default status will match all
-         */
-        if (req.query.status) {
-            options = {
-                ...options,
-                status: req.query.status === 'true',
             };
         }
 
@@ -177,7 +163,6 @@ const filter = async (req, res, next) => {
                 { type: new RegExp(options.search, 'i') },
                 { code: new RegExp(options.search, 'i') },
             ],
-            status: options.status,
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -201,7 +186,6 @@ const filter = async (req, res, next) => {
                 { type: new RegExp(options.search, 'i') },
                 { code: new RegExp(options.search, 'i') },
             ],
-            status: options.status,
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,

@@ -3,16 +3,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import {
-    Grid,
-    Typography,
-    Button,
-    Select,
-    MenuItem,
-    Drawer,
-    InputLabel,
-    FormControl,
-} from '@material-ui/core';
+import { Grid, Typography, Button, Drawer } from '@material-ui/core';
 import MomentUtils from '@date-io/moment';
 //import useStyles in the last
 import useStyles from './styles';
@@ -20,7 +11,6 @@ import useStyles from './styles';
 const FacilityFilter = ({
     openFilter,
     handleToggleFilter,
-    statusFilter,
     handleFilterChange,
     createdFrom,
     createdTo,
@@ -34,29 +24,16 @@ const FacilityFilter = ({
     return (
         <Drawer anchor="right" open={openFilter} onClose={handleToggleFilter}>
             <div className={css.filterTitle}>
-                <Typography style={{ fontWeight: 'bold' }} align="center" variant="h6">Filter Facility</Typography>
+                <Typography
+                    style={{ fontWeight: 'bold' }}
+                    align="center"
+                    variant="h6"
+                >
+                    Filter Facility
+                </Typography>
             </div>
             <div className={css.filterWrapper}>
                 <div className={css.filterInputs}>
-                    <FormControl size="small" fullWidth variant="outlined">
-                        <InputLabel id="statusFilterLabel">Status</InputLabel>
-                        <Select
-                            id="statusFiler"
-                            label="Status"
-                            labelId="statusFilterLabel"
-                            value={statusFilter}
-                            onChange={handleFilterChange}
-                            inputProps={{
-                                name: 'statusFilter',
-                            }}
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value={true}>Active</MenuItem>
-                            <MenuItem value={false}>Expired</MenuItem>
-                        </Select>
-                    </FormControl>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <Grid container justify="space-around">
                             <KeyboardDatePicker

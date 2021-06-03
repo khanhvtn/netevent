@@ -71,7 +71,6 @@ const initialState = {
     name: '',
     code: '',
     type: '',
-    status: '',
     openAlert: false,
     openDeleteDialog: false,
     openDeleteSnackBar: false,
@@ -80,7 +79,6 @@ const initialState = {
     openRecoverySnackBar: false,
     isCreateMode: true,
     openFilter: false,
-    statusFilter: '',
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
@@ -88,7 +86,6 @@ const initialState = {
 };
 
 const filterState = {
-    statusFilter: '',
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
@@ -230,7 +227,6 @@ const Facility = () => {
                 state.search,
                 state.take,
                 state.page,
-                state.statusFilter,
                 filterDate.createdFrom,
                 filterDate.createdTo,
                 filterDate.updatedFrom,
@@ -250,7 +246,6 @@ const Facility = () => {
         state.search,
         state.take,
         state.page,
-        state.statusFilter,
         state.createdFrom,
         state.createdTo,
         state.updatedFrom,
@@ -292,7 +287,7 @@ const Facility = () => {
     };
 
     const handleCreateAndUpdate = () => {
-        const { name, code, type, status } = state;
+        const { name, code, type } = state;
         //create
         if (state.isCreateMode) {
             const userReq = {
@@ -307,7 +302,7 @@ const Facility = () => {
         dispatch(
             updateFacility({
                 filter: selected[0],
-                update: { name, code, type, status },
+                update: { name, code, type },
             })
         );
     };
@@ -339,7 +334,6 @@ const Facility = () => {
             name: mode ? targetEdit.name : '',
             code: mode ? targetEdit.code : '',
             type: mode ? targetEdit.type : '',
-            status: mode ? targetEdit.status : '',
             openCreateAndUpdateDialog: !prevState.openCreateAndUpdateDialog,
             isCreateMode: mode ? false : true,
         }));
@@ -463,7 +457,6 @@ const Facility = () => {
                 name={state.name}
                 code={state.code}
                 type={state.type}
-                status={state.status}
                 openDeleteDialog={state.openDeleteDialog}
                 handleCreateAndUpdate={handleCreateAndUpdate}
                 handleToggleDialogDelete={handleToggleDialogDelete}
@@ -486,7 +479,6 @@ const Facility = () => {
             <FacilityFilter
                 openFilter={state.openFilter}
                 handleToggleFilter={handleToggleFilter}
-                statusFilter={filters.statusFilter}
                 handleFilterChange={handleFilterChange}
                 createdFrom={filters.createdFrom}
                 createdTo={filters.createdTo}
