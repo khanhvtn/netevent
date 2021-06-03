@@ -30,6 +30,16 @@ export default makeStyles((theme) => ({
 
 
     },
+    contentWrapper: {
+        marginTop: '20%'
+    },
+
+    contentWrapper1: {
+        width: '10%',
+        height: '10%'
+
+    },
+
 
 
     buttonSend1: {

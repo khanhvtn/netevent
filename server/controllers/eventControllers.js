@@ -1,6 +1,8 @@
 const { Event, Task, FacilityHistory, Facility } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
+const { sendEmail } = require('./misc/mailer');
+
 
 /**
  *  =====================================
@@ -375,10 +377,37 @@ const getAllEvent = async (req, res, next) => {
     }
 };
 
+/**
+ * @decsription Send Mass Notification
+ * @method POST
+ * @route /api/event/sendMassNotification
+ *
+ * @version 1.0
+ */
+
+const sendNotification = async (req, res, next) => {
+    const notification = req.body;
+    try {
+        const isSend = await sendEmail(
+            'noreply@netevent.com',
+            'minhhuynhrmit@gmail.com',
+            notification.title,
+            notification.description
+        )
+        return cusResponse(res, 200, isSend, null)
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+
+    }
+
+}
+
+
 module.exports = {
     createEvent,
     filter,
     deleteEvent,
     updateEvent,
     getAllEvent,
+    sendNotification
 };
