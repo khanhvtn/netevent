@@ -9,7 +9,7 @@ const initialState = {
     deleteSuccess: false,
 };
 
-export default function facilityReducers(state = initialState, action) {
+export default function eventReducers(state = initialState, action) {
     switch (action.type) {
         case EVENT_LOADING:
             return { ...state, isLoading: action.payload };
