@@ -283,6 +283,9 @@ const filter = async (req, res, next) => {
                 $lte: options.updatedMaxDate,
             },
         })
+            .populate({
+                path: 'eventTypeId',
+            })
             .sort({ updatedAt: -1 })
             .skip((page - 1) * options.take)
             .limit(options.take);
