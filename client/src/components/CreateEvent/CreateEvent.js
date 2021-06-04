@@ -36,6 +36,8 @@ import useStyles from './styles';
 import TaskDialog from './TaskDialog/TaskDialog';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 import CreateEventInputGroup from './CreateEventInputGroup/CreateEventInputGroup';
+import { convertFromRaw } from 'draft-js';
+import { stateToHTML } from 'draft-js-export-html';
 
 let tagList = [];
 const headCells = [
@@ -124,7 +126,7 @@ const initialTaskState = {
     isTaskCreateMode: true,
 };
 
-const CreateEvent = () => {
+const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog, updateFacilities, updateTasks }) => {
     const css = useStyles();
     const fileInput = useRef(null);
     const dispatch = useDispatch();
@@ -218,22 +220,71 @@ const CreateEvent = () => {
         dispatch(getAllFacilities());
         dispatch(getAllUsers());
         dispatch(getFacilityHistories({ returnFrom: new Date(Date.now()) }));
+
+        if (isUpdateMode) {
+            setState((prevState) => ({
+                ...prevState,
+                ...updateEventDetail,
+                eventTypeTarget: updateEventDetail.eventTypeId.name,
+                borrowFacilities: updateFacilities,
+                tasks: updateTasks
+            }));
+
+            setBorrowFacilityState((prevState) => ({
+                ...prevState,
+                borrowFacilities: updateFacilities.map((facility) => ({
+                    name: facility.facilityId.name,
+                    borrowDate: facility.borrowDate,
+                    returnDate: facility.returnDate
+                }))
+            }))
+
+            setTaskState((prevState) => ({
+                ...prevState,
+                tasks: updateTasks.map((task) => ({
+                    name: task.name,
+                    email: task.userId.email,
+                    type: task.type,
+                    startTime: task.startDate,
+                    endTime: task.endDate,
+                }))
+            }))
+        }
     }, [dispatch]);
+
+    useEffect(() => {
+        try {
+            // const data = convertFromRaw(JSON.parse(state.description))
+            // const html = stateToHTML(data)
+            // console.log(JSON.parse(state.description).blocks[0])
+
+            // setState((prevState) => ({
+            //     ...prevState,
+
+            // }));
+        } catch (error) {
+            console.log(error)
+        }
+    }, [state.description])
+
     const handleChange = (e) => {
         setState((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
         }));
     };
+
     const handleCreateEventType = () => {
         dispatch(createEventType({ name: state.eventTypeTarget }));
     };
+
     const handleToggleDialogCreateEventType = () => {
         setState((prevState) => ({
             ...prevState,
             openDialogCreateEventType: !prevState.openDialogCreateEventType,
         }));
     };
+
     const handleCreateEvent = () => {
         const {
             eventName,
@@ -256,8 +307,8 @@ const CreateEvent = () => {
             language,
             eventTypeId: eventTypeTarget
                 ? eventTypes.find(
-                      (eventType) => eventType.name === eventTypeTarget
-                  )._id
+                    (eventType) => eventType.name === eventTypeTarget
+                )._id
                 : null,
             mode,
             location,
@@ -318,13 +369,13 @@ const CreateEvent = () => {
     };
 
     /* Borrow Facility */
-
     const handleChangeBorrowFacility = (e) => {
         setBorrowFacilityState((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
         }));
     };
+
     const handleToggleDialogCreateAndUpdateBorrowFacility = (event, mode) => {
         let targetEdit;
         if (mode) {
@@ -613,9 +664,8 @@ const CreateEvent = () => {
                             style={{
                                 width: '100%',
                                 height: '500px',
-                                backgroundImage: `url(${
-                                    !state.image ? blankPhoto : state.image
-                                })`,
+                                backgroundImage: `url(${!state.image ? blankPhoto : state.image
+                                    })`,
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center',
                                 backgroundSize: 'contain',
@@ -681,18 +731,18 @@ const CreateEvent = () => {
                                     Change Image
                                 </Button>
                             ) : (
-                                <Button
-                                    disabled={eventIsLoading}
-                                    startIcon={<AddAPhoto />}
-                                    style={{
-                                        backgroundColor: 'transparent',
-                                        textTransform: 'none',
-                                    }}
-                                    component="span"
-                                >
-                                    Choose Image
-                                </Button>
-                            )}
+                                    <Button
+                                        disabled={eventIsLoading}
+                                        startIcon={<AddAPhoto />}
+                                        style={{
+                                            backgroundColor: 'transparent',
+                                            textTransform: 'none',
+                                        }}
+                                        component="span"
+                                    >
+                                        Choose Image
+                                    </Button>
+                                )}
                         </label>
                     </Grid>
 
@@ -912,9 +962,11 @@ const CreateEvent = () => {
                                             size={26}
                                             color="inherit"
                                         />
-                                    ) : (
-                                        'Create Event'
-                                    )}
+                                    ) : isUpdateMode
+                                            ? 'Update Event'
+                                            :
+                                            'Create Event'
+                                    }
                                 </Button>
                             </Grid>
                         </Grid>
@@ -967,57 +1019,57 @@ const CreateEvent = () => {
                     !borrowFacilityState.borrowDate
                         ? []
                         : borrowFacilityState.isBorrowFacilityCreateMode
-                        ? facilities
-                              .filter((facility) => {
-                                  const targetFacilityHistory = facilityHistories
-                                      .filter(
-                                          (element) =>
-                                              element.facilityId ===
-                                              facility._id
-                                      )
-                                      .sort(
-                                          (a, b) =>
-                                              new Date(b.returnDate) -
-                                              new Date(a.returnDate)
-                                      );
-                                  return !targetFacilityHistory.length
-                                      ? true
-                                      : new Date(
+                            ? facilities
+                                .filter((facility) => {
+                                    const targetFacilityHistory = facilityHistories
+                                        .filter(
+                                            (element) =>
+                                                element.facilityId ===
+                                                facility._id
+                                        )
+                                        .sort(
+                                            (a, b) =>
+                                                new Date(b.returnDate) -
+                                                new Date(a.returnDate)
+                                        );
+                                    return !targetFacilityHistory.length
+                                        ? true
+                                        : new Date(
                                             borrowFacilityState.borrowDate
                                         ) <
+                                            new Date(
+                                                targetFacilityHistory[0].returnDate
+                                            )
+                                            ? false
+                                            : true;
+                                })
+                                .filter((facility) => {
+                                    const facilityNames = borrowFacilityState.borrowFacilities.map(
+                                        (borrowFacility) => borrowFacility.name
+                                    );
+
+                                    return !facilityNames.includes(facility.name);
+                                })
+                            : facilities.filter((facility) => {
+                                const targetFacilityHistory = facilityHistories
+                                    .filter(
+                                        (element) =>
+                                            element.facilityId === facility._id
+                                    )
+                                    .sort(
+                                        (a, b) =>
+                                            new Date(b.returnDate) -
+                                            new Date(a.returnDate)
+                                    );
+                                return !targetFacilityHistory.length
+                                    ? true
+                                    : new Date(borrowFacilityState.borrowDate) <
                                         new Date(
                                             targetFacilityHistory[0].returnDate
                                         )
-                                      ? false
-                                      : true;
-                              })
-                              .filter((facility) => {
-                                  const facilityNames = borrowFacilityState.borrowFacilities.map(
-                                      (borrowFacility) => borrowFacility.name
-                                  );
-
-                                  return !facilityNames.includes(facility.name);
-                              })
-                        : facilities.filter((facility) => {
-                              const targetFacilityHistory = facilityHistories
-                                  .filter(
-                                      (element) =>
-                                          element.facilityId === facility._id
-                                  )
-                                  .sort(
-                                      (a, b) =>
-                                          new Date(b.returnDate) -
-                                          new Date(a.returnDate)
-                                  );
-                              return !targetFacilityHistory.length
-                                  ? true
-                                  : new Date(borrowFacilityState.borrowDate) <
-                                    new Date(
-                                        targetFacilityHistory[0].returnDate
-                                    )
-                                  ? false
-                                  : true;
-                          })
+                                        ? false
+                                        : true;
+                            })
                 }
             />
             {/* Borrow Facility Dialog */}
@@ -1053,21 +1105,21 @@ const CreateEvent = () => {
                      */
                     taskState.isTaskCreateMode
                         ? users
-                              .filter((targetUser) =>
-                                  targetUser.role.includes('4')
-                              )
-                              .filter((targetUser) => {
-                                  const listUserEmails = taskState.tasks.map(
-                                      (task) => task.email
-                                  );
+                            .filter((targetUser) =>
+                                targetUser.role.includes('4')
+                            )
+                            .filter((targetUser) => {
+                                const listUserEmails = taskState.tasks.map(
+                                    (task) => task.email
+                                );
 
-                                  return !listUserEmails.includes(
-                                      targetUser.email
-                                  );
-                              })
+                                return !listUserEmails.includes(
+                                    targetUser.email
+                                );
+                            })
                         : users.filter(
-                              (targetUser) => targetUser.email !== user.email
-                          )
+                            (targetUser) => targetUser.email !== user.email
+                        )
                 }
             />
             {/* Notification */}

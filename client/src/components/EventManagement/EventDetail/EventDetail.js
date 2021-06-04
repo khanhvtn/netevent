@@ -11,8 +11,8 @@ import {
     AccordionDetails,
     Tooltip,
     Button,
-    CircularProgress,
-    Chip
+    Chip,
+    Dialog
 } from '@material-ui/core';
 import useStyles from './styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -28,9 +28,11 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFacilityAndTaskByEventName } from '../../../actions/eventActions';
 import { Skeleton } from '@material-ui/lab';
+import CreateEvent from '../../CreateEvent/CreateEvent';
 
 const initialState = {
     openDeleteDialog: false,
+    openUpdateDialog: false,
 }
 
 const EventDetail = () => {
@@ -83,10 +85,16 @@ const EventDetail = () => {
     }
 
     const handleToggleDialogDelete = () => {
-        console.log(state.openDeleteDialog)
         setState((prevState) => ({
             ...prevState,
             openDeleteDialog: !prevState.openDeleteDialog,
+        }));
+    };
+
+    const handleToggleDialogUpdate = () => {
+        setState((prevState) => ({
+            ...prevState,
+            openUpdateDialog: !prevState.openUpdateDialog,
         }));
     };
 
@@ -118,6 +126,7 @@ const EventDetail = () => {
                                         color="inherit"
                                         variant="outlined"
                                         style={{ margin: '0 8px' }}
+                                        onClick={handleToggleDialogUpdate}
                                     >
                                         Update
                                     </Button>
@@ -473,6 +482,23 @@ const EventDetail = () => {
                 handleToggleDialogDelete={handleToggleDialogDelete}
             // handleDelete={handleDelete}
             />
+
+            {/* Event Update Dialog */}
+            <Dialog
+                fullWidth
+                maxWidth="lg"
+                open={state.openUpdateDialog}
+                onClose={handleToggleDialogUpdate}
+                aria-labelledby="max-width-dialog-title"
+            >
+                <CreateEvent
+                    isUpdateMode={state.openUpdateDialog}
+                    updateEventDetail={state.event}
+                    updateFacilities={facilities}
+                    updateTasks={tasks}
+                    handleCloseUpdateDialog={handleToggleDialogUpdate}
+                />
+            </Dialog>
         </>
     )
 }

@@ -124,13 +124,13 @@ const useToolbarStyles = makeStyles((theme) => ({
     highlight:
         theme.palette.type === 'light'
             ? {
-                  color: theme.palette.secondary.main,
-                  backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-              }
+                color: theme.palette.secondary.main,
+                backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+            }
             : {
-                  color: theme.palette.text.primary,
-                  backgroundColor: theme.palette.secondary.dark,
-              },
+                color: theme.palette.text.primary,
+                backgroundColor: theme.palette.secondary.dark,
+            },
     title: {
         flex: '1 1 100%',
         fontWeight: 'bold',
@@ -163,27 +163,27 @@ const EnhancedTableToolbar = (props) => {
                     {numSelected} selected
                 </Typography>
             ) : (
-                <Typography
-                    className={classes.title}
-                    variant="h6"
-                    id="tableTitle"
-                    component="div"
-                >
-                    {tableName}
-                </Typography>
-            )}
+                    <Typography
+                        className={classes.title}
+                        variant="h6"
+                        id="tableTitle"
+                        component="div"
+                    >
+                        {tableName}
+                    </Typography>
+                )}
 
             {numSelected === 0 ? (
                 <Button
                     disabled={
                         constrainRangeDate === undefined ||
-                        disabled === undefined
+                            disabled === undefined
                             ? false
                             : !constrainRangeDate
-                            ? true
-                            : disabled
-                            ? true
-                            : false
+                                ? true
+                                : disabled
+                                    ? true
+                                    : false
                     }
                     onClick={handleToggleDialogCreateAndUpdate}
                     endIcon={<Create />}
@@ -215,15 +215,15 @@ const EnhancedTableToolbar = (props) => {
                     </Button>
                 </>
             ) : (
-                <Button
-                    onClick={handleToggleDialogDelete}
-                    endIcon={<Delete />}
-                    variant="contained"
-                    color="secondary"
-                >
-                    Delete
-                </Button>
-            )}
+                        <Button
+                            onClick={handleToggleDialogDelete}
+                            endIcon={<Delete />}
+                            variant="contained"
+                            color="secondary"
+                        >
+                            Delete
+                        </Button>
+                    )}
         </Toolbar>
     );
 };
@@ -321,112 +321,113 @@ const DataTable = ({
                     />
                     <TableBody>
                         {isLoading ||
-                        createSuccess ||
-                        updateSuccess ||
-                        deleteSuccess ? (
-                            <>
-                                {Array.apply(null, { length: take + 1 }).map(
-                                    () => {
-                                        return (
-                                            <>
-                                                <TableRow>
-                                                    <TableCell>
-                                                        <Skeleton />
-                                                    </TableCell>
-                                                    {headCells.map(() => {
-                                                        return (
-                                                            <TableCell>
-                                                                <Skeleton />
-                                                            </TableCell>
-                                                        );
-                                                    })}
-                                                </TableRow>
-                                            </>
-                                        );
-                                    }
-                                )}
-                            </>
-                        ) : data.length === 0 ? (
-                            <>
-                                <TableRow
-                                    style={{
-                                        height: 50 * take,
-                                    }}
-                                >
-                                    <TableCell
-                                        colSpan={headCells.length + 1}
-                                        align="center"
-                                    >
-                                        <Typography>No Data</Typography>
-                                    </TableCell>
-                                </TableRow>
-                            </>
-                        ) : (
-                            <>
-                                {stableSort(
-                                    data,
-                                    getComparator(order, orderBy)
-                                ).map((row, index) => {
-                                    const isItemSelected = isSelected(row.name);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
-
-                                    return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event) =>
-                                                handleClick(event, row.name)
-                                            }
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
-                                            key={row.name}
-                                            selected={isItemSelected}
-                                        >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    checked={isItemSelected}
-                                                    inputProps={{
-                                                        'aria-labelledby': labelId,
-                                                    }}
-                                                />
-                                            </TableCell>
-                                            {headCells.map((cell, index) => {
-                                                if (
-                                                    cell.id === 'createdAt' ||
-                                                    cell.id === 'updatedAt' ||
-                                                    cell.id.includes('Date') ||
-                                                    cell.id.includes('Time')
-                                                ) {
-                                                    return (
-                                                        <TableCell key={index}>
-                                                            {moment(
-                                                                row[cell.id]
-                                                            ).format('LL')}
+                            createSuccess ||
+                            updateSuccess ||
+                            deleteSuccess ? (
+                                <>
+                                    {Array.apply(null, { length: take + 1 }).map(
+                                        () => {
+                                            return (
+                                                <>
+                                                    <TableRow>
+                                                        <TableCell>
+                                                            <Skeleton />
                                                         </TableCell>
-                                                    );
-                                                }
-                                                return (
-                                                    <TableCell key={index}>
-                                                        {row[cell.id]}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                        </TableRow>
-                                    );
-                                })}
-                                {emptyRows > 0 && (
+                                                        {headCells.map((cell, index) => {
+                                                            return (
+                                                                <TableCell key={index}>
+                                                                    <Skeleton />
+                                                                </TableCell>
+                                                            );
+                                                        })}
+                                                    </TableRow>
+                                                </>
+                                            );
+                                        }
+                                    )}
+                                </>
+                            ) : data.length === 0 ? (
+                                <>
                                     <TableRow
                                         style={{
-                                            height: 50 * emptyRows,
+                                            height: 50 * take,
                                         }}
                                     >
                                         <TableCell
                                             colSpan={headCells.length + 1}
-                                        />
+                                            align="center"
+                                        >
+                                            <Typography>No Data</Typography>
+                                        </TableCell>
                                     </TableRow>
+                                </>
+                            ) : (
+                                    <>
+                                        {stableSort(
+                                            data,
+                                            getComparator(order, orderBy)
+                                        ).map((row, index) => {
+                                            const isItemSelected = isSelected(row.name);
+                                            const labelId = `enhanced-table-checkbox-${index}`;
+
+                                            return (
+                                                <TableRow
+                                                    hover
+                                                    onClick={(event) =>
+                                                        handleClick(event, row.name)
+                                                    }
+                                                    role="checkbox"
+                                                    aria-checked={isItemSelected}
+                                                    tabIndex={-1}
+                                                    key={row.name}
+                                                    selected={isItemSelected}
+                                                >
+                                                    <TableCell padding="checkbox">
+                                                        <Checkbox
+                                                            checked={isItemSelected}
+                                                            inputProps={{
+                                                                'aria-labelledby': labelId,
+                                                            }}
+                                                        />
+                                                    </TableCell>
+                                                    {headCells.map((cell, index) => {
+                                                        if (
+                                                            cell.id === 'createdAt' ||
+                                                            cell.id === 'updatedAt' ||
+                                                            cell.id.includes('Date') ||
+                                                            cell.id.includes('Time')
+                                                        ) {
+                                                            return (
+                                                                <TableCell key={index}>
+                                                                    {moment(
+                                                                        row[cell.id]
+
+                                                                    ).format('LL')}
+                                                                </TableCell>
+                                                            );
+                                                        }
+                                                        return (
+                                                            <TableCell key={index}>
+                                                                {row[cell.id]}
+                                                            </TableCell>
+                                                        );
+                                                    })}
+                                                </TableRow>
+                                            );
+                                        })}
+                                        {emptyRows > 0 && (
+                                            <TableRow
+                                                style={{
+                                                    height: 50 * emptyRows,
+                                                }}
+                                            >
+                                                <TableCell
+                                                    colSpan={headCells.length + 1}
+                                                />
+                                            </TableRow>
+                                        )}
+                                    </>
                                 )}
-                            </>
-                        )}
                     </TableBody>
                 </Table>
             </TableContainer>
