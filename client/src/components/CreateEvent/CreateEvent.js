@@ -34,7 +34,7 @@ import TaskDialog from './TaskDialog/TaskDialog';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 import CreateEventInputGroup from './CreateEventInputGroup/CreateEventInputGroup';
 
-let tagList = [];
+let listTag = [];
 const headCellBorrowFacility = [
   {
     id: 'name',
@@ -189,7 +189,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
       setTaskState(initialTaskState);
       setSelectedFacility([]);
       setSelectedTask([]);
-      tagList = [];
+      listTag = [];
       fileInput.current.value = '';
       //clear all error
       if (action) {
@@ -281,7 +281,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
       startDate,
       endDate,
       maxParticipants,
-      tags: tagList,
+      tags: listTag,
       description: description
         ? JSON.parse(description).blocks[0].text
           ? description
@@ -327,7 +327,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
 
   //handle update listTag
   const handleUpdateListTag = (newListTag) => {
-    tagList = newListTag;
+    listTag = newListTag;
   };
 
   /* Borrow Facility */
