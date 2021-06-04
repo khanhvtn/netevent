@@ -31,6 +31,7 @@ const CreateEventInputGroup = ({
     eventTypes,
     createEventSuccess,
     updateTagList,
+    defaultValueTags
 }) => {
     const css = useStyles();
     return (
@@ -134,14 +135,16 @@ const CreateEventInputGroup = ({
             {/* Tags */}
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                 <Autocomplete
+                    id="tags-filled"
                     key={createEventSuccess}
                     disabled={eventIsLoading}
                     limitTags={4}
                     multiple
-                    id="tags-filled"
+                    value={defaultValueTags}
                     options={[]}
                     freeSolo
                     renderTags={(value, getTagProps) => {
+                        console.log(value)
                         updateTagList(value);
                         return value.map((option, index) => (
                             <Chip
@@ -160,6 +163,7 @@ const CreateEventInputGroup = ({
                             {...params}
                             variant="outlined"
                             label="Tags"
+                            name="tags"
                             placeholder="Input your tag"
                         />
                     )}
@@ -250,8 +254,8 @@ const CreateEventInputGroup = ({
                             maxParticipants: value
                                 ? value
                                 : event.currentTarget?.value
-                                ? event.currentTarget?.value
-                                : '',
+                                    ? event.currentTarget?.value
+                                    : '',
                         }))
                     }
                     currencySymbol="🚹"
@@ -281,8 +285,8 @@ const CreateEventInputGroup = ({
                             budget: value
                                 ? value
                                 : event.currentTarget?.value
-                                ? event.currentTarget?.value
-                                : '',
+                                    ? event.currentTarget?.value
+                                    : '',
                         }));
                     }}
                     currencySymbol="VND"
@@ -349,8 +353,8 @@ const CreateEventInputGroup = ({
                             !state.startDate
                                 ? true
                                 : eventIsLoading
-                                ? true
-                                : false
+                                    ? true
+                                    : false
                         }
                         minDate={
                             state.startDate
@@ -385,10 +389,10 @@ const CreateEventInputGroup = ({
                             !state.startDate
                                 ? true
                                 : !state.endDate
-                                ? true
-                                : eventIsLoading
-                                ? true
-                                : false
+                                    ? true
+                                    : eventIsLoading
+                                        ? true
+                                        : false
                         }
                         minDate={
                             state.startDate

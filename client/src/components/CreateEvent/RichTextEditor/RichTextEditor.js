@@ -4,6 +4,8 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 //import useStyles in the last
 import useStyles from './styles';
 import { Paper } from '@material-ui/core';
+import { convertToRaw } from 'draft-js';
+
 //customize theme for RichTextEditor
 const defaultTheme = createMuiTheme();
 
@@ -27,22 +29,30 @@ Object.assign(defaultTheme, {
     },
 });
 
-const RichTextEditor = ({ setState, disabled }) => {
+
+
+const RichTextEditor = ({ setState, disabled, value }) => {
     const css = useStyles();
     const richTextEditorRef = useRef(null);
+
+    const handleOnChangeDescription = event => {
+        const plainText = event.getCurrentContent().getPlainText();
+        const rteContent = convertToRaw(event.getCurrentContent())
+        setState((prevState) => ({
+            ...prevState,
+            description: JSON.stringify(rteContent)
+        }))
+    }
+    
     return (
         <Paper elevation={3}>
             <MuiThemeProvider theme={defaultTheme}>
                 <MUIRichTextEditor
                     readOnly={disabled}
                     label="Type description here..."
-                    onSave={(content) =>
-                        setState((prevState) => ({
-                            ...prevState,
-                            description: content,
-                        }))
-                    }
-                    onChange={() => richTextEditorRef.current.save()}
+                    // value={value}
+                    onChange={handleOnChangeDescription}
+                    name="description"
                     inlineToolbar={true}
                     ref={richTextEditorRef}
                 />

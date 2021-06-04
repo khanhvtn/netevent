@@ -36,8 +36,7 @@ import useStyles from './styles';
 import TaskDialog from './TaskDialog/TaskDialog';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 import CreateEventInputGroup from './CreateEventInputGroup/CreateEventInputGroup';
-import { convertFromRaw } from 'draft-js';
-import { stateToHTML } from 'draft-js-export-html';
+import { convertToRaw, EditorState } from 'draft-js';
 
 let tagList = [];
 const headCells = [
@@ -160,6 +159,8 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
         initialBorrowFacilityState
     );
 
+    const [defaultValueTags, setDefaultValueTags] = useState(tagList);
+
     //task table
     const [selectedTask, setSelectedTask] = useState([]);
     const [taskState, setTaskState] = useState(initialTaskState);
@@ -226,8 +227,6 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                 ...prevState,
                 ...updateEventDetail,
                 eventTypeTarget: updateEventDetail.eventTypeId.name,
-                borrowFacilities: updateFacilities,
-                tasks: updateTasks
             }));
 
             setBorrowFacilityState((prevState) => ({
@@ -249,25 +248,29 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                     endTime: task.endDate,
                 }))
             }))
+
+            setDefaultValueTags(updateEventDetail.tags)
         }
     }, [dispatch]);
 
     useEffect(() => {
-        try {
-            // const data = convertFromRaw(JSON.parse(state.description))
-            // const html = stateToHTML(data)
-            // console.log(JSON.parse(state.description).blocks[0])
+        if (isUpdateMode) {
+            const emptyContentState = convertToRaw(EditorState.createEmpty().getCurrentContent())
+            emptyContentState.blocks[0].text = updateEventDetail.description
+            const rawDescription = JSON.stringify(emptyContentState)
 
-            // setState((prevState) => ({
-            //     ...prevState,
-
-            // }));
-        } catch (error) {
-            console.log(error)
+            setState((prevState) => ({
+                ...prevState,
+                description: rawDescription
+            }))
         }
-    }, [state.description])
+    }, [])
+
+    console.log(defaultValueTags)
 
     const handleChange = (e) => {
+        console.log(e.target.name)
+        console.log(e.target.value)
         setState((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
@@ -360,6 +363,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                 }
             ),
         };
+        console.log(templateRequest)
         dispatch(createEvent(templateRequest));
     };
 
@@ -762,6 +766,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                             eventIsLoading={eventIsLoading}
                             errors={errors}
                             handleChange={handleChange}
+                            defaultValueTags={defaultValueTags}
                             state={state}
                             setState={setState}
                             eventTypes={eventTypes}
@@ -908,6 +913,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                             <RichTextEditor
                                 key={createEventSuccess}
                                 disabled={eventIsLoading}
+                                value={state.description}
                                 setState={setState}
                             />
                             <FormControl

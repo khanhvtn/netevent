@@ -61,7 +61,7 @@ const EventDetail = () => {
         if (state.event) {
             dispatch(getFacilityAndTaskByEventName(state.event.eventName))
         }
-    }, [state])
+    }, [state.event])
 
     const { facilities, tasks, isLoading } = useSelector((state) => ({
         facilities: state.event.eventDetail?.facilityHistoryListId,
@@ -115,6 +115,7 @@ const EventDetail = () => {
                                 <div className={css.grow} />
                                 <Tooltip title="Delete">
                                     <Button
+                                        disabled={isLoading}
                                         color="inherit"
                                         onClick={handleToggleDialogDelete}
                                     >
@@ -123,6 +124,7 @@ const EventDetail = () => {
                                 </Tooltip>
                                 <Tooltip title="Edit">
                                     <Button
+                                        disabled={isLoading}
                                         color="inherit"
                                         variant="outlined"
                                         style={{ margin: '0 8px' }}
