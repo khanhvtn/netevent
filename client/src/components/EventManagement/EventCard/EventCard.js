@@ -133,7 +133,7 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                         {isLoading ? <Skeleton variant="text" width="20%" /> : 'Category (type)'}
                                     </Typography>
                                     <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                        {isLoading ? <Skeleton variant="text" /> : event.eventTypeId.name}
+                                        {isLoading ? <Skeleton variant="text" /> : event.eventTypeId?.name}
                                     </Typography>
                                 </Grid>
                             </Grid>

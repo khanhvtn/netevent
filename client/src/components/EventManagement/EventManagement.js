@@ -21,6 +21,7 @@ import EventCard from './EventCard/EventCard';
 import EventFilter from './EventFilter/EventFilter';
 import { useHistory } from 'react-router-dom';
 import { getEvents } from '../../actions/eventActions';
+import { getAllEventTypes } from '../../actions/eventTypeActions';
 
 
 const initialState = {
@@ -72,11 +73,28 @@ const EventManagement = () => {
                 state.take,
                 state.page,
                 state.type,
-                state.budgetRange,
-                state.participantRange
+                // state.budgetRange,
+                // state.participantRange
             ))
         }
-    }, [dispatch, state.search, state.take, state.page])
+        history.replace()
+    }, [
+        dispatch,
+        state.search,
+        state.take,
+        state.page,
+        state.type
+    ]);
+
+    const { eventTypes } = useSelector(() => ({
+        eventTypes: state.eventType?.eventTypes
+    }))
+
+    useEffect(() => {
+        if (eventTypes) {
+            dispatch(getAllEventTypes());
+        }
+    }, [])
 
     const handleChangePage = (event, newPage) => {
         setState((prevState) => ({ ...prevState, page: newPage }));
@@ -127,11 +145,10 @@ const EventManagement = () => {
         setState((prevState) => ({
             ...prevState,
             ...filters,
+            page: 1,
             openFilter: !prevState.openFilter,
         }));
     };
-
-    console.log(state)
 
     //handle Clear Filter
     const handleClearFilter = () => {

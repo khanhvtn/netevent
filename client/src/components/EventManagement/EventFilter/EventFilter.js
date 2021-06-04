@@ -111,9 +111,9 @@ const EventFilter = ({
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            {eventTypes.map((eventType) => {
+                            {eventTypes.map((eventType, index) => {
                                 return (
-                                    <MenuItem value={eventType.name}>{eventType.name}</MenuItem>
+                                    <MenuItem key={index} value={eventType.name}>{eventType.name}</MenuItem>
                                 )
                             })}
                         </Select>

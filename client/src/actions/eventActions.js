@@ -74,7 +74,6 @@ export const getFacilityAndTaskByEventName = (eventName) => async (dispatch) => 
     setEventDetailIsLoading(true, dispatch);
     try {
         const data = await getFacilityAndTaskByEventNameAPI(eventName);
-        console.log(data)
         dispatch({
             type: EVENT_GET_FACILITY_AND_TASK,
             payload: data
