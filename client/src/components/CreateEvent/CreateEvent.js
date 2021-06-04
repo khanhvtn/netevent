@@ -284,7 +284,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
       tags: tagList,
       description: description
         ? JSON.parse(description).blocks[0].text
-          ? JSON.parse(description).blocks[0].text
+          ? description
           : ''
         : '',
       ownerId: user.id,
