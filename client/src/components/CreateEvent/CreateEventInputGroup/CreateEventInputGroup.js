@@ -137,7 +137,7 @@ const CreateEventInputGroup = ({
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                 <Autocomplete
                     id="tags-filled"
-                    defaultValue={defaultTags}
+                    defaultValue={defaultValueTags}
                     key={createEventSuccess}
                     disabled={eventIsLoading}
                     limitTags={4}
