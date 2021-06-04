@@ -297,12 +297,14 @@ const EventDetail = () => {
                                         </>
                                         :
                                         tasks?.map((task, index) => {
+                                            
+
                                             return (
-                                                <Accordion key={index} expanded={expanded === 'panel1'} onChange={handleExpand('panel1')}>
+                                                <Accordion key={index} expanded={expanded === `panel${index}`} onChange={handleExpand(`panel${index}`)}>
                                                     <AccordionSummary
                                                         expandIcon={<ExpandMoreIcon />}
-                                                        aria-controls="panel1bh-content"
-                                                        id="panel1bh-header"
+                                                        aria-controls={`panel${index}bh-content`}
+                                                        id={`panel${index}bh-header`}
                                                     >
                                                         <Typography className={css.heading}>{task.name}</Typography>
                                                         <Typography className={css.secondaryHeading}>{task.userId.email}</Typography>

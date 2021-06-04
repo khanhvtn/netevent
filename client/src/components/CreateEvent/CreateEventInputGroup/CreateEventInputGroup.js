@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
     Grid,
@@ -31,9 +31,10 @@ const CreateEventInputGroup = ({
     eventTypes,
     createEventSuccess,
     updateTagList,
-    defaultValueTags
+    defaultValueTags,
 }) => {
     const css = useStyles();
+
     return (
         <>
             <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
@@ -136,15 +137,14 @@ const CreateEventInputGroup = ({
             <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
                 <Autocomplete
                     id="tags-filled"
+                    defaultValue={defaultTags}
                     key={createEventSuccess}
                     disabled={eventIsLoading}
                     limitTags={4}
                     multiple
-                    value={defaultValueTags}
                     options={[]}
                     freeSolo
                     renderTags={(value, getTagProps) => {
-                        console.log(value)
                         updateTagList(value);
                         return value.map((option, index) => (
                             <Chip

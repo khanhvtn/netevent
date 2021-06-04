@@ -83,7 +83,7 @@ const initialState = {
     startDate: null,
     endDate: null,
     maxParticipants: '',
-    description: '',
+    description: JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent())),
     budget: '',
     image: null,
     tasks: [],
@@ -152,6 +152,9 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
         facilities: state.facility.facilities,
         facilityHistories: state.facilityHistory.facilityHistories,
     }));
+
+
+
     const [state, setState] = useState(initialState);
     //borrow facility table
     const [selectedFacility, setSelectedFacility] = useState([]);
@@ -159,7 +162,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
         initialBorrowFacilityState
     );
 
-    const [defaultValueTags, setDefaultValueTags] = useState(tagList);
+    const [defaultValueTags, setDefaultValueTags] = useState(updateEventDetail?.tags || tagList);
 
     //task table
     const [selectedTask, setSelectedTask] = useState([]);
@@ -173,7 +176,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
             setTaskState(initialTaskState);
             setSelectedFacility([]);
             setSelectedTask([]);
-            tagList = [];
+            setDefaultValueTags(tagList)
             fileInput.current.value = '';
             //clear all error
             if (action) {
@@ -221,14 +224,25 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
         dispatch(getAllFacilities());
         dispatch(getAllUsers());
         dispatch(getFacilityHistories({ returnFrom: new Date(Date.now()) }));
+    }, [dispatch]);
 
+    //useEffect to check update mode
+    useEffect(() => {
         if (isUpdateMode) {
+            // setup initial update description for RTE
+            const emptyContentState = convertToRaw(EditorState.createEmpty().getCurrentContent())
+            emptyContentState.blocks[0].text = updateEventDetail?.description || ''
+            const rawDescription = JSON.stringify(emptyContentState)
+
+            // setup initial state
             setState((prevState) => ({
                 ...prevState,
                 ...updateEventDetail,
                 eventTypeTarget: updateEventDetail.eventTypeId.name,
+                description: rawDescription
             }));
 
+            // setup initial facilities
             setBorrowFacilityState((prevState) => ({
                 ...prevState,
                 borrowFacilities: updateFacilities.map((facility) => ({
@@ -238,6 +252,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                 }))
             }))
 
+            // setup initial tasks
             setTaskState((prevState) => ({
                 ...prevState,
                 tasks: updateTasks.map((task) => ({
@@ -248,29 +263,10 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                     endTime: task.endDate,
                 }))
             }))
-
-            setDefaultValueTags(updateEventDetail.tags)
-        }
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (isUpdateMode) {
-            const emptyContentState = convertToRaw(EditorState.createEmpty().getCurrentContent())
-            emptyContentState.blocks[0].text = updateEventDetail.description
-            const rawDescription = JSON.stringify(emptyContentState)
-
-            setState((prevState) => ({
-                ...prevState,
-                description: rawDescription
-            }))
         }
     }, [])
 
-    console.log(defaultValueTags)
-
     const handleChange = (e) => {
-        console.log(e.target.name)
-        console.log(e.target.value)
         setState((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
@@ -288,7 +284,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
         }));
     };
 
-    const handleCreateEvent = () => {
+    const handleCreateAndUpdateEvent = () => {
         const {
             eventName,
             language,
@@ -363,13 +359,19 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                 }
             ),
         };
+
+        if (!isUpdateMode) {
+            console.log(templateRequest)
+            dispatch(createEvent(templateRequest));
+        }
+
         console.log(templateRequest)
-        dispatch(createEvent(templateRequest));
+        console.log("Update")
     };
 
     //handle update taglist
     const handleUpdateTaglist = (newTagList) => {
-        tagList = newTagList;
+        setDefaultValueTags(newTagList);
     };
 
     /* Borrow Facility */
@@ -959,7 +961,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                                         width: '140px',
                                     }}
                                     size="large"
-                                    onClick={handleCreateEvent}
+                                    onClick={handleCreateAndUpdateEvent}
                                     variant="contained"
                                     color="primary"
                                 >
