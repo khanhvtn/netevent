@@ -307,8 +307,8 @@ const DataTable = ({
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = dataFilter.map((n) => n.name);
-      setSelected(newSelecteds);
+      const newSelected = dataFilter.map((n) => n.name);
+      setSelected(newSelected);
       return;
     }
     setSelected([]);

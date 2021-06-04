@@ -111,12 +111,12 @@ const initialState = {
   openCreateSnackBar: false,
 };
 const initialBorrowFacilityState = {
-  //facility taborrowFacilityState.
+  //borrowFacilityState.
   borrowFacilities: [],
   borrowFacilityLoading: false,
-  borrowFacilityCreatSucces: false,
-  borrowFacilityUpdateSucces: false,
-  borrowFacilityDeleteSucces: false,
+  borrowFacilityCreatSuccess: false,
+  borrowFacilityUpdateSuccess: false,
+  borrowFacilityDeleteSuccess: false,
   isBorrowFacilityCreateMode: true,
   name: '',
   borrowDate: null,
@@ -128,9 +128,9 @@ const initialBorrowFacilityState = {
 const initialTaskState = {
   tasks: [],
   isLoading: false,
-  taskCreatSucces: false,
-  taskDeleteSucces: false,
-  taskUpdateSucces: false,
+  taskCreatSuccess: false,
+  taskDeleteSuccess: false,
+  taskUpdateSuccess: false,
   name: '',
   email: '',
   type: '',
@@ -325,9 +325,9 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
     dispatch(createEvent(templateRequest));
   };
 
-  //handle update taglist
-  const handleUpdateTaglist = (newTagList) => {
-    tagList = newTagList;
+  //handle update listTag
+  const handleUpdateListTag = (newListTag) => {
+    tagList = newListTag;
   };
 
   /* Borrow Facility */
@@ -719,7 +719,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
               setState={setState}
               eventTypes={eventTypes}
               createEventSuccess={createEventSuccess}
-              updateTagList={handleUpdateTaglist}
+              updateListTag={handleUpdateListTag}
             />
 
             {/* Tasks Table */}
@@ -745,9 +745,9 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
                   setSelected={setSelectedTask}
                   data={taskState.tasks}
                   isLoading={taskState.isLoading}
-                  createSuccess={taskState.taskCreatSucces}
-                  deleteSuccess={taskState.taskDeleteSucces}
-                  updateSuccess={taskState.taskUpdateSucces}
+                  createSuccess={taskState.taskCreatSuccess}
+                  deleteSuccess={taskState.taskDeleteSuccess}
+                  updateSuccess={taskState.taskUpdateSuccess}
                   tableName="Task Assign"
                   headCells={headCellsTask}
                 />
@@ -784,9 +784,13 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
                   setSelected={setSelectedFacility}
                   data={borrowFacilityState.borrowFacilities}
                   isLoading={borrowFacilityState.borrowFacilityLoading}
-                  createSuccess={borrowFacilityState.borrowFacilityCreatSucces}
-                  deleteSuccess={borrowFacilityState.borrowFacilityDeleteSucces}
-                  updateSuccess={borrowFacilityState.borrowFacilityUpdateSucces}
+                  createSuccess={borrowFacilityState.borrowFacilityCreatSuccess}
+                  deleteSuccess={
+                    borrowFacilityState.borrowFacilityDeleteSuccess
+                  }
+                  updateSuccess={
+                    borrowFacilityState.borrowFacilityUpdateSuccess
+                  }
                   tableName="Borrow Facility"
                   headCells={headCellBorrowFacility}
                 />
@@ -907,7 +911,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
         handleDelete={handleDeleteBorrowFacility}
         isLoading={borrowFacilityState.borrowFacilityLoading}
         errors={errors}
-        createSuccess={borrowFacilityState.borrowFacilityCreatSucces}
+        createSuccess={borrowFacilityState.borrowFacilityCreatSuccess}
         availableFacilities={
           /* 
                     if isBorrowFacilityCreateMode is true, 
@@ -976,7 +980,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
         handleDelete={handleDeleteTask}
         isLoading={taskState.isLoading}
         errors={errors}
-        createSuccess={taskState.taskCreatSucces}
+        createSuccess={taskState.taskCreatSuccess}
         availableUsers={
           /* 
                     if isTaskCreateMode is true, 
