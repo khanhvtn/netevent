@@ -9,6 +9,7 @@ import { userCheck } from './actions/userActions';
 import { Grid, CircularProgress } from '@material-ui/core';
 import DashboardLayout from './Layouts/Dashboard/DashboardLayout';
 import Confirmation from './pages/confirmation/Confirmation';
+import Registration from './pages/registration/Registration';
 import Facility from './components/Facility/Facility';
 import User from './components/User/User';
 import EventType from './components/EventType/EventType';
@@ -45,6 +46,12 @@ const App = () => {
                         exact
                         path="/confirmation/:id"
                         component={Confirmation}
+                    />
+
+                    <Route
+                        exact
+                        path="/registration/:eventName"
+                        component={Registration}
                     />
 
                     {/* Here is the place to add route for dashboard layout */}

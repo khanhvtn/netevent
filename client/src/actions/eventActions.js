@@ -3,6 +3,7 @@ import {
     EVENT_CREATE_SUCCESS,
     IS_SENDING_NOTIFICATION,
     SEND_SUCCESS,
+    GET_EVENTS_COMPLETE,
     FETCH_EVENTS,
     ERROR_CLEAR,
     ERROR,
@@ -19,18 +20,19 @@ const setEventIsLoading = (status, dispatch) => {
 
 export const fetchEvents = () => async (dispatch) => {
     try {
-        const data =  await fetchEventsAPI()
+
+        const data = await fetchEventsAPI()
         dispatch({
             type: FETCH_EVENTS,
             payload: data
         })
+
+        dispatch({
+            type: GET_EVENTS_COMPLETE,
+            payload: true
+        })
     } catch (error) {
-        if (error.response.data?.errors) {
-            dispatch({
-                type: ERROR,
-                payload: error.response.data?.errors,
-            });
-        }
+
         console.log(error);
     }
 }
@@ -71,11 +73,11 @@ const sleep = (milliseconds) => {
 };
 
 
-export const sendNotification = (notificationReq) => async(dispatch) => {
+export const sendNotification = (notificationReq) => async (dispatch) => {
     try {
         dispatch({
             type: IS_SENDING_NOTIFICATION,
-            payload: true  
+            payload: true
         })
 
         await sendNotificationAPI(notificationReq)
