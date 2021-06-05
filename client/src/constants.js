@@ -29,7 +29,7 @@ export const ERROR_CLEAR = 'ERROR_CLEAR';
 export const EMAIL_ERROR = 'Email must not be empty and in right format';
 export const ROLE_ERROR = 'Role must not be empty';
 export const PASSWORD_MATCHED =
-    'Passwords must be matched and should not be empty';
+  'Passwords must be matched and should not be empty';
 
 //link action types
 export const GET_LINKS = 'GET_LIKKS';
@@ -58,6 +58,8 @@ export const EVENT_TYPE_DELETE = 'EVENT_TYPE_DELETE';
 export const EVENT_TYPE_CREATE_SUCCESS = 'EVENT_TYPE_CREATE_SUCCESS';
 export const EVENT_TYPE_UPDATE_SUCCESS = 'EVENT_TYPE_UPDATE_SUCCESS';
 export const EVENT_TYPE_DELETE_SUCCESS = 'EVENT_TYPE_DELETE_SUCCESS';
+export const EVENT_TYPE_RECOVERY = 'EVENT_TYPE_RECOVERY';
+export const EVENT_TYPE_RECOVERY_SUCCESS = 'EVENT_TYPE_RECOVERY_SUCCESS';
 
 // Event actions types
 export const EVENT_GET_ALL = 'EVENT_GET_ALL';
@@ -69,4 +71,4 @@ export const EVENT_CREATE_SUCCESS = 'EVENT_CREATE_SUCCESS';
 export const FACILITY_HISTORY_GET_ALL = 'FACILITY_HISTORY_GET_ALL';
 export const FACILITY_HISTORY_LOADING = 'FACILITY_HISTORY_LOADING';
 export const FACILITY_HISTORY_GET_ALL_FILTER =
-    'FACILITY_HISTORY_GET_ALL_FILTER';
+  'FACILITY_HISTORY_GET_ALL_FILTER';

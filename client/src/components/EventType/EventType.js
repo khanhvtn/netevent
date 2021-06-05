@@ -16,6 +16,7 @@ import {
   createEventType,
   deleteEventTypes,
   updateEventType,
+  recoveryEventTypes,
 } from '../../actions/eventTypeActions';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -39,6 +40,7 @@ const initialState = {
   openDeleteSnackBar: false,
   openUpdateSnackBar: false,
   openCreateSnackBar: false,
+  openRecoverySnackBar: false,
   isCreateMode: true,
   openFilter: false,
   createdFrom: null,
@@ -65,6 +67,7 @@ const EventType = () => {
     isLoading,
     totalPages,
     errors,
+    recoverySuccess,
   } = useSelector((state) => ({
     eventTypes: state.eventType.eventTypes,
     isLoading: state.eventType.isLoading,
@@ -73,12 +76,26 @@ const EventType = () => {
     createSuccess: state.eventType.createSuccess,
     deleteSuccess: state.eventType.deleteSuccess,
     updateSuccess: state.eventType.updateSuccess,
+    recoverySuccess: state.eventType.recoverySuccess,
   }));
 
   const [state, setState] = useState(initialState);
   const [filters, setFilters] = useState(filterState);
 
   const [selected, setSelected] = useState([]);
+
+  //userEffect to toggle notification for recovery success
+  useEffect(() => {
+    if (recoverySuccess) {
+      dispatch(getEventTypes());
+      //clear selected item
+      setSelected(() => []);
+    }
+    setState((prevState) => ({
+      ...prevState,
+      openRecoverySnackBar: recoverySuccess,
+    }));
+  }, [dispatch, recoverySuccess]);
 
   //useEffect to toggle notification for create success
   useEffect(() => {
@@ -314,7 +331,11 @@ const EventType = () => {
   };
 
   const handleRecovery = () => {
-    console.log('handle recovery');
+    dispatch(
+      recoveryEventTypes({
+        recoveryList: selected,
+      })
+    );
   };
 
   return (
