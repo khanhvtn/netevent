@@ -83,7 +83,7 @@ const initialState = {
     startDate: null,
     endDate: null,
     maxParticipants: '',
-    description: JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent())),
+    description: '',
     budget: '',
     image: null,
     tasks: [],
@@ -203,11 +203,15 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
             dispatch(
                 getFacilityHistories({ returnFrom: new Date(Date.now()) })
             );
+            setState((prevState) => ({
+                ...prevState,
+                isResetListTag: !prevState.isResetListTag
+            }));
+            setDefaultValueTags([])
         }
         setState((prevState) => ({
             ...prevState,
             openCreateSnackBar: createEventSuccess,
-            isResetListTag: !prevState.isResetListTag
         }));
     }, [dispatch, createEventSuccess, handleClearFields]);
 
@@ -305,6 +309,9 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
             image,
             eventTypeTarget,
         } = state;
+
+        console.log(description)
+
         //generate valid data to send request to the server
         const templateRequest = {
             eventName,
@@ -321,10 +328,10 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
             startDate,
             endDate,
             maxParticipants,
-            tags: tagList,
+            tags: defaultValueTags,
             description: description
                 ? JSON.parse(description).blocks[0].text
-                    ? JSON.parse(description).blocks[0].text
+                    ? description
                     : ''
                 : '',
             ownerId: user.id,
@@ -366,12 +373,10 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
         };
 
         if (!isUpdateMode) {
-            console.log(templateRequest)
             dispatch(createEvent(templateRequest));
+        } else {
+            console.log("Update")
         }
-
-        console.log(templateRequest)
-        console.log("Update")
     };
 
     //handle update taglist

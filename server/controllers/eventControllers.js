@@ -242,16 +242,16 @@ const filter = async (req, res, next) => {
                 })
                 .sort({ updatedAt: -1 })
 
-        
+
             const filterEvents = queryEvent.filter((event) => event.eventTypeId !== null);
             const totalEvent = filterEvents.length;
 
             let totalPages = (totalEvent / options.take).toString().includes('.')
                 ? Math.ceil(totalEvent / options.take)
                 : totalEvent / options.take;
-            
+
             const events = filterEvents.skip((page - 1) * options.take).limit(options.take);
-            
+
             return cusResponse(res, 200, events, null, totalPages);
         }
 
@@ -266,15 +266,15 @@ const filter = async (req, res, next) => {
             })
             .sort({ updatedAt: -1 })
 
-        
+
         const totalEvent = queryEvent.length;
 
         let totalPages = (totalEvent / options.take).toString().includes('.')
             ? Math.ceil(totalEvent / options.take)
             : totalEvent / options.take;
-        
+
         const events = queryEvent.skip((page - 1) * options.take).limit(options.take);
-        
+
         return cusResponse(res, 200, events, null, totalPages);
     } catch (error) {
         return next(new CustomError(500, error.message));
@@ -290,30 +290,21 @@ const filter = async (req, res, next) => {
  */
 const deleteEvent = async (req, res, next) => {
     try {
-        const { deleteList } = req.body;
-        if (deleteList.length === 1) {
-            const deletedEvent = await Event.findOneAndDelete({
-                eventName: deleteList[0],
-            });
-            return cusResponse(res, 200, deletedEvent, null);
-        } else {
-            const deletedEvent = await Promise.all(
-                deleteList.map(async (eventName) => {
-                    return await Event.findOneAndDelete({
-                        eventName,
-                    });
-                })
-            );
-            return cusResponse(res, 200, deletedEvent, null);
-        }
+        const { eventId, taskListId, historyFacilityListId } = req.body;
+
+        // Delete all reference Task
+        await Task.deleteMany({ _id: taskListId });
+        
+        // Delete all reference Facility History
+        await FacilityHistory.deleteMany({ _id: historyFacilityListId })
+        
+        // Delete Event
+        const deleteEvent = await Event.deleteOne({ _id: eventId })
+        const response = { ...deleteEvent, isDeleted: true }
+
+        return cusResponse(res, 200, response, null);
+
     } catch (error) {
-        if (error.name == 'ValidationError') {
-            let errors = {};
-            for (field in error.errors) {
-                errors = { ...errors, [field]: error.errors[field].message };
-            }
-            return next(new CustomError(500, errors));
-        }
         return next(new CustomError(500, error.message));
     }
 };
@@ -367,6 +358,14 @@ const getAllEvent = async (req, res, next) => {
     }
 };
 
+
+/**
+ * @decsription Get specific event detail
+ * @method GET
+ * @route /api/event/detail
+ *
+ * @version 1.0
+ */
 const getFacilityAndTaskByEventName = async (req, res, next) => {
     try {
         const event = await Event.findOne({

@@ -32,6 +32,7 @@ const taskSchema = mongoose.Schema(
         },
         eventId: {
             type: mongoose.Types.ObjectId,
+            ref: 'Event',
             default: null,
         },
     },

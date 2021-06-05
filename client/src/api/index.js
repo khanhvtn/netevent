@@ -104,7 +104,7 @@ export const getFacilityAndTaskByEventNameAPI = (eventName) =>
     AXIOS.get(`/event/detail?eventName=${eventName ? eventName : ''}`)
 export const createEventAPI = (userReq) => AXIOS.post(`/event/create`, userReq);
 export const updateEventAPI = (userReq) => AXIOS.patch(`/event/update`, userReq);
-export const deleteEventAPI = (userReq) => AXIOS.delete(`/event/delete`, userReq);
+export const deleteEventAPI = (userReq) => AXIOS.delete(`/event/delete`, { data: userReq });
 
 // Facility History APIs
 export const getFacilityHistoriesAPI = (userQueries) => {

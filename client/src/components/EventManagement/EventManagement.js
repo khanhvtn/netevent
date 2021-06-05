@@ -8,7 +8,6 @@ import {
     InputBase,
     Tooltip,
     IconButton,
-    CircularProgress,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,6 +21,7 @@ import EventFilter from './EventFilter/EventFilter';
 import { useHistory } from 'react-router-dom';
 import { getEvents } from '../../actions/eventActions';
 import { getAllEventTypes } from '../../actions/eventTypeActions';
+import SystemNotification from '../Notification/Notification';
 
 
 const initialState = {
@@ -35,6 +35,7 @@ const initialState = {
     participantRange: null,
     startDate: null,
     endDate: null,
+    openDeleteSnackBar: false
 }
 
 const filterState = {
@@ -54,12 +55,13 @@ const EventManagement = () => {
     const {
         events,
         isLoading,
-        totalPages
+        totalPages,
+        deleteEventSuccess
     } = useSelector((state) => ({
         events: state.event.events,
         isLoading: state.event.isLoading,
         totalPages: state.event.totalPages,
-        errors: state.error.errors
+        deleteEventSuccess: state.event.deleteSuccess
     }));
 
     const [state, setState] = useState(initialState);
@@ -80,6 +82,7 @@ const EventManagement = () => {
         history.replace()
     }, [
         dispatch,
+        history,
         state.search,
         state.take,
         state.page,
@@ -90,11 +93,20 @@ const EventManagement = () => {
         eventTypes: state.eventType?.eventTypes
     }))
 
+    // Request all event type in the first access
     useEffect(() => {
         if (eventTypes) {
             dispatch(getAllEventTypes());
         }
     }, [])
+
+    // UseEffect for delete event success
+    useEffect(() => {
+        setState((prevState) => ({
+            ...prevState,
+            openDeleteSnackBar: deleteEventSuccess
+        }));
+    }, [deleteEventSuccess])
 
     const handleChangePage = (event, newPage) => {
         setState((prevState) => ({ ...prevState, page: newPage }));
@@ -263,6 +275,9 @@ const EventManagement = () => {
                 handleApplyFilter={handleApplyFilter}
                 handleClearFilter={handleClearFilter}
             />
+
+            {/* Notification */}
+            <SystemNotification openDeleteSnackBar={state.openDeleteSnackBar} />
         </>
     )
 }

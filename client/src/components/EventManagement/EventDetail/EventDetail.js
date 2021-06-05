@@ -26,7 +26,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import EventDeleteDialog from '../EventDialog/EventDeleteDialog';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFacilityAndTaskByEventName } from '../../../actions/eventActions';
+import { deleteEventWithTaskAndFacilityHistory, getFacilityAndTaskByEventName } from '../../../actions/eventActions';
 import { Skeleton } from '@material-ui/lab';
 import CreateEvent from '../../CreateEvent/CreateEvent';
 
@@ -35,11 +35,18 @@ const initialState = {
     openUpdateDialog: false,
 }
 
+const initialDeleteState = {
+    eventId: null,
+    taskListId: [],
+    historyFacilityListId: []
+}
+
 const EventDetail = () => {
     const css = useStyles();
     const history = useHistory();
     const dispatch = useDispatch();
     const [state, setState] = useState(initialState);
+    const [deleteState, setDeleteState] = useState(initialDeleteState)
     const [expanded, setExpanded] = useState(false);
 
     // Update new state when getting props from event-management page
@@ -69,6 +76,17 @@ const EventDetail = () => {
         isLoading: state.event.isDetailLoading
     }));
 
+    // Update Delete State
+    useEffect(() => {
+        if (state.event && !isLoading)
+            setDeleteState((prevState) => ({
+                ...prevState,
+                eventId: state.event?._id,
+                taskListId: tasks.map((task) => task._id),
+                historyFacilityListId: facilities.map((facility) => facility._id),
+            }))
+    }, [isLoading])
+
     // Handle expand of accordion
     const handleExpand = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -97,6 +115,12 @@ const EventDetail = () => {
             openUpdateDialog: !prevState.openUpdateDialog,
         }));
     };
+
+    // Handle Delete Event
+    const handleDeleteEvent = () => {
+        console.log(deleteState);
+        dispatch(deleteEventWithTaskAndFacilityHistory(deleteState, history))
+    }
 
     return (
         <>
@@ -297,7 +321,7 @@ const EventDetail = () => {
                                         </>
                                         :
                                         tasks?.map((task, index) => {
-                                            
+
 
                                             return (
                                                 <Accordion key={index} expanded={expanded === `panel${index}`} onChange={handleExpand(`panel${index}`)}>
@@ -484,7 +508,7 @@ const EventDetail = () => {
             <EventDeleteDialog
                 openDeleteDialog={state.openDeleteDialog}
                 handleToggleDialogDelete={handleToggleDialogDelete}
-            // handleDelete={handleDelete}
+                handleDeleteEvent={handleDeleteEvent}
             />
 
             {/* Event Update Dialog */}

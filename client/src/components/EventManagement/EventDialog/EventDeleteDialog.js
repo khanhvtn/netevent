@@ -20,9 +20,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const EventDeleteDialog = ({
     openDeleteDialog,
     handleToggleDialogDelete,
-    // handleDelete,
+    handleDeleteEvent,
 }) => {
     const css = useStyles();
+
+    const { isLoading } = useSelector((state) => ({
+        isLoading: state.event.isLoading
+    }))
 
     return (
         <>
@@ -44,20 +48,19 @@ const EventDeleteDialog = ({
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
                     <Button
-                        // disabled={isLoading ? true : false}
+                        disabled={isLoading ? true : false}
                         onClick={handleToggleDialogDelete}
                         color="default"
                     >
                         Cancel
                     </Button>
                     <Button
-                        // disabled={isLoading ? true : false}
+                        disabled={isLoading ? true : false}
                         variant="contained"
-                        // onClick={handleDelete}
+                        onClick={handleDeleteEvent}
                         color="secondary"
                     >
-                        {/* {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Delete'} */}
-                        Delete
+                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Delete'}
                     </Button>
                 </DialogActions>
             </Dialog>

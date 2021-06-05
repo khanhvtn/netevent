@@ -6,8 +6,14 @@ import {
     EVENT_GET_ALL_FILTER,
     EVENT_GET_FACILITY_AND_TASK,
     EVENT_DETAIL_LOADING,
+    EVENT_DELETE_SUCCESS,
 } from '../constants';
-import { createEventAPI, getEventsAPI, getFacilityAndTaskByEventNameAPI } from '../api';
+import {
+    createEventAPI,
+    deleteEventAPI,
+    getEventsAPI,
+    getFacilityAndTaskByEventNameAPI
+} from '../api';
 
 //setIsLoading func is to set loading status
 const setEventIsLoading = (status, dispatch) => {
@@ -82,4 +88,26 @@ export const getFacilityAndTaskByEventName = (eventName) => async (dispatch) => 
         console.log(error.message)
     }
     setEventDetailIsLoading(false, dispatch);
+};
+
+export const deleteEventWithTaskAndFacilityHistory = (userReq, history) => async (dispatch) => {
+    setEventIsLoading(true, dispatch);
+    try {
+        console.log(userReq)
+        const data = await deleteEventAPI(userReq);
+        history.goBack();
+        dispatch({
+            type: EVENT_DELETE_SUCCESS,
+            payload: true
+        })
+        setTimeout(() => {
+            dispatch({
+                type: EVENT_DELETE_SUCCESS,
+                payload: false
+            })
+        }, 3000);
+    } catch (error) {
+        console.log(error.message)
+    }
+    setEventIsLoading(false, dispatch);
 }

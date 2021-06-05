@@ -35,20 +35,27 @@ const RichTextEditor = ({ setState, disabled, value }) => {
     const css = useStyles();
     const richTextEditorRef = useRef(null);
 
+    const handleOnChangeRTE = event => {
+        // const content = JSON.stringify(convertToRaw(event.getCurrentContent()))
+        // setState((prevState) => ({
+        //     ...prevState,
+        //     description: content,
+        // }))
+    }
+
     return (
         <Paper elevation={3}>
             <MuiThemeProvider theme={defaultTheme}>
                 <MUIRichTextEditor
                     readOnly={disabled}
                     label="Type description here..."
-                    defaultValue={value}
                     onSave={(content) =>
                         setState((prevState) => ({
                             ...prevState,
                             description: content,
                         }))
                     }
-                    name="description"
+                    onChange={() => richTextEditorRef.current.save()}
                     inlineToolbar={true}
                     ref={richTextEditorRef}
                 />
