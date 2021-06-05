@@ -21,7 +21,7 @@ describe('EVENT REDUCER', () => {
             })
         
         expect(action).toMatchSnapshot({
-            isLoading: true,
+            isLoading: action.payload,
             events: [],
             totalPages: null,
             createSuccess: false,
@@ -38,7 +38,7 @@ describe('EVENT REDUCER', () => {
             isLoading: false,
             events: [],
             totalPages: null,
-            createSuccess: true,
+            createSuccess: action.payload,
             updateSuccess: false,
             deleteSuccess: false,
         })

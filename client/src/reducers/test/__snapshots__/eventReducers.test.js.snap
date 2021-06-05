@@ -2,7 +2,7 @@
 
 exports[`EVENT REDUCER Should return EVENT_CREATE_SUCCESS 1`] = `
 Object {
-  "createSuccess": true,
+  "createSuccess": undefined,
   "deleteSuccess": false,
   "events": Array [],
   "isLoading": false,
@@ -16,7 +16,7 @@ Object {
   "createSuccess": false,
   "deleteSuccess": false,
   "events": Array [],
-  "isLoading": true,
+  "isLoading": undefined,
   "totalPages": null,
   "updateSuccess": false,
 }

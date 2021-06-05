@@ -12,9 +12,9 @@ const initialState = {
 export default function eventReducers(state = initialState, action) {
     switch (action.type) {
         case EVENT_LOADING:
-            return { ...state, isLoading: true };
+            return { ...state, isLoading: action.payload };
         case EVENT_CREATE_SUCCESS:
-            return { ...state, createSuccess: true };
+            return { ...state, createSuccess: action.payload };
         default:
             return state;
     }
