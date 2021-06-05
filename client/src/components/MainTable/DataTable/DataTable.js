@@ -299,6 +299,7 @@ const DataTable = ({
     : isRecoveryMode
     ? data.filter((target) => target.isDeleted === true)
     : data.filter((target) => target.isDeleted === false);
+  console.log(dataFilter);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
