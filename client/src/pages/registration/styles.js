@@ -234,6 +234,11 @@ export default makeStyles((theme) => ({
         '&:hover': {
             backgroundColor: '#a2001c',
         }
+    },
+
+    errorStyle:{
+        color: "red",
+        fontSize: 11
     }
 
 

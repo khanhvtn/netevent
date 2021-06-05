@@ -53,7 +53,7 @@ const Registration = () => {
     const myRef = useRef(null)
     const eventName = useParams();
     const history = useHistory();
-    const { event } = useSelector((state) => state)
+    const { event, error } = useSelector((state) => state)
     const participantStore = useSelector((state) => state)
     const dispatch = useDispatch();
     useEffect(() => {
@@ -233,11 +233,23 @@ const Registration = () => {
                             {participantStore.participant.isLoading === false ?
                                 <FormControl fullWidth ref={myRef}>
                                     <TextField label="Full Name" variant="outlined" value={participant.name} onChange={(e) => setParticipant({ ...participant, name: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    {error.errors !== null ? error.errors.name && <Typography className={css.errorStyle}>{error.errors.name}</Typography>: <></>}
+
                                     <TextField label="Email" type="email" variant="outlined" value={participant.email} onChange={(e) => setParticipant({ ...participant, email: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    {error.errors !== null ? error.errors.email && <Typography className={css.errorStyle}>{error.errors.email}</Typography>: <></>}
+
                                     <TextField label="School" variant="outlined" value={participant.school} onChange={(e) => setParticipant({ ...participant, school: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    {error.errors !== null ? error.errors.school && <Typography className={css.errorStyle}>{error.errors.school}</Typography>: <></>}
+
                                     <TextField label="Academic" variant="outlined" value={participant.academic} onChange={(e) => setParticipant({ ...participant, academic: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    { error.errors !== null ? error.errors.academic && <Typography className={css.errorStyle}>{error.errors.academic}</Typography>: <></>}
+
                                     <TextField label="Major" variant="outlined" value={participant.major} onChange={(e) => setParticipant({ ...participant, major: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    { error.errors !== null ? error.errors.major && <Typography className={css.errorStyle}>{error.errors.major}</Typography>: <></>}
+
                                     <TextField label="Phone" type="number" variant="outlined" value={participant.phone} onChange={(e) => setParticipant({ ...participant, phone: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    { error.errors !== null ? error.errors.phone && <Typography className={css.errorStyle}>{error.errors.phone}</Typography>: <></>}
+
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                         <KeyboardDatePicker
                                             disableToolbar
@@ -252,6 +264,8 @@ const Registration = () => {
                                                 'aria-label': 'change date',
                                             }}
                                         />
+                                        {error.errors !== null ? error.errors.DOB && <Typography className={css.errorStyle}>{error.errors.DOB}</Typography>: <></>}
+
 
                                         <KeyboardDatePicker
                                             disableToolbar
@@ -266,6 +280,8 @@ const Registration = () => {
                                                 'aria-label': 'change date',
                                             }}
                                         />
+                                        {error.errors !== null ? error.errors.expectedGraduateDate && <Typography className={css.errorStyle}>{error.errors.expectedGraduateDate}</Typography> : <></>}
+
                                     </MuiPickersUtilsProvider>
 
                                     <Button className={css.registerButton} color="primary" variant="contained" onClick={handleOnRegister}>Register Now</Button>

@@ -1,7 +1,8 @@
 import {
     PARTICIPANT_REGISTER,
     PARTICIPANT_LOADING,
-    ERROR
+    ERROR,
+    ERROR_CLEAR
 } from '../constants';
 import { registerParticipantAPI } from '../api';
 
@@ -17,6 +18,11 @@ export const registerParticipant = (participantData) => async (dispatch) => {
             payload: true
         })
         await registerParticipantAPI(participantData);
+
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null,
+        });
         dispatch({
             type: PARTICIPANT_REGISTER,
             payload: true
@@ -33,7 +39,7 @@ export const registerParticipant = (participantData) => async (dispatch) => {
             });
         }, 3000);
 
-
+        
 
 
     } catch (error) {
@@ -45,4 +51,8 @@ export const registerParticipant = (participantData) => async (dispatch) => {
         }
         console.log(error);
     }
+    dispatch({
+        type: PARTICIPANT_LOADING,
+        payload: false
+    })
 }
