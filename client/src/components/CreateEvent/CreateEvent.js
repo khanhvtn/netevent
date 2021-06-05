@@ -93,6 +93,7 @@ const initialState = {
     openDialogCreateEventType: false,
     eventTypeTarget: '',
     openCreateSnackBar: false,
+    isResetListTag: false
 };
 const initialBorrowFacilityState = {
     //facility taborrowFacilityState.
@@ -171,12 +172,15 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
     // handle clear all fields
     const handleClearFields = useCallback(
         (action) => {
-            setState(initialState);
+            setState((prevState) => ({
+                ...initialState,
+                isResetListTag: !prevState.isResetListTag
+            }));
             setBorrowFacilityState(initialBorrowFacilityState);
             setTaskState(initialTaskState);
             setSelectedFacility([]);
             setSelectedTask([]);
-            setDefaultValueTags(tagList)
+            setDefaultValueTags([])
             fileInput.current.value = '';
             //clear all error
             if (action) {
@@ -203,6 +207,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
         setState((prevState) => ({
             ...prevState,
             openCreateSnackBar: createEventSuccess,
+            isResetListTag: !prevState.isResetListTag
         }));
     }, [dispatch, createEventSuccess, handleClearFields]);
 
@@ -768,12 +773,12 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                             eventIsLoading={eventIsLoading}
                             errors={errors}
                             handleChange={handleChange}
-                            defaultValueTags={defaultValueTags}
                             state={state}
                             setState={setState}
                             eventTypes={eventTypes}
-                            createEventSuccess={createEventSuccess}
+                            isResetListTag={state.isResetListTag}
                             updateTagList={handleUpdateTaglist}
+                            defaultValueTags={defaultValueTags}
                         />
 
                         {/* Tasks Table */}

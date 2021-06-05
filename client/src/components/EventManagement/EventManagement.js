@@ -229,9 +229,9 @@ const EventManagement = () => {
                             )
                         })
                         :
-                        events.map((event, index) => {
+                        events.map((event) => {
                             return (
-                                <EventCard event={event} key={index} isLoading={isLoading} onClickEvent={handleOnClickEvent} />
+                                <EventCard event={event} key={event._id} isLoading={isLoading} onClickEvent={handleOnClickEvent} />
                             )
                         })
                     }

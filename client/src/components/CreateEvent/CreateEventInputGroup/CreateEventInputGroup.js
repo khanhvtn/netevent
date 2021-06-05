@@ -29,7 +29,7 @@ const CreateEventInputGroup = ({
     state,
     setState,
     eventTypes,
-    createEventSuccess,
+    isResetListTag,
     updateTagList,
     defaultValueTags,
 }) => {
@@ -138,7 +138,7 @@ const CreateEventInputGroup = ({
                 <Autocomplete
                     id="tags-filled"
                     defaultValue={defaultValueTags}
-                    key={createEventSuccess}
+                    key={isResetListTag}
                     disabled={eventIsLoading}
                     limitTags={4}
                     multiple
