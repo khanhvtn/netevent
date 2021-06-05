@@ -134,3 +134,8 @@ export const getFacilityHistoriesAPI = (userQueries) => {
 
 export const getAllFacilityHistoriesAPI = () =>
     AXIOS.get(`/facilityHistory/all`);
+
+
+// Participant API
+
+export const registerParticipantAPI = (participantData) => AXIOS.post('/participant/registerEvent', participantData)

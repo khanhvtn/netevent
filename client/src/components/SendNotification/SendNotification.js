@@ -137,11 +137,12 @@ const SendNotification = () => {
                             </FormControl>
                         </div>
                     </Paper>
-
+                    {/* Notification */}
+                    <SystemNotification openSendSnackBar={event.sendNotiSuccess} />
 
                 </div>
 
-                : <div className={css.grow}>
+                : (<div className={css.grow}>
                     <Paper className={css.paper} color="inherit">
                         <div className={css.grow}>
                             <FormControl className={css.formControl} variant="outlined" fullWidth>
@@ -204,9 +205,9 @@ const SendNotification = () => {
                             </FormControl>
                         </div>
                     </Paper>
-                    {/* Notification */}
-                    <SystemNotification openSendSnackBar={event.createSuccess} />
-                </div>
+
+                </div>)
+
 
 
         )

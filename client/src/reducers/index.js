@@ -6,6 +6,8 @@ import facilityReducers from './facilityReducers';
 import eventTypeReducers from './eventTypeReducers';
 import eventReducers from './eventReducers';
 import facilityHistoryReducers from './facilityHistoryReducers';
+import participantReducers from './participantReducers';
+
 
 const rootReducers = combineReducers({
     user: userReducers,
@@ -15,6 +17,7 @@ const rootReducers = combineReducers({
     eventType: eventTypeReducers,
     event: eventReducers,
     facilityHistory: facilityHistoryReducers,
+    participant: participantReducers
 });
 
 export default rootReducers;

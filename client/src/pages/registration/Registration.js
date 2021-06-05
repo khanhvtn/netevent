@@ -22,21 +22,26 @@ import {
 } from '@material-ui/pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEvents } from '../../actions/eventActions';
+import { registerParticipant } from '../../actions/participantActions';
 import { useParams, useHistory } from 'react-router';
+import { convertFromRaw } from 'draft-js';
+import { stateToHTML } from 'draft-js-export-html';
+import parse from 'html-react-parser'
+import SystemNotification from '../../components/Notification/Notification';
 
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
+const participantInitialState = {
+    "event": '',
+    "email": '',
+    "name": '',
+    "academic": '',
+    "school": '',
+    "major": '',
+    "phone": '',
+    "DOB": '',
+    "expectedGraduateDate": ''
+
 }
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
 
 const Registration = () => {
     const css = useStyles();
@@ -44,10 +49,12 @@ const Registration = () => {
     const [graduationDate, setGraduationDate] = React.useState(new Date(Date.now()));
     const [existedEvent, setExistedEvent] = useState([]);
     const [currentEvent, setCurrentEvent] = useState({});
+    const [participant, setParticipant] = useState(participantInitialState);
     const myRef = useRef(null)
     const eventName = useParams();
     const history = useHistory();
     const { event } = useSelector((state) => state)
+    const participantStore = useSelector((state) => state)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(fetchEvents());
@@ -63,13 +70,21 @@ const Registration = () => {
 
 
                 if (!existedEvent.includes(eventName.eventName)) {
-                    console.log(false)
                     history.push('/404')
 
                 } else {
                     const filterEvent = event.events.data.data.filter((obj) => obj.eventName.replace(/\s/g, "").toLowerCase() === eventName.eventName);
-                    setCurrentEvent(filterEvent[0]);
-                    console.log(currentEvent)
+                    if (filterEvent[0] !== undefined) {
+                        setCurrentEvent(filterEvent[0]);
+                        setParticipant({ ...participant, event: currentEvent._id })
+                    } else {
+                        history.push('/404')
+
+                    }
+
+
+
+
                 }
             }
             else {
@@ -84,20 +99,34 @@ const Registration = () => {
 
     const handleDateChange = (date) => {
         setDOB(date);
+        setParticipant({ ...participant, DOB: DOB })
     };
 
     const handleDateChange1 = (date) => {
         setGraduationDate(date);
+        setParticipant({ ...participant, expectedGraduateDate: graduationDate })
+
     };
 
     const executeScroll = () => myRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
+
+    const handleOnRegister = (e) => {
+        e.preventDefault()
+        dispatch(registerParticipant(participant))
+        handleClearField();
+
+    }
+
+    const handleClearField = () => {
+        setParticipant(participantInitialState)
+    }
 
     return event.loadComplete === false ?
 
         <div className={css.circularProgress} align="center">
             <CircularProgress color="primary" />
         </div>
-        : Object.keys(currentEvent).length === 0 ? <></> :(
+        : Object.keys(currentEvent).length === 0 ? <></> : (
             <div className={css.root}>
                 <Grid container spacing={3} >
                     <Grid item xs={12} md={12} lg={12}>
@@ -130,7 +159,7 @@ const Registration = () => {
                                 About {currentEvent.eventName}
                             </Typography>
                             <Typography className={css.eventDescription}>
-                                {currentEvent.description}
+                                {parse(stateToHTML(convertFromRaw(JSON.parse(currentEvent.description))))}
                             </Typography>
                             <Typography className={css.eventLanguage}>
                                 Language: {currentEvent.language}
@@ -179,8 +208,8 @@ const Registration = () => {
                                         ))}
                                     </TableBody>
                                 </Table>
-                            </TableContainer> 
-                            
+                            </TableContainer>
+
 
 
                             <Typography className={css.eventTags}>
@@ -201,46 +230,97 @@ const Registration = () => {
                                 Registration Form
                         </Typography>
 
-                            <FormControl fullWidth ref={myRef}>
-                                <TextField label="Full Name" variant="outlined" required fullWidth className={css.textField}></TextField>
-                                <TextField label="Email" type="email" variant="outlined" required fullWidth className={css.textField}></TextField>
-                                <TextField label="School" variant="outlined" required fullWidth className={css.textField}></TextField>
-                                <TextField label="Academic" variant="outlined" required fullWidth className={css.textField}></TextField>
-                                <TextField label="Major" variant="outlined" required fullWidth className={css.textField}></TextField>
-                                <TextField label="Phone" type="number" variant="outlined" required fullWidth className={css.textField}></TextField>
-                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <KeyboardDatePicker
-                                        disableToolbar
-                                        variant="outlined"
-                                        format="MM//dd/yyyy"
-                                        margin="normal"
-                                        id="date-picker-inline"
-                                        label="Date of Birth"
-                                        value={DOB}
-                                        onChange={handleDateChange}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
-                                    />
+                            {participantStore.participant.isLoading === false ?
+                                <FormControl fullWidth ref={myRef}>
+                                    <TextField label="Full Name" variant="outlined" value={participant.name} onChange={(e) => setParticipant({ ...participant, name: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField label="Email" type="email" variant="outlined" value={participant.email} onChange={(e) => setParticipant({ ...participant, email: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField label="School" variant="outlined" value={participant.school} onChange={(e) => setParticipant({ ...participant, school: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField label="Academic" variant="outlined" value={participant.academic} onChange={(e) => setParticipant({ ...participant, academic: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField label="Major" variant="outlined" value={participant.major} onChange={(e) => setParticipant({ ...participant, major: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField label="Phone" type="number" variant="outlined" value={participant.phone} onChange={(e) => setParticipant({ ...participant, phone: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="outlined"
+                                            format="MM/dd/yyyy"
+                                            margin="normal"
+                                            id="date-picker-inline"
+                                            label="Date of Birth"
+                                            value={DOB}
+                                            onChange={handleDateChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
 
-                                    <KeyboardDatePicker
-                                        disableToolbar
-                                        variant="outlined"
-                                        format="MM//dd/yyyy"
-                                        margin="normal"
-                                        id="date-picker-inline"
-                                        label="Expected Graduation Date"
-                                        value={graduationDate}
-                                        onChange={handleDateChange1}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
-                                    />
-                                </MuiPickersUtilsProvider>
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="outlined"
+                                            format="MM/dd/yyyy"
+                                            margin="normal"
+                                            id="date-picker-inline"
+                                            label="Expected Graduation Date"
+                                            value={graduationDate}
+                                            onChange={handleDateChange1}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </MuiPickersUtilsProvider>
 
-                                <Button className={css.registerButton} color="primary" variant="contained">Register Now</Button>
+                                    <Button className={css.registerButton} color="primary" variant="contained" onClick={handleOnRegister}>Register Now</Button>
 
-                            </FormControl>
+                                </FormControl>
+
+                                :
+
+                                <FormControl fullWidth ref={myRef}>
+                                    <TextField label="Full Name" variant="outlined" value={participant.name} onChange={(e) => setParticipant({ ...participant, name: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField label="Email" type="email" variant="outlined" value={participant.email} onChange={(e) => setParticipant({ ...participant, email: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField label="School" variant="outlined" value={participant.school} onChange={(e) => setParticipant({ ...participant, school: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField label="Academic" variant="outlined" value={participant.academic} onChange={(e) => setParticipant({ ...participant, academic: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField label="Major" variant="outlined" value={participant.major} onChange={(e) => setParticipant({ ...participant, major: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField label="Phone" type="number" variant="outlined" value={participant.phone} onChange={(e) => setParticipant({ ...participant, phone: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="outlined"
+                                            format="MM/dd/yyyy"
+                                            margin="normal"
+                                            id="date-picker-inline"
+                                            label="Date of Birth"
+                                            value={DOB}
+                                            onChange={handleDateChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="outlined"
+                                            format="MM/dd/yyyy"
+                                            margin="normal"
+                                            id="date-picker-inline"
+                                            label="Expected Graduation Date"
+                                            value={graduationDate}
+                                            onChange={handleDateChange1}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </MuiPickersUtilsProvider>
+
+                                    <Button className={css.registerButton} color="primary" variant="contained" onClick={handleOnRegister}>
+                                        <CircularProgress color="primary" />
+                                    </Button>
+
+                                </FormControl>
+
+
+                            }
+                            <SystemNotification openRegisterParticipantSnackBar={participantStore.participant.complete} />
+
                         </Container>
 
                     </Grid>

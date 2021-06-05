@@ -2,7 +2,7 @@ import {
     EVENT_LOADING,
     EVENT_CREATE_SUCCESS,
     IS_SENDING_NOTIFICATION,
-    SEND_SUCCESS,
+    SEND_NOTI_SUCCESS,
     GET_EVENTS_COMPLETE,
     FETCH_EVENTS,
     ERROR_CLEAR,
@@ -83,11 +83,9 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
         await sendNotificationAPI(notificationReq)
 
         dispatch({
-            type: SEND_SUCCESS,
+            type: SEND_NOTI_SUCCESS,
             payload: true
         })
-
-        await sleep(1000);
 
 
         dispatch({
@@ -95,11 +93,14 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
             payload: false
         })
 
+        setTimeout(() => {
+            dispatch({
+                type: SEND_NOTI_SUCCESS,
+                payload: false,
+            });
+        }, 3000);
 
-        dispatch({
-            type: SEND_SUCCESS,
-            payload: false
-        })
+
 
     } catch (error) {
         if (error.response.data?.errors) {

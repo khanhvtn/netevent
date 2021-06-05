@@ -8,7 +8,8 @@ const SystemNotification = ({
     openDeleteSnackBar,
     openUpdateSnackBar,
     openCreateSnackBar,
-    openSendSnackBar
+    openSendSnackBar,
+    openRegisterParticipantSnackBar
 }) => {
     const css = useStyles();
     return (
@@ -28,6 +29,10 @@ const SystemNotification = ({
             {/* Snackbar Send Success */}
             <Snackbar TransitionComponent={Slide} open={openSendSnackBar}>
                 <Alert severity="success">Send Notification Successful</Alert>
+            </Snackbar>
+             {/* Snackbar Register Participant Success */}
+             <Snackbar TransitionComponent={Slide} open={openRegisterParticipantSnackBar}>
+                <Alert severity="success">Register Event Successful</Alert>
             </Snackbar>
         </div>
     );

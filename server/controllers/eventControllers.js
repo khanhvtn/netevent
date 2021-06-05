@@ -1,4 +1,4 @@
-const { Event, Task, FacilityHistory, Facility } = require('../models');
+const { Event, Task, FacilityHistory, Facility, Participant } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
 const { sendEmail } = require('./misc/mailer');
@@ -387,14 +387,24 @@ const getAllEvent = async (req, res, next) => {
 
 const sendNotification = async (req, res, next) => {
     const notification = req.body;
+    const participants = await Participant.find({ event: notification.eventID })
+    const emailParticipantsList = [];
+    for (var i = 0; i < participants.length; i++) {
+        emailParticipantsList.push(participants[i].email)
+    }
+    const stringUsersMail = emailParticipantsList.join(', ')
+
     try {
-        const isSend = await sendEmail(
-            'noreply@netevent.com',
-            'minhhuynhrmit@gmail.com',
-            notification.title,
-            notification.description
-        )
-        return cusResponse(res, 200, isSend, null)
+       
+            const isSend = await sendEmail(
+                'noreply@netevent.com',
+                stringUsersMail,
+                notification.title,
+                notification.description
+            )
+            return cusResponse(res, 200, isSend, null)
+        
+
     } catch (error) {
         return next(new CustomError(500, error.message));
 

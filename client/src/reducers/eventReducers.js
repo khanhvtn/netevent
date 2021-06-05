@@ -1,4 +1,4 @@
-import { EVENT_CREATE_SUCCESS, EVENT_LOADING, IS_SENDING_NOTIFICATION, FETCH_EVENTS, SEND_SUCCESS, GET_EVENTS_COMPLETE } from '../constants';
+import { EVENT_CREATE_SUCCESS, EVENT_LOADING, IS_SENDING_NOTIFICATION, FETCH_EVENTS, SEND_NOTI_SUCCESS, GET_EVENTS_COMPLETE } from '../constants';
 
 const initialState = {
     isLoading: false,
@@ -9,6 +9,7 @@ const initialState = {
     updateSuccess: false,
     deleteSuccess: false,
     isSendingNotification: false,
+    sendNotiSuccess: false
 };
 
 export default function facilityReducers(state = initialState, action) {
@@ -21,8 +22,8 @@ export default function facilityReducers(state = initialState, action) {
             return { ...state, createSuccess: action.payload };
         case IS_SENDING_NOTIFICATION:
             return { ...state, isSendingNotification: action.payload}
-        case SEND_SUCCESS:
-            return { ...state, createSuccess: action.payload }
+        case SEND_NOTI_SUCCESS:
+            return { ...state, sendNotiSuccess: action.payload }
         case GET_EVENTS_COMPLETE:
             return {...state, loadComplete: action.payload}
 
