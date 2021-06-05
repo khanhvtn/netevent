@@ -73,24 +73,29 @@ export const recoverFacilitiesAPI = (userReq) =>
   AXIOS.patch(`/facility/recovery`, userReq);
 
 //Event Type APIs
-export const getEventTypesAPI = (
-  search,
-  take,
-  page,
-  createdFrom,
-  createdTo,
-  updatedFrom,
-  updatedTo
-) =>
-  AXIOS.get(
+export const getEventTypesAPI = (userQueries) => {
+  const {
+    search,
+    take,
+    page,
+    isDeleted,
+    createdFrom,
+    createdTo,
+    updatedFrom,
+    updatedTo,
+  } = userQueries;
+  return AXIOS.get(
     `/eventType/filter?search=${search ? search : ''}&take=${
       take ? take : ''
-    }&page=${page ? page : ''}&createdFrom=${
-      createdFrom ? createdFrom : ''
-    }&createdTo=${createdTo ? createdTo : ''}&updatedFrom=${
-      updatedFrom ? updatedFrom : ''
-    }&updatedTo=${updatedTo ? updatedTo : ''}`
+    }&page=${page ? page : ''}&isDeleted=${
+      isDeleted ? isDeleted : ''
+    }&createdFrom=${createdFrom ? createdFrom : ''}&createdTo=${
+      createdTo ? createdTo : ''
+    }&updatedFrom=${updatedFrom ? updatedFrom : ''}&updatedTo=${
+      updatedTo ? updatedTo : ''
+    }`
   );
+};
 export const createEventTypeAPI = (userReq) =>
   AXIOS.post(`/eventType/create`, userReq);
 export const updateEventTypeAPI = (userReq) =>

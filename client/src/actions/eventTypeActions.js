@@ -40,29 +40,19 @@ export const getAllEventTypes = () => async (dispatch) => {
   setEventTypeIsLoading(false, dispatch);
 };
 
-export const getEventTypes =
-  (search, take, page, createdFrom, createdTo, updatedFrom, updatedTo) =>
-  async (dispatch) => {
-    setEventTypeIsLoading(true, dispatch);
-    try {
-      const data = await getEventTypesAPI(
-        search,
-        take,
-        page,
-        createdFrom,
-        createdTo,
-        updatedFrom,
-        updatedTo
-      );
-      dispatch({
-        type: EVENT_TYPE_GET_ALL_FILTER,
-        payload: data,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    setEventTypeIsLoading(false, dispatch);
-  };
+export const getEventTypes = (userQueries) => async (dispatch) => {
+  setEventTypeIsLoading(true, dispatch);
+  try {
+    const data = await getEventTypesAPI(userQueries);
+    dispatch({
+      type: EVENT_TYPE_GET_ALL_FILTER,
+      payload: data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  setEventTypeIsLoading(false, dispatch);
+};
 export const createEventType = (userReq) => async (dispatch) => {
   setEventTypeIsLoading(true, dispatch);
   try {

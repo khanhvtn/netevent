@@ -81,13 +81,24 @@ const EventType = () => {
 
   const [state, setState] = useState(initialState);
   const [filters, setFilters] = useState(filterState);
-
+  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const [selected, setSelected] = useState([]);
 
   //userEffect to toggle notification for recovery success
   useEffect(() => {
     if (recoverySuccess) {
-      dispatch(getEventTypes());
+      dispatch(
+        getEventTypes({
+          search: state.search,
+          take: state.take,
+          page: state.page,
+          createdFrom: state.createdFrom,
+          createdTo: state.createdTo,
+          updatedFrom: state.updatedFrom,
+          updatedTo: state.updatedTo,
+          isDeleted: isRecoveryMode,
+        })
+      );
       //clear selected item
       setSelected(() => []);
     }
@@ -95,7 +106,19 @@ const EventType = () => {
       ...prevState,
       openRecoverySnackBar: recoverySuccess,
     }));
-  }, [dispatch, recoverySuccess]);
+  }, [
+    dispatch,
+    recoverySuccess,
+    state.search,
+    state.take,
+    state.page,
+    state.statusFilter,
+    state.createdFrom,
+    state.createdTo,
+    state.updatedFrom,
+    state.updatedTo,
+    isRecoveryMode,
+  ]);
 
   //useEffect to toggle notification for create success
   useEffect(() => {
@@ -108,7 +131,18 @@ const EventType = () => {
       openCreateSnackBar: createSuccess,
     };
     if (createSuccess) {
-      dispatch(getEventTypes());
+      dispatch(
+        getEventTypes({
+          search: state.search,
+          take: state.take,
+          page: state.page,
+          createdFrom: state.createdFrom,
+          createdTo: state.createdTo,
+          updatedFrom: state.updatedFrom,
+          updatedTo: state.updatedTo,
+          isDeleted: isRecoveryMode,
+        })
+      );
       defaultAction = {
         ...defaultAction,
         openCreateAndUpdateDialog: false,
@@ -120,7 +154,19 @@ const EventType = () => {
     }));
     //clear selected item
     setSelected(() => []);
-  }, [dispatch, createSuccess]);
+  }, [
+    dispatch,
+    createSuccess,
+    state.search,
+    state.take,
+    state.page,
+    state.statusFilter,
+    state.createdFrom,
+    state.createdTo,
+    state.updatedFrom,
+    state.updatedTo,
+    isRecoveryMode,
+  ]);
   //useEffect to toggle notification for update success
   useEffect(() => {
     let defaultAction = {
@@ -132,7 +178,18 @@ const EventType = () => {
       openUpdateSnackBar: updateSuccess,
     };
     if (updateSuccess) {
-      dispatch(getEventTypes());
+      dispatch(
+        getEventTypes({
+          search: state.search,
+          take: state.take,
+          page: state.page,
+          createdFrom: state.createdFrom,
+          createdTo: state.createdTo,
+          updatedFrom: state.updatedFrom,
+          updatedTo: state.updatedTo,
+          isDeleted: isRecoveryMode,
+        })
+      );
       defaultAction = {
         ...defaultAction,
         openCreateAndUpdateDialog: false,
@@ -144,7 +201,19 @@ const EventType = () => {
     }));
     //clear selected item
     setSelected(() => []);
-  }, [dispatch, updateSuccess]);
+  }, [
+    dispatch,
+    updateSuccess,
+    state.search,
+    state.take,
+    state.page,
+    state.statusFilter,
+    state.createdFrom,
+    state.createdTo,
+    state.updatedFrom,
+    state.updatedTo,
+    isRecoveryMode,
+  ]);
   //useEffect to toggle notification for delete success
   useEffect(() => {
     let defaultAction = {
@@ -156,7 +225,18 @@ const EventType = () => {
       openDeleteSnackBar: deleteSuccess,
     };
     if (deleteSuccess) {
-      dispatch(getEventTypes());
+      dispatch(
+        getEventTypes({
+          search: state.search,
+          take: state.take,
+          page: state.page,
+          createdFrom: state.createdFrom,
+          createdTo: state.createdTo,
+          updatedFrom: state.updatedFrom,
+          updatedTo: state.updatedTo,
+          isDeleted: isRecoveryMode,
+        })
+      );
       defaultAction = { ...defaultAction, openDeleteDialog: false };
     }
     setState((prevState) => ({
@@ -165,37 +245,35 @@ const EventType = () => {
     }));
     //clear selected item
     setSelected(() => []);
-  }, [dispatch, deleteSuccess]);
+  }, [
+    dispatch,
+    deleteSuccess,
+    state.search,
+    state.take,
+    state.page,
+    state.statusFilter,
+    state.createdFrom,
+    state.createdTo,
+    state.updatedFrom,
+    state.updatedTo,
+    isRecoveryMode,
+  ]);
 
   //useEffect
   useEffect(() => {
-    const filterDate = {
-      createdFrom: state.createdFrom
-        ? format(Date.parse(state.createdFrom), 'yyyy-MM-dd')
-        : '',
-      createdTo: state.createdTo
-        ? format(Date.parse(state.createdTo), 'yyyy-MM-dd')
-        : '',
-      updatedFrom: state.updatedFrom
-        ? format(Date.parse(state.updatedFrom), 'yyyy-MM-dd')
-        : '',
-      updatedTo: state.updatedTo
-        ? format(Date.parse(state.updatedTo), 'yyyy-MM-dd')
-        : '',
-    };
     //clear selected item
     setSelected(() => []);
-
     dispatch(
-      getEventTypes(
-        state.search,
-        state.take,
-        state.page,
-        filterDate.createdFrom,
-        filterDate.createdTo,
-        filterDate.updatedFrom,
-        filterDate.updatedTo
-      )
+      getEventTypes({
+        search: state.search,
+        take: state.take,
+        page: state.page,
+        createdFrom: state.createdFrom,
+        createdTo: state.createdTo,
+        updatedFrom: state.updatedFrom,
+        updatedTo: state.updatedTo,
+        isDeleted: isRecoveryMode,
+      })
     );
     return () => {
       dispatch({
@@ -213,6 +291,7 @@ const EventType = () => {
     state.createdTo,
     state.updatedFrom,
     state.updatedTo,
+    isRecoveryMode,
   ]);
 
   const handleChange = (e) => {
@@ -369,6 +448,8 @@ const EventType = () => {
               </Toolbar>
               {/* Facility Table */}
               <DataTable
+                isRecoveryMode={isRecoveryMode}
+                setIsRecoveryMode={setIsRecoveryMode}
                 handleRecovery={handleRecovery}
                 recoveryMode={true}
                 handleToggleDialogCreateAndUpdate={

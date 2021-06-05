@@ -92,7 +92,6 @@ const filterState = {
 };
 
 const Facility = () => {
-  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const css = useStyles();
   const dispatch = useDispatch();
   const {
@@ -116,8 +115,8 @@ const Facility = () => {
 
   const [state, setState] = useState(initialState);
   const [filters, setFilters] = useState(filterState);
-
   const [selected, setSelected] = useState([]);
+  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
 
   //userEffect to toggle notification for recovery success
   useEffect(() => {

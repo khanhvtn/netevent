@@ -77,7 +77,7 @@ const filter = async (req, res, next) => {
     let options = {
       search: '',
       take: 5,
-      type: '',
+      isDeleted: false,
       createdMaxDate: listRangeDate[0][0].createdAt,
       createdMinDate: listRangeDate[1][0].createdAt,
       updatedMaxDate: listRangeDate[2][0].updatedAt,
@@ -99,6 +99,16 @@ const filter = async (req, res, next) => {
       options = {
         ...options,
         take: parseInt(req.query.take.toString()),
+      };
+    }
+    /*
+        Add isDeleted  filter
+        Default is false
+         */
+    if (req.query.isDeleted) {
+      options = {
+        ...options,
+        isDeleted: req.query.isDeleted,
       };
     }
 
@@ -164,6 +174,7 @@ const filter = async (req, res, next) => {
         $gte: options.updatedMinDate,
         $lte: options.updatedMaxDate,
       },
+      isDeleted: options.isDeleted,
     }).countDocuments();
 
     let totalPages = (totalEventType / options.take).toString().includes('.')
@@ -181,6 +192,7 @@ const filter = async (req, res, next) => {
         $gte: options.updatedMinDate,
         $lte: options.updatedMaxDate,
       },
+      isDeleted: options.isDeleted,
     })
       .sort({ updatedAt: -1 })
       .skip((page - 1) * options.take)
