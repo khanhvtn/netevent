@@ -33,6 +33,7 @@ import useStyles from './styles';
 import TaskDialog from './TaskDialog/TaskDialog';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 import CreateEventInputGroup from './CreateEventInputGroup/CreateEventInputGroup';
+import { CreateEventInterface } from '../Context';
 
 let listTag = [];
 const headCellBorrowFacility = [
@@ -139,6 +140,15 @@ const initialTaskState = {
   openCreateAndUpdateDialogTask: false,
   openDeleteDialogTask: false,
   isTaskCreateMode: true,
+};
+
+//Create Event Provider
+const CreateEventProvider = ({ children, ...rest }) => {
+  return (
+    <CreateEventInterface.Provider value={{ ...rest }}>
+      {children}
+    </CreateEventInterface.Provider>
+  );
 };
 
 const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
@@ -593,414 +603,369 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
       setState({ ...state, image: fileBase64 });
     }
   };
-
   return (
     <div>
-      <Paper className={css.paper} elevation={3}>
-        <Grid container justify="center" alignItems="center" direction="column">
-          <Grid item>
-            <Typography style={{ fontWeight: 'bold' }} variant="h3">
-              Event Form
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-            item
-            md={12}
-            lg={12}
-            xl={12}
-            sm={12}
-            xs={12}
-            style={{ margin: '20px 0' }}
-          >
-            <div
-              style={{
-                width: '100%',
-                height: '500px',
-                backgroundImage: `url(${
-                  !state.image ? blankPhoto : state.image
-                })`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundSize: 'contain',
-              }}
-            ></div>
-            <FormControl error={errors?.image ? true : false}>
-              <FormHelperText>
-                {errors?.image ? errors?.image : ''}
-              </FormHelperText>
-            </FormControl>
-          </Grid>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-            item
-            md={12}
-            lg={12}
-            xl={12}
-            sm={12}
-            xs={12}
-          >
-            <input
-              ref={fileInput}
-              accept="image/*"
-              className={css.inputImage}
-              id="change-image"
-              type="file"
-              onChange={handleChangePhoto}
-            />
-            {state.image && (
-              <Button
-                disabled={eventIsLoading}
-                className={css.btnRemovePhoto}
-                onClick={() => {
-                  setState({
-                    ...state,
-                    image: null,
-                  });
-                  fileInput.current.value = '';
-                }}
-                color="secondary"
-                startIcon={<DeleteForever />}
-                variant="contained"
-                style={{ textTransform: 'none' }}
-              >
-                Remove
-              </Button>
-            )}
-            <label className={css.btnChangePhoto} htmlFor="change-image">
-              {state.image ? (
-                <Button
-                  disabled={eventIsLoading}
-                  startIcon={<AddAPhoto />}
-                  variant="contained"
-                  style={{ textTransform: 'none' }}
-                  color="primary"
-                  component="span"
-                >
-                  Change Image
-                </Button>
-              ) : (
-                <Button
-                  disabled={eventIsLoading}
-                  startIcon={<AddAPhoto />}
-                  style={{
-                    backgroundColor: 'transparent',
-                    textTransform: 'none',
-                  }}
-                  component="span"
-                >
-                  Choose Image
-                </Button>
-              )}
-            </label>
-          </Grid>
-
-          <Grid
-            container
-            item
-            md={12}
-            lg={12}
-            xl={12}
-            sm={12}
-            xs={12}
-            spacing={3}
-            style={{ margin: '20px 0' }}
-          >
-            {/* Create Event Input Group */}
-            <CreateEventInputGroup
-              eventIsLoading={eventIsLoading}
-              errors={errors}
-              handleChange={handleChange}
-              state={state}
-              setState={setState}
-              eventTypes={eventTypes}
-              createEventSuccess={createEventSuccess}
-              updateListTag={handleUpdateListTag}
-            />
-
-            {/* Tasks Table */}
-            <Grid
-              style={{ marginTop: 24 }}
-              item
-              md={12}
-              lg={12}
-              xl={12}
-              sm={12}
-              xs={12}
-            >
-              <Paper className={css.paper1} elevation={3}>
-                <DataTable
-                  constrainRangeDate={!!state.startDate && !!state.endDate}
-                  disabled={eventIsLoading}
-                  handleToggleDialogCreateAndUpdate={
-                    handleToggleDialogCreateAndUpdateTask
-                  }
-                  handleToggleDialogDelete={handleToggleDialogDeleteTask}
-                  take={1}
-                  selected={selectedTask}
-                  setSelected={setSelectedTask}
-                  data={taskState.tasks}
-                  isLoading={taskState.isLoading}
-                  createSuccess={taskState.taskCreatSuccess}
-                  deleteSuccess={taskState.taskDeleteSuccess}
-                  updateSuccess={taskState.taskUpdateSuccess}
-                  tableName="Task Assign"
-                  headCells={headCellsTask}
-                />
-              </Paper>
-              <FormControl error={errors?.taskListId ? true : false}>
-                <FormHelperText>
-                  {errors?.taskListId ? errors?.taskListId : ''}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-
-            {/* Pick Facility Table */}
-            <Grid
-              style={{ marginTop: 24 }}
-              item
-              md={12}
-              lg={12}
-              xl={12}
-              sm={12}
-              xs={12}
-            >
-              <Paper className={css.paper1} elevation={3}>
-                <DataTable
-                  disabled={eventIsLoading}
-                  constrainRangeDate={!!state.endDate}
-                  handleToggleDialogCreateAndUpdate={
-                    handleToggleDialogCreateAndUpdateBorrowFacility
-                  }
-                  handleToggleDialogDelete={
-                    handleToggleDialogDeleteBorrowFacility
-                  }
-                  take={1}
-                  selected={selectedFacility}
-                  setSelected={setSelectedFacility}
-                  data={borrowFacilityState.borrowFacilities}
-                  isLoading={borrowFacilityState.borrowFacilityLoading}
-                  createSuccess={borrowFacilityState.borrowFacilityCreatSuccess}
-                  deleteSuccess={
-                    borrowFacilityState.borrowFacilityDeleteSuccess
-                  }
-                  updateSuccess={
-                    borrowFacilityState.borrowFacilityUpdateSuccess
-                  }
-                  tableName="Borrow Facility"
-                  headCells={headCellBorrowFacility}
-                />
-              </Paper>
-              <FormControl error={errors?.facilityHistoryListId ? true : false}>
-                <FormHelperText>
-                  {errors?.facilityHistoryListId
-                    ? errors?.facilityHistoryListId
-                    : ''}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-
-            <Grid
-              style={{ marginTop: 24 }}
-              item
-              md={12}
-              lg={12}
-              xl={12}
-              sm={12}
-              xs={12}
-            >
-              <Typography style={{ fontWeight: 'bold' }} variant="h6">
-                Event Description
-              </Typography>
-            </Grid>
-
-            {/* Description */}
-            <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
-              <RichTextEditor
-                key={createEventSuccess}
-                disabled={eventIsLoading}
-                setState={setState}
-              />
-              <FormControl error={errors?.description ? true : false}>
-                <FormHelperText>
-                  {errors?.description ? errors?.description : ''}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-            {/* Button Control */}
-            <Grid container justify="space-between" alignItems="center" item>
-              <Grid item>
-                <Button
-                  className={css.clearAllButton}
-                  disabled={eventIsLoading}
-                  size="large"
-                  color="default"
-                  style={{ backgroundColor: 'transparent' }}
-                  onClick={() => handleClearFields(true)}
-                >
-                  Clear all
-                </Button>
-              </Grid>
-              <Grid item>
-                {handleCloseCreateDialog && (
-                  <Button
-                    disabled={eventIsLoading}
-                    size="large"
-                    onClick={handleCloseCreateDialog}
-                    variant="contained"
-                    color="default"
-                  >
-                    Close
-                  </Button>
-                )}
-                <Button
-                  disabled={eventIsLoading}
-                  style={{
-                    marginLeft: '20px',
-                    textTransform: 'none',
-                    width: '140px',
-                  }}
-                  size="large"
-                  onClick={handleCreateEvent}
-                  variant="contained"
-                  color="primary"
-                >
-                  {eventIsLoading ? (
-                    <CircularProgress size={26} color="inherit" />
-                  ) : (
-                    'Create Event'
-                  )}
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Paper>
-      {/* Create Event Type Dialog */}
-      <CreateEventTypeDialog
-        openDialogCreateEventType={state.openDialogCreateEventType}
-        handleToggleDialogCreateEventType={handleToggleDialogCreateEventType}
-        handleChange={handleChange}
-        eventTypeTarget={state.eventTypeTarget}
-        eventTypeIsLoading={eventTypeIsLoading}
-        handleCreateEventType={handleCreateEventType}
+      <CreateEventProvider
+        startDate={startDate}
+        endDate={endDate}
+        handleCloseCreateDialog={handleCloseCreateDialog}
+        listTag={listTag}
+        fileInput={fileInput}
+        eventTypes={eventTypes}
         errors={errors}
-      />
-      {/* Borrow Facility Dialog */}
-      <BorrowFacilityDialog
-        maxBorrowDate={state.endDate}
-        openCreateAndUpdateDialog={
-          borrowFacilityState.openCreateAndUpdateDialogBorrowFacility
-        }
-        handleToggleDialogCreateAndUpdate={
+        eventTypeIsLoading={eventTypeIsLoading}
+        createEventTypeSuccess={createEventTypeSuccess}
+        createEventSuccess={createEventSuccess}
+        facilities={facilities}
+        user={user}
+        users={users}
+        eventIsLoading={eventIsLoading}
+        facilityHistories={facilityHistories}
+        state={state}
+        selectedFacility={selectedFacility}
+        borrowFacilityState={borrowFacilityState}
+        selectedTask={selectedTask}
+        taskState={taskState}
+        handleChange={handleChange}
+        handleCreateEventType={handleCreateEventType}
+        handleToggleDialogCreateEventType={handleToggleDialogCreateEventType}
+        handleCreateEvent={handleCreateEvent}
+        handleUpdateListTag={handleUpdateListTag}
+        handleChangeBorrowFacility={handleChangeBorrowFacility}
+        handleToggleDialogCreateAndUpdateBorrowFacility={
           handleToggleDialogCreateAndUpdateBorrowFacility
         }
-        isCreateMode={borrowFacilityState.isBorrowFacilityCreateMode}
-        handleChange={handleChangeBorrowFacility}
-        setBorrowFacilityState={setBorrowFacilityState}
-        name={borrowFacilityState.name}
-        borrowDate={borrowFacilityState.borrowDate}
-        returnDate={borrowFacilityState.returnDate}
-        openDeleteDialog={borrowFacilityState.openDeleteDialogBorrowFacility}
-        handleCreateAndUpdate={handleCreateAndUpdateBorrowFacility}
-        handleToggleDialogDelete={handleToggleDialogDeleteBorrowFacility}
-        handleDelete={handleDeleteBorrowFacility}
-        isLoading={borrowFacilityState.borrowFacilityLoading}
-        errors={errors}
-        createSuccess={borrowFacilityState.borrowFacilityCreatSuccess}
-        availableFacilities={
-          /* 
-                    if isBorrowFacilityCreateMode is true, 
-                    then render facilities that are not in borrow facility table, vice versa.
-                     */
-          !borrowFacilityState.borrowDate
-            ? []
-            : borrowFacilityState.isBorrowFacilityCreateMode
-            ? facilities
-                .filter((facility) => {
-                  const targetFacilityHistory = facilityHistories
-                    .filter((element) => element.facilityId === facility._id)
-                    .sort(
-                      (a, b) => new Date(b.returnDate) - new Date(a.returnDate)
-                    );
-                  return !targetFacilityHistory.length
-                    ? true
-                    : new Date(borrowFacilityState.borrowDate) <
-                      new Date(targetFacilityHistory[0].returnDate)
-                    ? false
-                    : true;
-                })
-                .filter((facility) => {
-                  const facilityNames =
-                    borrowFacilityState.borrowFacilities.map(
-                      (borrowFacility) => borrowFacility.name
-                    );
-
-                  return !facilityNames.includes(facility.name);
-                })
-            : facilities.filter((facility) => {
-                const targetFacilityHistory = facilityHistories
-                  .filter((element) => element.facilityId === facility._id)
-                  .sort(
-                    (a, b) => new Date(b.returnDate) - new Date(a.returnDate)
-                  );
-                return !targetFacilityHistory.length
-                  ? true
-                  : new Date(borrowFacilityState.borrowDate) <
-                    new Date(targetFacilityHistory[0].returnDate)
-                  ? false
-                  : true;
-              })
+        handleToggleDialogDeleteBorrowFacility={
+          handleToggleDialogDeleteBorrowFacility
         }
-      />
-      {/* Borrow Facility Dialog */}
-
-      <TaskDialog
-        openCreateAndUpdateDialog={taskState.openCreateAndUpdateDialogTask}
-        handleToggleDialogCreateAndUpdate={
+        handleCreateAndUpdateBorrowFacility={
+          handleCreateAndUpdateBorrowFacility
+        }
+        setBorrowFacilityState={setBorrowFacilityState}
+        handleDeleteBorrowFacility={handleDeleteBorrowFacility}
+        handleChangeTask={handleChangeTask}
+        handleToggleDialogCreateAndUpdateTask={
           handleToggleDialogCreateAndUpdateTask
         }
-        isCreateMode={taskState.isTaskCreateMode}
-        handleChange={handleChangeTask}
+        handleToggleDialogDeleteTask={handleToggleDialogDeleteTask}
+        handleCreateAndUpdateTask={handleCreateAndUpdateTask}
+        handleDeleteTask={handleDeleteTask}
+        handleChangePhoto={handleChangePhoto}
+        setState={setState}
+        setSelectedFacility={setSelectedFacility}
+        setSelectedTask={setSelectedTask}
         setTaskState={setTaskState}
-        name={taskState.name}
-        email={taskState.email}
-        type={taskState.type}
-        maxDate={state.endDate}
-        minDate={state.startDate}
-        startTime={taskState.startTime}
-        endTime={taskState.endTime}
-        openDeleteDialog={taskState.openDeleteDialogTask}
-        handleCreateAndUpdate={handleCreateAndUpdateTask}
-        handleToggleDialogDelete={handleToggleDialogDeleteTask}
-        handleDelete={handleDeleteTask}
-        isLoading={taskState.isLoading}
-        errors={errors}
-        createSuccess={taskState.taskCreatSuccess}
-        availableUsers={
-          /* 
-                    if isTaskCreateMode is true, 
-                    then render user emails that are not in task table or a team member, vice versa.
-                     */
-          taskState.isTaskCreateMode
-            ? users
-                .filter((targetUser) => targetUser.role.includes('4'))
-                .filter((targetUser) => {
-                  const listUserEmails = taskState.tasks.map(
-                    (task) => task.email
-                  );
+      >
+        <Paper className={css.paper} elevation={3}>
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+            direction="column"
+          >
+            <Grid item>
+              <Typography style={{ fontWeight: 'bold' }} variant="h3">
+                Event Form
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              item
+              md={12}
+              lg={12}
+              xl={12}
+              sm={12}
+              xs={12}
+              style={{ margin: '20px 0' }}
+            >
+              <div
+                style={{
+                  width: '100%',
+                  height: '500px',
+                  backgroundImage: `url(${
+                    !state.image ? blankPhoto : state.image
+                  })`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  backgroundSize: 'contain',
+                }}
+              ></div>
+              <FormControl error={errors?.image ? true : false}>
+                <FormHelperText>
+                  {errors?.image ? errors?.image : ''}
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              item
+              md={12}
+              lg={12}
+              xl={12}
+              sm={12}
+              xs={12}
+            >
+              <input
+                ref={fileInput}
+                accept="image/*"
+                className={css.inputImage}
+                id="change-image"
+                type="file"
+                onChange={handleChangePhoto}
+              />
+              {state.image && (
+                <Button
+                  disabled={eventIsLoading}
+                  className={css.btnRemovePhoto}
+                  onClick={() => {
+                    setState({
+                      ...state,
+                      image: null,
+                    });
+                    fileInput.current.value = '';
+                  }}
+                  color="secondary"
+                  startIcon={<DeleteForever />}
+                  variant="contained"
+                  style={{ textTransform: 'none' }}
+                >
+                  Remove
+                </Button>
+              )}
+              <label className={css.btnChangePhoto} htmlFor="change-image">
+                {state.image ? (
+                  <Button
+                    disabled={eventIsLoading}
+                    startIcon={<AddAPhoto />}
+                    variant="contained"
+                    style={{ textTransform: 'none' }}
+                    color="primary"
+                    component="span"
+                  >
+                    Change Image
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={eventIsLoading}
+                    startIcon={<AddAPhoto />}
+                    style={{
+                      backgroundColor: 'transparent',
+                      textTransform: 'none',
+                    }}
+                    component="span"
+                  >
+                    Choose Image
+                  </Button>
+                )}
+              </label>
+            </Grid>
 
-                  return !listUserEmails.includes(targetUser.email);
-                })
-            : users.filter((targetUser) => targetUser.email !== user.email)
-        }
-      />
-      {/* Notification */}
-      <SystemNotification openCreateSnackBar={state.openCreateSnackBar} />
+            <Grid
+              container
+              item
+              md={12}
+              lg={12}
+              xl={12}
+              sm={12}
+              xs={12}
+              spacing={3}
+              style={{ margin: '20px 0' }}
+            >
+              {/* Create Event Input Group */}
+              <CreateEventInputGroup
+                eventIsLoading={eventIsLoading}
+                errors={errors}
+                handleChange={handleChange}
+                state={state}
+                setState={setState}
+                eventTypes={eventTypes}
+                createEventSuccess={createEventSuccess}
+                updateListTag={handleUpdateListTag}
+              />
+
+              {/* Tasks Table */}
+              <Grid
+                style={{ marginTop: 24 }}
+                item
+                md={12}
+                lg={12}
+                xl={12}
+                sm={12}
+                xs={12}
+              >
+                <Paper className={css.paper1} elevation={3}>
+                  <DataTable
+                    constrainRangeDate={!!state.startDate && !!state.endDate}
+                    disabled={eventIsLoading}
+                    handleToggleDialogCreateAndUpdate={
+                      handleToggleDialogCreateAndUpdateTask
+                    }
+                    handleToggleDialogDelete={handleToggleDialogDeleteTask}
+                    take={1}
+                    selected={selectedTask}
+                    setSelected={setSelectedTask}
+                    data={taskState.tasks}
+                    isLoading={taskState.isLoading}
+                    createSuccess={taskState.taskCreatSuccess}
+                    deleteSuccess={taskState.taskDeleteSuccess}
+                    updateSuccess={taskState.taskUpdateSuccess}
+                    tableName="Task Assign"
+                    headCells={headCellsTask}
+                  />
+                </Paper>
+                <FormControl error={errors?.taskListId ? true : false}>
+                  <FormHelperText>
+                    {errors?.taskListId ? errors?.taskListId : ''}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+
+              {/* Pick Facility Table */}
+              <Grid
+                style={{ marginTop: 24 }}
+                item
+                md={12}
+                lg={12}
+                xl={12}
+                sm={12}
+                xs={12}
+              >
+                <Paper className={css.paper1} elevation={3}>
+                  <DataTable
+                    disabled={eventIsLoading}
+                    constrainRangeDate={!!state.endDate}
+                    handleToggleDialogCreateAndUpdate={
+                      handleToggleDialogCreateAndUpdateBorrowFacility
+                    }
+                    handleToggleDialogDelete={
+                      handleToggleDialogDeleteBorrowFacility
+                    }
+                    take={1}
+                    selected={selectedFacility}
+                    setSelected={setSelectedFacility}
+                    data={borrowFacilityState.borrowFacilities}
+                    isLoading={borrowFacilityState.borrowFacilityLoading}
+                    createSuccess={
+                      borrowFacilityState.borrowFacilityCreatSuccess
+                    }
+                    deleteSuccess={
+                      borrowFacilityState.borrowFacilityDeleteSuccess
+                    }
+                    updateSuccess={
+                      borrowFacilityState.borrowFacilityUpdateSuccess
+                    }
+                    tableName="Borrow Facility"
+                    headCells={headCellBorrowFacility}
+                  />
+                </Paper>
+                <FormControl
+                  error={errors?.facilityHistoryListId ? true : false}
+                >
+                  <FormHelperText>
+                    {errors?.facilityHistoryListId
+                      ? errors?.facilityHistoryListId
+                      : ''}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+
+              <Grid
+                style={{ marginTop: 24 }}
+                item
+                md={12}
+                lg={12}
+                xl={12}
+                sm={12}
+                xs={12}
+              >
+                <Typography style={{ fontWeight: 'bold' }} variant="h6">
+                  Event Description
+                </Typography>
+              </Grid>
+
+              {/* Description */}
+              <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
+                <RichTextEditor
+                  key={createEventSuccess}
+                  disabled={eventIsLoading}
+                  setState={setState}
+                />
+                <FormControl error={errors?.description ? true : false}>
+                  <FormHelperText>
+                    {errors?.description ? errors?.description : ''}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+              {/* Button Control */}
+              <Grid container justify="space-between" alignItems="center" item>
+                <Grid item>
+                  <Button
+                    className={css.clearAllButton}
+                    disabled={eventIsLoading}
+                    size="large"
+                    color="default"
+                    style={{ backgroundColor: 'transparent' }}
+                    onClick={() => handleClearFields(true)}
+                  >
+                    Clear all
+                  </Button>
+                </Grid>
+                <Grid item>
+                  {handleCloseCreateDialog && (
+                    <Button
+                      disabled={eventIsLoading}
+                      size="large"
+                      onClick={handleCloseCreateDialog}
+                      variant="contained"
+                      color="default"
+                    >
+                      Close
+                    </Button>
+                  )}
+                  <Button
+                    disabled={eventIsLoading}
+                    style={{
+                      marginLeft: '20px',
+                      textTransform: 'none',
+                      width: '140px',
+                    }}
+                    size="large"
+                    onClick={handleCreateEvent}
+                    variant="contained"
+                    color="primary"
+                  >
+                    {eventIsLoading ? (
+                      <CircularProgress size={26} color="inherit" />
+                    ) : (
+                      'Create Event'
+                    )}
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Paper>
+        {/* Create Event Type Dialog */}
+        <CreateEventTypeDialog
+          openDialogCreateEventType={state.openDialogCreateEventType}
+          handleToggleDialogCreateEventType={handleToggleDialogCreateEventType}
+          handleChange={handleChange}
+          eventTypeTarget={state.eventTypeTarget}
+          eventTypeIsLoading={eventTypeIsLoading}
+          handleCreateEventType={handleCreateEventType}
+          errors={errors}
+        />
+        {/* Borrow Facility Dialog */}
+        <BorrowFacilityDialog />
+        {/* Task Dialog */}
+        <TaskDialog />
+        {/* Notification */}
+        <SystemNotification openCreateSnackBar={state.openCreateSnackBar} />
+      </CreateEventProvider>
     </div>
   );
 };
