@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ERROR REDUCERS should return ERROR 1`] = `
+Object {
+  "errors": Array [],
+}
+`;
+
+exports[`ERROR REDUCERS should return ERROR_CLEAR 1`] = `
+Object {
+  "errors": null,
+}
+`;
+
+exports[`ERROR REDUCERS should return default state 1`] = `
+Object {
+  "errors": null,
+}
+`;

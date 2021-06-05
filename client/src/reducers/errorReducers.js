@@ -7,7 +7,7 @@ const initialState = {
 export default function errorReducers(state = initialState, action) {
     switch (action.type) {
         case ERROR:
-            return { ...state, errors: action.payload };
+            return { ...state, errors: [] };
         case ERROR_CLEAR:
             return initialState;
         default:
