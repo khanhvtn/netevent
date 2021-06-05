@@ -395,17 +395,24 @@ const sendNotification = async (req, res, next) => {
     const stringUsersMail = emailParticipantsList.join(', ')
 
     try {
-       
-            const isSend = await sendEmail(
-                'noreply@netevent.com',
-                stringUsersMail,
-                notification.title,
-                notification.description
-            )
-            return cusResponse(res, 200, isSend, null)
-        
+
+        const isSend = await sendEmail(
+            'noreply@netevent.com',
+            stringUsersMail,
+            notification.title,
+            notification.description
+        )
+        return cusResponse(res, 200, isSend, null)
+
 
     } catch (error) {
+        if (error.name == 'ValidationError') {
+            let errors = {};
+            for (field in error.errors) {
+                errors = { ...errors, [field]: error.errors[field].message };
+            }
+            return next(new CustomError(500, errors));
+        }
         return next(new CustomError(500, error.message));
 
     }

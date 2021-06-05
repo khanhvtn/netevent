@@ -87,6 +87,11 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
             payload: true
         })
 
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null,
+        });
+
 
         dispatch({
             type: IS_SENDING_NOTIFICATION,
@@ -110,5 +115,10 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
             });
         }
         console.log(error)
+
     }
+    dispatch({
+        type: IS_SENDING_NOTIFICATION,
+        payload: false
+    })
 }

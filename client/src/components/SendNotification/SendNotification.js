@@ -16,7 +16,7 @@ import { fetchEvents, sendNotification } from '../../actions/eventActions'
 import { convertFromRaw } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
 import SystemNotification from '../Notification/Notification';
-
+import parse from 'html-react-parser'
 
 const initialState = {
     eventID: '',
@@ -28,12 +28,17 @@ const SendNotification = () => {
     const css = useStyles();
     const [state, setState] = useState(initialState)
     const dispatch = useDispatch();
-    const { event } = useSelector(state => state)
+    const { event, error } = useSelector(state => state)
+    const [errorEvent, setErrorEvent] = useState(false);
+    const [errorTitle, setErrorTitle] = useState(false);
+    const [errorDescription, setErrorDescription] = useState(false);
 
 
     useEffect(() => {
         dispatch(fetchEvents())
         console.log(event.events)
+        console.log(error.errors)
+
     }, [dispatch])
 
     useEffect(() => {
@@ -48,13 +53,30 @@ const SendNotification = () => {
 
     const handleSend = (e) => {
         e.preventDefault()
-        if (state.description === "" || state.title === "" || state.eventID === "") {
-            console.log(false)
+        const descriptionText = JSON.parse(state.description)
+        if (state.eventID === "") {
+            setErrorEvent(true)
         }
+
+        else if (state.title === "") {
+            setErrorTitle(true)
+            setErrorEvent(false)
+
+
+
+        }
+
+        else if (descriptionText.blocks[0].text === "") {
+            setErrorTitle(false)
+            setErrorEvent(false)
+            setErrorDescription(true)
+
+        }
+
         else {
+
             const data = convertFromRaw(JSON.parse(state.description))
             const html = stateToHTML(data)
-
             const notificationBody = {
                 eventID: state.eventID,
                 title: state.title,
@@ -62,6 +84,9 @@ const SendNotification = () => {
             }
 
             dispatch(sendNotification(notificationBody))
+            setErrorTitle(false)
+            setErrorEvent(false)
+            setErrorDescription(false)
 
         }
 
@@ -106,11 +131,17 @@ const SendNotification = () => {
 
 
                                         </Select>
+                                        {error.errors !== null && <Typography className={css.errorStyle}>This event does not have any participants</Typography>}
+                                        {errorEvent === true && <Typography className={css.errorStyle}>Event must be selected</Typography>}
+
                                     </Grid>
 
                                     <Grid item xs={6} md={6} lg={6} >
                                         <TextField id="filled-basic" label="Title" value={state.title} fullWidth
                                             onChange={(e) => setState({ ...state, title: e.target.value })} />
+
+                                        {errorTitle === true && <Typography className={css.errorStyle}>Title must not be empty</Typography>}
+
                                     </Grid>
 
                                 </Grid>
@@ -124,6 +155,8 @@ const SendNotification = () => {
                                         <RichTextEditor
                                             disabled={false}
                                             setState={setState} />
+                                        {errorDescription === true && <Typography className={css.errorStyle}>Description must not be empty</Typography>}
+
                                     </Grid>
                                 </Grid>
 

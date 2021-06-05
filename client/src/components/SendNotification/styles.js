@@ -45,5 +45,10 @@ export default makeStyles((theme) => ({
     buttonSend1: {
         minWidth: 40
 
+    },
+
+    errorStyle:{
+        color: "red",
+        fontSize: 14
     }
 }))
