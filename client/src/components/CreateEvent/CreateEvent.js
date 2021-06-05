@@ -203,11 +203,6 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
             dispatch(
                 getFacilityHistories({ returnFrom: new Date(Date.now()) })
             );
-            setState((prevState) => ({
-                ...prevState,
-                isResetListTag: !prevState.isResetListTag
-            }));
-            setDefaultValueTags([])
         }
         setState((prevState) => ({
             ...prevState,
