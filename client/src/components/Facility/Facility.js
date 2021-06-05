@@ -92,6 +92,7 @@ const filterState = {
 };
 
 const Facility = () => {
+  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const css = useStyles();
   const dispatch = useDispatch();
   const {
@@ -121,7 +122,18 @@ const Facility = () => {
   //userEffect to toggle notification for recovery success
   useEffect(() => {
     if (recoverySuccess) {
-      dispatch(getFacilities());
+      dispatch(
+        getFacilities({
+          search: state.search,
+          take: state.take,
+          page: state.page,
+          createdFrom: state.createdFrom,
+          createdTo: state.createdTo,
+          updatedFrom: state.updatedFrom,
+          updatedTo: state.updatedTo,
+          isDeleted: isRecoveryMode,
+        })
+      );
       //clear selected item
       setSelected(() => []);
     }
@@ -129,7 +141,18 @@ const Facility = () => {
       ...prevState,
       openRecoverySnackBar: recoverySuccess,
     }));
-  }, [dispatch, recoverySuccess]);
+  }, [
+    dispatch,
+    recoverySuccess,
+    state.search,
+    state.take,
+    state.page,
+    state.createdFrom,
+    state.createdTo,
+    state.updatedFrom,
+    state.updatedTo,
+    isRecoveryMode,
+  ]);
 
   //useEffect to toggle notification for create success
   useEffect(() => {
@@ -142,7 +165,18 @@ const Facility = () => {
       openCreateSnackBar: createSuccess,
     };
     if (createSuccess) {
-      dispatch(getFacilities());
+      dispatch(
+        getFacilities({
+          search: state.search,
+          take: state.take,
+          page: state.page,
+          createdFrom: state.createdFrom,
+          createdTo: state.createdTo,
+          updatedFrom: state.updatedFrom,
+          updatedTo: state.updatedTo,
+          isDeleted: isRecoveryMode,
+        })
+      );
       defaultAction = {
         ...defaultAction,
         openCreateAndUpdateDialog: false,
@@ -154,7 +188,18 @@ const Facility = () => {
     }));
     //clear selected item
     setSelected(() => []);
-  }, [dispatch, createSuccess]);
+  }, [
+    dispatch,
+    createSuccess,
+    state.search,
+    state.take,
+    state.page,
+    state.createdFrom,
+    state.createdTo,
+    state.updatedFrom,
+    state.updatedTo,
+    isRecoveryMode,
+  ]);
   //useEffect to toggle notification for update success
   useEffect(() => {
     let defaultAction = {
@@ -166,7 +211,18 @@ const Facility = () => {
       openUpdateSnackBar: updateSuccess,
     };
     if (updateSuccess) {
-      dispatch(getFacilities());
+      dispatch(
+        getFacilities({
+          search: state.search,
+          take: state.take,
+          page: state.page,
+          createdFrom: state.createdFrom,
+          createdTo: state.createdTo,
+          updatedFrom: state.updatedFrom,
+          updatedTo: state.updatedTo,
+          isDeleted: isRecoveryMode,
+        })
+      );
       defaultAction = {
         ...defaultAction,
         openCreateAndUpdateDialog: false,
@@ -178,7 +234,18 @@ const Facility = () => {
     }));
     //clear selected item
     setSelected(() => []);
-  }, [dispatch, updateSuccess]);
+  }, [
+    dispatch,
+    updateSuccess,
+    state.search,
+    state.take,
+    state.page,
+    state.createdFrom,
+    state.createdTo,
+    state.updatedFrom,
+    state.updatedTo,
+    isRecoveryMode,
+  ]);
   //useEffect to toggle notification for delete success
   useEffect(() => {
     let defaultAction = {
@@ -190,7 +257,18 @@ const Facility = () => {
       openDeleteSnackBar: deleteSuccess,
     };
     if (deleteSuccess) {
-      dispatch(getFacilities());
+      dispatch(
+        getFacilities({
+          search: state.search,
+          take: state.take,
+          page: state.page,
+          createdFrom: state.createdFrom,
+          createdTo: state.createdTo,
+          updatedFrom: state.updatedFrom,
+          updatedTo: state.updatedTo,
+          isDeleted: isRecoveryMode,
+        })
+      );
       defaultAction = {
         ...defaultAction,
         openDeleteDialog: false,
@@ -202,35 +280,32 @@ const Facility = () => {
     }));
     //clear selected item
     setSelected(() => []);
-  }, [dispatch, deleteSuccess]);
+  }, [
+    dispatch,
+    deleteSuccess,
+    state.search,
+    state.take,
+    state.page,
+    state.createdFrom,
+    state.createdTo,
+    state.updatedFrom,
+    state.updatedTo,
+    isRecoveryMode,
+  ]);
 
   //useEffect
   useEffect(() => {
-    const filterDate = {
-      createdFrom: state.createdFrom
-        ? format(Date.parse(state.createdFrom), 'yyyy-MM-dd')
-        : '',
-      createdTo: state.createdTo
-        ? format(Date.parse(state.createdTo), 'yyyy-MM-dd')
-        : '',
-      updatedFrom: state.updatedFrom
-        ? format(Date.parse(state.updatedFrom), 'yyyy-MM-dd')
-        : '',
-      updatedTo: state.updatedTo
-        ? format(Date.parse(state.updatedTo), 'yyyy-MM-dd')
-        : '',
-    };
-
     dispatch(
-      getFacilities(
-        state.search,
-        state.take,
-        state.page,
-        filterDate.createdFrom,
-        filterDate.createdTo,
-        filterDate.updatedFrom,
-        filterDate.updatedTo
-      )
+      getFacilities({
+        search: state.search,
+        take: state.take,
+        page: state.page,
+        createdFrom: state.createdFrom,
+        createdTo: state.createdTo,
+        updatedFrom: state.updatedFrom,
+        updatedTo: state.updatedTo,
+        isDeleted: isRecoveryMode,
+      })
     );
     //clear selected item
     setSelected(() => []);
@@ -249,6 +324,7 @@ const Facility = () => {
     state.createdTo,
     state.updatedFrom,
     state.updatedTo,
+    isRecoveryMode,
   ]);
 
   const handleChange = (e) => {
@@ -405,6 +481,8 @@ const Facility = () => {
 
               {/* Facility Table */}
               <DataTable
+                isRecoveryMode={isRecoveryMode}
+                setIsRecoveryMode={setIsRecoveryMode}
                 handleRecovery={handleRecovery}
                 recoveryMode={true}
                 handleToggleDialogCreateAndUpdate={

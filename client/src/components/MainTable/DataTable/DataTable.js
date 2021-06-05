@@ -288,18 +288,13 @@ const DataTable = ({
   constrainRangeDate,
   recoveryMode,
   handleRecovery,
+  isRecoveryMode,
+  setIsRecoveryMode,
 }) => {
   const css = useStyles();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
-  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
-
-  const dataFilter = constrainRangeDate
-    ? data
-    : isRecoveryMode
-    ? data.filter((target) => target.isDeleted === true)
-    : data.filter((target) => target.isDeleted === false);
-  console.log(dataFilter);
+  const dataFilter = data;
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');

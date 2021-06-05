@@ -39,25 +39,29 @@ export const confirmUser = (id, password) =>
 export const getLinks = () => AXIOS.get('/link');
 
 //Facility APIs
-export const getFacilitiesAPI = (
-  search,
-  take,
-  page,
-  status,
-  createdFrom,
-  createdTo,
-  updatedFrom,
-  updatedTo
-) =>
-  AXIOS.get(
+export const getFacilitiesAPI = (userQueries) => {
+  const {
+    search,
+    take,
+    page,
+    isDeleted,
+    createdFrom,
+    createdTo,
+    updatedFrom,
+    updatedTo,
+  } = userQueries;
+  return AXIOS.get(
     `/facility/filter?search=${search ? search : ''}&take=${
       take ? take : ''
-    }&page=${page ? page : ''}&status=${status ? status : ''}&createdFrom=${
-      createdFrom ? createdFrom : ''
-    }&createdTo=${createdTo ? createdTo : ''}&updatedFrom=${
-      updatedFrom ? updatedFrom : ''
-    }&updatedTo=${updatedTo ? updatedTo : ''}`
+    }&page=${page ? page : ''}&isDeleted=${
+      isDeleted ? isDeleted : ''
+    }&createdFrom=${createdFrom ? createdFrom : ''}&createdTo=${
+      createdTo ? createdTo : ''
+    }&updatedFrom=${updatedFrom ? updatedFrom : ''}&updatedTo=${
+      updatedTo ? updatedTo : ''
+    }`
   );
+};
 export const createFacilityAPI = (userReq) =>
   AXIOS.post(`/facility/create`, userReq);
 export const updateFacilityAPI = (userReq) =>
