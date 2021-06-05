@@ -23,7 +23,7 @@ import {
     getFacilityHistories,
 } from '../../actions/facilityHistoryActions';
 import { getAllUsers } from '../../actions/userActions';
-import { createEvent } from '../../actions/eventActions';
+import { createEvent, updateEvent } from '../../actions/eventActions';
 import SystemNotification from '../Notification/Notification';
 import DataTable from '../MainTable/DataTable/DataTable';
 import CreateEventTypeDialog from './CreateEventTypeDialog/CreateEventTypeDialog';
@@ -126,7 +126,13 @@ const initialTaskState = {
     isTaskCreateMode: true,
 };
 
-const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog, updateFacilities, updateTasks }) => {
+const CreateEvent = ({ 
+    isUpdateMode, 
+    updateEventDetail, 
+    handleCloseUpdateDialog, 
+    updateFacilities, 
+    updateTasks 
+}) => {
     const css = useStyles();
     const fileInput = useRef(null);
     const dispatch = useDispatch();
@@ -136,11 +142,12 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
         eventTypeIsLoading,
         createEventTypeSuccess,
         createEventSuccess,
+        updateEventSuccess,
         facilities,
         user,
         users,
         eventIsLoading,
-        facilityHistories,
+        facilityHistories,  
     } = useSelector((state) => ({
         users: state.user.users,
         user: state.user.user,
@@ -150,11 +157,10 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
         eventIsLoading: state.event.isLoading,
         createEventTypeSuccess: state.eventType.createSuccess,
         createEventSuccess: state.event.createSuccess,
+        updateEventSuccess: state.event.updateSuccess,
         facilities: state.facility.facilities,
         facilityHistories: state.facilityHistory.facilityHistories,
     }));
-
-
 
     const [state, setState] = useState(initialState);
     //borrow facility table
@@ -210,6 +216,14 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
         }));
     }, [dispatch, createEventSuccess, handleClearFields]);
 
+    //useEffect for update event success
+    useEffect(() => {
+        if (updateEventSuccess) {
+            handleClearFields();
+            handleCloseUpdateDialog();
+        }
+    }, [updateEventSuccess, handleClearFields]);
+
     //useEffect get status create event type
     useEffect(() => {
         setState((prevState) => ({
@@ -230,7 +244,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
         dispatch(getFacilityHistories({ returnFrom: new Date(Date.now()) }));
     }, [dispatch]);
 
-    //useEffect to check update mode
+    //useEffect to check update mode and set current state of update
     useEffect(() => {
         if (isUpdateMode) {
             // setup initial update description for RTE
@@ -250,6 +264,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
             setBorrowFacilityState((prevState) => ({
                 ...prevState,
                 borrowFacilities: updateFacilities.map((facility) => ({
+                    _id: facility._id,
                     name: facility.facilityId.name,
                     borrowDate: facility.borrowDate,
                     returnDate: facility.returnDate
@@ -260,6 +275,7 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
             setTaskState((prevState) => ({
                 ...prevState,
                 tasks: updateTasks.map((task) => ({
+                    _id: task._id,
                     name: task.name,
                     email: task.userId.email,
                     type: task.type,
@@ -304,8 +320,6 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
             image,
             eventTypeTarget,
         } = state;
-
-        console.log(description)
 
         //generate valid data to send request to the server
         const templateRequest = {
@@ -352,8 +366,8 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                     endDate,
                 };
             }),
-            borrowFacilities: borrowFacilityState.borrowFacilities.map(
-                (borrowFacility) => {
+            borrowFacilities: borrowFacilityState.borrowFacilities
+                .map((borrowFacility) => {
                     const { borrowDate, returnDate, name } = borrowFacility;
                     const targetFacility = facilities.find(
                         (facility) => facility.name === name
@@ -363,14 +377,55 @@ const CreateEvent = ({ isUpdateMode, updateEventDetail, handleCloseUpdateDialog,
                         borrowDate,
                         returnDate,
                     };
-                }
-            ),
+                }),
         };
 
         if (!isUpdateMode) {
             dispatch(createEvent(templateRequest));
         } else {
+            const updateTemplate = {
+                ...templateRequest,
+                _id: updateEventDetail._id,
+                borrowFacilities: [
+                    ...borrowFacilityState.borrowFacilities
+                        .filter((borrowFacility) => !borrowFacility._id)
+                        .map((borrowFacility) => {
+                            const { borrowDate, returnDate, name } = borrowFacility;
+                            const targetFacility = facilities.find(
+                                (facility) => facility.name === name
+                            );
+                            return {
+                                facilityId: targetFacility._id,
+                                borrowDate,
+                                returnDate,
+                            };
+                        }),
+                    ...borrowFacilityState.borrowFacilities
+                        .filter((borrowFacility) => borrowFacility._id)
+                ],
+                tasks: [
+                    ...taskState.tasks
+                        .filter((task) => !task._id)
+                        .map((task) => {
+                            const {
+                                name,
+                                email,
+                                type,
+                                startTime: startDate,
+                                endTime: endDate,
+                            } = task;
+                            const { _id: userId } = users.find(
+                                (user) => user.email === email
+                            );
+                            return { name, userId, type, startDate, endDate };
+                        }),
+                    ...taskState.tasks
+                        .filter((task) => task._id)
+                ]
+            }
+            console.log(updateTemplate)
             console.log("Update")
+            dispatch(updateEvent(updateTemplate))
         }
     };
 

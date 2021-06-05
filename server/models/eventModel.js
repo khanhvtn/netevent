@@ -13,7 +13,7 @@ const eventSchema = mongoose.Schema(
             type: String,
             required: [true, 'Event Name cannot be blanked'],
             trim: true,
-            unique: true,
+            // unique: true,
         },
         language: {
             type: String,

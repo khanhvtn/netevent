@@ -116,7 +116,7 @@ const createEvent = async (req, res, next) => {
         await Promise.all(
             facilityHistoryResult.map(async (facilityHistory) => {
                 try {
-                    return await Task.findByIdAndUpdate(facilityHistory._id, {
+                    return await FacilityHistory.findByIdAndUpdate(facilityHistory._id, {
                         ...facilityHistory._doc,
                         eventId: newEvent._id,
                     });
@@ -294,15 +294,14 @@ const deleteEvent = async (req, res, next) => {
 
         // Delete all reference Task
         await Task.deleteMany({ _id: taskListId });
-        
+
         // Delete all reference Facility History
         await FacilityHistory.deleteMany({ _id: historyFacilityListId })
-        
+
         // Delete Event
         const deleteEvent = await Event.deleteOne({ _id: eventId })
-        const response = { ...deleteEvent, isDeleted: true }
 
-        return cusResponse(res, 200, response, null);
+        return cusResponse(res, 200, deleteEvent, null);
 
     } catch (error) {
         return next(new CustomError(500, error.message));
@@ -317,18 +316,151 @@ const deleteEvent = async (req, res, next) => {
  * @version 1.0
  */
 const updateEvent = async (req, res, next) => {
+    let errors = {};
     try {
-        const userReq = req.body;
+        const { tasks, borrowFacilities, _id, ...eventDetail } = req.body;
+
+        // Get current task and facility id
+        const currentEvent = await Event.findOne({
+            _id: _id
+        })
+
+        eventDetailChecking = {
+            ...eventDetail,
+            eventName: currentEvent.eventName === eventDetail.eventName ? "tempName" : eventDetail.eventName
+        }
+
+        let event = new Event(eventDetailChecking);
+
+        if (Object.keys(tasks).length === 0) {
+            errors = { ...errors, taskListId: 'Task cannot be blanked' };
+        }
+
+        //validate borrow facilities list
+        if (Object.keys(borrowFacilities).length === 0) {
+            errors = {
+                ...errors,
+                facilityHistoryListId: 'Borrow Facility cannot be blanked',
+            };
+        }
+
+        //validate user request fields.
+        await event.validate();
+
+        if (Object.keys(errors).length !== 0) {
+            return next(new CustomError(400, errors));
+        }
+
+        // Filter all task and facility without having previous id
+        const newTaskList = tasks.filter((task) => !task._id);
+        const newHistoryFacilityList = borrowFacilities.filter((facility) => !facility._id);
+
+        //create new tasks to get task list ids
+        const newTaskListResult = await Promise.all(
+            newTaskList.map(async (task) => {
+                try {
+                    return await Task.create(task);
+                } catch (error) {
+                    throw error;
+                }
+            })
+        );
+
+        //create new facility histories to get their ids
+        const newHistoryFacilityListResult = await Promise.all(
+            newHistoryFacilityList.map(async (facilityHistory) => {
+                try {
+                    return await FacilityHistory.create(facilityHistory);
+                } catch (error) {
+                    throw error;
+                }
+            })
+        );
+
+        // Combine and filter all new facility history and task
+        const newTaskListIds = [
+            ...tasks.filter((task) => task._id).map((task) => task._id),
+            ...newTaskListResult.map((task) => task._id)
+        ]
+        console.log("newTaskListIds: ", newTaskListIds)
+
+        const newHistoryFacilityListIds = [
+            ...borrowFacilities.filter((task) => task._id).map((task) => task._id),
+            ...newHistoryFacilityListResult.map((task) => task._id)
+        ]
+        console.log("newHistoryFacilityListIds: ", newHistoryFacilityListIds)
+
+        // Get current task and history facility
+        const currentTaskListIds = currentEvent.taskListId.map(id => id.toString());
+        console.log("currentTaskListIds: ", currentTaskListIds)
+
+        const currentHistoryFacilityListIds = currentEvent.facilityHistoryListId.map(id => id.toString());
+        console.log("currentHistoryFacilityListIds: ", currentHistoryFacilityListIds)
+
+        // Get all delete task and history facility
+        const deleteTaskListIds = currentTaskListIds.filter(id => !newTaskListIds.includes(id))
+        console.log("deleteTaskListIds: ", deleteTaskListIds)
+
+        const deleteHistoryFacilityListIds = currentHistoryFacilityListIds.filter(id => !newHistoryFacilityListIds.includes(id))
+        console.log("deleteHistoryFacilityListIds: ", deleteHistoryFacilityListIds)
+
+        // Handle delete tasks
+        // const handleDeleteTasks = await Task.deleteMany({ _id: deleteTaskListIds })
+
+        // Handle delete facilities
+        // const handleDeleteFacilities = await FacilityHistory.deleteMany({ _id: deleteHistoryFacilityListIds });
+
+        // Add task list id into update
+        newUpdateState = {
+            ...eventDetail,
+            taskListId: newTaskListIds,
+            facilityHistoryListId: newHistoryFacilityListIds,
+        }
+
+        const { image, ...testEvent } = newUpdateState
+        console.log("newUpdateState: ", testEvent)
+
+        // Update new event
         const updatedEvent = await Event.findOneAndUpdate(
-            { eventName: userReq.filter },
-            userReq.update,
+            { _id: _id },
+            newUpdateState,
             { new: true, runValidators: true, context: 'query' }
+        ).populate({
+            path: 'eventTypeId'
+        });
+
+        // update id event back to above tasks.
+        await Promise.all(
+            newTaskListResult.map(async (task) => {
+                try {
+                    return await Task.findByIdAndUpdate(task._id, {
+                        ...task._doc,
+                        eventId: newEvent._id,
+                    });
+                } catch (error) {
+                    throw error;
+                }
+            })
+        );
+
+        // update id event back to above facility histories.
+        await Promise.all(
+            newHistoryFacilityListResult.map(async (facilityHistory) => {
+                try {
+                    return await FacilityHistory.findByIdAndUpdate(facilityHistory._id, {
+                        ...facilityHistory._doc,
+                        eventId: newEvent._id,
+                    });
+                } catch (error) {
+                    throw error;
+                }
+            })
         );
 
         return cusResponse(res, 200, updatedEvent, null);
     } catch (error) {
+        console.log(error.message)
         if (error.name == 'ValidationError') {
-            let errors = {};
             for (field in error.errors) {
                 errors = { ...errors, [field]: error.errors[field].message };
             }

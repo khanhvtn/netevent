@@ -29,10 +29,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteEventWithTaskAndFacilityHistory, getFacilityAndTaskByEventName } from '../../../actions/eventActions';
 import { Skeleton } from '@material-ui/lab';
 import CreateEvent from '../../CreateEvent/CreateEvent';
+import SystemNotification from '../../Notification/Notification';
 
 const initialState = {
+    event: null,
     openDeleteDialog: false,
     openUpdateDialog: false,
+    openUpdateSnackBar: false,
 }
 
 const initialDeleteState = {
@@ -52,14 +55,14 @@ const EventDetail = () => {
     // Update new state when getting props from event-management page
     useEffect(() => {
         // Return the event-management page when there is no props passing
-        if (!history.location.state) {
+        if (!history.location.state && !state.event) {
             history.push('/dashboard/event-management')
         }
 
         // Set state for the event
         setState((prevState) => ({
             ...prevState,
-            event: history.location.state.event
+            event: history.location.state.event || newUpdateEventDetail
         }));
     }, [])
 
@@ -70,11 +73,40 @@ const EventDetail = () => {
         }
     }, [state.event])
 
-    const { facilities, tasks, isLoading } = useSelector((state) => ({
+    const {
+        facilities,
+        tasks,
+        isLoading,
+        isUpdated,
+        updateEventSuccess,
+        newUpdateEventDetail,
+    } = useSelector((state) => ({
+        newUpdateEventDetail: state.event.eventDetail,
         facilities: state.event.eventDetail?.facilityHistoryListId,
         tasks: state.event.eventDetail?.taskListId,
-        isLoading: state.event.isDetailLoading
+        isLoading: state.event.isDetailLoading,
+        isUpdated: state.event.isLoading,
+        updateEventSuccess: state.event.updateSuccess
     }));
+
+    // UseEffect for update event success
+    useEffect(() => {
+        setState((prevState) => ({
+            ...prevState,
+            openUpdateSnackBar: updateEventSuccess,
+        }));
+    }, [updateEventSuccess])
+
+    // UseEffect for update event status
+    useEffect(() => {
+        if (updateEventSuccess) {
+            setState((prevState) => ({
+                ...prevState,
+                event: newUpdateEventDetail,
+            }));
+            history.replace()
+        }
+    }, [updateEventSuccess])
 
     // Update Delete State
     useEffect(() => {
@@ -94,6 +126,7 @@ const EventDetail = () => {
 
     // Return to event-management page with the current path
     const handleOnClickReturn = () => {
+        setState(initialState)
         history.push({
             pathname: '/dashboard/event-management',
             state: {
@@ -139,7 +172,7 @@ const EventDetail = () => {
                                 <div className={css.grow} />
                                 <Tooltip title="Delete">
                                     <Button
-                                        disabled={isLoading}
+                                        disabled={isLoading || isUpdated}
                                         color="inherit"
                                         onClick={handleToggleDialogDelete}
                                     >
@@ -148,7 +181,7 @@ const EventDetail = () => {
                                 </Tooltip>
                                 <Tooltip title="Edit">
                                     <Button
-                                        disabled={isLoading}
+                                        disabled={isLoading || isUpdated}
                                         color="inherit"
                                         variant="outlined"
                                         style={{ margin: '0 8px' }}
@@ -321,8 +354,6 @@ const EventDetail = () => {
                                         </>
                                         :
                                         tasks?.map((task, index) => {
-
-
                                             return (
                                                 <Accordion key={index} expanded={expanded === `panel${index}`} onChange={handleExpand(`panel${index}`)}>
                                                     <AccordionSummary
@@ -331,7 +362,7 @@ const EventDetail = () => {
                                                         id={`panel${index}bh-header`}
                                                     >
                                                         <Typography className={css.heading}>{task.name}</Typography>
-                                                        <Typography className={css.secondaryHeading}>{task.userId.email}</Typography>
+                                                        <Typography className={css.secondaryHeading}>{task.userId?.email}</Typography>
                                                     </AccordionSummary>
                                                     <AccordionDetails className={css.expandRoot}>
                                                         <Grid className={css.schedule} container >
@@ -388,7 +419,7 @@ const EventDetail = () => {
                                                         aria-controls="panel2bh-content"
                                                         id="panel2bh-header"
                                                     >
-                                                        <Typography >{facility.facilityId.name}</Typography>
+                                                        <Typography >{facility.facilityId?.name}</Typography>
                                                     </AccordionSummary>
                                                     <AccordionDetails className={css.expandRoot}>
                                                         <Grid className={css.schedule} container >
@@ -527,6 +558,9 @@ const EventDetail = () => {
                     handleCloseUpdateDialog={handleToggleDialogUpdate}
                 />
             </Dialog>
+
+            {/* Notification */}
+            <SystemNotification openUpdateSnackBar={state.openUpdateSnackBar} />
         </>
     )
 }
