@@ -18,7 +18,7 @@ const NavItem = ({ href, icon: Icon, title, ...rest }) => {
             return dispatch(userLogout(history));
         }
         if (href === 'pickrole') {
-            history.push(`/${href}`)
+            return history.push(`/${href}`);
         }
         history.push(href[0]);
     };
