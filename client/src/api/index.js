@@ -107,9 +107,22 @@ export const recoverEventTypesAPI = (userReq) =>
   AXIOS.patch(`/eventType/recovery`, userReq);
 
 // Event APIs
+export const getEventsAPI = (search, take, page, type, budgetRange, participantRange) =>
+    AXIOS.get(
+        `/event/get?search=${search ? search : ''}&take=${take ? take : ''}&page=${page ? page : ''}&type=${type ? type : ''}&budgetRange=${budgetRange ? budgetRange : ''}&participantRange=${participantRange ? participantRange : ''}`
+    );
+export const getFacilityAndTaskByEventNameAPI = (eventName) =>
+    AXIOS.get(`/event/detail?eventName=${eventName ? eventName : ''}`)
 export const createEventAPI = (userReq) => AXIOS.post(`/event/create`, userReq);
 export const sendNotificationAPI = (notificationReq) => AXIOS.post('/event/sendNotification', notificationReq)
+export const updateEventAPI = (userReq) => AXIOS.patch(`/event/update`, userReq);
+export const deleteEventAPI = (userReq) => AXIOS.delete(`/event/delete`, { data: userReq });
+export const deleteEventManagementAPI = (userReq) => AXIOS.delete(`/event/deleteManagement`, { data: userReq });
+// Same route
 export const fetchEventsAPI = () => AXIOS.get('/event/all')
+export const getAllEventAPI = () => AXIOS.get(`/event/all`);
+
+
 // Facility History APIs
 export const getFacilityHistoriesAPI = (userQueries) => {
   const takeQuery = `take=${userQueries?.take ? userQueries?.take : ''}`;
@@ -146,8 +159,6 @@ export const getFacilityHistoriesAPI = (userQueries) => {
 export const getAllFacilityHistoriesAPI = () =>
   AXIOS.get(`/facilityHistory/all`);
 
-//Event APIs
-export const getAllEventAPI = () => AXIOS.get(`/event/all`);
 
 // Participant API
 export const registerParticipantAPI = (participantData) => AXIOS.post('/participant/registerEvent', participantData)

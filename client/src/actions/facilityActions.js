@@ -39,6 +39,7 @@ export const getAllFacilities = () => async (dispatch) => {
   }
   setFacilityIsLoading(false, dispatch);
 };
+
 export const getFacilities = (userQueries) => async (dispatch) => {
   setFacilityIsLoading(true, dispatch);
   try {
@@ -52,6 +53,7 @@ export const getFacilities = (userQueries) => async (dispatch) => {
   }
   setFacilityIsLoading(false, dispatch);
 };
+
 export const createFacility = (userReq) => async (dispatch) => {
   setFacilityIsLoading(true, dispatch);
   try {
@@ -113,6 +115,7 @@ export const updateFacility = (userReq) => async (dispatch) => {
   }
   setFacilityIsLoading(false, dispatch);
 };
+
 export const recoveryFacilities = (userReq) => async (dispatch) => {
   setFacilityIsLoading(true, dispatch);
   try {
@@ -138,6 +141,7 @@ export const recoveryFacilities = (userReq) => async (dispatch) => {
   }
   setFacilityIsLoading(false, dispatch);
 };
+
 export const deleteFacilities = (userReq) => async (dispatch) => {
   setFacilityIsLoading(true, dispatch);
   try {

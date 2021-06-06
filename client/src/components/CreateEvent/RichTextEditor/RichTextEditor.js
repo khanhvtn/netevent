@@ -4,6 +4,8 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 //import useStyles in the last
 import useStyles from './styles';
 import { Paper } from '@material-ui/core';
+import { convertToRaw } from 'draft-js';
+
 //customize theme for RichTextEditor
 const defaultTheme = createMuiTheme();
 
@@ -27,9 +29,20 @@ Object.assign(defaultTheme, {
     },
 });
 
-const RichTextEditor = ({ setState, disabled }) => {
+
+
+const RichTextEditor = ({ setState, disabled, value }) => {
     const css = useStyles();
     const richTextEditorRef = useRef(null);
+
+    const handleOnChangeRTE = event => {
+        // const content = JSON.stringify(convertToRaw(event.getCurrentContent()))
+        // setState((prevState) => ({
+        //     ...prevState,
+        //     description: content,
+        // }))
+    }
+
     return (
         <Paper elevation={3}>
             <MuiThemeProvider theme={defaultTheme}>

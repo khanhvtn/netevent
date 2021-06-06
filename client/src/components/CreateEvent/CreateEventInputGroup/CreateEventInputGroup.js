@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   Grid,
@@ -29,16 +29,20 @@ const CreateEventInputGroup = ({
   state,
   setState,
   eventTypes,
+  isResetListTag,
   createEventSuccess,
+  updateEventSuccess,
   updateListTag,
+  defaultValueTags,
 }) => {
   const css = useStyles();
+
   return (
     <>
       <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
         <Typography style={{ fontWeight: 'bold' }} variant="h6">
           Event Details
-        </Typography>
+                </Typography>
       </Grid>
       {/* Event Name */}
       <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
@@ -131,11 +135,12 @@ const CreateEventInputGroup = ({
       {/* Tags */}
       <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
         <Autocomplete
-          key={createEventSuccess}
+          id="tags-filled"
+          defaultValue={defaultValueTags}
+          key={createEventSuccess || updateEventSuccess}
           disabled={eventIsLoading}
           limitTags={4}
           multiple
-          id="tags-filled"
           options={[]}
           freeSolo
           renderTags={(value, getTagProps) => {
@@ -157,6 +162,7 @@ const CreateEventInputGroup = ({
               {...params}
               variant="outlined"
               label="Tags"
+              name="tags"
               placeholder="Input your tag"
             />
           )}
@@ -214,7 +220,9 @@ const CreateEventInputGroup = ({
         <TextField
           disabled={eventIsLoading}
           error={errors?.accommodation ? true : false}
-          helperText={errors?.accommodation ? errors?.accommodation : ''}
+          helperText={
+            errors?.accommodation ? errors?.accommodation : ''
+          }
           size="medium"
           type="text"
           variant="outlined"
@@ -230,7 +238,9 @@ const CreateEventInputGroup = ({
         <CurrencyTextField
           disabled={eventIsLoading}
           error={errors?.maxParticipants ? true : false}
-          helperText={errors?.maxParticipants ? errors?.maxParticipants : ''}
+          helperText={
+            errors?.maxParticipants ? errors?.maxParticipants : ''
+          }
           size="medium"
           variant="outlined"
           fullWidth
@@ -243,8 +253,8 @@ const CreateEventInputGroup = ({
               maxParticipants: value
                 ? value
                 : event.currentTarget?.value
-                ? event.currentTarget?.value
-                : '',
+                  ? event.currentTarget?.value
+                  : '',
             }))
           }
           currencySymbol="🚹"
@@ -274,8 +284,8 @@ const CreateEventInputGroup = ({
               budget: value
                 ? value
                 : event.currentTarget?.value
-                ? event.currentTarget?.value
-                : '',
+                  ? event.currentTarget?.value
+                  : '',
             }));
           }}
           currencySymbol="VND"
@@ -320,7 +330,9 @@ const CreateEventInputGroup = ({
             onChange={(date) => {
               setState((prevState) => ({
                 ...prevState,
-                startDate: date?.toDate() ? date?.toDate() : null,
+                startDate: date?.toDate()
+                  ? date?.toDate()
+                  : null,
               }));
             }}
             KeyboardButtonProps={{
@@ -336,8 +348,18 @@ const CreateEventInputGroup = ({
             disablePast
             error={errors?.endDate ? true : false}
             helperText={errors?.endDate ? errors?.endDate : ''}
-            disabled={!state.startDate ? true : eventIsLoading ? true : false}
-            minDate={state.startDate ? Date.parse(state.startDate) : undefined}
+            disabled={
+              !state.startDate
+                ? true
+                : eventIsLoading
+                  ? true
+                  : false
+            }
+            minDate={
+              state.startDate
+                ? Date.parse(state.startDate)
+                : undefined
+            }
             inputVariant="outlined"
             size="medium"
             fullWidth
@@ -366,16 +388,26 @@ const CreateEventInputGroup = ({
               !state.startDate
                 ? true
                 : !state.endDate
-                ? true
-                : eventIsLoading
-                ? true
-                : false
+                  ? true
+                  : eventIsLoading
+                    ? true
+                    : false
             }
-            minDate={state.startDate ? Date.parse(state.startDate) : undefined}
-            maxDate={state.endDate ? Date.parse(state.endDate) : undefined}
+            minDate={
+              state.startDate
+                ? Date.parse(state.startDate)
+                : undefined
+            }
+            maxDate={
+              state.endDate
+                ? Date.parse(state.endDate)
+                : undefined
+            }
             error={errors?.registrationCloseDate ? true : false}
             helperText={
-              errors?.registrationCloseDate ? errors?.registrationCloseDate : ''
+              errors?.registrationCloseDate
+                ? errors?.registrationCloseDate
+                : ''
             }
             inputVariant="outlined"
             size="medium"
@@ -387,7 +419,9 @@ const CreateEventInputGroup = ({
             onChange={(date) => {
               setState((prevState) => ({
                 ...prevState,
-                registrationCloseDate: date?.toDate() ? date?.toDate() : null,
+                registrationCloseDate: date?.toDate()
+                  ? date?.toDate()
+                  : null,
               }));
             }}
             KeyboardButtonProps={{

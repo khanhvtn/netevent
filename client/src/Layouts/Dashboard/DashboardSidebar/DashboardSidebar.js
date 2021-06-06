@@ -17,6 +17,7 @@ import { CalendarToday } from '@material-ui/icons';
 import MailIcon from '@material-ui/icons/Mail';
 import { DevicesOther, People } from '@material-ui/icons';
 import ReplayIcon from '@material-ui/icons/Replay';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import NavItem from './NavItem';
 import useStyles from './styles';
 
@@ -32,25 +33,30 @@ const roleActions = {
         {
             title: 'User',
             icon: People,
-            href: '/dashboard/user',
+            href: ['/dashboard/user']
         },
         {
             title: 'Facility',
             icon: DevicesOther,
-            href: '/dashboard/facility',
+            href: ['/dashboard/facility']
         },
     ],
     2: [],
     3: [
         {
+            title: 'Event Management',
+            icon: EventAvailableIcon,
+            href: ['/dashboard/event-management', '/dashboard/event-detail']
+        },
+        {
             title: 'Create Event',
             icon: EventIcon,
-            href: '/dashboard/create-event',
+            href: ['/dashboard/create-event']
         },
         {
             title: 'Event Type',
             icon: EventNoteIcon,
-            href: '/dashboard/event-type',
+            href: ['/dashboard/event-type']
         },
         {
             title: 'Calendar',

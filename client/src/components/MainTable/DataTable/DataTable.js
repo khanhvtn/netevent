@@ -120,15 +120,15 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
-    flexGrow: '1',
+    flex: '1 1 100%',
     fontWeight: 'bold',
   },
 }));
@@ -163,15 +163,15 @@ const EnhancedTableToolbar = (props) => {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography
-          className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          {tableName}
-        </Typography>
-      )}
+          <Typography
+            className={classes.title}
+            variant="h6"
+            id="tableTitle"
+            component="div"
+          >
+            {tableName}
+          </Typography>
+        )}
 
       {numSelected === 0 ? (
         <>
@@ -181,10 +181,10 @@ const EnhancedTableToolbar = (props) => {
                 constrainRangeDate === undefined || disabled === undefined
                   ? false
                   : !constrainRangeDate
-                  ? true
-                  : disabled
-                  ? true
-                  : false
+                    ? true
+                    : disabled
+                      ? true
+                      : false
               }
               onClick={() => setIsRecoveryMode((prevState) => !prevState)}
               endIcon={!isRecoveryMode && <Delete />}
@@ -201,10 +201,10 @@ const EnhancedTableToolbar = (props) => {
                 constrainRangeDate === undefined || disabled === undefined
                   ? false
                   : !constrainRangeDate
-                  ? true
-                  : disabled
-                  ? true
-                  : false
+                    ? true
+                    : disabled
+                      ? true
+                      : false
               }
               style={{ marginLeft: '20px' }}
               onClick={handleToggleDialogCreateAndUpdate}
@@ -254,15 +254,15 @@ const EnhancedTableToolbar = (props) => {
           Recover
         </Button>
       ) : (
-        <Button
-          onClick={handleToggleDialogDelete}
-          endIcon={<Delete />}
-          variant="contained"
-          color="secondary"
-        >
-          Delete
-        </Button>
-      )}
+              <Button
+                onClick={handleToggleDialogDelete}
+                endIcon={<Delete />}
+                variant="contained"
+                color="secondary"
+              >
+                Delete
+              </Button>
+            )}
     </Toolbar>
   );
 };
@@ -399,66 +399,66 @@ const DataTable = ({
                 </TableRow>
               </>
             ) : (
-              <>
-                {stableSort(dataFilter, getComparator(order, orderBy)).map(
-                  (row, index) => {
-                    const isItemSelected = isSelected(row.name);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+                  <>
+                    {stableSort(dataFilter, getComparator(order, orderBy)).map(
+                      (row, index) => {
+                        const isItemSelected = isSelected(row.name);
+                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                    return (
+                        return (
+                          <TableRow
+                            hover
+                            onClick={(event) => handleClick(event, row.name)}
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            key={row.name}
+                            selected={isItemSelected}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isItemSelected}
+                                inputProps={{
+                                  'aria-labelledby': labelId,
+                                }}
+                              />
+                            </TableCell>
+                            {headCells.map((cell, index) => {
+                              if (
+                                cell.id === 'createdAt' ||
+                                cell.id === 'updatedAt' ||
+                                cell.id.includes('Date') ||
+                                cell.id.includes('Time')
+                              ) {
+                                return (
+                                  <TableCell key={index}>
+                                    {moment(row[cell.id]).format('LL')}
+                                  </TableCell>
+                                );
+                              }
+                              return (
+                                <TableCell key={index}>{row[cell.id]}</TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      }
+                    )}
+                    {emptyRows > 0 && (
                       <TableRow
-                        hover
-                        onClick={(event) => handleClick(event, row.name)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.name}
-                        selected={isItemSelected}
+                        style={{
+                          height: 50 * emptyRows,
+                        }}
                       >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isItemSelected}
-                            inputProps={{
-                              'aria-labelledby': labelId,
-                            }}
-                          />
-                        </TableCell>
-                        {headCells.map((cell, index) => {
-                          if (
-                            cell.id === 'createdAt' ||
-                            cell.id === 'updatedAt' ||
-                            cell.id.includes('Date') ||
-                            cell.id.includes('Time')
-                          ) {
-                            return (
-                              <TableCell key={index}>
-                                {moment(row[cell.id]).format('LL')}
-                              </TableCell>
-                            );
-                          }
-                          return (
-                            <TableCell key={index}>{row[cell.id]}</TableCell>
-                          );
-                        })}
+                        <TableCell colSpan={headCells.length + 1} />
                       </TableRow>
-                    );
-                  }
+                    )}
+                  </>
                 )}
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: 50 * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={headCells.length + 1} />
-                  </TableRow>
-                )}
-              </>
-            )}
           </TableBody>
         </Table>
       </TableContainer>
-    </Paper>
+    </Paper >
   );
 };
 

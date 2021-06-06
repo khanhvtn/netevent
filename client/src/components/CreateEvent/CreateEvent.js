@@ -20,7 +20,7 @@ import {
 import { getAllFacilities } from '../../actions/facilityActions';
 import { getFacilityHistories } from '../../actions/facilityHistoryActions';
 import { getAllUsers } from '../../actions/userActions';
-import { createEvent } from '../../actions/eventActions';
+import { createEvent, updateEvent } from '../../actions/eventActions';
 import SystemNotification from '../Notification/Notification';
 import DataTable from '../MainTable/DataTable/DataTable';
 import CreateEventTypeDialog from './CreateEventTypeDialog/CreateEventTypeDialog';
@@ -34,6 +34,7 @@ import TaskDialog from './TaskDialog/TaskDialog';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 import CreateEventInputGroup from './CreateEventInputGroup/CreateEventInputGroup';
 import { CreateEventInterface } from '../Context';
+import { convertToRaw, EditorState } from 'draft-js';
 
 let listTag = [];
 const headCellBorrowFacility = [
@@ -151,7 +152,17 @@ const CreateEventProvider = ({ children, ...rest }) => {
   );
 };
 
-const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
+
+const CreateEvent = ({
+  isUpdateMode,
+  updateEventDetail,
+  updateFacilities,
+  updateTasks,
+  startDate,
+  endDate,
+  handleCloseCreateDialog,
+  handleCloseUpdateDialog,
+}) => {
   initialState.startDate = startDate ? startDate : null;
   initialState.endDate = endDate ? endDate : null;
   const css = useStyles();
@@ -163,6 +174,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
     eventTypeIsLoading,
     createEventTypeSuccess,
     createEventSuccess,
+    updateEventSuccess,
     facilities,
     user,
     users,
@@ -177,15 +189,19 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
     eventIsLoading: state.event.isLoading,
     createEventTypeSuccess: state.eventType.createSuccess,
     createEventSuccess: state.event.createSuccess,
+    updateEventSuccess: state.event.updateSuccess,
     facilities: state.facility.facilities,
     facilityHistories: state.facilityHistory.facilityHistories,
   }));
+
   const [state, setState] = useState(initialState);
   //borrow facility table
   const [selectedFacility, setSelectedFacility] = useState([]);
   const [borrowFacilityState, setBorrowFacilityState] = useState(
     initialBorrowFacilityState
   );
+
+  const [defaultValueTags, setDefaultValueTags] = useState(updateEventDetail?.tags || listTag);
 
   //task table
   const [selectedTask, setSelectedTask] = useState([]);
@@ -199,6 +215,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
       setTaskState(initialTaskState);
       setSelectedFacility([]);
       setSelectedTask([]);
+      setDefaultValueTags([]);
       listTag = [];
       fileInput.current.value = '';
       //clear all error
@@ -227,6 +244,14 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
     }));
   }, [dispatch, createEventSuccess, handleClearFields]);
 
+  //useEffect for update event success
+  useEffect(() => {
+    if (updateEventSuccess) {
+      handleClearFields();
+      handleCloseUpdateDialog();
+    }
+  }, [updateEventSuccess, handleClearFields]);
+
   //useEffect get status create event type
   useEffect(() => {
     setState((prevState) => ({
@@ -246,22 +271,68 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
     dispatch(getAllUsers());
     dispatch(getFacilityHistories({ returnFrom: new Date(Date.now()) }));
   }, [dispatch]);
+
+  //useEffect to check update mode and set current state of update
+  useEffect(() => {
+    if (isUpdateMode) {
+      // setup initial update description for RTE
+      const emptyContentState = convertToRaw(EditorState.createEmpty().getCurrentContent())
+      emptyContentState.blocks[0].text = updateEventDetail?.description || ''
+      const rawDescription = JSON.stringify(emptyContentState)
+
+      // setup initial state
+      setState((prevState) => ({
+        ...prevState,
+        ...updateEventDetail,
+        eventTypeTarget: updateEventDetail.eventTypeId.name,
+        description: rawDescription
+      }));
+
+      // setup initial facilities
+      setBorrowFacilityState((prevState) => ({
+        ...prevState,
+        borrowFacilities: updateFacilities.map((facility) => ({
+          _id: facility._id,
+          name: facility.facilityId.name,
+          borrowDate: facility.borrowDate,
+          returnDate: facility.returnDate
+        }))
+      }))
+
+      // setup initial tasks
+      setTaskState((prevState) => ({
+        ...prevState,
+        tasks: updateTasks.map((task) => ({
+          _id: task._id,
+          name: task.name,
+          email: task.userId.email,
+          type: task.type,
+          startTime: task.startDate,
+          endTime: task.endDate,
+        }))
+      }))
+    }
+  }, [])
+
   const handleChange = (e) => {
     setState((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
+
   const handleCreateEventType = () => {
     dispatch(createEventType({ name: state.eventTypeTarget }));
   };
+
   const handleToggleDialogCreateEventType = () => {
     setState((prevState) => ({
       ...prevState,
       openDialogCreateEventType: !prevState.openDialogCreateEventType,
     }));
   };
-  const handleCreateEvent = () => {
+
+  const handleCreateAndUpdateEvent = () => {
     const {
       eventName,
       language,
@@ -277,12 +348,15 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
       image,
       eventTypeTarget,
     } = state;
+
     //generate valid data to send request to the server
     const templateRequest = {
       eventName,
       language,
       eventTypeId: eventTypeTarget
-        ? eventTypes.find((eventType) => eventType.name === eventTypeTarget)._id
+        ? eventTypes.find(
+          (eventType) => eventType.name === eventTypeTarget
+        )._id
         : null,
       mode,
       location,
@@ -291,7 +365,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
       startDate,
       endDate,
       maxParticipants,
-      tags: listTag,
+      tags: defaultValueTags,
       description: description
         ? JSON.parse(description).blocks[0].text
           ? description
@@ -309,7 +383,9 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
           endTime: endDate,
         } = task;
 
-        const { _id: userId } = users.find((user) => user.email === email);
+        const { _id: userId } = users.find(
+          (user) => user.email === email
+        );
         return {
           name,
           userId,
@@ -318,8 +394,8 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
           endDate,
         };
       }),
-      borrowFacilities: borrowFacilityState.borrowFacilities.map(
-        (borrowFacility) => {
+      borrowFacilities: borrowFacilityState.borrowFacilities
+        .map((borrowFacility) => {
           const { borrowDate, returnDate, name } = borrowFacility;
           const targetFacility = facilities.find(
             (facility) => facility.name === name
@@ -329,25 +405,71 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
             borrowDate,
             returnDate,
           };
-        }
-      ),
+        }),
     };
-    dispatch(createEvent(templateRequest));
+
+    if (!isUpdateMode) {
+      dispatch(createEvent(templateRequest));
+    } else {
+      const updateTemplate = {
+        ...templateRequest,
+        _id: updateEventDetail._id,
+        borrowFacilities: [
+          ...borrowFacilityState.borrowFacilities
+            .filter((borrowFacility) => !borrowFacility._id)
+            .map((borrowFacility) => {
+              const { borrowDate, returnDate, name } = borrowFacility;
+              const targetFacility = facilities.find(
+                (facility) => facility.name === name
+              );
+              return {
+                facilityId: targetFacility._id,
+                borrowDate,
+                returnDate,
+              };
+            }),
+          ...borrowFacilityState.borrowFacilities
+            .filter((borrowFacility) => borrowFacility._id)
+        ],
+        tasks: [
+          ...taskState.tasks
+            .filter((task) => !task._id)
+            .map((task) => {
+              const {
+                name,
+                email,
+                type,
+                startTime: startDate,
+                endTime: endDate,
+              } = task;
+              const { _id: userId } = users.find(
+                (user) => user.email === email
+              );
+              return { name, userId, type, startDate, endDate };
+            }),
+          ...taskState.tasks
+            .filter((task) => task._id)
+        ]
+      }
+      console.log(updateTemplate)
+      console.log("Update")
+      dispatch(updateEvent(updateTemplate))
+    }
   };
 
   //handle update listTag
-  const handleUpdateListTag = (newListTag) => {
-    listTag = newListTag;
+  const handleUpdateListTag = (newTagList) => {
+    setDefaultValueTags(newTagList);
   };
 
   /* Borrow Facility */
-
   const handleChangeBorrowFacility = (e) => {
     setBorrowFacilityState((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
+
   const handleToggleDialogCreateAndUpdateBorrowFacility = (event, mode) => {
     let targetEdit;
     if (mode) {
@@ -629,7 +751,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
         handleChange={handleChange}
         handleCreateEventType={handleCreateEventType}
         handleToggleDialogCreateEventType={handleToggleDialogCreateEventType}
-        handleCreateEvent={handleCreateEvent}
+        handleCreateEvent={handleCreateAndUpdateEvent}
         handleUpdateListTag={handleUpdateListTag}
         handleChangeBorrowFacility={handleChangeBorrowFacility}
         handleToggleDialogCreateAndUpdateBorrowFacility={
@@ -666,7 +788,7 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
             <Grid item>
               <Typography style={{ fontWeight: 'bold' }} variant="h3">
                 Event Form
-              </Typography>
+                        </Typography>
             </Grid>
             <Grid
               container
@@ -684,9 +806,8 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
                 style={{
                   width: '100%',
                   height: '500px',
-                  backgroundImage: `url(${
-                    !state.image ? blankPhoto : state.image
-                  })`,
+                  backgroundImage: `url(${!state.image ? blankPhoto : state.image
+                    })`,
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'center',
                   backgroundSize: 'contain',
@@ -736,7 +857,10 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
                   Remove
                 </Button>
               )}
-              <label className={css.btnChangePhoto} htmlFor="change-image">
+              <label
+                className={css.btnChangePhoto}
+                htmlFor="change-image"
+              >
                 {state.image ? (
                   <Button
                     disabled={eventIsLoading}
@@ -749,18 +873,18 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
                     Change Image
                   </Button>
                 ) : (
-                  <Button
-                    disabled={eventIsLoading}
-                    startIcon={<AddAPhoto />}
-                    style={{
-                      backgroundColor: 'transparent',
-                      textTransform: 'none',
-                    }}
-                    component="span"
-                  >
-                    Choose Image
-                  </Button>
-                )}
+                    <Button
+                      disabled={eventIsLoading}
+                      startIcon={<AddAPhoto />}
+                      style={{
+                        backgroundColor: 'transparent',
+                        textTransform: 'none',
+                      }}
+                      component="span"
+                    >
+                      Choose Image
+                    </Button>
+                  )}
               </label>
             </Grid>
 
@@ -784,7 +908,9 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
                 setState={setState}
                 eventTypes={eventTypes}
                 createEventSuccess={createEventSuccess}
+                updateEventSuccess={updateEventSuccess}
                 updateListTag={handleUpdateListTag}
+                defaultValueTags={defaultValueTags}
               />
 
               {/* Tasks Table */}
@@ -799,27 +925,35 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
               >
                 <Paper className={css.paper1} elevation={3}>
                   <DataTable
-                    constrainRangeDate={!!state.startDate && !!state.endDate}
+                    constrainRangeDate={
+                      !!state.startDate && !!state.endDate
+                    }
                     disabled={eventIsLoading}
                     handleToggleDialogCreateAndUpdate={
                       handleToggleDialogCreateAndUpdateTask
                     }
-                    handleToggleDialogDelete={handleToggleDialogDeleteTask}
+                    handleToggleDialogDelete={
+                      handleToggleDialogDeleteTask
+                    }
                     take={1}
                     selected={selectedTask}
                     setSelected={setSelectedTask}
                     data={taskState.tasks}
                     isLoading={taskState.isLoading}
-                    createSuccess={taskState.taskCreatSuccess}
-                    deleteSuccess={taskState.taskDeleteSuccess}
-                    updateSuccess={taskState.taskUpdateSuccess}
+                    createSuccess={taskState.taskCreatSucces}
+                    deleteSuccess={taskState.taskDeleteSucces}
+                    updateSuccess={taskState.taskUpdateSucces}
                     tableName="Task Assign"
                     headCells={headCellsTask}
                   />
                 </Paper>
-                <FormControl error={errors?.taskListId ? true : false}>
+                <FormControl
+                  error={errors?.taskListId ? true : false}
+                >
                   <FormHelperText>
-                    {errors?.taskListId ? errors?.taskListId : ''}
+                    {errors?.taskListId
+                      ? errors?.taskListId
+                      : ''}
                   </FormHelperText>
                 </FormControl>
               </Grid>
@@ -848,22 +982,26 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
                     selected={selectedFacility}
                     setSelected={setSelectedFacility}
                     data={borrowFacilityState.borrowFacilities}
-                    isLoading={borrowFacilityState.borrowFacilityLoading}
+                    isLoading={
+                      borrowFacilityState.borrowFacilityLoading
+                    }
                     createSuccess={
-                      borrowFacilityState.borrowFacilityCreatSuccess
+                      borrowFacilityState.borrowFacilityCreatSucces
                     }
                     deleteSuccess={
-                      borrowFacilityState.borrowFacilityDeleteSuccess
+                      borrowFacilityState.borrowFacilityDeleteSucces
                     }
                     updateSuccess={
-                      borrowFacilityState.borrowFacilityUpdateSuccess
+                      borrowFacilityState.borrowFacilityUpdateSucces
                     }
                     tableName="Borrow Facility"
                     headCells={headCellBorrowFacility}
                   />
                 </Paper>
                 <FormControl
-                  error={errors?.facilityHistoryListId ? true : false}
+                  error={
+                    errors?.facilityHistoryListId ? true : false
+                  }
                 >
                   <FormHelperText>
                     {errors?.facilityHistoryListId
@@ -882,9 +1020,12 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
                 sm={12}
                 xs={12}
               >
-                <Typography style={{ fontWeight: 'bold' }} variant="h6">
+                <Typography
+                  style={{ fontWeight: 'bold' }}
+                  variant="h6"
+                >
                   Event Description
-                </Typography>
+                            </Typography>
               </Grid>
 
               {/* Description */}
@@ -892,16 +1033,29 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
                 <RichTextEditor
                   key={createEventSuccess}
                   disabled={eventIsLoading}
+                  value={state.description}
                   setState={setState}
                 />
                 <FormControl error={errors?.description ? true : false}>
                   <FormHelperText>
-                    {errors?.description ? errors?.description : ''}
+                    {errors?.description
+                      ? errors?.description
+                      : ''}
                   </FormHelperText>
                 </FormControl>
               </Grid>
               {/* Button Control */}
-              <Grid container justify="space-between" alignItems="center" item>
+              <Grid
+                container
+                justify="flex-end"
+                alignItems="center"
+                item
+                md={12}
+                lg={12}
+                xl={12}
+                sm={12}
+                xs={12}
+              >
                 <Grid item>
                   <Button
                     className={css.clearAllButton}
@@ -915,11 +1069,11 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
                   </Button>
                 </Grid>
                 <Grid item>
-                  {handleCloseCreateDialog && (
+                  {handleCloseCreateDialog || handleCloseUpdateDialog && (
                     <Button
                       disabled={eventIsLoading}
                       size="large"
-                      onClick={handleCloseCreateDialog}
+                      onClick={handleCloseCreateDialog || handleCloseUpdateDialog}
                       variant="contained"
                       color="default"
                     >
@@ -934,15 +1088,20 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
                       width: '140px',
                     }}
                     size="large"
-                    onClick={handleCreateEvent}
+                    onClick={handleCreateAndUpdateEvent}
                     variant="contained"
                     color="primary"
                   >
                     {eventIsLoading ? (
-                      <CircularProgress size={26} color="inherit" />
-                    ) : (
-                      'Create Event'
-                    )}
+                      <CircularProgress
+                        size={26}
+                        color="inherit"
+                      />
+                    ) : isUpdateMode
+                        ? 'Update Event'
+                        :
+                        'Create Event'
+                    }
                   </Button>
                 </Grid>
               </Grid>
@@ -952,7 +1111,9 @@ const CreateEvent = ({ startDate, endDate, handleCloseCreateDialog }) => {
         {/* Create Event Type Dialog */}
         <CreateEventTypeDialog
           openDialogCreateEventType={state.openDialogCreateEventType}
-          handleToggleDialogCreateEventType={handleToggleDialogCreateEventType}
+          handleToggleDialogCreateEventType={
+            handleToggleDialogCreateEventType
+          }
           handleChange={handleChange}
           eventTypeTarget={state.eventTypeTarget}
           eventTypeIsLoading={eventTypeIsLoading}
