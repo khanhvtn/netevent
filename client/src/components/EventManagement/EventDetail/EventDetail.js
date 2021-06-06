@@ -30,6 +30,7 @@ import { deleteEventWithTaskAndFacilityHistory, getFacilityAndTaskByEventName } 
 import { Skeleton } from '@material-ui/lab';
 import CreateEvent from '../../CreateEvent/CreateEvent';
 import SystemNotification from '../../Notification/Notification';
+import { convertToRaw, EditorState } from 'draft-js';
 
 const initialState = {
     event: null,
@@ -53,33 +54,6 @@ const EventDetail = () => {
     const [deleteState, setDeleteState] = useState(initialDeleteState)
     const [expanded, setExpanded] = useState(false);
 
-    // Update new state when getting props from event-management page
-    useEffect(() => {
-        // Return the event-management page when there is no props passing
-        if (!history.location.state && !state.event) {
-            history.push('/dashboard/event-management')
-        }
-
-        // Set state for the event
-        setState((prevState) => ({
-            ...prevState,
-            event: {
-                ...history.location.state.event || newUpdateEventDetail,
-                description: JSON.parse(
-                    history.location.state.event.description).blocks[0].text 
-                    || 
-                    JSON.parse(newUpdateEventDetail.description).blocks[0].text,
-            }
-        }));
-    }, [])
-
-    // Get Facility and Task if state event existed
-    useEffect(() => {
-        if (state.event) {
-            dispatch(getFacilityAndTaskByEventName(state.event.eventName))
-        }
-    }, [state.event])
-
     const {
         facilities,
         tasks,
@@ -96,6 +70,36 @@ const EventDetail = () => {
         updateEventSuccess: state.event.updateSuccess
     }));
 
+    // Update new state when getting props from event-management page
+    useEffect(() => {
+        // Return the event-management page when there is no props passing
+        if (!history.location.state && !state.event) {
+            history.push('/dashboard/event-management')
+        }
+
+        console.log("set state")
+        // Set state for the event
+        setState((prevState) => ({
+            ...prevState,
+            event: {
+                ...history.location.state.event || newUpdateEventDetail,
+                description:
+                    JSON.parse(history.location.state.event.description).blocks[0].text
+                    ||
+                    JSON.parse(newUpdateEventDetail.description).blocks[0].text,
+            }
+        }));
+        console.log("finish state")
+    }, [])
+
+
+    // Get Facility and Task if state event existed
+    useEffect(() => {
+        if (state.event) {
+            dispatch(getFacilityAndTaskByEventName(state.event.eventName))
+        }
+    }, [state.event])
+
     // UseEffect for update event success
     useEffect(() => {
         setState((prevState) => ({
@@ -109,7 +113,10 @@ const EventDetail = () => {
         if (updateEventSuccess) {
             setState((prevState) => ({
                 ...prevState,
-                event: newUpdateEventDetail,
+                event: {
+                    ...newUpdateEventDetail,
+                    description: JSON.parse(newUpdateEventDetail.description).blocks[0].text
+                },
                 isUpdated: true
             }));
             history.replace()

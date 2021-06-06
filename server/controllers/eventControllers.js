@@ -408,6 +408,7 @@ const updateEvent = async (req, res, next) => {
             };
         }
 
+
         //validate user request fields.
         await event.validate();
 
@@ -488,7 +489,7 @@ const updateEvent = async (req, res, next) => {
         const updatedEvent = await Event.findOneAndUpdate(
             { _id: _id },
             newUpdateState,
-            { new: true, runValidators: true, context: 'query' }
+            { new: true, context: 'query' }
         ).populate({
             path: 'eventTypeId'
         });

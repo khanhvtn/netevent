@@ -210,13 +210,15 @@ const EventManagement = () => {
                                 </div>
                                 <div className={css.grow} />
                                 <Tooltip title="Filter">
-                                    <IconButton
-                                        disabled={isLoading}
-                                        color="inherit"
-                                        onClick={handleToggleFilter}
-                                    >
-                                        <FilterList />
-                                    </IconButton>
+                                    <div>
+                                        <IconButton
+                                            disabled={isLoading}
+                                            color="inherit"
+                                            onClick={handleToggleFilter}
+                                        >
+                                            <FilterList />
+                                        </IconButton>
+                                    </div>
                                 </Tooltip>
                             </Toolbar>
                         </Grid>
