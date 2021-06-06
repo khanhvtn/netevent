@@ -252,7 +252,7 @@ const Registration = () => {
                                     <TextField label="Email" type="email" variant="outlined" value={participant.email} onChange={(e) => setParticipant({ ...participant, email: e.target.value })} required fullWidth className={css.textField}></TextField>
                                     {error.errors !== null ? error.errors.email && <Typography className={css.errorStyle}>{error.errors.email}</Typography> : <></>}
 
-                                    <TextField label="School" variant="outlined" value={participant.school} onChange={(e) => setParticipant({ ...participant, school: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField label="University" variant="outlined" value={participant.school} onChange={(e) => setParticipant({ ...participant, school: e.target.value })} required fullWidth className={css.textField}></TextField>
                                     {error.errors !== null ? error.errors.school && <Typography className={css.errorStyle}>{error.errors.school}</Typography> : <></>}
 
                                     <FormControl className={css.textField}>
