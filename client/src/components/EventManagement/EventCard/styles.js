@@ -7,7 +7,8 @@ export default makeStyles((theme) => ({
         padding: 16,
     },
     titleCard: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        
     },
     content: {
         paddingLeft: 0,
@@ -32,7 +33,6 @@ export default makeStyles((theme) => ({
         paddingTop: 16,
     },
     getButton: {
-        border: '2px solid',
         fontWeight: 'bold',
     },
     schedule: {
@@ -51,6 +51,6 @@ export default makeStyles((theme) => ({
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
-        maxWidth: 110
+        maxWidth: 120
     }
 }));

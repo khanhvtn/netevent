@@ -263,14 +263,13 @@ const EventDetail = () => {
                   {state.event?.isApproved === null ? (
                     <Chip
                       className={css.chipStatus}
-                      variant="outlined"
+                      style={{ backgroundColor: `rgba(251, 191, 36, 1)` }}
                       size="small"
                       label="Pending"
                     />
                   ) : state.event?.isFinished ? (
                     <Chip
                       className={css.chipStatus}
-                      variant="outlined"
                       size="small"
                       label="Expired"
                       disabled
@@ -278,18 +277,16 @@ const EventDetail = () => {
                   ) : state.event?.isApproved ? (
                     <Chip
                       className={css.chipStatus}
-                      variant="outlined"
+                      style={{ backgroundColor: `rgba(52, 211, 153, 1)` }}
                       size="small"
                       label="On-going"
-                      color="primary"
                     />
                   ) : (
                     <Chip
                       className={css.chipStatus}
-                      variant="outlined"
+                      style={{ backgroundColor: `rgba(248, 113, 113, 1)` }}
                       size="small"
                       label="Rejected"
-                      color="secondary"
                     />
                   )}
                 </Typography>
