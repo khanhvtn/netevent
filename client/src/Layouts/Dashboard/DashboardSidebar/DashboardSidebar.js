@@ -61,12 +61,12 @@ const roleActions = {
         {
             title: 'Calendar',
             icon: CalendarToday,
-            href: '/dashboard/creator-calendar',
+            href: ['/dashboard/creator-calendar'],
         },
         {
             title: 'Send Notification',
             icon: MailIcon,
-            href: '/dashboard/send-notification',
+            href: ['/dashboard/send-notification'],
         },
     ],
     4: [],
