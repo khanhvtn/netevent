@@ -20,13 +20,13 @@ describe('FACILITY REDUCER', () => {
     };
     it('should return default state', () => {
         const action = facilityReducers(undefined, {})
-        expect(action).toEqual(initialState)
+        expect(action).toMatchSnapshot(initialState)
     });
     it('should return FACILITY_LOADING', () => {
         const action = facilityReducers(initialState, {
             type: FACILITY_LOADING
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isLoading: action.payload,
             facilities: [],
             totalPages: null,
@@ -39,7 +39,7 @@ describe('FACILITY REDUCER', () => {
         const action = facilityReducers(initialState, {
             type: FACILITY_CREATE_SUCCESS
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isLoading: false,
             facilities: [],
             totalPages: null,
@@ -52,7 +52,7 @@ describe('FACILITY REDUCER', () => {
         const action = facilityReducers(initialState, {
             type: FACILITY_UPDATE_SUCCESS
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isLoading: false,
             facilities: [],
             totalPages: null,
@@ -65,7 +65,7 @@ describe('FACILITY REDUCER', () => {
         const action = facilityReducers(initialState, {
             type: FACILITY_DELETE_SUCCESS
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isLoading: false,
             facilities: [],
             totalPages: null,

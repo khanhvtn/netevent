@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FACILITY REDUCER should return FACILITY_CREATE_SUCCESS 1`] = `
+Object {
+  "createSuccess": undefined,
+  "deleteSuccess": false,
+  "facilities": Array [],
+  "isLoading": false,
+  "totalPages": null,
+  "updateSuccess": false,
+}
+`;
+
+exports[`FACILITY REDUCER should return FACILITY_DELETE_SUCCESS 1`] = `
+Object {
+  "createSuccess": false,
+  "deleteSuccess": undefined,
+  "facilities": Array [],
+  "isLoading": false,
+  "totalPages": null,
+  "updateSuccess": false,
+}
+`;
+
+exports[`FACILITY REDUCER should return FACILITY_LOADING 1`] = `
+Object {
+  "createSuccess": false,
+  "deleteSuccess": false,
+  "facilities": Array [],
+  "isLoading": undefined,
+  "totalPages": null,
+  "updateSuccess": false,
+}
+`;
+
+exports[`FACILITY REDUCER should return FACILITY_UPDATE_SUCCESS 1`] = `
+Object {
+  "createSuccess": false,
+  "deleteSuccess": false,
+  "facilities": Array [],
+  "isLoading": false,
+  "totalPages": null,
+  "updateSuccess": undefined,
+}
+`;
+
+exports[`FACILITY REDUCER should return default state 1`] = `
+Object {
+  "createSuccess": false,
+  "deleteSuccess": false,
+  "facilities": Array [],
+  "isLoading": false,
+  "totalPages": null,
+  "updateSuccess": false,
+}
+`;

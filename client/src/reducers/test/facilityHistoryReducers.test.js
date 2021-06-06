@@ -17,13 +17,13 @@ describe('FACILITY HISTORY REDUCER', () => {
     };
     it('Should return default state', () => {
         const action = facilityHistoryReducers(undefined, {})
-        expect(action).toEqual(initialState)
+        expect(action).toMatchSnapshot(initialState)
     });
     it('Should return FACILITY_HISTORY_LOADING', () => {
         const action = facilityHistoryReducers(initialState, {
             type: FACILITY_HISTORY_LOADING
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isLoading: action.payload,
             facilityHistories: [],
             totalPages: null,

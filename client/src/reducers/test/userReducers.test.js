@@ -33,13 +33,13 @@ describe('USER REDUCER', () => {
     };
     it('should return default state', () => {
         const action = userReducers(undefined, {})
-        expect(action).toEqual(initialState)
+        expect(action).toMatchSnapshot(initialState)
     });
     it('should return USER_LOGIN', () => {
         const action = userReducers(initialState, {
             type: USER_LOGIN
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isUserChecking: false,
             isLoading: false,
             isConfirm: false,
@@ -56,13 +56,13 @@ describe('USER REDUCER', () => {
         const action = userReducers(initialState, {
             type: USER_LOGOUT
         })
-        expect(action).toEqual(initialState)
+        expect(action).toMatchSnapshot(initialState)
     });
     it('should return USER_LOADING', () => {
         const action = userReducers(initialState, {
             type: USER_LOADING
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isUserChecking: false,
             isLoading: action.payload,
             isConfirm: false,
@@ -79,7 +79,7 @@ describe('USER REDUCER', () => {
         const action = userReducers(initialState, {
             type: USER_PICK_ROLE
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isUserChecking: false,
             isLoading: false,
             isConfirm: false,
@@ -96,7 +96,7 @@ describe('USER REDUCER', () => {
         const action = userReducers(initialState, {
             type: USER_CONFIRM
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isUserChecking: false,
             isLoading: false,
             isConfirm: false,
@@ -113,7 +113,7 @@ describe('USER REDUCER', () => {
         const action = userReducers(initialState, {
             type: USER_IS_CONFIRM
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isUserChecking: false,
             isLoading: false,
             isConfirm: action.payload,
@@ -130,7 +130,7 @@ describe('USER REDUCER', () => {
         const action = userReducers(initialState, {
             type: USER_CHECK
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isUserChecking: false,
             isLoading: false,
             isConfirm: false,
@@ -147,7 +147,7 @@ describe('USER REDUCER', () => {
         const action = userReducers(initialState, {
             type: USER_CHECKING
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isUserChecking: action.payload,
             isLoading: false,
             isConfirm: false,
@@ -164,7 +164,7 @@ describe('USER REDUCER', () => {
         const action = userReducers(initialState, {
             type: FETCH_CURRENT_USER
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isUserChecking: false,
             isLoading: false,
             isConfirm: false,
@@ -181,7 +181,7 @@ describe('USER REDUCER', () => {
         const action = userReducers(initialState, {
             type: USER_CREATE_SUCCESS
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isUserChecking: false,
             isLoading: false,
             isConfirm: false,
@@ -198,7 +198,7 @@ describe('USER REDUCER', () => {
         const action = userReducers(initialState, {
             type: USER_UPDATE_SUCCESS
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isUserChecking: false,
             isLoading: false,
             isConfirm: false,
@@ -215,7 +215,7 @@ describe('USER REDUCER', () => {
         const action = userReducers(initialState, {
             type: USER_DELETE_SUCCESS
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isUserChecking: false,
             isLoading: false,
             isConfirm: false,

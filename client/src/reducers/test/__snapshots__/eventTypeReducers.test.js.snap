@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EVENT TYPE REDUCER Should return EVENT_TYPE_CREATE_SUCCESS 1`] = `
+Object {
+  "createSuccess": undefined,
+  "deleteSuccess": false,
+  "eventTypes": Array [],
+  "isLoading": false,
+  "totalPages": null,
+  "updateSuccess": false,
+}
+`;
+
+exports[`EVENT TYPE REDUCER Should return EVENT_TYPE_DELETE_SUCCESS 1`] = `
+Object {
+  "createSuccess": false,
+  "deleteSuccess": undefined,
+  "eventTypes": Array [],
+  "isLoading": false,
+  "totalPages": null,
+  "updateSuccess": false,
+}
+`;
+
+exports[`EVENT TYPE REDUCER Should return EVENT_TYPE_LOADING 1`] = `
+Object {
+  "createSuccess": false,
+  "deleteSuccess": false,
+  "eventTypes": Array [],
+  "isLoading": undefined,
+  "totalPages": null,
+  "updateSuccess": false,
+}
+`;
+
+exports[`EVENT TYPE REDUCER Should return EVENT_TYPE_UPDATE_SUCCESS 1`] = `
+Object {
+  "createSuccess": false,
+  "deleteSuccess": false,
+  "eventTypes": Array [],
+  "isLoading": false,
+  "totalPages": null,
+  "updateSuccess": undefined,
+}
+`;
+
+exports[`EVENT TYPE REDUCER Should return default state 1`] = `
+Object {
+  "createSuccess": false,
+  "deleteSuccess": false,
+  "eventTypes": Array [],
+  "isLoading": false,
+  "totalPages": null,
+  "updateSuccess": false,
+}
+`;

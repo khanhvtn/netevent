@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LINK REDUCER should return GET_LINKS 1`] = `
+Object {
+  "complete": false,
+  "links": undefined,
+}
+`;
+
+exports[`LINK REDUCER should return GET_LINKS_COMPLETE 1`] = `
+Object {
+  "complete": undefined,
+  "links": Array [],
+}
+`;
+
+exports[`LINK REDUCER should return default state 1`] = `
+Object {
+  "complete": false,
+  "links": Array [],
+}
+`;

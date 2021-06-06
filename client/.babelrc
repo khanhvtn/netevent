@@ -3,5 +3,11 @@
       "@babel/preset-env",
       "@babel/preset-react"
     ],
-    "plugins": ["file-loader"]
+    "plugins": [
+      "file-loader",
+      ["@babel/transform-runtime"]
+      // ["transform-runtime", {
+      //   "regenerator": true
+      // }]
+    ]
   }

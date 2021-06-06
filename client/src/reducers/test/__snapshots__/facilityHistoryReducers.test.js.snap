@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FACILITY HISTORY REDUCER Should return FACILITY_HISTORY_LOADING 1`] = `
+Object {
+  "createSuccess": false,
+  "deleteSuccess": false,
+  "facilityHistories": Array [],
+  "isLoading": undefined,
+  "totalPages": null,
+  "updateSuccess": false,
+}
+`;
+
+exports[`FACILITY HISTORY REDUCER Should return default state 1`] = `
+Object {
+  "createSuccess": false,
+  "deleteSuccess": false,
+  "facilityHistories": Array [],
+  "isLoading": false,
+  "totalPages": null,
+  "updateSuccess": false,
+}
+`;

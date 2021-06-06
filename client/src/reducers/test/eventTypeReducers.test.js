@@ -20,13 +20,13 @@ describe('EVENT TYPE REDUCER', () => {
     };
     it('Should return default state', () => {
         const action = eventTypeReducers(undefined, {})
-        expect(action).toEqual(initialState)
+        expect(action).toMatchSnapshot(initialState)
     })
     it('Should return EVENT_TYPE_LOADING', () => {
         const action = eventTypeReducers(initialState, {
             type: EVENT_TYPE_LOADING
             })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isLoading: action.payload,
             eventTypes: [],
             totalPages: null,
@@ -39,7 +39,7 @@ describe('EVENT TYPE REDUCER', () => {
         const action = eventTypeReducers(initialState, {
             type: EVENT_TYPE_CREATE_SUCCESS
             })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isLoading: false,
             eventTypes: [],
             totalPages: null,
@@ -52,7 +52,7 @@ describe('EVENT TYPE REDUCER', () => {
         const action = eventTypeReducers(initialState, {
             type: EVENT_TYPE_UPDATE_SUCCESS
             })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isLoading: false,
             eventTypes: [],
             totalPages: null,
@@ -65,7 +65,7 @@ describe('EVENT TYPE REDUCER', () => {
         const action = eventTypeReducers(initialState, {
             type: EVENT_TYPE_DELETE_SUCCESS
             })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             isLoading: false,
             eventTypes: [],
             totalPages: null,

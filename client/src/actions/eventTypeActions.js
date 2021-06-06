@@ -28,11 +28,10 @@ export const getAllEventTypes = () => async (dispatch) => {
     setEventTypeIsLoading(true, dispatch);
     try {
         const data = await getAllEventTypesAPI();
-        console.log(data)
-        // dispatch({
-        //     type: EVENT_TYPE_GET_ALL,
-        //     payload: data,
-        // });
+        dispatch({
+            type: EVENT_TYPE_GET_ALL,
+            payload: data,
+        });
     } catch (error) {
         console.log(error);
     }

@@ -1,0 +1,196 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`USER REDUCER should return FETCH_CURRENT_USER 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": false,
+  "isDeleted": false,
+  "isLoading": false,
+  "isUpdated": false,
+  "isUserChecking": false,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": undefined,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return USER_CHECK 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": false,
+  "isDeleted": false,
+  "isLoading": false,
+  "isUpdated": false,
+  "isUserChecking": false,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": undefined,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return USER_CHECKING 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": false,
+  "isDeleted": false,
+  "isLoading": false,
+  "isUpdated": false,
+  "isUserChecking": undefined,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": null,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return USER_CONFIRM 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": false,
+  "isDeleted": false,
+  "isLoading": false,
+  "isUpdated": false,
+  "isUserChecking": false,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": undefined,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return USER_CREATE_SUCCESS 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": undefined,
+  "isDeleted": false,
+  "isLoading": false,
+  "isUpdated": false,
+  "isUserChecking": false,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": null,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return USER_DELETE_SUCCESS 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": false,
+  "isDeleted": undefined,
+  "isLoading": false,
+  "isUpdated": false,
+  "isUserChecking": false,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": null,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return USER_IS_CONFIRM 1`] = `
+Object {
+  "isConfirm": undefined,
+  "isCreated": false,
+  "isDeleted": false,
+  "isLoading": false,
+  "isUpdated": false,
+  "isUserChecking": false,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": null,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return USER_LOADING 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": false,
+  "isDeleted": false,
+  "isLoading": undefined,
+  "isUpdated": false,
+  "isUserChecking": false,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": null,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return USER_LOGIN 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": false,
+  "isDeleted": false,
+  "isLoading": false,
+  "isUpdated": false,
+  "isUserChecking": false,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": undefined,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return USER_LOGOUT 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": false,
+  "isDeleted": false,
+  "isLoading": false,
+  "isUpdated": false,
+  "isUserChecking": false,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": null,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return USER_PICK_ROLE 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": false,
+  "isDeleted": false,
+  "isLoading": false,
+  "isUpdated": false,
+  "isUserChecking": false,
+  "pickedRoleNum": undefined,
+  "totalPages": null,
+  "user": null,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return USER_UPDATE_SUCCESS 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": false,
+  "isDeleted": false,
+  "isLoading": false,
+  "isUpdated": undefined,
+  "isUserChecking": false,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": null,
+  "users": Array [],
+}
+`;
+
+exports[`USER REDUCER should return default state 1`] = `
+Object {
+  "isConfirm": false,
+  "isCreated": false,
+  "isDeleted": false,
+  "isLoading": false,
+  "isUpdated": false,
+  "isUserChecking": false,
+  "pickedRoleNum": null,
+  "totalPages": null,
+  "user": null,
+  "users": Array [],
+}
+`;

@@ -9,13 +9,13 @@ describe('LINK REDUCER', () => {
     }
     it('should return default state', () => {
         const action = linkReducers(undefined, {})
-        expect(action).toEqual(initialState)
+        expect(action).toMatchSnapshot(initialState)
     });
     it('should return GET_LINKS', () => {
         const action = linkReducers(initialState, {
             type: GET_LINKS
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             links: action.payload,
             complete: false
         })
@@ -24,7 +24,7 @@ describe('LINK REDUCER', () => {
         const action = linkReducers(initialState, {
             type: GET_LINK_COMPLETE
         })
-        expect(action).toEqual({
+        expect(action).toMatchSnapshot({
             links: [],
             complete: action.payload,
         })
