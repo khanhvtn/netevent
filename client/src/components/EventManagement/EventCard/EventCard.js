@@ -94,7 +94,7 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                 <Grid xs={2} container alignItems="center" justify="center" item>
                                     {isLoading ? <Skeleton variant="circle" width={30} height={30} /> : <LocationOnOutlinedIcon />}
                                 </Grid>
-                                <Grid xs={10} container direction="column" item>
+                                <Grid xs={10} container direction="column" wrap="nowrap" zeroMinWidth item>
                                     <Typography variant="caption" color="textSecondary">
                                         {isLoading ? <Skeleton variant="text" width="20%" /> : 'Location'}
                                     </Typography>
@@ -107,7 +107,7 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                 <Grid xs={2} container alignItems="center" justify="center" item>
                                     {isLoading ? <Skeleton variant="circle" width={30} height={30} /> : <LocalOfferOutlinedIcon />}
                                 </Grid>
-                                <Grid xs={10} container direction="column" item>
+                                <Grid xs={10} container direction="column" wrap="nowrap" zeroMinWidth item>
                                     <Typography variant="caption" color="textSecondary">
                                         {isLoading ? <Skeleton variant="text" width="20%" /> : 'Tags'}
                                     </Typography>
@@ -144,15 +144,15 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                             {isLoading ? <Skeleton variant="text" width="15%" />
                                 :
                                 event.isApproved === null ?
-                                    <Chip className={css.getButton} label="Pending" variant="outlined" />
+                                    <Chip className={css.getButton} style={{ backgroundColor: `rgba(251, 191, 36, 1)`}} label="Pending" />
                                     :
                                     event.isFinished ?
-                                        <Chip className={css.getButton} label="Expired" variant="outlined" disabled />
+                                        <Chip className={css.getButton} label="Expired" disabled />
                                         :
                                         event.isApproved ?
-                                            <Chip className={css.getButton} label="On-going" variant="outlined" color="primary" />
+                                            <Chip className={css.getButton} style={{ backgroundColor: `rgba(52, 211, 153, 1)` }} label="On-going" />
                                             :
-                                            <Chip className={css.getButton} label="Rejected" variant="outlined" color="secondary" />
+                                            <Chip className={css.getButton} style={{ backgroundColor: `rgba(248, 113, 113, 1)` }} label="Rejected" />
                             }
                         </CardActions>
                     </Card>

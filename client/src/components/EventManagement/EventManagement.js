@@ -198,7 +198,6 @@ const EventManagement = () => {
                                         <SearchIcon />
                                     </div>
                                     <InputBase
-                                        disabled={isLoading}
                                         onChange={handleChange}
                                         className={css.inputInput}
                                         placeholder="Search by event name"
