@@ -108,7 +108,8 @@ export const recoverEventTypesAPI = (userReq) =>
 
 // Event APIs
 export const createEventAPI = (userReq) => AXIOS.post(`/event/create`, userReq);
-
+export const sendNotificationAPI = (notificationReq) => AXIOS.post('/event/sendNotification', notificationReq)
+export const fetchEventsAPI = () => AXIOS.get('/event/all')
 // Facility History APIs
 export const getFacilityHistoriesAPI = (userQueries) => {
   const takeQuery = `take=${userQueries?.take ? userQueries?.take : ''}`;
@@ -147,3 +148,6 @@ export const getAllFacilityHistoriesAPI = () =>
 
 //Event APIs
 export const getAllEventAPI = () => AXIOS.get(`/event/all`);
+
+// Participant API
+export const registerParticipantAPI = (participantData) => AXIOS.post('/participant/registerEvent', participantData)

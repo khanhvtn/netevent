@@ -1,6 +1,6 @@
 const keyMailer = {
-    GOOGLE_USER: 'vouchyvn@gmail.com',
-    GOOGLE_PASSWORD: 'pvzhcflpjxvprqes'
+    GOOGLE_USER: 'neteventcompany@gmail.com',
+    GOOGLE_PASSWORD: 'esdysekdtdzxqnqh'
 }
 
 module.exports = {
