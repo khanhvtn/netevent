@@ -264,7 +264,7 @@ const CreateEvent = ({
       handleClearFields();
       handleCloseUpdateDialog();
     }
-  }, [updateEventSuccess, handleClearFields, handleCloseUpdateDialog]);
+  }, [updateEventSuccess, handleClearFields]);
 
   //useEffect get status create event type
   useEffect(() => {
@@ -313,7 +313,7 @@ const CreateEvent = ({
         ...prevState,
         borrowFacilities: updateFacilities.map((facility) => ({
           _id: facility._id,
-          name: facility.facilityId.name,
+          name: facility.facilityId?.name,
           borrowDate: facility.borrowDate,
           returnDate: facility.returnDate,
         })),
@@ -325,7 +325,7 @@ const CreateEvent = ({
         tasks: updateTasks.map((task) => ({
           _id: task._id,
           name: task.name,
-          email: task.userId.email,
+          email: task.userId?.email,
           type: task.type,
           startTime: task.startDate,
           endTime: task.endDate,

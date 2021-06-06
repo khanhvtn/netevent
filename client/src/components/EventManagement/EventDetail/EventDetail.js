@@ -62,14 +62,20 @@ const EventDetail = () => {
   // Update new state when getting props from event-management page
   useEffect(() => {
     // Return the event-management page when there is no props passing
-    if (!history.location.state && !state.event) {
+    if (!history.location.state && !state?.event) {
       history.push('/dashboard/event-management');
     }
 
     // Set state for the event
     setState((prevState) => ({
       ...prevState,
-      event: history.location.state.event || newUpdateEventDetail,
+      event: {
+        ...(history.location.state?.event || newUpdateEventDetail),
+        description:
+          JSON.parse(history.location.state?.event.description).blocks[0]
+            .text ||
+          JSON.parse(newUpdateEventDetail.description).blocks[0].text,
+      },
     }));
   }, []);
 
@@ -109,7 +115,11 @@ const EventDetail = () => {
     if (updateEventSuccess) {
       setState((prevState) => ({
         ...prevState,
-        event: newUpdateEventDetail,
+        event: {
+          ...newUpdateEventDetail,
+          description: JSON.parse(newUpdateEventDetail.description).blocks[0]
+            .text,
+        },
         isUpdated: true,
       }));
       history.replace();
@@ -144,6 +154,17 @@ const EventDetail = () => {
     });
   };
 
+  // Handle Delete Event
+  const handleDeleteEvent = () => {
+    console.log(deleteState);
+    dispatch(deleteEventWithTaskAndFacilityHistory(deleteState, history));
+  };
+  const contentState = convertFromRaw(
+    JSON.parse(
+      state.event?.description ? state.event?.description : initialDescription
+    )
+  );
+  const editorState = EditorState.createWithContent(contentState);
   const handleToggleDialogDelete = () => {
     setState((prevState) => ({
       ...prevState,
@@ -157,18 +178,6 @@ const EventDetail = () => {
       openUpdateDialog: !prevState.openUpdateDialog,
     }));
   };
-
-  // Handle Delete Event
-  const handleDeleteEvent = () => {
-    console.log(deleteState);
-    dispatch(deleteEventWithTaskAndFacilityHistory(deleteState, history));
-  };
-  const contentState = convertFromRaw(
-    JSON.parse(
-      state.event?.description ? state.event?.description : initialDescription
-    )
-  );
-  const editorState = EditorState.createWithContent(contentState);
 
   return (
     <>
@@ -558,6 +567,63 @@ const EventDetail = () => {
                 <Typography style={{ fontWeight: 'bold' }} variant="h6">
                   Description
                 </Typography>
+                <Typography variant="body2">
+                  {state.event?.description}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            {/* Right-side Detail */}
+            <Grid
+              className={css.detailWrapper}
+              xs={12}
+              sm={12}
+              md={4}
+              container
+              alignItems="flex-start"
+              justify="center"
+              direction="column"
+              item
+            >
+              {/* Date and time */}
+              <Grid item>
+                <Typography style={{ fontWeight: 'bold' }} variant="h6">
+                  Date and time
+                </Typography>
+                <Typography variant="body2">
+                  {moment(state.event?.startDate).format('DD MMM') ===
+                  moment(state.event?.endDate).format('DD MMM')
+                    ? `${moment(state.event?.startDate).format('DD MMM, YYYY')}`
+                    : `${moment(state.event?.startDate).format(
+                        'DD MMM'
+                      )} - ${moment(state.event?.endDate).format('DD MMM')}`}
+                </Typography>
+                <Typography variant="body2">
+                  {`${moment(state.event?.startDate).format('LT')} - ${moment(
+                    state.event?.endDate
+                  ).format('LT')}`}
+                </Typography>
+              </Grid>
+
+              {/* Registration Close Date */}
+              <Grid className={css.mt36} item>
+                <Typography style={{ fontWeight: 'bold' }} variant="h6">
+                  Registration deadline
+                </Typography>
+                <Typography variant="body2">
+                  {`${moment(state.event?.registrationCloseDate).format(
+                    'DD MMM, YYYY'
+                  )}`}
+                </Typography>
+                <Typography variant="body2">
+                  {`${moment(state.event?.registrationCloseDate).format('LT')}`}
+                </Typography>
+              </Grid>
+              {/* Event Description */}
+              <Grid className={css.mt48} item>
+                <Typography style={{ fontWeight: 'bold' }} variant="h6">
+                  Description
+                </Typography>
                 {/* <Typography variant="body2">
                   {state.event?.description}
                 </Typography> */}
@@ -633,7 +699,6 @@ const EventDetail = () => {
           </Grid>
         </Grid>
       </Paper>
-
       {/* Event Delete Dialog */}
       <EventDeleteDialog
         openDeleteDialog={state.openDeleteDialog}

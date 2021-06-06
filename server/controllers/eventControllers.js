@@ -487,10 +487,12 @@ const updateEvent = async (req, res, next) => {
     console.log('deleteHistoryFacilityListIds: ', deleteHistoryFacilityListIds);
 
     // Handle delete tasks
-    // const handleDeleteTasks = await Task.deleteMany({ _id: deleteTaskListIds })
+    const handleDeleteTasks = await Task.deleteMany({ _id: deleteTaskListIds });
 
     // Handle delete facilities
-    // const handleDeleteFacilities = await FacilityHistory.deleteMany({ _id: deleteHistoryFacilityListIds });
+    const handleDeleteFacilities = await FacilityHistory.deleteMany({
+      _id: deleteHistoryFacilityListIds,
+    });
 
     // Add task list id into update
     newUpdateState = {
@@ -506,7 +508,7 @@ const updateEvent = async (req, res, next) => {
     const updatedEvent = await Event.findOneAndUpdate(
       { _id: _id },
       newUpdateState,
-      { new: true, runValidators: true, context: 'query' }
+      { new: true, context: 'query' }
     ).populate({
       path: 'eventTypeId',
     });

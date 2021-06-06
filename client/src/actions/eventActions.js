@@ -233,13 +233,13 @@ export const updateEvent = (userReq) => async (dispatch) => {
         }, 3000);
 
     } catch (error) {
+        console.log(error);
         if (error.response.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors,
             });
         }
-        console.log(error);
     }
     setEventIsLoading(false, dispatch)
 }
