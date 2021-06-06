@@ -63,7 +63,13 @@ const EventDetail = () => {
         // Set state for the event
         setState((prevState) => ({
             ...prevState,
-            event: history.location.state.event || newUpdateEventDetail
+            event: {
+                ...history.location.state.event || newUpdateEventDetail,
+                description: JSON.parse(
+                    history.location.state.event.description).blocks[0].text 
+                    || 
+                    JSON.parse(newUpdateEventDetail.description).blocks[0].text,
+            }
         }));
     }, [])
 
