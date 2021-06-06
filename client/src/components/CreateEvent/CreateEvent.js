@@ -37,6 +37,9 @@ import { CreateEventInterface } from '../Context';
 import { convertToRaw, EditorState } from 'draft-js';
 
 let listTag = [];
+const initialDescription =
+  '{"blocks":[{"key":"4jrep","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}';
+
 const headCellBorrowFacility = [
   {
     id: 'name',
@@ -107,6 +110,7 @@ const initialState = {
   tasks: [],
   tags: [],
   borrowFacilities: [],
+  isResetListTag: false,
   // create event type
   openDialogCreateEventType: false,
   eventTypeTarget: '',
@@ -151,7 +155,6 @@ const CreateEventProvider = ({ children, ...rest }) => {
     </CreateEventInterface.Provider>
   );
 };
-
 
 const CreateEvent = ({
   isUpdateMode,
@@ -201,7 +204,9 @@ const CreateEvent = ({
     initialBorrowFacilityState
   );
 
-  const [defaultValueTags, setDefaultValueTags] = useState(updateEventDetail?.tags || listTag);
+  const [defaultValueTags, setDefaultValueTags] = useState([]);
+  const [defaultDescription, setDefaultDescription] =
+    useState(initialDescription);
 
   //task table
   const [selectedTask, setSelectedTask] = useState([]);
@@ -210,13 +215,20 @@ const CreateEvent = ({
   // handle clear all fields
   const handleClearFields = useCallback(
     (action) => {
-      setState(initialState);
+      setState((prevState) => {
+        return {
+          ...prevState,
+          ...initialState,
+          isResetListTag: !prevState.isResetListTag,
+        };
+      });
       setBorrowFacilityState(initialBorrowFacilityState);
       setTaskState(initialTaskState);
       setSelectedFacility([]);
       setSelectedTask([]);
       setDefaultValueTags([]);
-      listTag = [];
+      setDefaultDescription(initialDescription);
+      handleUpdateListTag([]);
       fileInput.current.value = '';
       //clear all error
       if (action) {
@@ -241,6 +253,7 @@ const CreateEvent = ({
     setState((prevState) => ({
       ...prevState,
       openCreateSnackBar: createEventSuccess,
+      isResetListTag: !prevState.isResetListTag,
     }));
   }, [dispatch, createEventSuccess, handleClearFields]);
 
@@ -250,7 +263,7 @@ const CreateEvent = ({
       handleClearFields();
       handleCloseUpdateDialog();
     }
-  }, [updateEventSuccess, handleClearFields]);
+  }, [updateEventSuccess, handleClearFields, handleCloseUpdateDialog]);
 
   //useEffect get status create event type
   useEffect(() => {
@@ -275,17 +288,25 @@ const CreateEvent = ({
   //useEffect to check update mode and set current state of update
   useEffect(() => {
     if (isUpdateMode) {
+      listTag = updateEventDetail?.tags
+        ? [...listTag, ...updateEventDetail?.tags]
+        : [...listTag];
+      setDefaultValueTags(() => listTag);
+      setDefaultDescription(updateEventDetail?.description);
+
       // setup initial update description for RTE
-      const emptyContentState = convertToRaw(EditorState.createEmpty().getCurrentContent())
-      emptyContentState.blocks[0].text = updateEventDetail?.description || ''
-      const rawDescription = JSON.stringify(emptyContentState)
+      const emptyContentState = convertToRaw(
+        EditorState.createEmpty().getCurrentContent()
+      );
+      emptyContentState.blocks[0].text = updateEventDetail?.description || '';
+      const rawDescription = JSON.stringify(emptyContentState);
 
       // setup initial state
       setState((prevState) => ({
         ...prevState,
         ...updateEventDetail,
         eventTypeTarget: updateEventDetail.eventTypeId.name,
-        description: rawDescription
+        description: updateEventDetail?.description,
       }));
 
       // setup initial facilities
@@ -295,9 +316,9 @@ const CreateEvent = ({
           _id: facility._id,
           name: facility.facilityId.name,
           borrowDate: facility.borrowDate,
-          returnDate: facility.returnDate
-        }))
-      }))
+          returnDate: facility.returnDate,
+        })),
+      }));
 
       // setup initial tasks
       setTaskState((prevState) => ({
@@ -309,10 +330,10 @@ const CreateEvent = ({
           type: task.type,
           startTime: task.startDate,
           endTime: task.endDate,
-        }))
-      }))
+        })),
+      }));
     }
-  }, [])
+  }, [isUpdateMode, updateEventDetail, updateFacilities, updateTasks]);
 
   const handleChange = (e) => {
     setState((prevState) => ({
@@ -354,9 +375,7 @@ const CreateEvent = ({
       eventName,
       language,
       eventTypeId: eventTypeTarget
-        ? eventTypes.find(
-          (eventType) => eventType.name === eventTypeTarget
-        )._id
+        ? eventTypes.find((eventType) => eventType.name === eventTypeTarget)._id
         : null,
       mode,
       location,
@@ -365,7 +384,7 @@ const CreateEvent = ({
       startDate,
       endDate,
       maxParticipants,
-      tags: defaultValueTags,
+      tags: listTag,
       description: description
         ? JSON.parse(description).blocks[0].text
           ? description
@@ -383,9 +402,7 @@ const CreateEvent = ({
           endTime: endDate,
         } = task;
 
-        const { _id: userId } = users.find(
-          (user) => user.email === email
-        );
+        const { _id: userId } = users.find((user) => user.email === email);
         return {
           name,
           userId,
@@ -394,8 +411,8 @@ const CreateEvent = ({
           endDate,
         };
       }),
-      borrowFacilities: borrowFacilityState.borrowFacilities
-        .map((borrowFacility) => {
+      borrowFacilities: borrowFacilityState.borrowFacilities.map(
+        (borrowFacility) => {
           const { borrowDate, returnDate, name } = borrowFacility;
           const targetFacility = facilities.find(
             (facility) => facility.name === name
@@ -405,7 +422,8 @@ const CreateEvent = ({
             borrowDate,
             returnDate,
           };
-        }),
+        }
+      ),
     };
 
     if (!isUpdateMode) {
@@ -428,8 +446,9 @@ const CreateEvent = ({
                 returnDate,
               };
             }),
-          ...borrowFacilityState.borrowFacilities
-            .filter((borrowFacility) => borrowFacility._id)
+          ...borrowFacilityState.borrowFacilities.filter(
+            (borrowFacility) => borrowFacility._id
+          ),
         ],
         tasks: [
           ...taskState.tasks
@@ -447,19 +466,18 @@ const CreateEvent = ({
               );
               return { name, userId, type, startDate, endDate };
             }),
-          ...taskState.tasks
-            .filter((task) => task._id)
-        ]
-      }
-      console.log(updateTemplate)
-      console.log("Update")
-      dispatch(updateEvent(updateTemplate))
+          ...taskState.tasks.filter((task) => task._id),
+        ],
+      };
+      console.log(updateTemplate);
+      console.log('Update');
+      dispatch(updateEvent(updateTemplate));
     }
   };
 
   //handle update listTag
   const handleUpdateListTag = (newTagList) => {
-    setDefaultValueTags(newTagList);
+    listTag = newTagList;
   };
 
   /* Borrow Facility */
@@ -788,7 +806,7 @@ const CreateEvent = ({
             <Grid item>
               <Typography style={{ fontWeight: 'bold' }} variant="h3">
                 Event Form
-                        </Typography>
+              </Typography>
             </Grid>
             <Grid
               container
@@ -806,8 +824,9 @@ const CreateEvent = ({
                 style={{
                   width: '100%',
                   height: '500px',
-                  backgroundImage: `url(${!state.image ? blankPhoto : state.image
-                    })`,
+                  backgroundImage: `url(${
+                    !state.image ? blankPhoto : state.image
+                  })`,
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'center',
                   backgroundSize: 'contain',
@@ -857,10 +876,7 @@ const CreateEvent = ({
                   Remove
                 </Button>
               )}
-              <label
-                className={css.btnChangePhoto}
-                htmlFor="change-image"
-              >
+              <label className={css.btnChangePhoto} htmlFor="change-image">
                 {state.image ? (
                   <Button
                     disabled={eventIsLoading}
@@ -873,18 +889,18 @@ const CreateEvent = ({
                     Change Image
                   </Button>
                 ) : (
-                    <Button
-                      disabled={eventIsLoading}
-                      startIcon={<AddAPhoto />}
-                      style={{
-                        backgroundColor: 'transparent',
-                        textTransform: 'none',
-                      }}
-                      component="span"
-                    >
-                      Choose Image
-                    </Button>
-                  )}
+                  <Button
+                    disabled={eventIsLoading}
+                    startIcon={<AddAPhoto />}
+                    style={{
+                      backgroundColor: 'transparent',
+                      textTransform: 'none',
+                    }}
+                    component="span"
+                  >
+                    Choose Image
+                  </Button>
+                )}
               </label>
             </Grid>
 
@@ -901,6 +917,7 @@ const CreateEvent = ({
             >
               {/* Create Event Input Group */}
               <CreateEventInputGroup
+                isResetListTag={state.isResetListTag}
                 eventIsLoading={eventIsLoading}
                 errors={errors}
                 handleChange={handleChange}
@@ -925,16 +942,12 @@ const CreateEvent = ({
               >
                 <Paper className={css.paper1} elevation={3}>
                   <DataTable
-                    constrainRangeDate={
-                      !!state.startDate && !!state.endDate
-                    }
+                    constrainRangeDate={!!state.startDate && !!state.endDate}
                     disabled={eventIsLoading}
                     handleToggleDialogCreateAndUpdate={
                       handleToggleDialogCreateAndUpdateTask
                     }
-                    handleToggleDialogDelete={
-                      handleToggleDialogDeleteTask
-                    }
+                    handleToggleDialogDelete={handleToggleDialogDeleteTask}
                     take={1}
                     selected={selectedTask}
                     setSelected={setSelectedTask}
@@ -947,13 +960,9 @@ const CreateEvent = ({
                     headCells={headCellsTask}
                   />
                 </Paper>
-                <FormControl
-                  error={errors?.taskListId ? true : false}
-                >
+                <FormControl error={errors?.taskListId ? true : false}>
                   <FormHelperText>
-                    {errors?.taskListId
-                      ? errors?.taskListId
-                      : ''}
+                    {errors?.taskListId ? errors?.taskListId : ''}
                   </FormHelperText>
                 </FormControl>
               </Grid>
@@ -982,9 +991,7 @@ const CreateEvent = ({
                     selected={selectedFacility}
                     setSelected={setSelectedFacility}
                     data={borrowFacilityState.borrowFacilities}
-                    isLoading={
-                      borrowFacilityState.borrowFacilityLoading
-                    }
+                    isLoading={borrowFacilityState.borrowFacilityLoading}
                     createSuccess={
                       borrowFacilityState.borrowFacilityCreatSucces
                     }
@@ -999,9 +1006,7 @@ const CreateEvent = ({
                   />
                 </Paper>
                 <FormControl
-                  error={
-                    errors?.facilityHistoryListId ? true : false
-                  }
+                  error={errors?.facilityHistoryListId ? true : false}
                 >
                   <FormHelperText>
                     {errors?.facilityHistoryListId
@@ -1020,27 +1025,22 @@ const CreateEvent = ({
                 sm={12}
                 xs={12}
               >
-                <Typography
-                  style={{ fontWeight: 'bold' }}
-                  variant="h6"
-                >
+                <Typography style={{ fontWeight: 'bold' }} variant="h6">
                   Event Description
-                            </Typography>
+                </Typography>
               </Grid>
 
               {/* Description */}
               <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
                 <RichTextEditor
-                  key={createEventSuccess}
+                  key={state.isResetListTag}
                   disabled={eventIsLoading}
-                  value={state.description}
+                  value={defaultDescription}
                   setState={setState}
                 />
                 <FormControl error={errors?.description ? true : false}>
                   <FormHelperText>
-                    {errors?.description
-                      ? errors?.description
-                      : ''}
+                    {errors?.description ? errors?.description : ''}
                   </FormHelperText>
                 </FormControl>
               </Grid>
@@ -1069,17 +1069,20 @@ const CreateEvent = ({
                   </Button>
                 </Grid>
                 <Grid item>
-                  {handleCloseCreateDialog || handleCloseUpdateDialog && (
-                    <Button
-                      disabled={eventIsLoading}
-                      size="large"
-                      onClick={handleCloseCreateDialog || handleCloseUpdateDialog}
-                      variant="contained"
-                      color="default"
-                    >
-                      Close
-                    </Button>
-                  )}
+                  {handleCloseCreateDialog ||
+                    (handleCloseUpdateDialog && (
+                      <Button
+                        disabled={eventIsLoading}
+                        size="large"
+                        onClick={
+                          handleCloseCreateDialog || handleCloseUpdateDialog
+                        }
+                        variant="contained"
+                        color="default"
+                      >
+                        Close
+                      </Button>
+                    ))}
                   <Button
                     disabled={eventIsLoading}
                     style={{
@@ -1093,15 +1096,12 @@ const CreateEvent = ({
                     color="primary"
                   >
                     {eventIsLoading ? (
-                      <CircularProgress
-                        size={26}
-                        color="inherit"
-                      />
-                    ) : isUpdateMode
-                        ? 'Update Event'
-                        :
-                        'Create Event'
-                    }
+                      <CircularProgress size={26} color="inherit" />
+                    ) : isUpdateMode ? (
+                      'Update Event'
+                    ) : (
+                      'Create Event'
+                    )}
                   </Button>
                 </Grid>
               </Grid>
@@ -1111,9 +1111,7 @@ const CreateEvent = ({
         {/* Create Event Type Dialog */}
         <CreateEventTypeDialog
           openDialogCreateEventType={state.openDialogCreateEventType}
-          handleToggleDialogCreateEventType={
-            handleToggleDialogCreateEventType
-          }
+          handleToggleDialogCreateEventType={handleToggleDialogCreateEventType}
           handleChange={handleChange}
           eventTypeTarget={state.eventTypeTarget}
           eventTypeIsLoading={eventTypeIsLoading}
