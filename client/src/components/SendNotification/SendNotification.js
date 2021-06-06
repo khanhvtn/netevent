@@ -38,7 +38,6 @@ const SendNotification = () => {
         dispatch(fetchEvents())
         console.log(event.events)
         console.log(error.errors)
-
     }, [dispatch])
 
     useEffect(() => {
@@ -61,20 +60,15 @@ const SendNotification = () => {
         else if (state.title === "") {
             setErrorTitle(true)
             setErrorEvent(false)
-
-
-
         }
 
         else if (descriptionText.blocks[0].text === "") {
             setErrorTitle(false)
             setErrorEvent(false)
             setErrorDescription(true)
-
         }
 
         else {
-
             const data = convertFromRaw(JSON.parse(state.description))
             const html = stateToHTML(data)
             const notificationBody = {
@@ -87,11 +81,7 @@ const SendNotification = () => {
             setErrorTitle(false)
             setErrorEvent(false)
             setErrorDescription(false)
-
         }
-
-
-
     }
 
 
@@ -100,8 +90,8 @@ const SendNotification = () => {
         <Paper className={css.paper} color="inherit">
             <div className={css.contentWrapper} align="center">
                 <CircularProgress color="primary" />
-            </div> </Paper> : (
-
+            </div> </Paper>
+        : (
             event.isSendingNotification === false ?
                 <div className={css.grow}>
                     <Paper className={css.paper} color="inherit">
@@ -119,31 +109,25 @@ const SendNotification = () => {
                                             value={state.eventID}
                                             onChange={(e) => setState({ ...state, eventID: e.target.value })}
                                             label="Select Event"
-
                                         >
                                             <MenuItem value="">
                                                 <em>None</em>
                                             </MenuItem>
                                             {event.events.data.data.map((event) => (
-                                                <MenuItem value={event._id}>{event.eventName}</MenuItem>
-
+                                                <MenuItem value={event._id}>
+                                                    {event.eventName}
+                                                </MenuItem>
                                             ))}
-
-
                                         </Select>
                                         {error.errors !== null && <Typography className={css.errorStyle}>This event does not have any participants</Typography>}
                                         {errorEvent === true && <Typography className={css.errorStyle}>Event must be selected</Typography>}
-
                                     </Grid>
 
                                     <Grid item xs={6} md={6} lg={6} >
                                         <TextField id="filled-basic" label="Title" value={state.title} fullWidth
                                             onChange={(e) => setState({ ...state, title: e.target.value })} />
-
                                         {errorTitle === true && <Typography className={css.errorStyle}>Title must not be empty</Typography>}
-
                                     </Grid>
-
                                 </Grid>
 
                                 <Grid container spacing={2} direction="row" justify="flex-start" className={css.notificationDescription}
@@ -156,7 +140,6 @@ const SendNotification = () => {
                                             disabled={false}
                                             setState={setState} />
                                         {errorDescription === true && <Typography className={css.errorStyle}>Description must not be empty</Typography>}
-
                                     </Grid>
                                 </Grid>
 
@@ -172,80 +155,69 @@ const SendNotification = () => {
                     </Paper>
                     {/* Notification */}
                     <SystemNotification openSendSnackBar={event.sendNotiSuccess} />
-
                 </div>
 
-                : (<div className={css.grow}>
-                    <Paper className={css.paper} color="inherit">
-                        <div className={css.grow}>
-                            <FormControl className={css.formControl} variant="outlined" fullWidth>
-                                <Grid container spacing={2} direction="row"
-                                    justify="flex-start"
-                                    alignItems="flex-start">
-                                    <Grid item xs={6} md={6} lg={6}>
-                                        <InputLabel id="demo-simple-select-outlined-label">Select Event</InputLabel>
-                                        <Select
-                                            fullWidth
-                                            labelId="demo-simple-select-outlined-label"
-                                            id="demo-simple-select-outlined"
-                                            value={state.eventID}
-                                            onChange={(e) => setState({ ...state, eventID: e.target.value })}
-                                            label="Select Event"
-                                            disabled
+                : (
+                    <div className={css.grow}>
+                        <Paper className={css.paper} color="inherit">
+                            <div className={css.grow}>
+                                <FormControl className={css.formControl} variant="outlined" fullWidth>
+                                    <Grid container spacing={2} direction="row"
+                                        justify="flex-start"
+                                        alignItems="flex-start">
+                                        <Grid item xs={6} md={6} lg={6}>
+                                            <InputLabel id="demo-simple-select-outlined-label">Select Event</InputLabel>
+                                            <Select
+                                                fullWidth
+                                                labelId="demo-simple-select-outlined-label"
+                                                id="demo-simple-select-outlined"
+                                                value={state.eventID}
+                                                onChange={(e) => setState({ ...state, eventID: e.target.value })}
+                                                label="Select Event"
+                                                disabled
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                {event.events.data.data.map((event) => (
+                                                    <MenuItem value={event._id}>{event.eventName}</MenuItem>
+                                                ))}
+                                            </Select>
+                                        </Grid>
 
-                                        >
-                                            <MenuItem value="">
-                                                <em>None</em>
-                                            </MenuItem>
-                                            {event.events.data.data.map((event) => (
-                                                <MenuItem value={event._id}>{event.eventName}</MenuItem>
-
-                                            ))}
-
-
-                                        </Select>
+                                        <Grid item xs={6} md={6} lg={6} >
+                                            <TextField id="filled-basic" label="Title" value={state.title} fullWidth
+                                                onChange={(e) => setState({ ...state, title: e.target.value })} disabled />
+                                        </Grid>
                                     </Grid>
 
-                                    <Grid item xs={6} md={6} lg={6} >
-                                        <TextField id="filled-basic" label="Title" value={state.title} fullWidth
-                                            onChange={(e) => setState({ ...state, title: e.target.value })} disabled />
-                                    </Grid>
-
-                                </Grid>
-
-                                <Grid container spacing={2} direction="row" justify="flex-start" className={css.notificationDescription}
-                                    alignItems="flex-start">
-                                    <Grid item xs={12} md={12} lg={12} align="left">
-                                        <Typography align="left">
-                                            Description
+                                    <Grid container spacing={2} direction="row" justify="flex-start" className={css.notificationDescription}
+                                        alignItems="flex-start">
+                                        <Grid item xs={12} md={12} lg={12} align="left">
+                                            <Typography align="left">
+                                                Description
                                         </Typography>
-                                        <RichTextEditor
-                                            key={event.createSuccess}
-                                            disabled={true}
-                                            setState={setState}
-                                        />
+                                            <RichTextEditor
+                                                key={event.createSuccess}
+                                                disabled={true}
+                                                setState={setState}
+                                            />
+                                        </Grid>
                                     </Grid>
-                                </Grid>
 
-                                <Grid container spacing={2} direction="row" justify="start-end" alignItems="start-end" className={css.buttonSend}>
-                                    <Grid item xs={12} md={12} lg={12} align="right">
-                                        <Button disabled variant="contained" color="primary" className={css.buttonSend1} onClick={handleSend}>
-                                            <CircularProgress color="primary" />
-
-                                        </Button>
+                                    <Grid container spacing={2} direction="row" justify="start-end" alignItems="start-end" className={css.buttonSend}>
+                                        <Grid item xs={12} md={12} lg={12} align="right">
+                                            <Button disabled variant="contained" color="primary" className={css.buttonSend1} onClick={handleSend}>
+                                                <CircularProgress color="primary" />
+                                            </Button>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </FormControl>
-                        </div>
-                    </Paper>
-
-                </div>)
-
-
-
+                                </FormControl>
+                            </div>
+                        </Paper>
+                    </div>
+                )
         )
-
-
 }
 
 export default SendNotification;

@@ -4,7 +4,6 @@ export default makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         scrollBehavior: "smooth"
-
     },
     paper: {
         padding: theme.spacing(2),
@@ -16,7 +15,6 @@ export default makeStyles((theme) => ({
     responsive: {
         width: "100%",
         maxHeight: "450px",
-        
     },
 
     circularProgress: {
@@ -40,74 +38,50 @@ export default makeStyles((theme) => ({
             top: "50%",
             left: "33%",
         },
-
     },
-
     paper1: {
         padding: theme.spacing(2),
         textAlign: 'left',
         width: "100%",
         height: "70%",
-
         [theme.breakpoints.only('sm')]: {
-            
+
             width: "100%",
             height: "70%",
-    
-
         },
-
         [theme.breakpoints.only('md')]: {
-            
             width: "80%",
             height: "80%",
-    
-
         },
-    
     },
-
     typo1: {
         color: "#000054",
         fontSize: "20pt",
         [theme.breakpoints.only('sm')]: {
             fontSize: "8pt",
-
         },
-
         [theme.breakpoints.only('md')]: {
             fontSize: "9pt",
-
         },
     },
-
     typo2: {
         marginTop: 20,
         [theme.breakpoints.only('sm')]: {
             fontSize: "6pt",
             marginTop: 0,
-
         },
-
         [theme.breakpoints.only('md')]: {
             fontSize: "9pt",
             marginTop: 0,
-
-
         },
     },
-
     typo3: {
         [theme.breakpoints.only('sm')]: {
             fontSize: "6pt",
-
         },
-
         [theme.breakpoints.only('md')]: {
             fontSize: "8pt",
             marginTop: 0,
-
-
         },
     },
 
@@ -122,35 +96,25 @@ export default makeStyles((theme) => ({
             marginTop: 0,
             top: -20,
             left: 80
-            
-
-
         },
 
         [theme.breakpoints.only('md')]: {
             fontSize: "8pt",
             marginTop: 10,
-
-
         },
     },
-
     icon: {
         position: "relative",
         top: 5
     },
-
     body: {
         padding: theme.spacing(5),
-
     },
-
     eventName: {
         color: "#000054",
         fontSize: "20pt",
         marginBottom: 7
     },
-
     eventDescription: {
         fontSize: "14pt"
     },
@@ -174,39 +138,29 @@ export default makeStyles((theme) => ({
         marginTop: 3,
         fontSize: "14pt"
     },
-
     eventAccommodation: {
         marginTop: 3,
         fontSize: "14pt"
     },
-
     eventActivities: {
         color: "#000054",
         fontSize: "20pt",
         marginTop: 7
-
     },
-
     tableText: {
         fontSize: "14pt"
-
     },
-
     eventTags: {
         color: "#000054",
         fontSize: "20pt",
         marginTop: 7
-
     },
-
     chip: {
         fontSize: "14pt",
         backgroundColor: "#000054",
         color: "#fff",
         margin: theme.spacing(0.5),
-
     },
-
     chipContainer: {
         root: {
             display: 'flex',
@@ -217,17 +171,14 @@ export default makeStyles((theme) => ({
             },
         },
     },
-
     form: {
         color: "#000054",
         fontSize: "20pt",
         marginTop: 7
     },
-
     textField: {
         marginTop: 7
     },
-
     registerButton: {
         marginTop: 20,
         backgroundColor: "red",
@@ -235,13 +186,8 @@ export default makeStyles((theme) => ({
             backgroundColor: '#a2001c',
         }
     },
-
-    errorStyle:{
+    errorStyle: {
         color: "red",
         fontSize: 11
     }
-
-
-
-
 }))

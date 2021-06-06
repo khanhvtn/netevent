@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
  */
 
 
- const getParticipants = async (req, res, next) => {
+const getParticipants = async (req, res, next) => {
     try {
         const participants = await Participant.find();
         return cusResponse(res, 200, participants, null);
@@ -20,8 +20,8 @@ const mongoose = require('mongoose');
     }
 };
 
-const registerEvent = async(req, res, next) => {
-    
+const registerEvent = async (req, res, next) => {
+
     try {
         const data = new Participant(req.body)
         await data.validate()
@@ -65,7 +65,7 @@ const checkValid = async (req, res, next) => {
         } else {
             const update = await Participant.findByIdAndUpdate(
                 updatedInfo._id,
-                { $set: {'isValid': true}},
+                { $set: { 'isValid': true } },
                 { new: true }
             )
             res.json(update);
@@ -85,7 +85,7 @@ const checkAttendance = async (req, res, next) => {
         } else {
             const update = await Participant.findByIdAndUpdate(
                 updatedInfo._id,
-                { $set: {'isAttended': updatedInfo.isAttended}},
+                { $set: { 'isAttended': updatedInfo.isAttended } },
                 { new: true }
             )
             res.json(update);

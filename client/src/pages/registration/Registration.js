@@ -68,7 +68,6 @@ const Registration = () => {
                     existedEvent.push(name.toLowerCase())
                 }
 
-
                 if (!existedEvent.includes(eventName.eventName)) {
                     history.push('/404')
 
@@ -79,21 +78,13 @@ const Registration = () => {
                         setParticipant({ ...participant, event: currentEvent._id })
                     } else {
                         history.push('/404')
-
                     }
-
-
-
-
                 }
             }
             else {
                 history.push('/404')
-
             }
-
         }
-
     }, [eventName])
 
 
@@ -173,15 +164,12 @@ const Registration = () => {
                             <Typography className={css.eventLocation}>
                                 Location: {currentEvent.location}
                             </Typography>
-
                             <Typography className={css.eventRegistrationCloseDate}>
                                 Registration Closed Date: {moment(currentEvent.registrationCloseDate).format("LLLL")}
                             </Typography>
-
                             <Typography className={css.eventAccommodation}>
                                 Accomomodation: {currentEvent.accommodation}
                             </Typography>
-
                             <Typography className={css.eventActivities}>
                                 Activities
                         </Typography>
@@ -233,22 +221,22 @@ const Registration = () => {
                             {participantStore.participant.isLoading === false ?
                                 <FormControl fullWidth ref={myRef}>
                                     <TextField label="Full Name" variant="outlined" value={participant.name} onChange={(e) => setParticipant({ ...participant, name: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    {error.errors !== null ? error.errors.name && <Typography className={css.errorStyle}>{error.errors.name}</Typography>: <></>}
+                                    {error.errors !== null ? error.errors.name && <Typography className={css.errorStyle}>{error.errors.name}</Typography> : <></>}
 
                                     <TextField label="Email" type="email" variant="outlined" value={participant.email} onChange={(e) => setParticipant({ ...participant, email: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    {error.errors !== null ? error.errors.email && <Typography className={css.errorStyle}>{error.errors.email}</Typography>: <></>}
+                                    {error.errors !== null ? error.errors.email && <Typography className={css.errorStyle}>{error.errors.email}</Typography> : <></>}
 
                                     <TextField label="School" variant="outlined" value={participant.school} onChange={(e) => setParticipant({ ...participant, school: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    {error.errors !== null ? error.errors.school && <Typography className={css.errorStyle}>{error.errors.school}</Typography>: <></>}
+                                    {error.errors !== null ? error.errors.school && <Typography className={css.errorStyle}>{error.errors.school}</Typography> : <></>}
 
                                     <TextField label="Academic" variant="outlined" value={participant.academic} onChange={(e) => setParticipant({ ...participant, academic: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    { error.errors !== null ? error.errors.academic && <Typography className={css.errorStyle}>{error.errors.academic}</Typography>: <></>}
+                                    {error.errors !== null ? error.errors.academic && <Typography className={css.errorStyle}>{error.errors.academic}</Typography> : <></>}
 
                                     <TextField label="Major" variant="outlined" value={participant.major} onChange={(e) => setParticipant({ ...participant, major: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    { error.errors !== null ? error.errors.major && <Typography className={css.errorStyle}>{error.errors.major}</Typography>: <></>}
+                                    {error.errors !== null ? error.errors.major && <Typography className={css.errorStyle}>{error.errors.major}</Typography> : <></>}
 
                                     <TextField label="Phone" type="number" variant="outlined" value={participant.phone} onChange={(e) => setParticipant({ ...participant, phone: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    { error.errors !== null ? error.errors.phone && <Typography className={css.errorStyle}>{error.errors.phone}</Typography>: <></>}
+                                    {error.errors !== null ? error.errors.phone && <Typography className={css.errorStyle}>{error.errors.phone}</Typography> : <></>}
 
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                         <KeyboardDatePicker
@@ -264,7 +252,7 @@ const Registration = () => {
                                                 'aria-label': 'change date',
                                             }}
                                         />
-                                        {error.errors !== null ? error.errors.DOB && <Typography className={css.errorStyle}>{error.errors.DOB}</Typography>: <></>}
+                                        {error.errors !== null ? error.errors.DOB && <Typography className={css.errorStyle}>{error.errors.DOB}</Typography> : <></>}
 
 
                                         <KeyboardDatePicker
@@ -280,23 +268,79 @@ const Registration = () => {
                                                 'aria-label': 'change date',
                                             }}
                                         />
-                                        {error.errors !== null ? error.errors.expectedGraduateDate && <Typography className={css.errorStyle}>{error.errors.expectedGraduateDate}</Typography> : <></>}
-
+                                        {error.errors !== null
+                                            ? error.errors.expectedGraduateDate
+                                            &&
+                                            <Typography className={css.errorStyle}>
+                                                {error.errors.expectedGraduateDate}
+                                            </Typography> : <></>
+                                        }
                                     </MuiPickersUtilsProvider>
-
-                                    <Button className={css.registerButton} color="primary" variant="contained" onClick={handleOnRegister}>Register Now</Button>
-
+                                    <Button
+                                        className={css.registerButton}
+                                        color="primary"
+                                        variant="contained"
+                                        onClick={handleOnRegister}>Register Now</Button>
                                 </FormControl>
 
                                 :
 
                                 <FormControl fullWidth ref={myRef}>
-                                    <TextField label="Full Name" variant="outlined" value={participant.name} onChange={(e) => setParticipant({ ...participant, name: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    <TextField label="Email" type="email" variant="outlined" value={participant.email} onChange={(e) => setParticipant({ ...participant, email: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    <TextField label="School" variant="outlined" value={participant.school} onChange={(e) => setParticipant({ ...participant, school: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    <TextField label="Academic" variant="outlined" value={participant.academic} onChange={(e) => setParticipant({ ...participant, academic: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    <TextField label="Major" variant="outlined" value={participant.major} onChange={(e) => setParticipant({ ...participant, major: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    <TextField label="Phone" type="number" variant="outlined" value={participant.phone} onChange={(e) => setParticipant({ ...participant, phone: e.target.value })} required fullWidth className={css.textField}></TextField>
+                                    <TextField
+                                        label="Full Name"
+                                        variant="outlined"
+                                        value={participant.name}
+                                        onChange={(e) => setParticipant({ ...participant, name: e.target.value })}
+                                        required
+                                        fullWidth
+                                        className={css.textField}>
+                                    </TextField>
+                                    <TextField
+                                        label="Email"
+                                        type="email"
+                                        variant="outlined"
+                                        value={participant.email}
+                                        onChange={(e) => setParticipant({ ...participant, email: e.target.value })}
+                                        required
+                                        fullWidth
+                                        className={css.textField}></TextField>
+                                    <TextField
+                                        label="School"
+                                        variant="outlined"
+                                        value={participant.school}
+                                        onChange={(e) => setParticipant({ ...participant, school: e.target.value })}
+                                        required
+                                        fullWidth
+                                        className={css.textField}>
+                                    </TextField>
+                                    <TextField
+                                        label="Academic"
+                                        variant="outlined"
+                                        value={participant.academic}
+                                        onChange={(e) => setParticipant({ ...participant, academic: e.target.value })}
+                                        required
+                                        fullWidth
+                                        className={css.textField}>
+                                    </TextField>
+                                    <TextField
+                                        label="Major"
+                                        variant="outlined"
+                                        value={participant.major}
+                                        onChange={(e) => setParticipant({ ...participant, major: e.target.value })}
+                                        required
+                                        fullWidth
+                                        className={css.textField}>
+                                    </TextField>
+                                    <TextField
+                                        label="Phone"
+                                        type="number"
+                                        variant="outlined"
+                                        value={participant.phone}
+                                        onChange={(e) => setParticipant({ ...participant, phone: e.target.value })}
+                                        required
+                                        fullWidth
+                                        className={css.textField}>
+                                    </TextField>
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                         <KeyboardDatePicker
                                             disableToolbar
@@ -311,7 +355,6 @@ const Registration = () => {
                                                 'aria-label': 'change date',
                                             }}
                                         />
-
                                         <KeyboardDatePicker
                                             disableToolbar
                                             variant="outlined"
@@ -326,19 +369,13 @@ const Registration = () => {
                                             }}
                                         />
                                     </MuiPickersUtilsProvider>
-
                                     <Button className={css.registerButton} color="primary" variant="contained" onClick={handleOnRegister}>
                                         <CircularProgress color="primary" />
                                     </Button>
-
                                 </FormControl>
-
-
                             }
                             <SystemNotification openRegisterParticipantSnackBar={participantStore.participant.complete} />
-
                         </Container>
-
                     </Grid>
                 </Grid>
             </div>
