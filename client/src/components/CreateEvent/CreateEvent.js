@@ -263,7 +263,7 @@ const CreateEvent = ({
       handleClearFields();
       handleCloseUpdateDialog();
     }
-  }, [updateEventSuccess, handleClearFields, handleCloseUpdateDialog]);
+  }, [updateEventSuccess, handleClearFields]);
 
   //useEffect get status create event type
   useEffect(() => {
@@ -288,12 +288,6 @@ const CreateEvent = ({
   //useEffect to check update mode and set current state of update
   useEffect(() => {
     if (isUpdateMode) {
-      listTag = updateEventDetail?.tags
-        ? [...listTag, ...updateEventDetail?.tags]
-        : [...listTag];
-      setDefaultValueTags(() => listTag);
-      setDefaultDescription(updateEventDetail?.description);
-
       // setup initial update description for RTE
       const emptyContentState = convertToRaw(
         EditorState.createEmpty().getCurrentContent()
@@ -301,11 +295,17 @@ const CreateEvent = ({
       emptyContentState.blocks[0].text = updateEventDetail?.description || '';
       const rawDescription = JSON.stringify(emptyContentState);
 
+      listTag = updateEventDetail?.tags
+        ? [...listTag, ...updateEventDetail?.tags]
+        : [...listTag];
+      setDefaultValueTags(() => listTag);
+      setDefaultDescription(rawDescription);
+
       // setup initial state
       setState((prevState) => ({
         ...prevState,
         ...updateEventDetail,
-        eventTypeTarget: updateEventDetail.eventTypeId.name,
+        eventTypeTarget: updateEventDetail?.eventTypeId.name,
         description: updateEventDetail?.description,
       }));
 
@@ -314,7 +314,7 @@ const CreateEvent = ({
         ...prevState,
         borrowFacilities: updateFacilities.map((facility) => ({
           _id: facility._id,
-          name: facility.facilityId.name,
+          name: facility.facilityId?.name,
           borrowDate: facility.borrowDate,
           returnDate: facility.returnDate,
         })),
@@ -326,7 +326,7 @@ const CreateEvent = ({
         tasks: updateTasks.map((task) => ({
           _id: task._id,
           name: task.name,
-          email: task.userId.email,
+          email: task.userId?.email,
           type: task.type,
           startTime: task.startDate,
           endTime: task.endDate,
@@ -824,9 +824,8 @@ const CreateEvent = ({
                 style={{
                   width: '100%',
                   height: '500px',
-                  backgroundImage: `url(${
-                    !state.image ? blankPhoto : state.image
-                  })`,
+                  backgroundImage: `url(${!state.image ? blankPhoto : state.image
+                    })`,
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'center',
                   backgroundSize: 'contain',
@@ -889,18 +888,18 @@ const CreateEvent = ({
                     Change Image
                   </Button>
                 ) : (
-                  <Button
-                    disabled={eventIsLoading}
-                    startIcon={<AddAPhoto />}
-                    style={{
-                      backgroundColor: 'transparent',
-                      textTransform: 'none',
-                    }}
-                    component="span"
-                  >
-                    Choose Image
-                  </Button>
-                )}
+                    <Button
+                      disabled={eventIsLoading}
+                      startIcon={<AddAPhoto />}
+                      style={{
+                        backgroundColor: 'transparent',
+                        textTransform: 'none',
+                      }}
+                      component="span"
+                    >
+                      Choose Image
+                    </Button>
+                  )}
               </label>
             </Grid>
 
@@ -1100,8 +1099,8 @@ const CreateEvent = ({
                     ) : isUpdateMode ? (
                       'Update Event'
                     ) : (
-                      'Create Event'
-                    )}
+                          'Create Event'
+                        )}
                   </Button>
                 </Grid>
               </Grid>
