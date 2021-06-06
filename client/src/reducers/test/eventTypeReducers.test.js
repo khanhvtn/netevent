@@ -1,10 +1,10 @@
 import {
-    EVENT_TYPE_GET_ALL,
+    // EVENT_TYPE_GET_ALL,
     EVENT_TYPE_LOADING,
     EVENT_TYPE_CREATE_SUCCESS,
     EVENT_TYPE_UPDATE_SUCCESS,
     EVENT_TYPE_DELETE_SUCCESS,
-    EVENT_TYPE_GET_ALL_FILTER,
+    // EVENT_TYPE_GET_ALL_FILTER,
 } from '../../constants';
 import eventTypeReducers from '../eventTypeReducers'
 import expect from 'expect'

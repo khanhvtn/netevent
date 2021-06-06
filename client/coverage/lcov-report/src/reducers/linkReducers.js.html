@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/reducers/errorReducers.js</title>
+    <title>Code coverage report for src/reducers/linkReducers.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/reducers</a> errorReducers.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/reducers</a> linkReducers.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -72,9 +72,11 @@
 <a name='L13'></a><a href='#L13'>13</a>
 <a name='L14'></a><a href='#L14'>14</a>
 <a name='L15'></a><a href='#L15'>15</a>
-<a name='L16'></a><a href='#L16'>16</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -87,20 +89,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ERROR, ERROR_CLEAR } from '../constants';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { GET_LINKS, GET_LINK_COMPLETE } from '../constants'
 &nbsp;
 const initialState = {
-    errors: null,
-};
+    links: [],
+    complete: false
+}
 &nbsp;
-export default function errorReducers(state = initialState, action) {
+export default function linkReducers(state = initialState, action) {
     switch (action.type) {
-        case ERROR:
-            return { ...state, errors: [] };
-        case ERROR_CLEAR:
-            return initialState;
+        case GET_LINKS:
+            return { ...state, links: action.payload }
+        case GET_LINK_COMPLETE:
+            return { ...state, complete: action.payload }
         default:
-            return state;
+            return state
     }
 }</pre></td></tr></table></pre>
 
