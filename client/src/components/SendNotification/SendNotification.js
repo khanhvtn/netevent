@@ -101,10 +101,10 @@ const SendNotification = () => {
                                     justify="flex-start"
                                     alignItems="flex-start">
                                     <Grid item xs={6} md={6} lg={6}>
-                                        <InputLabel id="demo-simple-select-outlined-label">Select Event</InputLabel>
+                                        <InputLabel id="demo-simple-select-outlined-label1">Select Event</InputLabel>
                                         <Select
                                             fullWidth
-                                            labelId="demo-simple-select-outlined-label"
+                                            labelId="demo-simple-select-outlined-label1"
                                             id="demo-simple-select-outlined"
                                             value={state.eventID}
                                             onChange={(e) => setState({ ...state, eventID: e.target.value })}

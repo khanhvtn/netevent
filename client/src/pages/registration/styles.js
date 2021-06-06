@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core'
 export default makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        scrollBehavior: "smooth"
+        overflowX: "hidden",
+        overflow: "hidden"
     },
     paper: {
         padding: theme.spacing(2),
@@ -94,8 +95,8 @@ export default makeStyles((theme) => ({
         [theme.breakpoints.only('sm')]: {
             fontSize: "6pt",
             marginTop: 0,
-            top: -20,
-            left: 80
+            top: -30,
+            left: 140
         },
 
         [theme.breakpoints.only('md')]: {
@@ -189,5 +190,11 @@ export default makeStyles((theme) => ({
     errorStyle: {
         color: "red",
         fontSize: 11
+    },
+
+    academicField:{
+        marginLeft: theme.spacing(2),
+        marginTop: -4
+
     }
 }))

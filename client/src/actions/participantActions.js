@@ -39,7 +39,6 @@ export const registerParticipant = (participantData) => async (dispatch) => {
             });
         }, 3000);
 
-        
 
 
     } catch (error) {

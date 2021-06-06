@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import useStyles from './styles'
 import { Paper, Grid, Typography, Container, Button, CircularProgress } from '@material-ui/core'
 import EventIcon from '@material-ui/icons/Event';
@@ -28,6 +28,11 @@ import { convertFromRaw } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
 import parse from 'html-react-parser'
 import SystemNotification from '../../components/Notification/Notification';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import { ERROR, ERROR_CLEAR } from '../../constants';
+
 
 
 const participantInitialState = {
@@ -64,7 +69,7 @@ const Registration = () => {
         if (event.loadComplete) {
             if (event.events.length !== 0) {
                 for (var i = 0; i < event.events.data.data.length; i++) {
-                    const name = event.events.data.data[i].eventName.replace(/\s/g, "");
+                    const name = event.events.data.data[i].eventName.replace(/\s/g, "-");
                     existedEvent.push(name.toLowerCase())
                 }
 
@@ -72,7 +77,7 @@ const Registration = () => {
                     history.push('/404')
 
                 } else {
-                    const filterEvent = event.events.data.data.filter((obj) => obj.eventName.replace(/\s/g, "").toLowerCase() === eventName.eventName);
+                    const filterEvent = event.events.data.data.filter((obj) => obj.eventName.replace(/\s/g, "-").toLowerCase() === eventName.eventName);
                     if (filterEvent[0] !== undefined) {
                         setCurrentEvent(filterEvent[0]);
                         setParticipant({ ...participant, event: currentEvent._id })
@@ -87,6 +92,30 @@ const Registration = () => {
         }
     }, [eventName])
 
+        // handle clear all fields
+  const handleClearField = useCallback(
+    (action) => {
+        setParticipant(participantInitialState)
+
+      //clear all error
+      if (action) {
+        dispatch({
+          type: ERROR_CLEAR,
+          payload: null,
+        });
+      }
+    },
+    [dispatch]
+  );
+
+
+    useEffect(() => {
+        if(participantStore.participant.complete){
+            handleClearField();
+        }
+    },[dispatch, participantStore.participant.complete ,handleClearField])
+
+ 
 
     const handleDateChange = (date) => {
         setDOB(date);
@@ -104,13 +133,10 @@ const Registration = () => {
     const handleOnRegister = (e) => {
         e.preventDefault()
         dispatch(registerParticipant(participant))
-        handleClearField();
-
+       
     }
 
-    const handleClearField = () => {
-        setParticipant(participantInitialState)
-    }
+   
 
     return event.loadComplete === false ?
 
@@ -229,8 +255,34 @@ const Registration = () => {
                                     <TextField label="School" variant="outlined" value={participant.school} onChange={(e) => setParticipant({ ...participant, school: e.target.value })} required fullWidth className={css.textField}></TextField>
                                     {error.errors !== null ? error.errors.school && <Typography className={css.errorStyle}>{error.errors.school}</Typography> : <></>}
 
-                                    <TextField label="Academic" variant="outlined" value={participant.academic} onChange={(e) => setParticipant({ ...participant, academic: e.target.value })} required fullWidth className={css.textField}></TextField>
-                                    {error.errors !== null ? error.errors.academic && <Typography className={css.errorStyle}>{error.errors.academic}</Typography> : <></>}
+                                    <FormControl className={css.textField}>
+                                        <InputLabel id="demo-simple-select-outlined-label1" className={css.academicField}>Academic *</InputLabel>
+                                        <Select
+                                            fullWidth
+                                            labelId="demo-simple-select-outlined-label1"
+                                            id="demo-simple-select-outlined"
+                                            variant="outlined"
+                                            value={participant.academic}
+                                            onChange={participant.academic} onChange={(e) => setParticipant({ ...participant, academic: e.target.value })}
+                                            label="Academic"
+                                        >
+
+                                            <MenuItem value="Bachelor">
+                                                <em>Bachelor</em>
+                                            </MenuItem>
+
+                                            <MenuItem value="Master">
+                                                <em>Master</em>
+                                            </MenuItem>
+
+                                            <MenuItem value="Phd">
+                                                <em>Phd</em>
+                                            </MenuItem>
+
+                                        </Select>
+                                        {error.errors !== null ? error.errors.academic && <Typography className={css.errorStyle}>{error.errors.academic}</Typography> : <></>}
+                                    </FormControl>
+
 
                                     <TextField label="Major" variant="outlined" value={participant.major} onChange={(e) => setParticipant({ ...participant, major: e.target.value })} required fullWidth className={css.textField}></TextField>
                                     {error.errors !== null ? error.errors.major && <Typography className={css.errorStyle}>{error.errors.major}</Typography> : <></>}
@@ -240,7 +292,6 @@ const Registration = () => {
 
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                         <KeyboardDatePicker
-                                            disableToolbar
                                             variant="outlined"
                                             format="MM/dd/yyyy"
                                             margin="normal"
@@ -256,7 +307,6 @@ const Registration = () => {
 
 
                                         <KeyboardDatePicker
-                                            disableToolbar
                                             variant="outlined"
                                             format="MM/dd/yyyy"
                                             margin="normal"
@@ -305,7 +355,7 @@ const Registration = () => {
                                         fullWidth
                                         className={css.textField}></TextField>
                                     <TextField
-                                        label="School"
+                                        label="University"
                                         variant="outlined"
                                         value={participant.school}
                                         onChange={(e) => setParticipant({ ...participant, school: e.target.value })}
@@ -313,15 +363,32 @@ const Registration = () => {
                                         fullWidth
                                         className={css.textField}>
                                     </TextField>
-                                    <TextField
-                                        label="Academic"
-                                        variant="outlined"
-                                        value={participant.academic}
-                                        onChange={(e) => setParticipant({ ...participant, academic: e.target.value })}
-                                        required
-                                        fullWidth
-                                        className={css.textField}>
-                                    </TextField>
+                                    <FormControl className={css.textField}>
+                                        <InputLabel id="demo-simple-select-outlined-label1" className={css.academicField}>Academic *</InputLabel>
+                                        <Select
+                                            fullWidth
+                                            labelId="demo-simple-select-outlined-label1"
+                                            id="demo-simple-select-outlined"
+                                            variant="outlined"
+                                            value={participant.academic}
+                                            onChange={participant.academic} onChange={(e) => setParticipant({ ...participant, academic: e.target.value })}
+                                            label="Academic"
+                                        >
+
+                                            <MenuItem value="Bachelor">
+                                                <em>Bachelor</em>
+                                            </MenuItem>
+
+                                            <MenuItem value="Master">
+                                                <em>Master</em>
+                                            </MenuItem>
+
+                                            <MenuItem value="Phd">
+                                                <em>Phd</em>
+                                            </MenuItem>
+
+                                        </Select>
+                                    </FormControl>
                                     <TextField
                                         label="Major"
                                         variant="outlined"
@@ -334,6 +401,7 @@ const Registration = () => {
                                     <TextField
                                         label="Phone"
                                         type="number"
+
                                         variant="outlined"
                                         value={participant.phone}
                                         onChange={(e) => setParticipant({ ...participant, phone: e.target.value })}
@@ -343,7 +411,6 @@ const Registration = () => {
                                     </TextField>
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                         <KeyboardDatePicker
-                                            disableToolbar
                                             variant="outlined"
                                             format="MM/dd/yyyy"
                                             margin="normal"
@@ -355,8 +422,9 @@ const Registration = () => {
                                                 'aria-label': 'change date',
                                             }}
                                         />
+
+
                                         <KeyboardDatePicker
-                                            disableToolbar
                                             variant="outlined"
                                             format="MM/dd/yyyy"
                                             margin="normal"
