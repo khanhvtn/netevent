@@ -161,7 +161,7 @@ const createEvent = async (req, res, next) => {
  *
  * @version 1.0
  */
-const filter = async (req, res, next) => {
+const filterEventManagement = async (req, res, next) => {
     try {
         let options = {
             search: '',
@@ -528,7 +528,7 @@ const getFacilityAndTaskByEventName = async (req, res, next) => {
 
 module.exports = {
     createEvent,
-    filter,
+    filterEventManagement,
     deleteEvent,
     updateEvent,
     getAllEvent,
