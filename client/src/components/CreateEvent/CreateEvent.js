@@ -1047,7 +1047,7 @@ const CreateEvent = ({
               {/* Button Control */}
               <Grid
                 container
-                justify="flex-end"
+                justify="space-between"
                 alignItems="center"
                 item
                 md={12}
