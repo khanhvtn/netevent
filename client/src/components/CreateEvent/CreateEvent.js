@@ -35,6 +35,7 @@ import RichTextEditor from './RichTextEditor/RichTextEditor';
 import CreateEventInputGroup from './CreateEventInputGroup/CreateEventInputGroup';
 import { CreateEventInterface } from '../Context';
 import { convertToRaw, EditorState } from 'draft-js';
+import moment from 'moment';
 
 let listTag = [];
 const initialDescription =
@@ -294,17 +295,15 @@ const CreateEvent = ({
       setDefaultValueTags(() => listTag);
       setDefaultDescription(updateEventDetail?.description);
 
-      // setup initial update description for RTE
-      const emptyContentState = convertToRaw(
-        EditorState.createEmpty().getCurrentContent()
-      );
-      emptyContentState.blocks[0].text = updateEventDetail?.description || '';
-      const rawDescription = JSON.stringify(emptyContentState);
-
       // setup initial state
       setState((prevState) => ({
         ...prevState,
         ...updateEventDetail,
+        startDate: moment(Date.parse(updateEventDetail.startDate)).toDate(),
+        endDate: moment(Date.parse(updateEventDetail.endDate)).toDate(),
+        registrationCloseDate: moment(
+          Date.parse(updateEventDetail.registrationCloseDate)
+        ).toDate(),
         eventTypeTarget: updateEventDetail.eventTypeId.name,
         description: updateEventDetail?.description,
       }));
@@ -425,7 +424,7 @@ const CreateEvent = ({
         }
       ),
     };
-
+    console.log(templateRequest);
     if (!isUpdateMode) {
       dispatch(createEvent(templateRequest));
     } else {

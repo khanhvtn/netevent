@@ -33,6 +33,9 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import CreateEvent from '../../CreateEvent/CreateEvent';
 import SystemNotification from '../../Notification/Notification';
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
+const initialDescription =
+  '{"blocks":[{"key":"4jrep","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}';
 
 const initialState = {
   event: null,
@@ -160,6 +163,12 @@ const EventDetail = () => {
     console.log(deleteState);
     dispatch(deleteEventWithTaskAndFacilityHistory(deleteState, history));
   };
+  const contentState = convertFromRaw(
+    JSON.parse(
+      state.event?.description ? state.event?.description : initialDescription
+    )
+  );
+  const editorState = EditorState.createWithContent(contentState);
 
   return (
     <>
@@ -549,9 +558,10 @@ const EventDetail = () => {
                 <Typography style={{ fontWeight: 'bold' }} variant="h6">
                   Description
                 </Typography>
-                <Typography variant="body2">
+                {/* <Typography variant="body2">
                   {state.event?.description}
-                </Typography>
+                </Typography> */}
+                <Editor editorState={editorState} readOnly={true} />
               </Grid>
             </Grid>
 
