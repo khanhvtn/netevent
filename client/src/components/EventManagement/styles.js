@@ -45,6 +45,6 @@ export default makeStyles((theme) => ({
         width: '100%',
     },
     gridLayout: {
-        padding: 16
+        padding: 16,
     },
 }));

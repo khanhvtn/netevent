@@ -7,7 +7,8 @@ import {
     CardMedia,
     Divider,
     Chip,
-    CardActionArea
+    CardActionArea,
+    CardActions
 } from '@material-ui/core';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
@@ -48,10 +49,10 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
 
                         {/* Title, budge and maxParticipants */}
                         <CardContent className={css.content}>
-                            <Typography className={css.titleCard} variant="h6">
+                            <Typography className={css.titleCard} variant="h6" noWrap>
                                 {isLoading ? <Skeleton variant="text" /> : event.eventName}
                             </Typography>
-                            <Typography variant="caption" color="textSecondary">
+                            <Typography variant="caption" color="textSecondary" noWrap>
                                 {isLoading ? <Skeleton variant="text" width="50%" />
                                     :
                                     `${event.budget} vnd | ${event.maxParticipants} participants`
@@ -97,7 +98,7 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                     <Typography variant="caption" color="textSecondary">
                                         {isLoading ? <Skeleton variant="text" width="20%" /> : 'Location'}
                                     </Typography>
-                                    <Typography variant="body2" style={{ fontWeight: 'bold' }}>
+                                    <Typography variant="body2" style={{ fontWeight: 'bold' }} noWrap>
                                         {isLoading ? <Skeleton variant="text" /> : event.location}
                                     </Typography>
                                 </Grid>
@@ -115,7 +116,7 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                         <div className={css.chipRoot}>
                                             {event.tags.map((tag, index) => {
                                                 return (
-                                                    <Chip key={index} size="small" label={tag} />
+                                                    <Chip className={css.chipTag} key={index} size="small" label={tag} />
                                                 )
                                             })}
                                         </div>
@@ -138,9 +139,8 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                 </Grid>
                             </Grid>
                         </CardContent>
-
-                        {/* Event Status Display */}
-                        <div className={css.controls}>
+                        <CardActions className={css.controls}>
+                            {/* Event Status Display */}
                             {isLoading ? <Skeleton variant="text" width="15%" />
                                 :
                                 event.isApproved === null ?
@@ -154,7 +154,7 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                             :
                                             <Chip className={css.getButton} label="Rejected" variant="outlined" color="secondary" />
                             }
-                        </div>
+                        </CardActions>
                     </Card>
                 </CardActionArea>
             </Grid>

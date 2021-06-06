@@ -37,7 +37,7 @@ export default makeStyles((theme) => ({
     },
     schedule: {
         marginBottom: 10,
-        marginTop: 10
+        marginTop: 10,
     },
     chipRoot: {
         display: 'flex',
@@ -46,6 +46,11 @@ export default makeStyles((theme) => ({
         '& > *': {
             margin: theme.spacing(0.5),
         },
+    },
+    chipTag: {
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        maxWidth: 110
     }
 }));
-

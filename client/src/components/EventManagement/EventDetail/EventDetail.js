@@ -36,6 +36,7 @@ const initialState = {
     openDeleteDialog: false,
     openUpdateDialog: false,
     openUpdateSnackBar: false,
+    isUpdated: false
 }
 
 const initialDeleteState = {
@@ -76,16 +77,16 @@ const EventDetail = () => {
     const {
         facilities,
         tasks,
+        isDetailLoading,
         isLoading,
-        isUpdated,
         updateEventSuccess,
         newUpdateEventDetail,
     } = useSelector((state) => ({
         newUpdateEventDetail: state.event.eventDetail,
         facilities: state.event.eventDetail?.facilityHistoryListId,
         tasks: state.event.eventDetail?.taskListId,
-        isLoading: state.event.isDetailLoading,
-        isUpdated: state.event.isLoading,
+        isDetailLoading: state.event.isDetailLoading,
+        isLoading: state.event.isLoading,
         updateEventSuccess: state.event.updateSuccess
     }));
 
@@ -103,6 +104,7 @@ const EventDetail = () => {
             setState((prevState) => ({
                 ...prevState,
                 event: newUpdateEventDetail,
+                isUpdated: true
             }));
             history.replace()
         }
@@ -110,14 +112,14 @@ const EventDetail = () => {
 
     // Update Delete State
     useEffect(() => {
-        if (state.event && !isLoading)
+        if (state.event && !isDetailLoading)
             setDeleteState((prevState) => ({
                 ...prevState,
                 eventId: state.event?._id,
                 taskListId: tasks.map((task) => task._id),
                 historyFacilityListId: facilities.map((facility) => facility._id),
             }))
-    }, [isLoading])
+    }, [isDetailLoading])
 
     // Handle expand of accordion
     const handleExpand = (panel) => (event, isExpanded) => {
@@ -130,7 +132,8 @@ const EventDetail = () => {
         history.push({
             pathname: '/dashboard/event-management',
             state: {
-                from: '/dashboard/event-detail'
+                from: '/dashboard/event-detail',
+                isUpdated: state.isUpdated
             }
         })
     }
@@ -172,7 +175,7 @@ const EventDetail = () => {
                                 <div className={css.grow} />
                                 <Tooltip title="Delete">
                                     <Button
-                                        disabled={isLoading || isUpdated}
+                                        disabled={isDetailLoading || isLoading}
                                         color="inherit"
                                         onClick={handleToggleDialogDelete}
                                     >
@@ -181,7 +184,7 @@ const EventDetail = () => {
                                 </Tooltip>
                                 <Tooltip title="Edit">
                                     <Button
-                                        disabled={isLoading || isUpdated}
+                                        disabled={isDetailLoading || isLoading}
                                         color="inherit"
                                         variant="outlined"
                                         style={{ margin: '0 8px' }}
@@ -347,7 +350,7 @@ const EventDetail = () => {
                                     Tasks
                                 </Typography>
                                 <div className={css.expandRoot}>
-                                    {isLoading ?
+                                    {isDetailLoading ?
                                         <>
                                             <Skeleton />
                                             <Skeleton />
@@ -355,11 +358,11 @@ const EventDetail = () => {
                                         :
                                         tasks?.map((task, index) => {
                                             return (
-                                                <Accordion key={index} expanded={expanded === `panel${index}`} onChange={handleExpand(`panel${index}`)}>
+                                                <Accordion key={index} expanded={expanded === `task-panel${index}`} onChange={handleExpand(`task-panel${index}`)}>
                                                     <AccordionSummary
                                                         expandIcon={<ExpandMoreIcon />}
-                                                        aria-controls={`panel${index}bh-content`}
-                                                        id={`panel${index}bh-header`}
+                                                        aria-controls={`task-panel${index}bh-content`}
+                                                        id={`task-panel${index}bh-header`}
                                                     >
                                                         <Typography className={css.heading}>{task.name}</Typography>
                                                         <Typography className={css.secondaryHeading}>{task.userId?.email}</Typography>
@@ -405,7 +408,7 @@ const EventDetail = () => {
                                     Facilities
                                 </Typography>
                                 <div className={css.expandRoot}>
-                                    {isLoading ?
+                                    {isDetailLoading ?
                                         <>
                                             <Skeleton />
                                             <Skeleton />
@@ -413,11 +416,11 @@ const EventDetail = () => {
                                         :
                                         facilities?.map((facility, index) => {
                                             return (
-                                                <Accordion key={index} expanded={expanded === 'panel2'} onChange={handleExpand('panel2')}>
+                                                <Accordion key={index} expanded={expanded === `facility-panel${index}`} onChange={handleExpand(`facility-panel${index}`)}>
                                                     <AccordionSummary
                                                         expandIcon={<ExpandMoreIcon />}
-                                                        aria-controls="panel2bh-content"
-                                                        id="panel2bh-header"
+                                                        aria-controls={`facility-panel${index}bh-content`}
+                                                        id={`facility-panel${index}bh-header`}
                                                     >
                                                         <Typography >{facility.facilityId?.name}</Typography>
                                                     </AccordionSummary>

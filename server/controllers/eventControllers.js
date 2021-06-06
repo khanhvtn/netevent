@@ -433,9 +433,10 @@ const updateEvent = async (req, res, next) => {
         await Promise.all(
             newTaskListResult.map(async (task) => {
                 try {
-                    return await Task.findByIdAndUpdate(task._id, {
+                    return await Task.findByIdAndUpdate(
+                        task._id, {
                         ...task._doc,
-                        eventId: newEvent._id,
+                        eventId: updatedEvent._id,
                     });
                 } catch (error) {
                     throw error;
@@ -447,9 +448,10 @@ const updateEvent = async (req, res, next) => {
         await Promise.all(
             newHistoryFacilityListResult.map(async (facilityHistory) => {
                 try {
-                    return await FacilityHistory.findByIdAndUpdate(facilityHistory._id, {
+                    return await FacilityHistory.findByIdAndUpdate(
+                        facilityHistory._id, {
                         ...facilityHistory._doc,
-                        eventId: newEvent._id,
+                        eventId: updatedEvent._id,
                     });
                 } catch (error) {
                     throw error;

@@ -11,7 +11,11 @@ export default makeStyles((theme) => ({
     },
     chips: {
         display: 'flex',
+        justifyContent: 'flex-start',
         flexWrap: 'wrap',
+        '& > *': {
+            margin: theme.spacing(0.5),
+        },
     },
 
     dialogCreateUpdateUser: {

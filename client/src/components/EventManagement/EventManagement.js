@@ -69,7 +69,7 @@ const EventManagement = () => {
 
     // Request to get the events data
     useEffect(() => {
-        if (!history.location.state) {
+        if (!history.location.state || history.location.state?.isUpdated) {
             dispatch(getEvents(
                 state.search,
                 state.take,
@@ -198,6 +198,7 @@ const EventManagement = () => {
                                         <SearchIcon />
                                     </div>
                                     <InputBase
+                                        disabled={isLoading}
                                         onChange={handleChange}
                                         className={css.inputInput}
                                         placeholder="Search by event name"
@@ -211,6 +212,7 @@ const EventManagement = () => {
                                 <div className={css.grow} />
                                 <Tooltip title="Filter">
                                     <IconButton
+                                        disabled={isLoading}
                                         color="inherit"
                                         onClick={handleToggleFilter}
                                     >
