@@ -35,6 +35,7 @@ import RichTextEditor from './RichTextEditor/RichTextEditor';
 import CreateEventInputGroup from './CreateEventInputGroup/CreateEventInputGroup';
 import { CreateEventInterface } from '../Context';
 import { convertToRaw, EditorState } from 'draft-js';
+import moment from 'moment';
 
 let listTag = [];
 const initialDescription =
@@ -288,24 +289,22 @@ const CreateEvent = ({
   //useEffect to check update mode and set current state of update
   useEffect(() => {
     if (isUpdateMode) {
-      // setup initial update description for RTE
-      const emptyContentState = convertToRaw(
-        EditorState.createEmpty().getCurrentContent()
-      );
-      emptyContentState.blocks[0].text = updateEventDetail?.description || '';
-      const rawDescription = JSON.stringify(emptyContentState);
-
       listTag = updateEventDetail?.tags
         ? [...listTag, ...updateEventDetail?.tags]
         : [...listTag];
       setDefaultValueTags(() => listTag);
-      setDefaultDescription(rawDescription);
+      setDefaultDescription(updateEventDetail?.description);
 
       // setup initial state
       setState((prevState) => ({
         ...prevState,
         ...updateEventDetail,
-        eventTypeTarget: updateEventDetail?.eventTypeId.name,
+        startDate: moment(Date.parse(updateEventDetail.startDate)).toDate(),
+        endDate: moment(Date.parse(updateEventDetail.endDate)).toDate(),
+        registrationCloseDate: moment(
+          Date.parse(updateEventDetail.registrationCloseDate)
+        ).toDate(),
+        eventTypeTarget: updateEventDetail.eventTypeId.name,
         description: updateEventDetail?.description,
       }));
 
@@ -425,7 +424,7 @@ const CreateEvent = ({
         }
       ),
     };
-
+    console.log(templateRequest);
     if (!isUpdateMode) {
       dispatch(createEvent(templateRequest));
     } else {
@@ -824,8 +823,9 @@ const CreateEvent = ({
                 style={{
                   width: '100%',
                   height: '500px',
-                  backgroundImage: `url(${!state.image ? blankPhoto : state.image
-                    })`,
+                  backgroundImage: `url(${
+                    !state.image ? blankPhoto : state.image
+                  })`,
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'center',
                   backgroundSize: 'contain',
@@ -888,18 +888,18 @@ const CreateEvent = ({
                     Change Image
                   </Button>
                 ) : (
-                    <Button
-                      disabled={eventIsLoading}
-                      startIcon={<AddAPhoto />}
-                      style={{
-                        backgroundColor: 'transparent',
-                        textTransform: 'none',
-                      }}
-                      component="span"
-                    >
-                      Choose Image
-                    </Button>
-                  )}
+                  <Button
+                    disabled={eventIsLoading}
+                    startIcon={<AddAPhoto />}
+                    style={{
+                      backgroundColor: 'transparent',
+                      textTransform: 'none',
+                    }}
+                    component="span"
+                  >
+                    Choose Image
+                  </Button>
+                )}
               </label>
             </Grid>
 
@@ -1099,8 +1099,8 @@ const CreateEvent = ({
                     ) : isUpdateMode ? (
                       'Update Event'
                     ) : (
-                          'Create Event'
-                        )}
+                      'Create Event'
+                    )}
                   </Button>
                 </Grid>
               </Grid>
