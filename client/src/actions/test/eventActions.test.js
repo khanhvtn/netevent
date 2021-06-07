@@ -22,20 +22,29 @@ describe('createEvent actions', () => {
     beforeEach(() => {
         store.clearActions()
     })
-
+    
     it('dispatches EVENT_CREATE_SUCCESS after a Successful API requiest', () => {
-        mock.onPost('api/event/create').reply(201, {response: true})
+        mock.onPost('api/event/create').reply(200, {response: true})
         store.dispatch(actions.createEvent()).then(() => {
             let expectedActions = [
+                { type: EVENT_LOADING, payload: status},
                 { type: createEventAPI },
-                { type: EVENT_CREATE_SUCCESS, payload: true },
-                { type: ERROR_CLEAR, payload: null},
-                { type: EVENT_LOADING, payload: status}
+                { type: EVENT_CREATE_SUCCESS, payload: true }
             ]
             expect(store.getActions()).toMatchSnapshot(expectedActions)
         })
     });
-
+    it('dispatches EVENT_CREATE_SUCCESS after a Successful API requiest', () => {
+        mock.onPost('api/event/create').reply(200, {payload: null})
+        store.dispatch(actions.createEvent()).then(() => {
+            let expectedActions = [
+                { type: EVENT_LOADING, payload: status},
+                { type: createEventAPI },
+                { type: ERROR_CLEAR, payload: null},
+            ]
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
+        })
+    });
     it('dispatches ERROR after a failed API request', () => {
         mock.onPost('api/event/create').reply(400, { error: {message: 'error message'}})
         store.dispatch(actions.createEvent()).then(() => {

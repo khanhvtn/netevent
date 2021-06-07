@@ -139,7 +139,18 @@ describe('userConfirm actions', () => {
         store.clearActions()
     })
 
-    
+    it('dispatches USER_CONFIRM after a failed API requests', () => {
+        mock.onPost('api/user/login').reply(200, { response: true })
+        store.dispatch(actions.userConfirm()).then(() => {
+            let expectedActions = [
+                {
+                    type: USER_LOADING,
+                    payload: true
+                }
+            ]
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
+        })
+    });
     it('dispatches USER_CONFIRM after a failed API requests', () => {
         mock.onPost('api/user/login').reply(200, { response: {confirm: 'confirmed'} })
         store.dispatch(actions.userConfirm()).then(() => {
@@ -227,8 +238,19 @@ describe('createUser actions', () => {
         mock.onPost('api/user/create').reply(200, { response: true})
         store.dispatch(actions.createUser()).then(() => {
             let expectedActions = [
+                {type: USER_LOADING},
                 { type: api.createUserAPI },               
-                { type: EVENT_TYPE_CREATE_SUCCESS, payload: true },
+                { type: USER_CREATE_SUCCESS, payload: true }, 
+            ]
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
+        })
+    });
+    it('dispatches USER_CREATE_SUCCESS after a successfull API requests', () => {
+        mock.onPost('api/user/create').reply(200, { response: null})
+        store.dispatch(actions.createUser()).then(() => {
+            let expectedActions = [
+                {type: USER_LOADING},
+                { type: api.createUserAPI },               
                 { type: ERROR_CLEAR, payload: null }   
             ]
             expect(store.getActions()).toMatchSnapshot(expectedActions)
@@ -254,8 +276,19 @@ describe('updateUser actions', () => {
         mock.onPatch('api/user/update').reply(200, { response: true})
         store.dispatch(actions.updateUser()).then(() => {
             let expectedActions = [
+                {type: USER_LOADING},
                 { type: api.updateUserAPI },               
-                { type: EVENT_TYPE_UPDATE_SUCCESS, payload: true },
+                { type: USER_UPDATE_SUCCESS, payload: true }, 
+            ]
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
+        })
+    });
+    it('dispatches USER_UPDATE_SUCCESS after a successfull API requests', () => {
+        mock.onPatch('api/user/update').reply(200, { response: null})
+        store.dispatch(actions.updateUser()).then(() => {
+            let expectedActions = [
+                {type: USER_LOADING},
+                { type: api.updateUserAPI },               
                 { type: ERROR_CLEAR, payload: null }   
             ]
             expect(store.getActions()).toMatchSnapshot(expectedActions)
@@ -281,8 +314,19 @@ describe('deleteUsers actions', () => {
         mock.onDelete('api/user/delete').reply(200, { response: true})
         store.dispatch(actions.deleteUsers()).then(() => {
             let expectedActions = [
+                {type: USER_LOADING},
                 { type: deleteUsersAPI },               
-                { type: EVENT_TYPE_DELETE_SUCCESS, payload: true },
+                { type: USER_DELETE_SUCCESS, payload: true }, 
+            ]
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
+        })
+    });
+    it('dispatches USER_DELETE_SUCCESS after a successfull API requests', () => {
+        mock.onDelete('api/user/delete').reply(200, { response: null})
+        store.dispatch(actions.deleteUsers()).then(() => {
+            let expectedActions = [
+                {type: USER_LOADING},
+                { type: deleteUsersAPI },
                 { type: ERROR_CLEAR, payload: null }   
             ]
             expect(store.getActions()).toMatchSnapshot(expectedActions)

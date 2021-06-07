@@ -37,6 +37,7 @@ describe('getAllEventTypes actions', () => {
         mock.onGet('api/eventType/all').reply(200, { response: [{ item: 'item1'}, {item: 'item2'}] })
         store.dispatch(actions.getAllEventTypes()).then(() => {
             let expectedActions = [
+                { type: EVENT_TYPE_LOADING },
                 { type: getAllEventTypesAPI },
                 {
                     type: EVENT_TYPE_GET_ALL,
@@ -56,6 +57,7 @@ describe('getEventTypes actions', () => {
         mock.onGet('api/eventType/filter').reply(200, { response: [{ item: 'item1'}, {item: 'item2'}] })
         store.dispatch(actions.getEventTypes()).then(() => {
             let expectedActions = [
+                { type: EVENT_TYPE_LOADING },
                 { type: getEventTypesAPI },
                 {
                     type: EVENT_TYPE_GET_ALL_FILTER,
@@ -75,8 +77,19 @@ describe('createEventType actions', () => {
         mock.onPost('api/eventType/create').reply(200, { response: true})
         store.dispatch(actions.createEventType()).then(() => {
             let expectedActions = [
+                { type: EVENT_TYPE_LOADING },
                 { type: createEventTypeAPI },               
-                { type: EVENT_TYPE_CREATE_SUCCESS, payload: true },
+                { type: EVENT_TYPE_CREATE_SUCCESS, payload: true }, 
+            ]
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
+        })
+    });
+    it('dispatches EVENT_TYPE_CREATE_SUCCESS after a successfull API requests', () => {
+        mock.onPost('api/eventType/create').reply(200, { response: null})
+        store.dispatch(actions.createEventType()).then(() => {
+            let expectedActions = [
+                { type: EVENT_TYPE_LOADING },
+                { type: createEventTypeAPI },               
                 { type: ERROR_CLEAR, payload: null }   
             ]
             expect(store.getActions()).toMatchSnapshot(expectedActions)
@@ -102,8 +115,19 @@ describe('updateEventType actions', () => {
         mock.onPatch('api/eventType/update').reply(200, { response: true})
         store.dispatch(actions.updateEventType()).then(() => {
             let expectedActions = [
+                { type: EVENT_TYPE_LOADING },
                 { type: updateEventTypeAPI },               
-                { type: EVENT_TYPE_UPDATE_SUCCESS, payload: true },
+                { type: EVENT_TYPE_UPDATE_SUCCESS, payload: true },   
+            ]
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
+        })
+    });
+    it('dispatches EVENT_TYPE_UPDATE_SUCCESS after a successfull API requests', () => {
+        mock.onPatch('api/eventType/update').reply(200, { response: null})
+        store.dispatch(actions.updateEventType()).then(() => {
+            let expectedActions = [
+                { type: EVENT_TYPE_LOADING },
+                { type: updateEventTypeAPI },               
                 { type: ERROR_CLEAR, payload: null }   
             ]
             expect(store.getActions()).toMatchSnapshot(expectedActions)
@@ -129,8 +153,19 @@ describe('deleteEventTypes actions', () => {
         mock.onDelete('api/eventType/delete').reply(200, { response: true})
         store.dispatch(actions.deleteEventTypes()).then(() => {
             let expectedActions = [
+                { type: EVENT_TYPE_LOADING },
                 { type: deleteEventTypesAPI },               
-                { type: EVENT_TYPE_DELETE_SUCCESS, payload: true },
+                { type: EVENT_TYPE_DELETE_SUCCESS, payload: true }, 
+            ]
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
+        })
+    });
+    it('dispatches EVENT_TYPE_DELETE_SUCCESS after a successfull API requests', () => {
+        mock.onDelete('api/eventType/delete').reply(200, { response: null})
+        store.dispatch(actions.deleteEventTypes()).then(() => {
+            let expectedActions = [
+                { type: EVENT_TYPE_LOADING },
+                { type: deleteEventTypesAPI },               
                 { type: ERROR_CLEAR, payload: null }   
             ]
             expect(store.getActions()).toMatchSnapshot(expectedActions)
