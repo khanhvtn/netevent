@@ -1,23 +1,76 @@
 import { makeStyles } from '@material-ui/core'
 
 export default makeStyles((theme) => ({
+    screen: {
+        position: 'static',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        margin: 0,
+        backgroundColor: '#eeeeee',
+        zIndex: -1
+    },
     root: {
         flexGrow: 1,
         overflowX: "hidden",
-        overflow: "hidden"
+        overflow: "hidden",
+        position: "relative",
+        padding: '2% 16%',
+        zIndex: 1
+    },
+    wrapper: {
+
+    },
+    topDisplay: {
+        minHeight: 345,
+    },
+    background: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
     },
     paper: {
         padding: theme.spacing(2),
         textAlign: 'center',
         color: theme.palette.text.secondary,
-        position: "relative"
+        position: "relative",
+        borderRadius: 8,
+        zIndex: 0
     },
-
+    register: {
+        padding: 24
+    },
     responsive: {
+        position: 'absolute',
         width: "100%",
-        maxHeight: "450px",
+        height: "70vh",
+        WebkitFilter: "blur(20px)",
+        backdropFilter: 'blur(10px) brightness(0.10)',
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        // borderRadius: 8
     },
-
+    image: {
+        width: '100%',
+        height: '0',
+        paddingTop: '56.25%', // 16:9,
+    },
+    detailWrapper: {
+        padding: '48px 24px',
+        [theme.breakpoints.down('md')]: {
+            padding: '48px 24px',
+        },
+        [theme.breakpoints.down('sm')]: {
+            padding: '48px 24px',
+        },
+        [theme.breakpoints.down('xs')]: {
+            padding: 8,
+        },
+    },
     circularProgress: {
         position: "absolute",
         top: "50%",
@@ -56,8 +109,6 @@ export default makeStyles((theme) => ({
         },
     },
     typo1: {
-        color: "#000054",
-        fontSize: "20pt",
         [theme.breakpoints.only('sm')]: {
             fontSize: "8pt",
         },
@@ -87,11 +138,6 @@ export default makeStyles((theme) => ({
     },
 
     typo4: {
-        marginTop: 20,
-        backgroundColor: "red",
-        '&:hover': {
-            backgroundColor: '#a2001c',
-        },
         [theme.breakpoints.only('sm')]: {
             fontSize: "6pt",
             marginTop: 0,
@@ -109,7 +155,7 @@ export default makeStyles((theme) => ({
         top: 5
     },
     body: {
-        padding: theme.spacing(5),
+        padding: 20,
     },
     eventName: {
         color: "#000054",
@@ -156,8 +202,10 @@ export default makeStyles((theme) => ({
         fontSize: "20pt",
         marginTop: 7
     },
+    mt36: {
+        marginTop: 36
+    },
     chip: {
-        fontSize: "14pt",
         backgroundColor: "#000054",
         color: "#fff",
         margin: theme.spacing(0.5),
@@ -192,7 +240,7 @@ export default makeStyles((theme) => ({
         fontSize: 11
     },
 
-    academicField:{
+    academicField: {
         marginLeft: theme.spacing(2),
         marginTop: -4
 
