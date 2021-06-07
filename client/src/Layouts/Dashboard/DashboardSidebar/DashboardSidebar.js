@@ -46,7 +46,7 @@ const roleActions = {
         {
             title: 'Event Management',
             icon: EventAvailableIcon,
-            href: ['/dashboard/event-management', '/dashboard/event-detail']
+            href: ['/dashboard/event-management']
         },
         {
             title: 'Create Event',

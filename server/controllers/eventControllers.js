@@ -564,7 +564,7 @@ const updateEvent = async (req, res, next) => {
 const getAllEvent = async (req, res, next) => {
   try {
     const events = await Event.find({})
-      .populate([{ path: 'taskListId facilityHistoryListId' }])
+      .select('-taskListId -facilityHistoryListId')
       .populate({
         path: 'eventTypeId ownerId',
       });

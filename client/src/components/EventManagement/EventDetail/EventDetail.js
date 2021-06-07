@@ -40,6 +40,7 @@ const initialDescription =
 
 const initialState = {
     event: null,
+    previousPath: null,
     openDeleteDialog: false,
     openUpdateDialog: false,
     openUpdateSnackBar: false,
@@ -62,9 +63,9 @@ const EventDetail = () => {
 
     // Update new state when getting props from event-management page
     useEffect(() => {
-        // Return the event-management page when there is no props passing
+        // Return the previous page when there is no props passing
         if (!history.location.state && !state?.event) {
-            history.push('/dashboard/event-management');
+            history.goBack();
         }
 
         // Set state for the event
@@ -74,6 +75,7 @@ const EventDetail = () => {
                 ...(history.location.state?.event || newUpdateEventDetail),
                 description: history.location.state?.event.description || newUpdateEventDetail.description,
             },
+            previousPath: history.location.state?.from
         }));
     }, []);
 
@@ -136,21 +138,34 @@ const EventDetail = () => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    // Return to event-management page with the current path
+    console.log(state)
+
+    // Return to previous page with status
     const handleOnClickReturn = () => {
         setState(initialState);
-        history.push({
-            pathname: '/dashboard/event-management',
-            state: {
-                from: '/dashboard/event-detail',
-                isUpdated: state.isUpdated,
-            },
-        });
+
+        switch (state.previousPath) {
+            case '/dashboard/creator-calendar':
+                return history.push({
+                    pathname: `${state.previousPath}`,
+                    state: {
+                        isUpdated: state.isUpdated,
+                    },
+                });
+            case '/dashboard/event-management':
+                return history.push({
+                    pathname: `${state.previousPath}`,
+                    state: {
+                        isUpdated: state.isUpdated,
+                    },
+                });
+            default:
+                return history.goBack();
+        }
     };
 
     // Handle Delete Event
     const handleDeleteEvent = () => {
-        console.log(deleteState);
         dispatch(deleteEventWithTaskAndFacilityHistory(deleteState, history));
     };
 
@@ -188,7 +203,7 @@ const EventDetail = () => {
                                 </IconButton>
                                 <Typography className={css.toolbarEventDetail} variant="h6">
                                     Event Management
-                </Typography>
+                                </Typography>
                                 <div className={css.grow} />
                                 <Tooltip title="Delete">
                                     <Button
@@ -197,7 +212,7 @@ const EventDetail = () => {
                                         onClick={handleToggleDialogDelete}
                                     >
                                         Delete
-                  </Button>
+                                    </Button>
                                 </Tooltip>
                                 <Tooltip title="Edit">
                                     <Button
@@ -208,7 +223,7 @@ const EventDetail = () => {
                                         onClick={handleToggleDialogUpdate}
                                     >
                                         Update
-                  </Button>
+                                    </Button>
                                 </Tooltip>
                             </Toolbar>
                         </Grid>
@@ -221,7 +236,7 @@ const EventDetail = () => {
                     <Grid item>
                         <Typography className={css.eventDetailTitle} variant="h3">
                             Event Detail
-            </Typography>
+                        </Typography>
                     </Grid>
 
                     {/* Event Image */}
@@ -330,7 +345,7 @@ const EventDetail = () => {
                                     <Grid xs={5} container direction="column" item>
                                         <Typography variant="caption" color="textSecondary">
                                             Category (type)
-                    </Typography>
+                                        </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
                                             {state.event?.eventTypeId.name}
                                         </Typography>
@@ -347,7 +362,7 @@ const EventDetail = () => {
                                     <Grid xs={5} container direction="column" item>
                                         <Typography variant="caption" color="textSecondary">
                                             Language
-                    </Typography>
+                                        </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
                                             {state.event?.language}
                                         </Typography>
@@ -373,7 +388,7 @@ const EventDetail = () => {
                                     <Grid xs={5} container direction="column" item>
                                         <Typography variant="caption" color="textSecondary">
                                             Mode
-                    </Typography>
+                                        </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
                                             {state.event?.mode}
                                         </Typography>
@@ -390,7 +405,7 @@ const EventDetail = () => {
                                     <Grid xs={5} container direction="column" item>
                                         <Typography variant="caption" color="textSecondary">
                                             Accomodation
-                    </Typography>
+                                        </Typography>
                                         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
                                             {state.event?.accommodation}
                                         </Typography>
@@ -402,7 +417,7 @@ const EventDetail = () => {
                             <Grid className={css.mt48} container item>
                                 <Typography style={{ fontWeight: 'bold' }} variant="h6">
                                     Tasks
-                </Typography>
+                                </Typography>
                                 <div className={css.expandRoot}>
                                     {isDetailLoading ? (
                                         <>
@@ -444,7 +459,7 @@ const EventDetail = () => {
                                                                         style={{ fontWeight: 'bold' }}
                                                                     >
                                                                         Type
-                                </Typography>
+                                                                    </Typography>
                                                                     <Typography variant="body2">
                                                                         {task.type}
                                                                     </Typography>
@@ -456,7 +471,7 @@ const EventDetail = () => {
                                                                         style={{ fontWeight: 'bold' }}
                                                                     >
                                                                         From
-                                </Typography>
+                                                                    </Typography>
                                                                     <Typography variant="body2">
                                                                         {`${moment(task.startDate).format('LT')}`}
                                                                     </Typography>
@@ -468,7 +483,7 @@ const EventDetail = () => {
                                                                         style={{ fontWeight: 'bold' }}
                                                                     >
                                                                         To
-                                </Typography>
+                                                                    </Typography>
                                                                     <Typography variant="body2">
                                                                         {`${moment(task.endDate).format('LT')}`}
                                                                     </Typography>

@@ -180,6 +180,7 @@ const EventManagement = () => {
         history.push({
             pathname: '/dashboard/event-detail',
             state: {
+                from: '/dashboard/event-management',
                 event: event
             }
         })
