@@ -1,10 +1,10 @@
 import { GET_LINKS, GET_LINK_COMPLETE } from '../constants'
-import * as api from '../api';
+import {getLinksAPI} from '../api';
 
 
 export const getLinks = () => async (dispatch) => {
     try {
-        const { data } = await api.getLinks();
+        const { data } = await getLinksAPI();
         dispatch({ type: GET_LINKS, payload: data })
         dispatch({ type: GET_LINK_COMPLETE, payload: true })
 

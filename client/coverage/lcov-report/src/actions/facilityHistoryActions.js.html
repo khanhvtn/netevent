@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/reducers/facilityReducers.js</title>
+    <title>Code coverage report for src/actions/facilityHistoryActions.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/reducers</a> facilityReducers.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/actions</a> facilityHistoryActions.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.78% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/9</span>
+                <span class='fraction'>12/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/8</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.78% </span>
+                <span class="strong">62.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/9</span>
+                <span class='fraction'>10/16</span>
             </div>
         
             
@@ -98,8 +98,7 @@
 <a name='L39'></a><a href='#L39'>39</a>
 <a name='L40'></a><a href='#L40'>40</a>
 <a name='L41'></a><a href='#L41'>41</a>
-<a name='L42'></a><a href='#L42'>42</a>
-<a name='L43'></a><a href='#L43'>43</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L42'></a><a href='#L42'>42</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -109,17 +108,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,63 +124,63 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
-    FACILITY_GET_ALL,
-    FACILITY_LOADING,
-    FACILITY_CREATE_SUCCESS,
-    FACILITY_UPDATE_SUCCESS,
-    FACILITY_DELETE_SUCCESS,
-    FACILITY_GET_ALL_FILTER,
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getAllFacilityHistoriesAPI, getFacilityHistoriesAPI } from '../api';
+&nbsp;
+import {
+    FACILITY_HISTORY_GET_ALL,
+    FACILITY_HISTORY_LOADING,
+    FACILITY_HISTORY_GET_ALL_FILTER,
 } from '../constants';
 &nbsp;
-const initialState = {
-    isLoading: false,
-    facilities: [],
-    totalPages: null,
-    createSuccess: false,
-    updateSuccess: false,
-    deleteSuccess: false,
+//setIsLoading func is to set loading status
+const setFacilityHistoryIsLoading = (status, dispatch) =&gt; {
+    dispatch({
+        type: FACILITY_HISTORY_LOADING,
+        payload: status,
+    });
 };
-&nbsp;
-export default function facilityReducers(state = initialState, action) {
-    switch (action.type) {
-<span class="branch-0 cbranch-no" title="branch not covered" >        case FACILITY_GET_ALL:</span>
-<span class="cstat-no" title="statement not covered" >            return {</span>
-                ...state,
-                facilities: action.payload.data.data,
-            };
-<span class="branch-1 cbranch-no" title="branch not covered" >        case FACILITY_GET_ALL_FILTER:</span>
-<span class="cstat-no" title="statement not covered" >            return {</span>
-                ...state,
-                facilities: action.payload.data.data,
-                totalPages: action.payload.data.totalPages,
-            };
-        case FACILITY_LOADING:
-            return { ...state, isLoading: action.payload };
-        case FACILITY_CREATE_SUCCESS:
-            return { ...state, createSuccess: action.payload };
-        case FACILITY_UPDATE_SUCCESS:
-            return { ...state, updateSuccess: action.payload };
-        case FACILITY_DELETE_SUCCESS:
-            return { ...state, deleteSuccess: action.payload };
-        default:
-            return state;
+export const getAllFacilityHistories = () =&gt; async (dispatch) =&gt; {
+    setFacilityHistoryIsLoading(true, dispatch);
+    try {
+        const data = await getAllFacilityHistoriesAPI();
+<span class="cstat-no" title="statement not covered" >        dispatch({</span>
+            type: FACILITY_HISTORY_GET_ALL,
+            payload: data,
+        });
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >        console.log(error);</span>
     }
-}</pre></td></tr></table></pre>
+<span class="cstat-no" title="statement not covered" >    setFacilityHistoryIsLoading(false, dispatch);</span>
+};
+export const getFacilityHistories = (userQueries) =&gt; async (dispatch) =&gt; {
+    setFacilityHistoryIsLoading(true, dispatch);
+    try {
+        const data = await getFacilityHistoriesAPI(userQueries);
+<span class="cstat-no" title="statement not covered" >        dispatch({</span>
+            type: FACILITY_HISTORY_GET_ALL_FILTER,
+            payload: data,
+        });
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >        console.log(error);</span>
+    }
+<span class="cstat-no" title="statement not covered" >    setFacilityHistoryIsLoading(false, dispatch);</span>
+};
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->

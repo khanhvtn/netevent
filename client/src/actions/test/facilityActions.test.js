@@ -4,21 +4,21 @@ import axios from 'axios';
 import beforeEach  from 'jest-wrap'
 import MockAdapter from 'axios-mock-adapter';		
 import {
-    EVENT_TYPE_GET_ALL,
-    EVENT_TYPE_LOADING,
-    EVENT_TYPE_UPDATE_SUCCESS,
-    EVENT_TYPE_CREATE_SUCCESS,
+    FACILITY_GET_ALL,
+    FACILITY_LOADING,
+    FACILITY_UPDATE_SUCCESS,
+    FACILITY_CREATE_SUCCESS,
     ERROR,
     ERROR_CLEAR,
-    EVENT_TYPE_DELETE_SUCCESS,
-    EVENT_TYPE_GET_ALL_FILTER,
+    FACILITY_DELETE_SUCCESS,
+    FACILITY_GET_ALL_FILTER,
 } from '../../constants';
 import {
-    getEventTypesAPI,
-    createEventTypeAPI,
-    updateEventTypeAPI,
-    deleteEventTypesAPI,
-    getAllEventTypesAPI,
+    getFacilitiesAPI,
+    createFacilityAPI,
+    updateFacilityAPI,
+    deleteFacilitiesAPI,
+    getAllFacilitiesAPI,
 } from '../../api/index';
 import * as actions from '../facilityActions'
 import expect from 'expect'
@@ -41,9 +41,10 @@ describe('getAllFacilities actions', () => {
                 {
                     type: FACILITY_GET_ALL,
                     payload: [{ item: 'item1'}, {item: 'item2'}]
-                }
+                },
+                { type: EVENT_LOADING, payload: status}
             ]
-            expect(store.getActions()).toEqual(expectedActions)
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
         })
     });
 });
@@ -62,7 +63,7 @@ describe('getFacilities actions', () => {
                     payload: [{ item: 'item1'}, {item: 'item2'}]
                 }
             ]
-            expect(store.getActions()).toEqual(expectedActions)
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
         })
     });
 });
@@ -79,7 +80,7 @@ describe('createFacility actions', () => {
                 { type: FACILITY_CREATE_SUCCESS, payload: true },
                 { type: ERROR_CLEAR, payload: null }   
             ]
-            expect(store.getActions()).toEqual(expectedActions)
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
         })
     });
     it('dispatches ERROR after a failed API requests', () => {
@@ -89,7 +90,7 @@ describe('createFacility actions', () => {
                 { type: createFacilityAPI },               
                 { type: ERROR, payload: {error: {message: 'error message'}} }  
             ]
-            expect(store.getActions()).toEqual(expectedActions)
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
         })
     });
 });
@@ -106,7 +107,7 @@ describe('updateFacility actions', () => {
                 { type: FACILITY_UPDATE_SUCCESS, payload: true },
                 { type: ERROR_CLEAR, payload: null }   
             ]
-            expect(store.getActions()).toEqual(expectedActions)
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
         })
     });
     it('dispatches ERROR after a failed API requests', () => {
@@ -116,7 +117,7 @@ describe('updateFacility actions', () => {
                 { type: updateFacilityAPI },               
                 { type: ERROR, payload: {error: {message: 'error message'}} }  
             ]
-            expect(store.getActions()).toEqual(expectedActions)
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
         })
     });
 });
@@ -133,7 +134,7 @@ describe('deleteFacility actions', () => {
                 { type: FACILITY_DELETE_SUCCESS, payload: true },
                 { type: ERROR_CLEAR, payload: null }   
             ]
-            expect(store.getActions()).toEqual(expectedActions)
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
         })
     });
     it('dispatches ERROR after a failed API requests', () => {
@@ -143,7 +144,7 @@ describe('deleteFacility actions', () => {
                 { type: deleteFacilitiesAPI },               
                 { type: ERROR, payload: {error: {message: 'error message'}} }  
             ]
-            expect(store.getActions()).toEqual(expectedActions)
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
         })
     });
 });

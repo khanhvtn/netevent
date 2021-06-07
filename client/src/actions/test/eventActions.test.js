@@ -32,7 +32,7 @@ describe('createEvent actions', () => {
                 { type: ERROR_CLEAR, payload: null},
                 { type: EVENT_LOADING, payload: status}
             ]
-            expect(store.getActions()).toEqual(expectedActions)
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
         })
     });
 
@@ -43,7 +43,7 @@ describe('createEvent actions', () => {
                 { type: createEventAPI },
                 {type: ERROR, payload: { error: { message: 'error message'}}}
             ]
-            expect(store.getActions()).toEqual(expectedActions)
+            expect(store.getActions()).toMatchSnapshot(expectedActions)
         })
     });
 })

@@ -38,7 +38,7 @@ export const getUsersAPI = (
 // Link API
 export const confirmUser = (id, password) =>
     AXIOS.patch(`/link/confirm/${id}`, { password: password });
-export const getLinks = () => AXIOS.get('/link');
+export const getLinksAPI = () => AXIOS.get('/link');
 
 //Facility APIs
 export const getFacilitiesAPI = (
