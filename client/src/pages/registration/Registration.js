@@ -58,6 +58,7 @@ const Registration = () => {
 
     const myRef = useRef(null)
     const history = useHistory();
+    const dispatch = useDispatch();
 
     // UseParams to get pathname
     const pathname = useParams();
@@ -73,7 +74,6 @@ const Registration = () => {
         registerSuccess: state.participant.complete
     }))
 
-    const dispatch = useDispatch();
 
     // Call API to get current event by name
     useEffect(() => {
@@ -82,6 +82,7 @@ const Registration = () => {
         }
     }, [dispatch, currentEvent])
 
+    // UseEffect to set state of the event, delete in redux store after finish
     useEffect(() => {
         if (eventDetail) {
             setCurrentEvent((prevState) => ({
@@ -105,6 +106,7 @@ const Registration = () => {
         })
     }, [eventDetail])
 
+    // Check if page is valid by event name
     useEffect(() => {
         if (currentEvent.isLoaded && !currentEvent?.eventName) {
             history.push('/404')
@@ -112,11 +114,7 @@ const Registration = () => {
     }, [currentEvent])
 
 
-    const contentState = convertFromRaw(
-        JSON.parse(
-            currentEvent?.description ? currentEvent?.description : initialDescription
-        )
-    );
+    const contentState = convertFromRaw(JSON.parse(currentEvent?.description ? currentEvent?.description : initialDescription));
     const editorState = EditorState.createWithContent(contentState);
 
 
@@ -144,14 +142,16 @@ const Registration = () => {
         }));
     }
 
-
+    // Handle success register
     useEffect(() => {
         if (registerSuccess) {
             handleClearField();
         }
     }, [dispatch, registerSuccess, handleClearField])
 
+    // On scroll register button
     const executeScroll = () => myRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
+
 
     const handleOnRegister = (e) => {
         e.preventDefault()
