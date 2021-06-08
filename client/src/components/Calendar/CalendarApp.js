@@ -11,11 +11,13 @@ import { Skeleton } from '@material-ui/lab';
 //import useStyles in the last
 import useStyles from './styles';
 import CalendarEvent from './CalendarEvent/CalendarEvent';
+import { useHistory } from 'react-router-dom';
 
 const CalendarApp = () => {
     const css = useStyles();
     const [state, setState] = useState({ open: false, start: null, end: null });
     const dispatch = useDispatch();
+    const history = useHistory();
     const { events, eventIsLoading, createEventSuccess } = useSelector(
         (state) => ({
             events: state.event.events,
@@ -25,7 +27,10 @@ const CalendarApp = () => {
     );
     const localizer = momentLocalizer(moment);
     useEffect(() => {
-        dispatch(getAllEvent());
+        if (!history.location.state || history.location.state?.isUpdated) {
+            dispatch(getAllEvent());
+        }
+        history.replace();
     }, [dispatch]);
 
     //useEffect for create event success
@@ -48,8 +53,20 @@ const CalendarApp = () => {
     });
 
     const handleSelectEvent = (event) => {
-        alert(`Go to event id : ${event.resource._id}`);
+        history.push({
+            pathname: '/dashboard/event-detail',
+            state: {
+                from: '/dashboard/creator-calendar',
+                event: { 
+                    ...event.resource,
+                    eventName: event.title,
+                    endDate: event.end,
+                    startDate: event.start
+                }
+            }
+        })
     };
+
     const handlePickEventTime = ({ start, end }) => {
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
@@ -64,10 +81,12 @@ const CalendarApp = () => {
             open: !prevState.open,
         }));
     };
+
     //handle toggle create form
     const handleClose = () => {
         setState((prevState) => ({ ...prevState, open: !prevState.open }));
     };
+    
     return (
         <Paper
             elevation={3}

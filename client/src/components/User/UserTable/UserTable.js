@@ -401,7 +401,7 @@ const UserTable = ({
                                                 role="checkbox"
                                                 aria-checked={isItemSelected}
                                                 tabIndex={-1}
-                                                key={row.email}
+                                                key={row._id}
                                                 selected={isItemSelected}
                                             >
                                                 <TableCell padding="checkbox">

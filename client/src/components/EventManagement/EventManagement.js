@@ -180,6 +180,7 @@ const EventManagement = () => {
         history.push({
             pathname: '/dashboard/event-detail',
             state: {
+                from: '/dashboard/event-management',
                 event: event
             }
         })
@@ -198,7 +199,6 @@ const EventManagement = () => {
                                         <SearchIcon />
                                     </div>
                                     <InputBase
-                                        disabled={isLoading}
                                         onChange={handleChange}
                                         className={css.inputInput}
                                         placeholder="Search by event name"
@@ -211,13 +211,15 @@ const EventManagement = () => {
                                 </div>
                                 <div className={css.grow} />
                                 <Tooltip title="Filter">
-                                    <IconButton
-                                        disabled={isLoading}
-                                        color="inherit"
-                                        onClick={handleToggleFilter}
-                                    >
-                                        <FilterList />
-                                    </IconButton>
+                                    <div>
+                                        <IconButton
+                                            disabled={isLoading}
+                                            color="inherit"
+                                            onClick={handleToggleFilter}
+                                        >
+                                            <FilterList />
+                                        </IconButton>
+                                    </div>
                                 </Tooltip>
                             </Toolbar>
                         </Grid>

@@ -10,8 +10,9 @@ const NavItem = ({ href, icon: Icon, title, ...rest }) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const css = useStyles();
-    const active = href.includes(location.pathname) ? true : false;
-
+    const active = href.includes(location.pathname)
+        ? true
+        : href[0] === history.location.state?.from;
 
     const handleAction = () => {
         if (href === 'logout') {
