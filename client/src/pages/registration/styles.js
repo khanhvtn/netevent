@@ -16,14 +16,27 @@ export default makeStyles((theme) => ({
         overflowX: "hidden",
         overflow: "hidden",
         position: "relative",
-        padding: '2% 16%',
         zIndex: 1
     },
     wrapper: {
+        minWidth: 945,
+        margin: '2% 16%',
+        [theme.breakpoints.down('md')]: {
+            margin: '2% 8%',
+            minWidth: 0
+        },
+        [theme.breakpoints.down('sm')]: {
+            margin: 0,
+            minWidth: 0
+        },
 
     },
     topDisplay: {
         minHeight: 345,
+        height: 345,
+        [theme.breakpoints.down('sm')]: {
+            height: 'auto',
+        },
     },
     background: {
         position: 'absolute',
@@ -41,7 +54,17 @@ export default makeStyles((theme) => ({
         zIndex: 0
     },
     register: {
-        padding: 24
+        padding: 24,
+    },
+    registerBottom: {
+        [theme.breakpoints.down('md')]: {
+            marginTop: 8,
+        },
+    },
+    registerBottomButton: {
+        [theme.breakpoints.down('md')]: {
+            marginTop: 48,
+        },
     },
     responsive: {
         position: 'absolute',
@@ -52,12 +75,17 @@ export default makeStyles((theme) => ({
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-        // borderRadius: 8
     },
     image: {
-        width: '100%',
-        height: '0',
-        paddingTop: '56.25%', // 16:9,
+        width: "100%",
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        [theme.breakpoints.down('xs')]: {
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'bottom',
+            backgroundSize: 'contain',
+        },
     },
     detailWrapper: {
         padding: '48px 24px',
@@ -66,6 +94,18 @@ export default makeStyles((theme) => ({
         },
         [theme.breakpoints.down('sm')]: {
             padding: '48px 24px',
+        },
+        [theme.breakpoints.down('xs')]: {
+            padding: 8,
+        },
+    },
+    detailDescriptionWrapper: {
+        padding: '48px 96px',
+        [theme.breakpoints.down('md')]: {
+            padding: '48px 24px',
+        },
+        [theme.breakpoints.down('sm')]: {
+            padding: '24px',
         },
         [theme.breakpoints.down('xs')]: {
             padding: 8,
@@ -93,69 +133,26 @@ export default makeStyles((theme) => ({
             left: "33%",
         },
     },
-    paper1: {
-        padding: theme.spacing(2),
-        textAlign: 'left',
-        width: "100%",
-        height: "70%",
-        [theme.breakpoints.only('sm')]: {
-
-            width: "100%",
-            height: "70%",
+    bodyActivity: {
+        padding: '40px 20px',
+        [theme.breakpoints.down('md')]: {
+            padding: '40px 10px'
         },
-        [theme.breakpoints.only('md')]: {
-            width: "80%",
-            height: "80%",
+        [theme.breakpoints.down('sm')]: {
+            padding: '40px 0'
+        },
+        [theme.breakpoints.down('xs')]: {
+            padding: '10px 0'
         },
     },
-    typo1: {
-        [theme.breakpoints.only('sm')]: {
-            fontSize: "8pt",
+    bodyRegistrationForm: {
+        padding: '40px 160px',
+        [theme.breakpoints.down('sm')]: {
+            padding: '40px 80px'
         },
-        [theme.breakpoints.only('md')]: {
-            fontSize: "9pt",
+        [theme.breakpoints.down('xs')]: {
+            padding: '10px 0'
         },
-    },
-    typo2: {
-        marginTop: 20,
-        [theme.breakpoints.only('sm')]: {
-            fontSize: "6pt",
-            marginTop: 0,
-        },
-        [theme.breakpoints.only('md')]: {
-            fontSize: "9pt",
-            marginTop: 0,
-        },
-    },
-    typo3: {
-        [theme.breakpoints.only('sm')]: {
-            fontSize: "6pt",
-        },
-        [theme.breakpoints.only('md')]: {
-            fontSize: "8pt",
-            marginTop: 0,
-        },
-    },
-
-    typo4: {
-        [theme.breakpoints.only('sm')]: {
-            fontSize: "6pt",
-            marginTop: 0,
-            top: -30,
-            left: 140
-        },
-
-        [theme.breakpoints.only('md')]: {
-            fontSize: "8pt",
-            marginTop: 10,
-        },
-    },
-    icon: {
-        position: "relative",
-        top: 5
-    },
-    body: {
-        padding: 20,
     },
     eventName: {
         color: "#000054",
@@ -163,8 +160,9 @@ export default makeStyles((theme) => ({
         marginBottom: 7
     },
     eventDescription: {
-        fontSize: "14pt"
+
     },
+
     eventType: {
         marginTop: 3,
         fontSize: "14pt"
@@ -205,6 +203,9 @@ export default makeStyles((theme) => ({
     mt36: {
         marginTop: 36
     },
+    mtb36: {
+        margin: 36
+    },
     chip: {
         backgroundColor: "#000054",
         color: "#fff",
@@ -230,6 +231,12 @@ export default makeStyles((theme) => ({
     },
     registerButton: {
         marginTop: 20,
+        backgroundColor: "red",
+        '&:hover': {
+            backgroundColor: '#a2001c',
+        }
+    },
+    registerButtonTop: {
         backgroundColor: "red",
         '&:hover': {
             backgroundColor: '#a2001c',

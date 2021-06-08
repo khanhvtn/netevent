@@ -24,9 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getFacilityAndTaskByEventName } from '../../actions/eventActions';
 import { registerParticipant } from '../../actions/participantActions';
 import { useParams, useHistory } from 'react-router';
-import { convertFromRaw } from 'draft-js';
-import { stateToHTML } from 'draft-js-export-html';
-import parse from 'html-react-parser'
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import SystemNotification from '../../components/Notification/Notification';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -34,7 +32,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { ERROR, ERROR_CLEAR, EVENT_GET_FACILITY_AND_TASK, } from '../../constants';
 
 const participantInitialState = {
-    event: '',
+    event: null,
     email: '',
     name: '',
     academic: '',
@@ -48,6 +46,10 @@ const participantInitialState = {
 const eventInitialState = {
     isLoaded: false,
 }
+
+const initialDescription =
+    '{"blocks":[{"key":"4jrep","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}';
+
 
 const Registration = () => {
     const css = useStyles();
@@ -63,13 +65,13 @@ const Registration = () => {
 
 
 
-    const { isLoading, eventDetail, error } = useSelector((state) => ({
+    const { isLoading, eventDetail, error, isRegistered, registerSuccess } = useSelector((state) => ({
         isLoading: state.event.isDetailLoading,
         eventDetail: state.event.eventDetail,
-        error: state.error
+        error: state.error,
+        isRegistered: state.participant.isLoading,
+        registerSuccess: state.participant.complete
     }))
-
-    const participantStore = useSelector((state) => state)
 
     const dispatch = useDispatch();
 
@@ -110,32 +112,13 @@ const Registration = () => {
     }, [currentEvent])
 
 
-    // useEffect(() => {
-    //     if (isLoading) {
-    //         if (event.events.length !== 0) {
-    //             for (var i = 0; i < event.events.data.data.length; i++) {
-    //                 const name = event.events.data.data[i].eventName.replace(/\s/g, "-");
-    //                 existedEvent.push(name.toLowerCase())
-    //             }
+    const contentState = convertFromRaw(
+        JSON.parse(
+            currentEvent?.description ? currentEvent?.description : initialDescription
+        )
+    );
+    const editorState = EditorState.createWithContent(contentState);
 
-    //             if (!existedEvent.includes(eventName.eventName)) {
-    //                 history.push('/404')
-
-    //             } else {
-    //                 const filterEvent = event.events.data.data.filter((obj) => obj.eventName.replace(/\s/g, "-").toLowerCase() === eventName.eventName);
-    //                 if (filterEvent[0] !== undefined) {
-    //                     setCurrentEvent(filterEvent[0]);
-    //                     setParticipant({ ...participant, event: currentEvent._id })
-    //                 } else {
-    //                     history.push('/404')
-    //                 }
-    //             }
-    //         }
-    //         else {
-    //             history.push('/404')
-    //         }
-    //     }
-    // }, [eventName])
 
     // handle clear all fields
     const handleClearField = useCallback(
@@ -163,15 +146,16 @@ const Registration = () => {
 
 
     useEffect(() => {
-        if (participantStore.participant.complete) {
+        if (registerSuccess) {
             handleClearField();
         }
-    }, [dispatch, participantStore.participant.complete, handleClearField])
+    }, [dispatch, registerSuccess, handleClearField])
 
     const executeScroll = () => myRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
 
     const handleOnRegister = (e) => {
         e.preventDefault()
+        console.log(participant)
         dispatch(registerParticipant(participant))
     }
 
@@ -189,11 +173,39 @@ const Registration = () => {
                     <div className={css.root}>
                         <Paper className={css.wrapper}>
                             <Grid className={css.topDisplay} container>
-                                <Grid item xs={8}>
-                                    <CardMedia className={css.image} image={currentEvent.image} />
+                                <Grid item
+
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={8}>
+                                    <div className={css.image}
+                                        style={{
+                                            width: '100%',
+                                            height: 345,
+                                            maxHeight: 345,
+                                            backgroundImage: `url(${currentEvent.image})`,
+
+                                        }}
+                                    />
                                 </Grid>
-                                <Grid className={css.register} container item xs={4}>
-                                    <Grid container direction="column" item>
+                                <Grid
+                                    className={css.register}
+                                    container
+                                    item
+                                    xs={12}
+                                    sm={12}
+                                    md={4}
+                                    lg={4}>
+                                    <Grid
+                                        className={css.registerBottom}
+                                        container
+                                        direction="column"
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        item>
                                         <Typography style={{ fontWeight: 'bold' }}>
                                             {moment(currentEvent.startDate).format("MMM")}
                                         </Typography>
@@ -201,7 +213,16 @@ const Registration = () => {
                                             {moment(currentEvent.startDate).format("DD")}
                                         </Typography>
                                     </Grid>
-                                    <Grid container direction="column" item>
+
+                                    <Grid
+                                        className={css.registerBottom}
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        container
+                                        direction="column"
+                                        item>
                                         <Typography variant="h6">{currentEvent.eventName}</Typography>
                                         <Typography variant="caption">Hosted by NetCompany</Typography>
                                     </Grid>
@@ -212,12 +233,14 @@ const Registration = () => {
                                             {currentEvent.location}
                                         </Typography>
                                     </Grid> */}
-                                    <Grid container justify="flex-start" alignItems="flex-end" item>
-                                        <Button color="secondary" variant="outlined" onClick={executeScroll}>Register Now</Button>
+                                    <Grid className={css.registerBottomButton} container justify="flex-start" alignItems="flex-end" item>
+                                        <Button className={css.registerButtonTop} color="primary" variant="contained" onClick={executeScroll}>Register Now</Button>
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <Divider />
+                            <Grid item xs={12}>
+                                <Divider style={{ height: '1px' }} flexItem />
+                            </Grid>
 
 
                             <Grid container spacing={1}>
@@ -295,7 +318,7 @@ const Registration = () => {
 
                                     {/* Left Side */}
                                     <Grid
-                                        className={css.detailWrapper}
+                                        className={css.detailDescriptionWrapper}
                                         container
                                         alignItems="flex-start"
                                         direction="column"
@@ -305,26 +328,26 @@ const Registration = () => {
                                         md={8}
                                         lg={8}>
                                         <Grid item>
-                                            <Typography style={{ fontWeight: 'bold' }} variant="h5">
-                                                About {currentEvent.eventName}
+                                            <Typography style={{ fontWeight: 'bold' }} variant="h6">
+                                                About this event
                                             </Typography>
 
-                                            <Typography className={css.eventDescription}>
-                                                {/* {parse(stateToHTML(convertFromRaw(JSON.parse(currentEvent.description))))} */}
-                                                {currentEvent.description}
-                                            </Typography>
+                                            <Editor className={css.eventDescription} editorState={editorState} readOnly={true} />
                                         </Grid>
                                     </Grid>
                                 </Grid>
 
+                                <Grid item xs={12}>
+                                    <Divider style={{ height: '1px' }} flexItem />
+                                </Grid>
 
                                 {/* Bottom side */}
                                 <Grid container item xs={12} md={12} lg={12}>
-                                    <Grid container className={css.mt36} item>
-                                        <Container fixed className={css.body}>
-                                            <Typography className={css.eventActivities}>
+                                    <Grid container className={css.mtb36} item>
+                                        <Container fixed className={css.bodyActivity}>
+                                            <Typography style={{ fontWeight: 'bold' }} align="center" variant="h4">
                                                 Activities
-                                        </Typography>
+                                            </Typography>
                                             <TableContainer>
                                                 <Table className={css.table} aria-label="simple table">
                                                     <TableHead>
@@ -351,17 +374,23 @@ const Registration = () => {
                                         </Container>
                                     </Grid>
 
-                                    <Grid container className={css.mt36} item>
-                                        <Container fixed className={css.body}>
-                                            <Typography className={css.form} id="registrationForm">
-                                                Registration Form
-                                        </Typography>
+                                    <Grid item xs={12}>
+                                        <Divider style={{ height: '1px' }} flexItem />
+                                    </Grid>
 
-                                            <FormControl fullWidth ref={myRef}>
+                                    <Grid container className={css.mtb36} item ref={myRef}>
+                                        <Container fixed className={css.bodyRegistrationForm}>
+                                            <Typography style={{ fontWeight: 'bold' }} align="center" variant="h4" id="registrationForm">
+                                                Registration Form
+                                            </Typography>
+
+                                            <FormControl fullWidth>
                                                 <TextField
                                                     label="Full Name"
                                                     variant="outlined"
+                                                    margin="none"
                                                     name="name"
+                                                    error={error.errors?.name ? true : false}
                                                     value={participant.name}
                                                     onChange={handleOnChange}
                                                     required
@@ -374,6 +403,7 @@ const Registration = () => {
                                                     label="Email"
                                                     type="email"
                                                     name="email"
+                                                    margin="none"
                                                     variant="outlined"
                                                     value={participant.email}
                                                     onChange={handleOnChange}
@@ -385,6 +415,7 @@ const Registration = () => {
 
                                                 <TextField
                                                     label="University"
+                                                    margin="none"
                                                     variant="outlined"
                                                     name="school"
                                                     value={participant.school}
@@ -395,7 +426,7 @@ const Registration = () => {
                                                 </TextField>
                                                 {error.errors !== null ? error.errors.school && <Typography className={css.errorStyle}>{error.errors.school}</Typography> : <></>}
 
-                                                <FormControl className={css.textField}>
+                                                <FormControl margin="none" className={css.textField}>
                                                     <InputLabel id="demo-simple-select-outlined-label1" className={css.academicField}>Academic *</InputLabel>
                                                     <Select
                                                         fullWidth
@@ -425,6 +456,7 @@ const Registration = () => {
                                                 <TextField
                                                     name="major"
                                                     label="Major"
+                                                    margin="none"
                                                     variant="outlined"
                                                     value={participant.major}
                                                     onChange={handleOnChange}
@@ -438,6 +470,7 @@ const Registration = () => {
                                                     name="phone"
                                                     label="Phone"
                                                     type="number"
+                                                    margin="none"
                                                     variant="outlined"
                                                     value={participant.phone}
                                                     onChange={handleOnChange}
@@ -452,13 +485,13 @@ const Registration = () => {
                                                         variant="outlined"
                                                         format="MM/dd/yyyy"
                                                         margin="normal"
-                                                        id="date-picker-inline"
+                                                        id="date-picker-inline-DOB"
                                                         label="Date of Birth"
                                                         value={participant.DOB}
                                                         onChange={(date) => {
                                                             setParticipant((prevState) => ({
                                                                 ...prevState,
-                                                                DOB: date?.toDate() ? date?.toDate() : null,
+                                                                DOB: date ? date : null,
                                                             }));
                                                         }}
                                                         KeyboardButtonProps={{
@@ -472,13 +505,13 @@ const Registration = () => {
                                                         variant="outlined"
                                                         format="MM/dd/yyyy"
                                                         margin="normal"
-                                                        id="date-picker-inline"
-                                                        label="Expected Graduation Date"
-                                                        value={participant.graduationDate}
+                                                        id="date-picker-inline-expectedGraduateDate"
+                                                        label="Graduation Date"
+                                                        value={participant.expectedGraduateDate}
                                                         onChange={(date) => {
                                                             setParticipant((prevState) => ({
                                                                 ...prevState,
-                                                                graduationDate: date?.toDate() ? date?.toDate() : null,
+                                                                expectedGraduateDate: date ? date : null,
                                                             }));
                                                         }}
                                                         KeyboardButtonProps={{
@@ -494,17 +527,49 @@ const Registration = () => {
                                                     }
                                                 </MuiPickersUtilsProvider>
                                                 <Button
+                                                    disabled={isRegistered}
                                                     className={css.registerButton}
                                                     color="primary"
                                                     variant="contained"
-                                                    onClick={handleOnRegister}>Register Now</Button>
+                                                    onClick={handleOnRegister}>
+                                                    {isRegistered
+                                                        ?
+                                                        <CircularProgress
+                                                            size={26}
+                                                            color="inherit"
+                                                        />
+                                                        :
+                                                        'Register Now'
+                                                    }
+                                                </Button>
                                             </FormControl>
+                                        </Container>
+                                    </Grid>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <Divider style={{ height: '1px' }} flexItem />
+                                </Grid>
+
+                                {/* Footer */}
+                                <Grid container item xs={12} md={12} lg={12}>
+                                    <Grid container className={css.mtb36} item>
+                                        <Container fixed className={css.bodyActivity}>
+                                            <Typography style={{ fontWeight: 'bold', marginBottom: 8 }} align="center" variant="subtitle2">
+                                                {currentEvent.eventName}
+                                            </Typography>
+                                            <Typography align="center" variant="body2">
+                                                at
+                                            </Typography>
+                                            <Typography style={{ fontWeight: 'bold', marginTop: 8 }} align="center" variant="subtitle2">
+                                                {currentEvent.location}
+                                            </Typography>
                                         </Container>
                                     </Grid>
                                 </Grid>
                             </Grid>
                         </Paper>
-                        <SystemNotification openRegisterParticipantSnackBar={participantStore.participant.complete} />
+                        <SystemNotification openRegisterParticipantSnackBar={registerSuccess} />
                     </div>
                 </div>
             </>
