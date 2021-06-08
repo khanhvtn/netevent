@@ -63,6 +63,11 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+      "globals": {
+        "__DEV__": true
+      }
+  },
   "proxy": "http://localhost:5000",
   "devDependencies": {
     "@babel/plugin-syntax-jsx": "^7.12.13",
