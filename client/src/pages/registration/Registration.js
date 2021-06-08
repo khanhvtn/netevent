@@ -363,8 +363,12 @@ const Registration = () => {
                                                                 <TableCell className={css.tableText} component="th" scope="row">
                                                                     {task.name}
                                                                 </TableCell>
-                                                                <TableCell className={css.tableText} align="left">{moment(task.startDate).format("LLLL")}</TableCell>
-                                                                <TableCell className={css.tableText} align="left">{moment(task.endDate).format("LLLL")}</TableCell>
+                                                                <TableCell className={css.tableText} align="left">
+                                                                    {moment(task.startDate).format("LLLL")}
+                                                                </TableCell>
+                                                                <TableCell className={css.tableText} align="left">
+                                                                    {moment(task.endDate).format("LLLL")}
+                                                                </TableCell>
 
                                                             </TableRow>
                                                         ))}
@@ -405,6 +409,7 @@ const Registration = () => {
                                                     name="email"
                                                     margin="none"
                                                     variant="outlined"
+                                                    error={error.errors?.email ? true : false}
                                                     value={participant.email}
                                                     onChange={handleOnChange}
                                                     required
@@ -418,6 +423,7 @@ const Registration = () => {
                                                     margin="none"
                                                     variant="outlined"
                                                     name="school"
+                                                    error={error.errors?.school ? true : false}
                                                     value={participant.school}
                                                     onChange={handleOnChange}
                                                     required
@@ -427,12 +433,13 @@ const Registration = () => {
                                                 {error.errors !== null ? error.errors.school && <Typography className={css.errorStyle}>{error.errors.school}</Typography> : <></>}
 
                                                 <FormControl margin="none" className={css.textField}>
-                                                    <InputLabel id="demo-simple-select-outlined-label1" className={css.academicField}>Academic *</InputLabel>
+                                                    <InputLabel id="demo-simple-select-outlined-label1" error={error.errors?.academic ? true : false} className={css.academicField}>Academic *</InputLabel>
                                                     <Select
                                                         fullWidth
                                                         labelId="demo-simple-select-outlined-label1"
                                                         id="demo-simple-select-outlined"
                                                         name="academic"
+                                                        error={error.errors?.academic ? true : false}
                                                         variant="outlined"
                                                         value={participant.academic}
                                                         onChange={participant.academic} onChange={handleOnChange}
@@ -458,6 +465,7 @@ const Registration = () => {
                                                     label="Major"
                                                     margin="none"
                                                     variant="outlined"
+                                                    error={error.errors?.major ? true : false}
                                                     value={participant.major}
                                                     onChange={handleOnChange}
                                                     required
@@ -472,6 +480,7 @@ const Registration = () => {
                                                     type="number"
                                                     margin="none"
                                                     variant="outlined"
+                                                    error={error.errors?.phone ? true : false}
                                                     value={participant.phone}
                                                     onChange={handleOnChange}
                                                     required
@@ -482,10 +491,11 @@ const Registration = () => {
 
                                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                                     <KeyboardDatePicker
-                                                        variant="outlined"
+                                                        inputVariant="outlined"
                                                         format="MM/dd/yyyy"
                                                         margin="normal"
                                                         id="date-picker-inline-DOB"
+                                                        error={error.errors?.DOB ? true : false}
                                                         label="Date of Birth"
                                                         value={participant.DOB}
                                                         onChange={(date) => {
@@ -502,11 +512,12 @@ const Registration = () => {
 
 
                                                     <KeyboardDatePicker
-                                                        variant="outlined"
                                                         format="MM/dd/yyyy"
                                                         margin="normal"
+                                                        inputVariant="outlined"
                                                         id="date-picker-inline-expectedGraduateDate"
                                                         label="Graduation Date"
+                                                        error={error.errors?.expectedGraduateDate ? true : false}
                                                         value={participant.expectedGraduateDate}
                                                         onChange={(date) => {
                                                             setParticipant((prevState) => ({

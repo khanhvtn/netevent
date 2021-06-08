@@ -29,7 +29,6 @@ export default makeStyles((theme) => ({
             margin: 0,
             minWidth: 0
         },
-
     },
     topDisplay: {
         minHeight: 345,
@@ -54,6 +53,7 @@ export default makeStyles((theme) => ({
         zIndex: 0
     },
     register: {
+        backgroundColor: '#eeeeee',
         padding: 24,
     },
     registerBottom: {
@@ -116,23 +116,6 @@ export default makeStyles((theme) => ({
         top: "50%",
         left: "50%",
     },
-    centered: {
-        position: "absolute",
-        top: "50%",
-        left: "30%",
-        maxWidth: "512px",
-        transform: `translate(-${50}%, -${50}%)`,
-        [theme.breakpoints.only('sm')]: {
-            width: "50%",
-            height: "50%",
-        },
-        [theme.breakpoints.only('md')]: {
-            width: "60%",
-            height: "60%",
-            top: "50%",
-            left: "33%",
-        },
-    },
     bodyActivity: {
         padding: '40px 20px',
         [theme.breakpoints.down('md')]: {
@@ -153,44 +136,6 @@ export default makeStyles((theme) => ({
         [theme.breakpoints.down('xs')]: {
             padding: '10px 0'
         },
-    },
-    eventName: {
-        color: "#000054",
-        fontSize: "20pt",
-        marginBottom: 7
-    },
-    eventDescription: {
-
-    },
-
-    eventType: {
-        marginTop: 3,
-        fontSize: "14pt"
-    },
-    eventMode: {
-        marginTop: 3,
-        fontSize: "14pt"
-    },
-    eventLocation: {
-        marginTop: 3,
-        fontSize: "14pt"
-    },
-    eventLanguage: {
-        marginTop: 3,
-        fontSize: "14pt"
-    },
-    eventRegistrationCloseDate: {
-        marginTop: 3,
-        fontSize: "14pt"
-    },
-    eventAccommodation: {
-        marginTop: 3,
-        fontSize: "14pt"
-    },
-    eventActivities: {
-        color: "#000054",
-        fontSize: "20pt",
-        marginTop: 7
     },
     tableText: {
         fontSize: "14pt"
@@ -221,11 +166,11 @@ export default makeStyles((theme) => ({
             },
         },
     },
-    form: {
-        color: "#000054",
-        fontSize: "20pt",
-        marginTop: 7
-    },
+    // form: {
+    //     color: "#000054",
+    //     fontSize: "20pt",
+    //     marginTop: 7
+    // },
     textField: {
         marginTop: 7
     },
@@ -246,10 +191,8 @@ export default makeStyles((theme) => ({
         color: "red",
         fontSize: 11
     },
-
     academicField: {
         marginLeft: theme.spacing(2),
         marginTop: -4
-
     }
 }))
