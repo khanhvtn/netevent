@@ -64,9 +64,9 @@
     ]
   },
   "jest": {
-      "globals": {
-        "__DEV__": true
-      }
+    "globals": {
+      "__DEV__": true
+    }
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
@@ -90,6 +90,7 @@
     "jest": "^26.6.0",
     "jest-enzyme": "^7.1.2",
     "jest-wrap": "^1.7.0",
+    "react-test-renderer": "^17.0.2",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.7.0"
   }

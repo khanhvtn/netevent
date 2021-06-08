@@ -1,49 +1,33 @@
 import expect from 'expect'
-import beforeEach from 'jest-wrap'
 import React from 'react'
-import {shallow} from 'enzyme'
-import { Provider } from 'react-redux'
-import renderer from 'react-test-renderer'
-import configureStore from 'redux-mock-store'
+import { render, fireEvent } from '@testing-library/react'
 import Login from '../Login'
-import { TextField } from '@material-ui/core'
-import wrap from 'jest-wrap'
-import { userLogin } from '../../../actions/userActions'
+import { act } from 'react-dom/test-utils';
 
-const mockStore = configureStore([]);
-
-describe('Login React-Redux Component', () => {
-    let store;
-    let component;
-    let wrapper;
-
-    beforeEach(() =>{
-        store = mockStore({
-            myState: 'login State'
+describe('Login', () => {
+    describe('with valid inputs', () => {
+        it('calls the handleSubmit function',async () => {
+            const mockHandleSubmit= jest.fn()
+            const {getByLabelText, getByRole} = render(<Login handleSubmit={mockHandleSubmit}/>)
+            
+            await act(async () => {
+            fireEvent.change(getByLabelText("Email"), {target: {value: "trantritai99@gmail.com"}})
+            fireEvent.change(getByLabelText("Password"), {target: {value: "123456"}})
         })
-        
-        // store.dispatch = jest.fn()
 
-        component = renderer.create(
-            <Provider store={store}>
-                <Login />
-            </Provider>
-        )
-    })
-    
- 
-    it('should render with given state from Redux store', () => {
-        // expect(component.toJSON()).toMatchSnapshot()
+            await act(async () => {
+                fireEvent.click(getByRole("button"))
+            })
+
+            expect(mockHandleSubmit).toHaveBeenCalled()
     });
-   
-    // it('should dispatch an action on button click', () => {
-    //     renderer.act(() => {
-    //         component.findByType('submit').props.onClick()
-    //     })
-    //     expect(store.dispatch).toHaveBeenCalledTimes(1)
-    //     expect(store.dispatch).toHaveBeenCalledWith(
-    //         userLogin({payload: 'login State'})
-    //     )
-    // });
-});
 
+    describe('with invalid email', () => {
+        it.todo('renders the email validation error')
+    });
+
+    describe('with invalid password', () => {
+        it.todo('renders the password validation error')
+    });
+});
+})

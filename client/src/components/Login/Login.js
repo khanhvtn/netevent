@@ -77,6 +77,7 @@ const Login = () => {
                                 name="email"
                                 fullWidth
                                 onChange={handleChange}
+                                inputProps={{"data-testid": "account-login-email"}}
                             />
                             <TextField
                                 helperText={
@@ -91,14 +92,18 @@ const Login = () => {
                                 name="password"
                                 fullWidth
                                 onChange={handleChange}
+                                inputProps={{"data-testid": "account-login-password"}}
                             />
                             <Button
                                 size="large"
+                                role="button"
                                 variant="contained"
                                 className={css.btnSubmit}
                                 type="submit"
                                 color="primary"
                                 fullWidth
+                                data-testid="account-login-button"
+                                disabled={!email || !password}
                             >
                                 {user.isLoading ? (
                                     <CircularProgress color="inherit" />
