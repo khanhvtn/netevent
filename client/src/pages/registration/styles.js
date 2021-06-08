@@ -182,10 +182,11 @@ export default makeStyles((theme) => ({
         }
     },
     registerButtonTop: {
+        marginRight: 8,
         backgroundColor: "red",
         '&:hover': {
             backgroundColor: '#a2001c',
-        }
+        },
     },
     errorStyle: {
         color: "red",

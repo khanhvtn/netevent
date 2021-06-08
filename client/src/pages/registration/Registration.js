@@ -45,6 +45,7 @@ const participantInitialState = {
 
 const eventInitialState = {
     isLoaded: false,
+    isReviewed: false
 }
 
 const initialDescription =
@@ -64,7 +65,7 @@ const Registration = () => {
     const pathname = useParams();
     const eventName = pathname.eventName.replace(/-/g, ' ');
 
-
+    const isReviewed = history.location?.state?.isReviewed;
 
     const { isLoading, eventDetail, error, isRegistered, registerSuccess } = useSelector((state) => ({
         isLoading: state.event.isDetailLoading,
@@ -74,24 +75,20 @@ const Registration = () => {
         registerSuccess: state.participant.complete
     }))
 
-
     // Call API to get current event by name
     useEffect(() => {
-        if (!currentEvent?.eventName) {
+        if (!currentEvent?.eventName && !isReviewed) {
             dispatch(getFacilityAndTaskByEventName(eventName));
         }
     }, [dispatch, currentEvent])
 
-    // UseEffect to set state of the event, delete in redux store after finish
+    // UseEffect to check review status and load the event detail from history
     useEffect(() => {
-        if (eventDetail) {
+        if (isReviewed) {
             setCurrentEvent((prevState) => ({
-                ...eventDetail,
-                isLoaded: !prevState.isLoaded
-            }))
-            setParticipant((prevState) => ({
-                ...prevState,
-                event: currentEvent._id
+                ...history.location.state.event,
+                isLoaded: !prevState.isLoaded,
+                isReviewed: isReviewed
             }));
         }
         return (() => {
@@ -102,9 +99,41 @@ const Registration = () => {
                         data: null
                     }
                 }
-            })
+            });
+        })
+    }, [isReviewed])
+
+    console.log(currentEvent.isReviewed)
+
+    // UseEffect to set state of the event, delete in redux store after finish
+    useEffect(() => {
+        if (eventDetail) {
+            setCurrentEvent((prevState) => ({
+                ...eventDetail,
+                isLoaded: !prevState.isLoaded
+            }));
+        }
+        return (() => {
+            dispatch({
+                type: EVENT_GET_FACILITY_AND_TASK,
+                payload: {
+                    data: {
+                        data: null
+                    }
+                }
+            });
         })
     }, [eventDetail])
+
+    // UseEffect to set current event for participant when get the event state
+    useEffect(() => {
+        if (!currentEvent.event) {
+            setParticipant((prevState) => ({
+                ...prevState,
+                event: currentEvent._id
+            }));
+        }
+    }, [currentEvent])
 
     // Check if page is valid by event name
     useEffect(() => {
@@ -152,10 +181,18 @@ const Registration = () => {
     // On scroll register button
     const executeScroll = () => myRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
 
+    // Back to detail page and set review to false
+    const handleOnBackToDetailPage = () => {
+        setCurrentEvent(eventInitialState)
+        if (history.location?.state) {
+            history.replace();
+            history.goBack();
+        }
+    }
 
+    // Handle On Click Register
     const handleOnRegister = (e) => {
         e.preventDefault()
-        console.log(participant)
         dispatch(registerParticipant(participant))
     }
 
@@ -235,6 +272,7 @@ const Registration = () => {
                                     </Grid> */}
                                     <Grid className={css.registerBottomButton} container justify="flex-start" alignItems="flex-end" item>
                                         <Button className={css.registerButtonTop} color="primary" variant="contained" onClick={executeScroll}>Register Now</Button>
+                                        {isReviewed && <Button variant="outlined" onClick={handleOnBackToDetailPage}>Back to detail</Button>}
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -246,7 +284,7 @@ const Registration = () => {
                             <Grid container spacing={1}>
 
                                 {/* Top side */}
-                                <Grid container item xs={12} md={12} lg={12} direction="row-reverse">
+                                <Grid container item xs={12} md={12} lg={12} alignItems="stretch" direction="row-reverse">
 
                                     {/* Right-side */}
                                     <Grid
@@ -390,6 +428,7 @@ const Registration = () => {
 
                                             <FormControl fullWidth>
                                                 <TextField
+                                                    disabled={isReviewed}
                                                     label="Full Name"
                                                     variant="outlined"
                                                     margin="none"
@@ -404,6 +443,7 @@ const Registration = () => {
                                                 {error.errors !== null ? error.errors.name && <Typography className={css.errorStyle}>{error.errors.name}</Typography> : <></>}
 
                                                 <TextField
+                                                    disabled={isReviewed}
                                                     label="Email"
                                                     type="email"
                                                     name="email"
@@ -419,6 +459,7 @@ const Registration = () => {
                                                 {error.errors !== null ? error.errors.email && <Typography className={css.errorStyle}>{error.errors.email}</Typography> : <></>}
 
                                                 <TextField
+                                                    disabled={isReviewed}
                                                     label="University"
                                                     margin="none"
                                                     variant="outlined"
@@ -432,7 +473,7 @@ const Registration = () => {
                                                 </TextField>
                                                 {error.errors !== null ? error.errors.school && <Typography className={css.errorStyle}>{error.errors.school}</Typography> : <></>}
 
-                                                <FormControl margin="none" className={css.textField}>
+                                                <FormControl disabled={isReviewed} margin="none" className={css.textField}>
                                                     <InputLabel id="demo-simple-select-outlined-label1" error={error.errors?.academic ? true : false} className={css.academicField}>Academic *</InputLabel>
                                                     <Select
                                                         fullWidth
@@ -461,6 +502,7 @@ const Registration = () => {
 
 
                                                 <TextField
+                                                    disabled={isReviewed}
                                                     name="major"
                                                     label="Major"
                                                     margin="none"
@@ -475,6 +517,7 @@ const Registration = () => {
                                                 {error.errors !== null ? error.errors.major && <Typography className={css.errorStyle}>{error.errors.major}</Typography> : <></>}
 
                                                 <TextField
+                                                    disabled={isReviewed}
                                                     name="phone"
                                                     label="Phone"
                                                     type="number"
@@ -491,6 +534,7 @@ const Registration = () => {
 
                                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                                     <KeyboardDatePicker
+                                                        disabled={isReviewed}
                                                         inputVariant="outlined"
                                                         format="MM/dd/yyyy"
                                                         margin="normal"
@@ -512,6 +556,7 @@ const Registration = () => {
 
 
                                                     <KeyboardDatePicker
+                                                        disabled={isReviewed}
                                                         format="MM/dd/yyyy"
                                                         margin="normal"
                                                         inputVariant="outlined"
@@ -538,7 +583,7 @@ const Registration = () => {
                                                     }
                                                 </MuiPickersUtilsProvider>
                                                 <Button
-                                                    disabled={isRegistered}
+                                                    disabled={isRegistered || isReviewed}
                                                     className={css.registerButton}
                                                     color="primary"
                                                     variant="contained"

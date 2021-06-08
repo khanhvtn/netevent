@@ -17,7 +17,7 @@ import {
 import useStyles from './styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import blankPhoto from '../../../images/blankPhoto.png';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import AssignmentIndOutlinedIcon from '@material-ui/icons/AssignmentIndOutlined';
 import LanguageIcon from '@material-ui/icons/Language';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
@@ -73,7 +73,7 @@ const EventDetail = () => {
             ...prevState,
             event: {
                 ...(history.location.state?.event || newUpdateEventDetail),
-                description: history.location.state?.event.description || newUpdateEventDetail.description,
+                description: history.location.state?.event?.description || newUpdateEventDetail.description,
             },
             previousPath: history.location.state?.from
         }));
@@ -138,7 +138,20 @@ const EventDetail = () => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    console.log(state)
+    const handleOnClickViewTemplate = () => {
+        console.log(`/registration/${state.event.eventName.replace(/\s/g, "-")}`)
+        history.push({
+            pathname: `/registration/${state.event.eventName.replace(/\s/g, "-")}`,
+            state: {
+                from: '/dashboard/event-detail',
+                event: {
+                    ...state.event,
+                    taskListId: tasks,
+                },
+                isReviewed: true
+            }
+        })
+    }
 
     // Return to previous page with status
     const handleOnClickReturn = () => {
@@ -285,42 +298,48 @@ const EventDetail = () => {
                             item
                         >
                             {/* Event Title, Budget and MaxParticipants */}
-                            <Grid item>
+                            <Grid container direction="column" item>
                                 <Typography style={{ fontWeight: 'bold' }} variant="h5">
                                     {state.event?.eventName}
-                                    {state.event?.isApproved === null ? (
+                                    {state.event?.isApproved === null ?
                                         <Chip
                                             className={css.chipStatus}
                                             style={{ backgroundColor: `rgba(251, 191, 36, 1)` }}
                                             size="small"
                                             label="Pending"
                                         />
-                                    ) : state.event?.isFinished ? (
-                                        <Chip
-                                            className={css.chipStatus}
-                                            size="small"
-                                            label="Expired"
-                                            disabled
-                                        />
-                                    ) : state.event?.isApproved ? (
-                                        <Chip
-                                            className={css.chipStatus}
-                                            style={{ backgroundColor: `rgba(52, 211, 153, 1)` }}
-                                            size="small"
-                                            label="On-going"
-                                        />
-                                    ) : (
-                                                    <Chip
-                                                        className={css.chipStatus}
-                                                        style={{ backgroundColor: `rgba(248, 113, 113, 1)` }}
-                                                        size="small"
-                                                        label="Rejected"
-                                                    />
-                                                )}
+                                        :
+                                        state.event?.isFinished ?
+                                            <Chip
+                                                className={css.chipStatus}
+                                                size="small"
+                                                label="Expired"
+                                                disabled
+                                            />
+                                            : state.event?.isApproved ?
+                                                <Chip
+                                                    className={css.chipStatus}
+                                                    style={{ backgroundColor: `rgba(52, 211, 153, 1)` }}
+                                                    size="small"
+                                                    label="On-going"
+                                                />
+                                                :
+                                                <Chip
+                                                    className={css.chipStatus}
+                                                    style={{ backgroundColor: `rgba(248, 113, 113, 1)` }}
+                                                    size="small"
+                                                    label="Rejected"
+                                                />
+                                    }
                                 </Typography>
                                 <Typography variant="caption" color="textSecondary">
                                     {`${state.event?.budget} vnd | ${state.event?.maxParticipants} participants`}
                                 </Typography>
+                                <div>
+                                    <Button disabled={isDetailLoading || isLoading} onClick={handleOnClickViewTemplate} className={css.viewTemplateButton} variant="outlined" size="small" >
+                                        View template
+                                    </Button>
+                                </div>
                             </Grid>
 
                             {/* Event Language, Type, Mode, Accomodation */}
@@ -586,7 +605,7 @@ const EventDetail = () => {
 
                         {/* Right-side Detail */}
                         <Grid
-                            className={css.detailWrapper}
+                            className={css.detailRightWrapper}
                             xs={12}
                             sm={12}
                             md={4}
@@ -613,6 +632,11 @@ const EventDetail = () => {
                                     {`${moment(state.event?.startDate).format('LT')} - ${moment(
                                         state.event?.endDate
                                     ).format('LT')}`}
+                                </Typography>
+                                <Typography variant="caption" color="primary">
+                                    <Link style={{ textDecoration: 'none' }}>
+                                        View Calendar
+                                    </Link>
                                 </Typography>
                             </Grid>
 
@@ -644,9 +668,11 @@ const EventDetail = () => {
                                 <Typography style={{ fontWeight: 'bold' }} variant="h6">
                                     Tags
                                 </Typography>
-                                <Typography variant="body2">
-                                    {state.event?.tags.join(', ')}
-                                </Typography>
+                                <div className={css.chipContainer}>
+                                    {state.event?.tags.map((tag) => (
+                                        <Chip label={tag} size="small" className={css.chip} />
+                                    ))}
+                                </div>
                             </Grid>
                         </Grid>
                     </Grid>

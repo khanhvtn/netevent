@@ -38,6 +38,18 @@ export default makeStyles((theme) => ({
             padding: 8,
         },
     },
+    detailRightWrapper: {
+        padding: '12px 80px 80px 80px',
+        [theme.breakpoints.down('md')]: {
+            padding: '12px 48px 48px 48px',
+        },
+        [theme.breakpoints.down('sm')]: {
+            padding: '12px 24px 24px 24px',
+        },
+        [theme.breakpoints.down('xs')]: {
+            padding: 8,
+        },
+    },
     heading: {
         fontSize: theme.typography.pxToRem(15),
         flexBasis: '33.33%',
@@ -59,5 +71,25 @@ export default makeStyles((theme) => ({
     },
     mt36: {
         marginTop: 36
+    },
+    chipContainer: {
+        root: {
+            display: 'flex',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+            '& > *': {
+                margin: theme.spacing(0.5),
+            },
+        },
+    },
+    chip: {
+        backgroundColor: "#000054",
+        color: "#fff",
+        margin: theme.spacing(0.5),
+    },
+    viewTemplateButton:{
+        textTransform: 'none',
+        fontSize: '11px',
+        marginTop: 4
     }
 }));
