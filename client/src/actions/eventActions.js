@@ -200,6 +200,12 @@ export const deleteEventWithTaskAndFacilityHistory = (userReq, history) => async
             })
         }, 3000);
     } catch (error) {
+        if (error.response.data?.errors) {
+            dispatch({
+                type: ERROR,
+                payload: error.response.data?.errors,
+            });
+        }
         console.log(error.message)
     }
     setEventIsLoading(false, dispatch);

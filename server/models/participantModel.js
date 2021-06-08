@@ -1,5 +1,10 @@
 const mongoose = require('mongoose')
 
+var validateEmail = function(email) {
+    var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return re.test(email)
+};
+
 const participantSchema = mongoose.Schema({
     event: {
         type: mongoose.Schema.Types.ObjectId,
@@ -9,7 +14,9 @@ const participantSchema = mongoose.Schema({
 
     email: {
         type: String,
-        required: [true, 'Email cannot be blanked'],
+        required: 'Email cannot be blanked',
+        validate: [validateEmail, 'Please fill a valid email address'],
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
 
     name: {
