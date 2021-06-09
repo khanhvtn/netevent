@@ -131,7 +131,7 @@ const EventDetail = () => {
             ...prevState,
             event: {
                 ...(history.location.state?.event || newUpdateEventDetail),
-                description: history.location?.state?.event?.description || newUpdateEventDetail.description || '', // Fix later
+                description: history.location?.state?.event?.description || newUpdateEventDetail?.description || '', // Fix later
             },
             previousPath: history.location.state?.from
         }));
