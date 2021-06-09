@@ -2,13 +2,22 @@ import {
     PARTICIPANT_REGISTER,
     PARTICIPANT_LOADING,
     ERROR,
-    ERROR_CLEAR
+    ERROR_CLEAR,
+    PARTICIPANT_GET_ALL_FILTER
 } from '../constants';
-import { registerParticipantAPI } from '../api';
+import { getParticipantsAPI, registerParticipantAPI } from '../api';
 
 
 const sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
+
+//setIsLoading func is to set loading status
+const setPartiticpantIsLoading = (status, dispatch) => {
+    dispatch({
+        type: PARTICIPANT_LOADING,
+        payload: status,
+    });
 };
 
 export const registerParticipant = (participantData) => async (dispatch) => {
@@ -55,3 +64,19 @@ export const registerParticipant = (participantData) => async (dispatch) => {
         payload: false
     })
 }
+
+
+export const getParticipants = (search, take, page, eventId) => async (dispatch) => {
+    setPartiticpantIsLoading(true, dispatch);
+    try {
+        const data = await getParticipantsAPI(search, take, page, eventId);
+        dispatch({
+            type: PARTICIPANT_GET_ALL_FILTER,
+            payload: data
+        })
+    } catch (error) {
+        console.log(error.message)
+    }
+    setPartiticpantIsLoading(false, dispatch);
+}
+

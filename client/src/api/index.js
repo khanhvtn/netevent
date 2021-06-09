@@ -51,14 +51,10 @@ export const getFacilitiesAPI = (userQueries) => {
     updatedTo,
   } = userQueries;
   return AXIOS.get(
-    `/facility/filter?search=${search ? search : ''}&take=${
-      take ? take : ''
-    }&page=${page ? page : ''}&isDeleted=${
-      isDeleted ? isDeleted : ''
-    }&createdFrom=${createdFrom ? createdFrom : ''}&createdTo=${
-      createdTo ? createdTo : ''
-    }&updatedFrom=${updatedFrom ? updatedFrom : ''}&updatedTo=${
-      updatedTo ? updatedTo : ''
+    `/facility/filter?search=${search ? search : ''}&take=${take ? take : ''
+    }&page=${page ? page : ''}&isDeleted=${isDeleted ? isDeleted : ''
+    }&createdFrom=${createdFrom ? createdFrom : ''}&createdTo=${createdTo ? createdTo : ''
+    }&updatedFrom=${updatedFrom ? updatedFrom : ''}&updatedTo=${updatedTo ? updatedTo : ''
     }`
   );
 };
@@ -85,14 +81,10 @@ export const getEventTypesAPI = (userQueries) => {
     updatedTo,
   } = userQueries;
   return AXIOS.get(
-    `/eventType/filter?search=${search ? search : ''}&take=${
-      take ? take : ''
-    }&page=${page ? page : ''}&isDeleted=${
-      isDeleted ? isDeleted : ''
-    }&createdFrom=${createdFrom ? createdFrom : ''}&createdTo=${
-      createdTo ? createdTo : ''
-    }&updatedFrom=${updatedFrom ? updatedFrom : ''}&updatedTo=${
-      updatedTo ? updatedTo : ''
+    `/eventType/filter?search=${search ? search : ''}&take=${take ? take : ''
+    }&page=${page ? page : ''}&isDeleted=${isDeleted ? isDeleted : ''
+    }&createdFrom=${createdFrom ? createdFrom : ''}&createdTo=${createdTo ? createdTo : ''
+    }&updatedFrom=${updatedFrom ? updatedFrom : ''}&updatedTo=${updatedTo ? updatedTo : ''
     }`
   );
 };
@@ -108,11 +100,11 @@ export const recoverEventTypesAPI = (userReq) =>
 
 // Event APIs
 export const getEventsAPI = (search, take, page, type, budgetRange, participantRange) =>
-    AXIOS.get(
-        `/event/get?search=${search ? search : ''}&take=${take ? take : ''}&page=${page ? page : ''}&type=${type ? type : ''}&budgetRange=${budgetRange ? budgetRange : ''}&participantRange=${participantRange ? participantRange : ''}`
-    );
+  AXIOS.get(
+    `/event/get?search=${search ? search : ''}&take=${take ? take : ''}&page=${page ? page : ''}&type=${type ? type : ''}&budgetRange=${budgetRange ? budgetRange : ''}&participantRange=${participantRange ? participantRange : ''}`
+  );
 export const getFacilityAndTaskByEventNameAPI = (eventName) =>
-    AXIOS.get(`/event/detail?eventName=${eventName ? eventName : ''}`)
+  AXIOS.get(`/event/detail?eventName=${eventName ? eventName : ''}`)
 export const createEventAPI = (userReq) => AXIOS.post(`/event/create`, userReq);
 export const sendNotificationAPI = (notificationReq) => AXIOS.post('/event/sendNotification', notificationReq)
 export const updateEventAPI = (userReq) => AXIOS.patch(`/event/update`, userReq);
@@ -127,30 +119,22 @@ export const getAllEventAPI = () => AXIOS.get(`/event/all`);
 export const getFacilityHistoriesAPI = (userQueries) => {
   const takeQuery = `take=${userQueries?.take ? userQueries?.take : ''}`;
   const pageQuery = `page=${userQueries?.page ? userQueries?.page : ''}`;
-  const createdFromQuery = `createdFrom=${
-    userQueries?.createdFrom ? userQueries?.createdFrom : ''
-  }`;
-  const createdToQuery = `createdTo=${
-    userQueries?.createdTo ? userQueries?.createdTo : ''
-  }`;
-  const updatedFromQuery = `updatedFrom=${
-    userQueries?.updatedFrom ? userQueries?.updatedFrom : ''
-  }`;
-  const updatedToQuery = `updatedTo=${
-    userQueries?.updatedTo ? userQueries?.updatedTo : ''
-  }`;
-  const borrowFromQuery = `borrowFrom=${
-    userQueries?.borrowFrom ? userQueries?.borrowFrom : ''
-  }`;
-  const borrowToQuery = `borrowTo=${
-    userQueries?.borrowTo ? userQueries?.borrowTo : ''
-  }`;
-  const returnFromQuery = `returnFrom=${
-    userQueries?.returnFrom ? userQueries?.returnFrom : ''
-  }`;
-  const returnToQuery = `returnTo=${
-    userQueries?.returnTo ? userQueries?.returnTo : ''
-  }`;
+  const createdFromQuery = `createdFrom=${userQueries?.createdFrom ? userQueries?.createdFrom : ''
+    }`;
+  const createdToQuery = `createdTo=${userQueries?.createdTo ? userQueries?.createdTo : ''
+    }`;
+  const updatedFromQuery = `updatedFrom=${userQueries?.updatedFrom ? userQueries?.updatedFrom : ''
+    }`;
+  const updatedToQuery = `updatedTo=${userQueries?.updatedTo ? userQueries?.updatedTo : ''
+    }`;
+  const borrowFromQuery = `borrowFrom=${userQueries?.borrowFrom ? userQueries?.borrowFrom : ''
+    }`;
+  const borrowToQuery = `borrowTo=${userQueries?.borrowTo ? userQueries?.borrowTo : ''
+    }`;
+  const returnFromQuery = `returnFrom=${userQueries?.returnFrom ? userQueries?.returnFrom : ''
+    }`;
+  const returnToQuery = `returnTo=${userQueries?.returnTo ? userQueries?.returnTo : ''
+    }`;
   return AXIOS.get(
     `/facilityHistory/filter?${takeQuery}&${pageQuery}&${createdFromQuery}&${createdToQuery}&${updatedFromQuery}&${updatedToQuery}&${borrowFromQuery}&${borrowToQuery}&${returnFromQuery}&${returnToQuery}`
   );
@@ -161,4 +145,5 @@ export const getAllFacilityHistoriesAPI = () =>
 
 
 // Participant API
-export const registerParticipantAPI = (participantData) => AXIOS.post('/participant/registerEvent', participantData)
+export const registerParticipantAPI = (participantData) => AXIOS.post('/participant/registerEvent', participantData);
+export const getParticipantsAPI = (search, take, page, eventId) => AXIOS.get(`/participant/filter?search=${search ? search : ''}&take=${take ? take : ''}&page=${page ? page : ''}&eventId=${eventId ? eventId : ''}`);

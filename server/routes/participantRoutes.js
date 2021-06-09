@@ -4,6 +4,7 @@ const { participantControllers } = require('../controllers');
 
 
 router.get('/all', participantControllers.getParticipants);
+router.get('/filter', participantControllers.filterParticipants);
 router.post('/registerEvent', participantControllers.registerEvent);
 router.delete('/:id', participantControllers.deleteParticipant);
 router.patch('/checkValid', participantControllers.checkValid);

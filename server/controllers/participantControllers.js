@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 
 /**
  *  =====================================
- *              PARTICIPANT CONTROLLER
+ *         PARTICIPANT CONTROLLER
  *  =====================================
  */
 
@@ -19,6 +19,91 @@ const getParticipants = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+
+const filterParticipants = async (req, res, next) => {
+    try {
+        let options = {
+            search: '',
+            take: 10,
+            eventId: null,
+        };
+
+        //adding search
+        if (req.query.search) {
+            options = {
+                ...options,
+                search: req.query.search.toString(),
+            };
+        }
+
+        /* 
+        Add take row filter
+        Default take is 5
+         */
+        if (req.query.take) {
+            options = {
+                ...options,
+                take: parseInt(req.query.take.toString()),
+            };
+        }
+
+        /* 
+        Add eventId row filter
+         */
+        if (req.query.eventId) {
+            options = {
+                ...options,
+                eventId: req.query.eventId.toString(),
+            };
+        }
+
+        /* 
+        Variable page default is 1
+         */
+        const page = parseInt(req.query.page) || 1;
+
+        console.log(options)
+
+        /* 
+        Variable total user based on search and filter
+         */
+        const totalParticipants = await Participant.find({
+            $or: [
+                { email: new RegExp(options.search, 'i') },
+                { name: new RegExp(options.search, 'i') },
+                { school: new RegExp(options.search, 'i') },
+                { academic: new RegExp(options.search, 'i') },
+                { major: new RegExp(options.search, 'i') }
+            ],
+            event: options.eventId,
+        }).countDocuments();
+
+        let totalPages = (totalParticipants / options.take).toString().includes('.')
+            ? Math.ceil(totalParticipants / options.take)
+            : totalParticipants / options.take;
+
+        //return data to client
+        const participants = await Participant.find({
+            $or: [
+                { email: new RegExp(options.search, 'i') },
+                { name: new RegExp(options.search, 'i') },
+                { school: new RegExp(options.search, 'i') },
+                { academic: new RegExp(options.search, 'i') },
+                { major: new RegExp(options.search, 'i') }
+            ],
+            event: options.eventId,
+        })
+            .sort({ updatedAt: -1 })
+            .skip((page - 1) * options.take)
+            .limit(options.take);
+
+        console.log(participants)
+
+        return cusResponse(res, 200, participants, null, totalPages);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+}
 
 const registerEvent = async (req, res, next) => {
 
@@ -100,5 +185,6 @@ module.exports = {
     registerEvent,
     deleteParticipant,
     checkValid,
-    checkAttendance
+    checkAttendance,
+    filterParticipants
 }
