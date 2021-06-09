@@ -367,16 +367,16 @@ const DataTable = ({
           <TableBody>
             {isLoading || createSuccess || updateSuccess || deleteSuccess ? (
               <>
-                {Array.apply(null, { length: take + 1 }).map(() => {
+                {Array.apply(null, { length: take + 1 }).map((row, index) => {
                   return (
                     <>
-                      <TableRow>
+                      <TableRow key={index}>
                         <TableCell>
                           <Skeleton />
                         </TableCell>
-                        {headCells.map(() => {
+                        {headCells.map((row, index) => {
                           return (
-                            <TableCell>
+                            <TableCell key={index}>
                               <Skeleton />
                             </TableCell>
                           );

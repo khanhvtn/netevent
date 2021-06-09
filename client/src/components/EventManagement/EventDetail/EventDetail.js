@@ -142,7 +142,7 @@ const EventDetail = () => {
         if (state.event) {
             dispatch(getFacilityAndTaskByEventName(state.event.eventName));
         }
-    }, [state.event]);
+    }, [dispatch, state.event]);
 
     const {
         facilities,
@@ -556,7 +556,7 @@ const EventDetail = () => {
                                                 Category (type)
                                         </Typography>
                                             <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                                                {state.event?.eventTypeId.name}
+                                                {state.event?.eventTypeId?.name}
                                             </Typography>
                                         </Grid>
                                         <Grid

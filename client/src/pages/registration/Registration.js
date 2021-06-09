@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import useStyles from './styles'
-import { Paper, Grid, Typography, Container, Button, CircularProgress, CardMedia, Divider, CardActions } from '@material-ui/core'
-import EventIcon from '@material-ui/icons/Event';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import { Paper, Grid, Typography, Container, Button, CircularProgress, Divider } from '@material-ui/core'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -18,7 +16,6 @@ import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
-    DatePicker,
 } from '@material-ui/pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFacilityAndTaskByEventName } from '../../actions/eventActions';
@@ -29,7 +26,7 @@ import SystemNotification from '../../components/Notification/Notification';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { ERROR, ERROR_CLEAR, EVENT_GET_FACILITY_AND_TASK, } from '../../constants';
+import { ERROR, ERROR_CLEAR, } from '../../constants';
 
 const participantInitialState = {
     event: null,

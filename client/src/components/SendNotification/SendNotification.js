@@ -16,7 +16,6 @@ import { fetchEvents, sendNotification } from '../../actions/eventActions'
 import { convertFromRaw } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
 import SystemNotification from '../Notification/Notification';
-import parse from 'html-react-parser'
 
 const initialState = {
     eventID: '',
