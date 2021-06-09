@@ -29,9 +29,10 @@ const CalendarApp = () => {
     useEffect(() => {
         if (!history.location.state || history.location.state?.isUpdated) {
             dispatch(getAllEvent());
+            console.log('here');
         }
         history.replace();
-    }, [dispatch]);
+    }, [dispatch, history]);
 
     //useEffect for create event success
     useEffect(() => {
@@ -57,14 +58,14 @@ const CalendarApp = () => {
             pathname: '/dashboard/event-detail',
             state: {
                 from: '/dashboard/creator-calendar',
-                event: { 
+                event: {
                     ...event.resource,
                     eventName: event.title,
                     endDate: event.end,
-                    startDate: event.start
-                }
-            }
-        })
+                    startDate: event.start,
+                },
+            },
+        });
     };
 
     const handlePickEventTime = ({ start, end }) => {
@@ -86,7 +87,7 @@ const CalendarApp = () => {
     const handleClose = () => {
         setState((prevState) => ({ ...prevState, open: !prevState.open }));
     };
-    
+
     return (
         <Paper
             elevation={3}
