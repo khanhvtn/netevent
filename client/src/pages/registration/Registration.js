@@ -84,14 +84,15 @@ const Registration = () => {
 
     // UseEffect to check review status and load the event detail from history
     useEffect(() => {
-        if (isReviewed) {
+        if (isReviewed && !currentEvent.isLoaded) {
             setCurrentEvent((prevState) => ({
                 ...history.location.state.event,
                 isLoaded: !prevState.isLoaded,
                 isReviewed: isReviewed
             }));
+            window.scrollTo(0, 0);
         }
-    }, [isReviewed])
+    }, [isReviewed, currentEvent])
 
     // UseEffect to set state of the event, delete in redux store after finish
     useEffect(() => {
@@ -100,6 +101,7 @@ const Registration = () => {
                 ...eventDetail,
                 isLoaded: !prevState.isLoaded
             }));
+            window.scrollTo(0, 0);
         }
     }, [eventDetail, currentEvent])
 
