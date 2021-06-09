@@ -129,7 +129,10 @@ export default makeStyles((theme) => ({
         },
     },
     bodyRegistrationForm: {
-        padding: '40px 160px',
+        padding: '40px 360px',
+        [theme.breakpoints.down('lg')]: {
+            padding: '40px 160px'
+        },
         [theme.breakpoints.down('sm')]: {
             padding: '40px 80px'
         },
