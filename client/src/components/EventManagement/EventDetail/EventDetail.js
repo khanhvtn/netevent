@@ -17,8 +17,8 @@ import {
     Tabs,
     Tab,
     Divider,
+    InputBase,
 } from '@material-ui/core';
-import useStyles from './styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import blankPhoto from '../../../images/blankPhoto.png';
 import { Link, useHistory } from 'react-router-dom';
@@ -34,10 +34,18 @@ import {
     deleteEventWithTaskAndFacilityHistory,
     getFacilityAndTaskByEventName,
 } from '../../../actions/eventActions';
+import { getParticipants, setInvalidAndVerifyParticipant } from '../../../actions/participantActions';
 import { Skeleton } from '@material-ui/lab';
 import CreateEvent from '../../CreateEvent/CreateEvent';
 import SystemNotification from '../../Notification/Notification';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import ParticipantPagination from '../ParticipantPagination/ParticipantPagination';
+import ParticipantTable from '../ParticipantTable/ParticipantTable';
+import { FilterList } from '@material-ui/icons';
+import SearchIcon from '@material-ui/icons/Search';
+import useStyles from './styles';
+import ParticipantFilter from '../ParticipantFilter/ParticipantFilter';
+import { is } from 'date-fns/esm/locale';
 
 
 function TabPanel(props) {
@@ -73,12 +81,20 @@ const initialDescription =
     '{"blocks":[{"key":"4jrep","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}';
 
 const initialState = {
+    search: '',
+    take: 10,
+    page: 1,
+    openFilter: false,
+    status: '',
+    academic: '',
+    isValid: '',
     event: null,
     previousPath: null,
     openDeleteDialog: false,
     openUpdateDialog: false,
     openUpdateSnackBar: false,
     isUpdated: false,
+    isParticipantUpdated: false,
 };
 
 const initialDeleteState = {
@@ -87,6 +103,10 @@ const initialDeleteState = {
     historyFacilityListId: [],
 };
 
+const filterState = {
+    academic: '',
+    isValid: '',
+}
 
 const EventDetail = () => {
     const css = useStyles();
@@ -96,6 +116,8 @@ const EventDetail = () => {
     const [deleteState, setDeleteState] = useState(initialDeleteState);
     const [expanded, setExpanded] = useState(false);
     const [tabs, setTabs] = useState(0)
+    const [filters, setFilters] = useState(filterState);
+    const [selected, setSelected] = useState([]);
 
     // Update new state when getting props from event-management page
     useEffect(() => {
@@ -109,7 +131,7 @@ const EventDetail = () => {
             ...prevState,
             event: {
                 ...(history.location.state?.event || newUpdateEventDetail),
-                description: history.location.state?.event?.description || newUpdateEventDetail.description || '',
+                description: history.location?.state?.event?.description || newUpdateEventDetail?.description || '', // Fix later
             },
             previousPath: history.location.state?.from
         }));
@@ -129,6 +151,7 @@ const EventDetail = () => {
         isLoading,
         updateEventSuccess,
         newUpdateEventDetail,
+        isParticipantUpdated,
     } = useSelector((state) => ({
         newUpdateEventDetail: state.event.eventDetail,
         facilities: state.event.eventDetail?.facilityHistoryListId,
@@ -136,15 +159,26 @@ const EventDetail = () => {
         isDetailLoading: state.event.isDetailLoading,
         isLoading: state.event.isLoading,
         updateEventSuccess: state.event.updateSuccess,
+        isParticipantUpdated: state.participant.isUpdated
     }));
 
     // UseEffect for update event success
     useEffect(() => {
+        if (isParticipantUpdated) {
+            setSelected([])
+            setState((prevState) => ({
+                ...prevState,
+                academic: '',
+                isValid: '',
+                isParticipantUpdated: !prevState.isParticipantUpdated
+            }));
+        }
+
         setState((prevState) => ({
             ...prevState,
-            openUpdateSnackBar: updateEventSuccess,
+            openUpdateSnackBar: updateEventSuccess || isParticipantUpdated,
         }));
-    }, [updateEventSuccess]);
+    }, [updateEventSuccess, isParticipantUpdated]);
 
     // UseEffect for update event status
     useEffect(() => {
@@ -169,17 +203,47 @@ const EventDetail = () => {
             }));
     }, [isDetailLoading]);
 
+    // Use Effect call participants API after state is set
+    useEffect(() => {
+        if (state.event?._id && tabs === 1) {
+            dispatch(
+                getParticipants(
+                    state.search,
+                    state.take,
+                    state.page,
+                    state.academic,
+                    state.isValid,
+                    state.event._id))
+        }
+    }, [dispatch,
+        state.search,
+        state.take,
+        state.page,
+        state.isValid,
+        state.academic,
+        state.isParticipantUpdated,
+        tabs]
+    );
+
     // Handle expand of accordion
     const handleExpand = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
     const handleChangeTabs = (event, newValue) => {
+        setSelected([]);
         setTabs(newValue);
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setState((prevState) => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+
     const handleOnClickViewTemplate = () => {
-        console.log(`/registration/${state.event.eventName.replace(/\s/g, "-")}`)
         history.push({
             pathname: `/registration/${state.event.eventName.replace(/\s/g, "-")}`,
             state: {
@@ -243,6 +307,66 @@ const EventDetail = () => {
         }));
     };
 
+    const handleChangePage = (event, newPage) => {
+        setState((prevState) => ({ ...prevState, page: newPage }));
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setState((prevState) => ({
+            ...prevState,
+            take: parseInt(event.target.value),
+            page: 1,
+        }));
+    };
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    //handle ToggleFilter
+    const handleToggleFilter = () => {
+        setState((prevState) => ({
+            ...prevState,
+            openFilter: !prevState.openFilter,
+        }));
+    };
+
+    //handle Apply Filter
+    const handleApplyFilter = () => {
+        setState((prevState) => ({
+            ...prevState,
+            ...filters,
+            openFilter: !prevState.openFilter,
+        }));
+        setSelected([])
+    };
+
+    //handle Clear Filter
+    const handleClearFilter = () => {
+        setFilters((prevState) => ({
+            ...prevState,
+            ...filterState,
+        }));
+        setState((prevState) => ({
+            ...prevState,
+            ...filterState,
+            openFilter: !prevState.openFilter,
+        }));
+        setSelected([])
+    };
+
+    const handleSetInvalid = () => {
+        dispatch(setInvalidAndVerifyParticipant({ invalidList: selected, action: false }))
+    }
+
+    const handleSetVerified = () => {
+        dispatch(setInvalidAndVerifyParticipant({ verifiedList: selected, action: true }))
+    }
+
     return (
         <>
             <Paper className={css.paper} color="inherit" elevation={3}>
@@ -286,7 +410,9 @@ const EventDetail = () => {
                         </Grid>
                     </AppBar>
                 </div>
+
                 <Divider />
+
                 <div className={css.grow}>
                     <AppBar position="static" color="default" elevation={0}>
                         <Grid container direction="column">
@@ -295,13 +421,16 @@ const EventDetail = () => {
                                 onChange={handleChangeTabs}
                                 textColor="inherit"
                                 TabIndicatorProps={{ style: { background: 'black' } }}>
-                                <Tab style={{textTransform: 'none'}} textColor="inherit" label="Detail" {...a11yProps(0)} />
-                                <Tab style={{textTransform: 'none'}} textColor="inherit" label="Participant" {...a11yProps(1)} />
+                                <Tab style={{ textTransform: 'none' }} textColor="inherit" label="Detail" {...a11yProps(0)} />
+                                <Tab style={{ textTransform: 'none' }} textColor="inherit" label="Participant" {...a11yProps(1)} />
                             </Tabs>
                         </Grid>
                     </AppBar>
                 </div>
 
+                <Divider />
+
+                {/* Event detail tabs */}
                 <TabPanel value={tabs} index={0}>
                     {/* Event Detail */}
                     <Grid container justify="center" alignItems="center" direction="column">
@@ -739,10 +868,64 @@ const EventDetail = () => {
                     </Grid>
                 </TabPanel>
 
+                {/* Participant Tabs */}
                 <TabPanel value={tabs} index={1}>
-
+                    <AppBar elevation={0} position="static" color="default">
+                        <Grid container direction="column">
+                            <Toolbar>
+                                <div className={css.search}>
+                                    <div className={css.searchIcon}>
+                                        <SearchIcon />
+                                    </div>
+                                    <InputBase
+                                        onChange={handleChange}
+                                        className={css.inputInput}
+                                        placeholder="Search by email, name, university or major"
+                                        name="search"
+                                        value={state.search}
+                                        inputProps={{
+                                            'aria-label': 'search',
+                                        }}
+                                    />
+                                </div>
+                                <div className={css.grow} />
+                                <Tooltip title="Filter">
+                                    <IconButton
+                                        color="inherit"
+                                        onClick={handleToggleFilter}
+                                    >
+                                        <FilterList />
+                                    </IconButton>
+                                </Tooltip>
+                            </Toolbar>
+                            <ParticipantTable
+                                take={state.take}
+                                handleSetInvalid={handleSetInvalid}
+                                handleSetVerified={handleSetVerified}
+                                selected={selected}
+                                setSelected={setSelected} />
+                            <ParticipantPagination
+                                page={state.page}
+                                take={state.take}
+                                handleChangeRowsPerPage={
+                                    handleChangeRowsPerPage
+                                }
+                                handleChangePage={handleChangePage} />
+                        </Grid>
+                    </AppBar>
                 </TabPanel>
             </Paper>
+
+            {/* Participant Filter */}
+            <ParticipantFilter
+                openFilter={state.openFilter}
+                handleToggleFilter={handleToggleFilter}
+                academic={filters.academic}
+                isValid={filters.isValid}
+                handleFilterChange={handleFilterChange}
+                handleApplyFilter={handleApplyFilter}
+                handleClearFilter={handleClearFilter} />
+
             {/* Event Delete Dialog */}
             <EventDeleteDialog
                 openDeleteDialog={state.openDeleteDialog}
