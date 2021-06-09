@@ -258,12 +258,26 @@ const EventManagement = () => {
                                 <EventCard key={index} isLoading={isLoading} />
                             )
                         })
-                        :
-                        events.map((event) => {
-                            return (
-                                <EventCard event={event} key={event._id} isLoading={isLoading} onClickEvent={handleOnClickEvent} />
-                            )
-                        })
+                        : events.length === 0
+                            ?
+                            <Grid
+                                container
+                                spacing={0}
+                                direction="column"
+                                alignItems="center"
+                                justify="center"
+                                style={{ minHeight: '50vh' }}
+                            >
+                                <Typography >
+                                    No data matched
+                                </Typography>
+                            </Grid>
+                            :
+                            events.map((event) => {
+                                return (
+                                    <EventCard event={event} key={event._id} isLoading={isLoading} onClickEvent={handleOnClickEvent} />
+                                )
+                            })
                     }
                 </Grid>
 
