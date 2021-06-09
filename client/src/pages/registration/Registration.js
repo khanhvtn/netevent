@@ -75,6 +75,11 @@ const Registration = () => {
         registerSuccess: state.participant.complete
     }))
 
+    // UseEffect to scroll to top at the first mount
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+
     // Call API to get current event by name
     useEffect(() => {
         if (!currentEvent?.eventName && !isReviewed) {
@@ -84,15 +89,14 @@ const Registration = () => {
 
     // UseEffect to check review status and load the event detail from history
     useEffect(() => {
-        if (isReviewed && !currentEvent.isLoaded) {
+        if (isReviewed) {
             setCurrentEvent((prevState) => ({
                 ...history.location.state.event,
                 isLoaded: !prevState.isLoaded,
                 isReviewed: isReviewed
             }));
-            window.scrollTo(0, 0);
         }
-    }, [isReviewed, currentEvent])
+    }, [isReviewed])
 
     // UseEffect to set state of the event, delete in redux store after finish
     useEffect(() => {
@@ -101,7 +105,6 @@ const Registration = () => {
                 ...eventDetail,
                 isLoaded: !prevState.isLoaded
             }));
-            window.scrollTo(0, 0);
         }
     }, [eventDetail, currentEvent])
 

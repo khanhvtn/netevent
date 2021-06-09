@@ -219,24 +219,28 @@ const EventDetail = () => {
                                 </Typography>
                                 <div className={css.grow} />
                                 <Tooltip title="Delete">
-                                    <Button
-                                        disabled={isDetailLoading || isLoading}
-                                        color="inherit"
-                                        onClick={handleToggleDialogDelete}
-                                    >
-                                        Delete
-                                    </Button>
+                                    <div>
+                                        <Button
+                                            disabled={isDetailLoading || isLoading}
+                                            color="inherit"
+                                            onClick={handleToggleDialogDelete}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </div>
                                 </Tooltip>
                                 <Tooltip title="Edit">
-                                    <Button
-                                        disabled={isDetailLoading || isLoading}
-                                        color="inherit"
-                                        variant="outlined"
-                                        style={{ margin: '0 8px' }}
-                                        onClick={handleToggleDialogUpdate}
-                                    >
-                                        Update
-                                    </Button>
+                                    <div>
+                                        <Button
+                                            disabled={isDetailLoading || isLoading}
+                                            color="inherit"
+                                            variant="outlined"
+                                            style={{ margin: '0 8px' }}
+                                            onClick={handleToggleDialogUpdate}
+                                        >
+                                            Update
+                                        </Button>
+                                    </div>
                                 </Tooltip>
                             </Toolbar>
                         </Grid>
@@ -669,8 +673,8 @@ const EventDetail = () => {
                                     Tags
                                 </Typography>
                                 <div className={css.chipContainer}>
-                                    {state.event?.tags.map((tag) => (
-                                        <Chip label={tag} size="small" className={css.chip} />
+                                    {state.event?.tags.map((tag, index) => (
+                                        <Chip key={index} label={tag} size="small" className={css.chip} />
                                     ))}
                                 </div>
                             </Grid>
