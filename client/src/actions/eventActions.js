@@ -24,7 +24,7 @@ import {
     updateEventAPI,
     getAllEventAPI,
     sendNotificationAPI,
-    fetchEventsAPI
+    fetchEventsAPI,
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -38,9 +38,9 @@ const setEventIsLoading = (status, dispatch) => {
 const setEventDetailIsLoading = (status, dispatch) => {
     dispatch({
         type: EVENT_DETAIL_LOADING,
-        payload: status
-    })
-}
+        payload: status,
+    });
+};
 
 export const getAllEvent = () => async (dispatch) => {
     setEventIsLoading(true, dispatch);
@@ -58,19 +58,21 @@ export const getAllEvent = () => async (dispatch) => {
 
 // Minh Part Send Notification
 export const fetchEvents = () => async (dispatch) => {
+    setEventIsLoading(true, dispatch);
     try {
-        const data = await fetchEventsAPI()
+        const data = await fetchEventsAPI();
         dispatch({
             type: FETCH_EVENTS,
-            payload: data
-        })
+            payload: data,
+        });
         dispatch({
             type: GET_EVENTS_COMPLETE,
-            payload: true
-        })
+            payload: true,
+        });
     } catch (error) {
         console.log(error);
     }
+    setEventIsLoading(false, dispatch);
 };
 
 export const createEvent = (userReq) => async (dispatch) => {
@@ -112,15 +114,15 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
     try {
         dispatch({
             type: IS_SENDING_NOTIFICATION,
-            payload: true
-        })
+            payload: true,
+        });
 
-        await sendNotificationAPI(notificationReq)
+        await sendNotificationAPI(notificationReq);
 
         dispatch({
             type: SEND_NOTI_SUCCESS,
-            payload: true
-        })
+            payload: true,
+        });
 
         dispatch({
             type: ERROR_CLEAR,
@@ -129,8 +131,8 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
 
         dispatch({
             type: IS_SENDING_NOTIFICATION,
-            payload: false
-        })
+            payload: false,
+        });
 
         setTimeout(() => {
             dispatch({
@@ -145,86 +147,111 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
                 payload: error.response.data?.errors,
             });
         }
-        console.log(error)
-
+        console.log(error);
     }
     dispatch({
         type: IS_SENDING_NOTIFICATION,
-        payload: false
-    })
-}
-
-export const getEvents = (search, take, page, type, budgetRange, participantRange, startFrom, startTo, endFrom, endTo) => async (dispatch) => {
-    setEventIsLoading(true, dispatch);
-    try {
-        const data = await getEventsAPI(search, take, page, type, budgetRange, participantRange, startFrom, startTo, endFrom, endTo);
-
-        dispatch({
-            type: EVENT_GET_ALL_FILTER,
-            payload: data
-        });
-    } catch (error) {
-        console.log(error.message)
-    }
-    setEventIsLoading(false, dispatch);
+        payload: false,
+    });
 };
 
-export const getFacilityAndTaskByEventName = (eventName) => async (dispatch) => {
-    setEventDetailIsLoading(true, dispatch);
-    try {
-        const data = await getFacilityAndTaskByEventNameAPI(eventName);
-        dispatch({
-            type: EVENT_GET_FACILITY_AND_TASK,
-            payload: data
-        });
-    } catch (error) {
-        console.log(error.message)
-    }
-    setEventDetailIsLoading(false, dispatch);
-};
+export const getEvents =
+    (
+        search,
+        take,
+        page,
+        type,
+        budgetRange,
+        participantRange,
+        startFrom,
+        startTo,
+        endFrom,
+        endTo
+    ) =>
+    async (dispatch) => {
+        setEventIsLoading(true, dispatch);
+        try {
+            const data = await getEventsAPI(
+                search,
+                take,
+                page,
+                type,
+                budgetRange,
+                participantRange,
+                startFrom,
+                startTo,
+                endFrom,
+                endTo
+            );
 
-export const deleteEventWithTaskAndFacilityHistory = (userReq, history) => async (dispatch) => {
-    setEventIsLoading(true, dispatch);
-    try {
-        console.log(userReq)
-        const data = await deleteEventManagementAPI(userReq);
-        history.goBack();
-        dispatch({
-            type: EVENT_DELETE_SUCCESS,
-            payload: true
-        })
-        setTimeout(() => {
+            dispatch({
+                type: EVENT_GET_ALL_FILTER,
+                payload: data,
+            });
+        } catch (error) {
+            console.log(error.message);
+        }
+        setEventIsLoading(false, dispatch);
+    };
+
+export const getFacilityAndTaskByEventName =
+    (eventName) => async (dispatch) => {
+        setEventDetailIsLoading(true, dispatch);
+        try {
+            const data = await getFacilityAndTaskByEventNameAPI(eventName);
+            dispatch({
+                type: EVENT_GET_FACILITY_AND_TASK,
+                payload: data,
+            });
+        } catch (error) {
+            console.log(error.message);
+        }
+        setEventDetailIsLoading(false, dispatch);
+    };
+
+export const deleteEventWithTaskAndFacilityHistory =
+    (userReq, history) => async (dispatch) => {
+        setEventIsLoading(true, dispatch);
+        try {
+            console.log(userReq);
+            const data = await deleteEventManagementAPI(userReq);
+            history.goBack();
             dispatch({
                 type: EVENT_DELETE_SUCCESS,
-                payload: false
-            })
-        }, 3000);
-    } catch (error) {
-        if (error.response.data?.errors) {
-            dispatch({
-                type: ERROR,
-                payload: error.response.data?.errors,
+                payload: true,
             });
+            setTimeout(() => {
+                dispatch({
+                    type: EVENT_DELETE_SUCCESS,
+                    payload: false,
+                });
+            }, 3000);
+        } catch (error) {
+            if (error.response.data?.errors) {
+                dispatch({
+                    type: ERROR,
+                    payload: error.response.data?.errors,
+                });
+            }
+            console.log(error.message);
         }
-        console.log(error.message)
-    }
-    setEventIsLoading(false, dispatch);
-};
+        setEventIsLoading(false, dispatch);
+    };
 
 export const updateEvent = (userReq) => async (dispatch) => {
-    setEventIsLoading(true, dispatch)
+    setEventIsLoading(true, dispatch);
     try {
         const data = await updateEventAPI(userReq);
 
         dispatch({
             type: EVENT_UPDATE,
-            payload: data
-        })
+            payload: data,
+        });
 
         dispatch({
             type: EVENT_UPDATE_SUCCESS,
-            payload: true
-        })
+            payload: true,
+        });
 
         dispatch({
             type: ERROR_CLEAR,
@@ -234,10 +261,9 @@ export const updateEvent = (userReq) => async (dispatch) => {
         setTimeout(() => {
             dispatch({
                 type: EVENT_UPDATE_SUCCESS,
-                payload: false
-            })
+                payload: false,
+            });
         }, 3000);
-
     } catch (error) {
         console.log(error);
         if (error.response.data?.errors) {
@@ -247,5 +273,5 @@ export const updateEvent = (userReq) => async (dispatch) => {
             });
         }
     }
-    setEventIsLoading(false, dispatch)
-}
+    setEventIsLoading(false, dispatch);
+};
