@@ -91,39 +91,17 @@ const Registration = () => {
                 isReviewed: isReviewed
             }));
         }
-        return (() => {
-            dispatch({
-                type: EVENT_GET_FACILITY_AND_TASK,
-                payload: {
-                    data: {
-                        data: null
-                    }
-                }
-            });
-        })
     }, [isReviewed])
-
-    console.log(currentEvent.isReviewed)
 
     // UseEffect to set state of the event, delete in redux store after finish
     useEffect(() => {
-        if (eventDetail) {
+        if (eventDetail && !currentEvent.isLoaded) {
             setCurrentEvent((prevState) => ({
                 ...eventDetail,
                 isLoaded: !prevState.isLoaded
             }));
         }
-        return (() => {
-            dispatch({
-                type: EVENT_GET_FACILITY_AND_TASK,
-                payload: {
-                    data: {
-                        data: null
-                    }
-                }
-            });
-        })
-    }, [eventDetail])
+    }, [eventDetail, currentEvent])
 
     // UseEffect to set current event for participant when get the event state
     useEffect(() => {
@@ -347,8 +325,8 @@ const Registration = () => {
                                             </Typography>
                                             <div className={css.chipContainer}>
 
-                                                {currentEvent.tags?.map((tag) => (
-                                                    <Chip label={tag} size="small" className={css.chip} />
+                                                {currentEvent.tags?.map((tag, index) => (
+                                                    <Chip key={index} label={tag} size="small" className={css.chip} />
                                                 ))}
                                             </div>
                                         </Grid>

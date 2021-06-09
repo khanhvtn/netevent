@@ -2,20 +2,12 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(() => ({
     errorBox: {
-        backgroundColor: 'background.default',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        justifyContent: 'center',
-        margin: 200
+        position: "absolute",
+        width: '150px',
+        height: '50px',
+        top: "50%",
+        left: "50%",
+        marginLeft: '-50px', /* margin is -0.5 * dimension */
+        marginTop: '-25px',
     },
-    imageAlign: {
-        textAlign: 'center'
-    },
-    handleImage: {
-        marginTop: 100,
-        display: 'inline-block',
-        maxWidth: '100%',
-        width: 560
-    }
 }));

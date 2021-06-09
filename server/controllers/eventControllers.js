@@ -635,6 +635,11 @@ const getFacilityAndTaskByEventName = async (req, res, next) => {
         },
       ],
     });
+
+    if(!event){
+      return cusResponse(res, 200, [], null);
+    }
+
     return cusResponse(res, 200, event, null);
   } catch (error) {
     return next(new CustomError(500, error.message));
