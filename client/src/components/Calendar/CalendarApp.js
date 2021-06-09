@@ -57,7 +57,7 @@ const CalendarApp = () => {
             pathname: '/dashboard/event-detail',
             state: {
                 from: '/dashboard/creator-calendar',
-                event: { 
+                event: {
                     ...event.resource,
                     eventName: event.title,
                     endDate: event.end,
@@ -86,7 +86,7 @@ const CalendarApp = () => {
     const handleClose = () => {
         setState((prevState) => ({ ...prevState, open: !prevState.open }));
     };
-    
+
     return (
         <Paper
             elevation={3}
@@ -104,72 +104,72 @@ const CalendarApp = () => {
                     <Skeleton height="100px" />
                 </>
             ) : (
-                <Calendar
-                    popup
-                    selectable
-                    formats={{
-                        agendaHeaderFormat: (
-                            { start, end },
-                            culture,
-                            localizer
-                        ) =>
-                            localizer.format(start, 'DD/MM/YYYY', culture) +
-                            ' — ' +
-                            localizer.format(end, 'DD/MM/YYYY', culture),
-                    }}
-                    style={{ height: '100vh' }}
-                    localizer={localizer}
-                    events={genEvents}
-                    defaultView={Views.MONTH}
-                    scrollToTime={new Date()}
-                    defaultDate={new Date()}
-                    onSelectEvent={handleSelectEvent}
-                    onSelectSlot={handlePickEventTime}
-                    components={{
-                        event: CalendarEvent,
-                    }}
-                    eventPropGetter={(date) => {
-                        let styleTemplate = {
-                            style: {
-                                color: '#333',
-                                outline: 'none',
-                            },
-                        };
-                        const { isApproved } = date.resource;
-                        /* Approve Status
-                    Null is pending and color is yellow
-                    True Accepted and color is green
-                    False Rejected and color is red
-                     */
-                        if (isApproved === null) {
-                            styleTemplate = {
-                                ...styleTemplate,
+                    <Calendar
+                        popup
+                        selectable
+                        formats={{
+                            agendaHeaderFormat: (
+                                { start, end },
+                                culture,
+                                localizer
+                            ) =>
+                                localizer.format(start, 'DD/MM/YYYY', culture) +
+                                ' — ' +
+                                localizer.format(end, 'DD/MM/YYYY', culture),
+                        }}
+                        style={{ height: '100vh' }}
+                        localizer={localizer}
+                        events={genEvents}
+                        defaultView={Views.MONTH}
+                        scrollToTime={new Date()}
+                        defaultDate={new Date()}
+                        onSelectEvent={handleSelectEvent}
+                        onSelectSlot={handlePickEventTime}
+                        components={{
+                            event: CalendarEvent,
+                        }}
+                        eventPropGetter={(date) => {
+                            let styleTemplate = {
                                 style: {
-                                    ...styleTemplate.style,
-                                    backgroundColor: `rgba(251, 191, 36, 1)`,
+                                    color: '#333',
+                                    outline: 'none',
                                 },
                             };
-                        } else if (isApproved === true) {
-                            styleTemplate = {
-                                ...styleTemplate,
-                                style: {
-                                    ...styleTemplate.style,
-                                    backgroundColor: `rgba(52, 211, 153, 1)`,
-                                },
-                            };
-                        } else {
-                            styleTemplate = {
-                                ...styleTemplate,
-                                style: {
-                                    ...styleTemplate.style,
-                                    backgroundColor: `rgba(248, 113, 113, 1)`,
-                                },
-                            };
-                        }
-                        return styleTemplate;
-                    }}
-                />
-            )}
+                            const { isApproved } = date.resource;
+                            /* Approve Status
+                        Null is pending and color is yellow
+                        True Accepted and color is green
+                        False Rejected and color is red
+                         */
+                            if (isApproved === null) {
+                                styleTemplate = {
+                                    ...styleTemplate,
+                                    style: {
+                                        ...styleTemplate.style,
+                                        backgroundColor: `rgba(251, 191, 36, 1)`,
+                                    },
+                                };
+                            } else if (isApproved === true) {
+                                styleTemplate = {
+                                    ...styleTemplate,
+                                    style: {
+                                        ...styleTemplate.style,
+                                        backgroundColor: `rgba(52, 211, 153, 1)`,
+                                    },
+                                };
+                            } else {
+                                styleTemplate = {
+                                    ...styleTemplate,
+                                    style: {
+                                        ...styleTemplate.style,
+                                        backgroundColor: `rgba(248, 113, 113, 1)`,
+                                    },
+                                };
+                            }
+                            return styleTemplate;
+                        }}
+                    />
+                )}
             {/* Dialog Create Event */}
             <Dialog
                 fullWidth

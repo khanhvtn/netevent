@@ -5,9 +5,11 @@ export default makeStyles((theme) => ({
         flexGrow: 1
     },
     paper: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(9),
         textAlign: 'center',
         color: theme.palette.text.secondary,
+        backgroundColor: theme.palette.background.default,
+        minHeight: '78vh'
     },
     formControl: {
         margin: theme.spacing(1),
@@ -20,7 +22,7 @@ export default makeStyles((theme) => ({
         paddingTop: 20
     },
     buttonSend: {
-        padding: theme.spacing(2),
+        paddingTop: theme.spacing(2),
     },
     contentWrapper: {
         marginTop: '20%'

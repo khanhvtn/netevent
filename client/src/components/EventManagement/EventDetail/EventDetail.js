@@ -95,6 +95,7 @@ const initialState = {
     openUpdateSnackBar: false,
     isUpdated: false,
     isParticipantUpdated: false,
+    isDetailLoading: false
 };
 
 const initialDeleteState = {
@@ -119,6 +120,24 @@ const EventDetail = () => {
     const [filters, setFilters] = useState(filterState);
     const [selected, setSelected] = useState([]);
 
+    const {
+        facilities,
+        tasks,
+        isDetailLoading,
+        isLoading,
+        updateEventSuccess,
+        newUpdateEventDetail,
+        isParticipantUpdated,
+    } = useSelector((state) => ({
+        newUpdateEventDetail: state.event.eventDetail,
+        facilities: state.event.eventDetail?.facilityHistoryListId,
+        tasks: state.event.eventDetail?.taskListId,
+        isDetailLoading: state.event.isDetailLoading,
+        isLoading: state.event.isLoading,
+        updateEventSuccess: state.event.updateSuccess,
+        isParticipantUpdated: state.participant.isUpdated
+    }));
+
     // Update new state when getting props from event-management page
     useEffect(() => {
         // Return the previous page when there is no props passing
@@ -139,28 +158,18 @@ const EventDetail = () => {
 
     // Get Facility and Task if state event existed
     useEffect(() => {
-        if (state.event) {
+        if (state.event && !isDetailLoading) {
             dispatch(getFacilityAndTaskByEventName(state.event.eventName));
+            setState((prevState) => ({
+                ...prevState,
+                isDetailLoading: !prevState.isDetailLoading
+            }))
         }
     }, [dispatch, state.event]);
 
-    const {
-        facilities,
-        tasks,
-        isDetailLoading,
-        isLoading,
-        updateEventSuccess,
-        newUpdateEventDetail,
-        isParticipantUpdated,
-    } = useSelector((state) => ({
-        newUpdateEventDetail: state.event.eventDetail,
-        facilities: state.event.eventDetail?.facilityHistoryListId,
-        tasks: state.event.eventDetail?.taskListId,
-        isDetailLoading: state.event.isDetailLoading,
-        isLoading: state.event.isLoading,
-        updateEventSuccess: state.event.updateSuccess,
-        isParticipantUpdated: state.participant.isUpdated
-    }));
+    console.log(state.event)
+    console.log(newUpdateEventDetail)
+
 
     // UseEffect for update event success
     useEffect(() => {
@@ -198,8 +207,8 @@ const EventDetail = () => {
             setDeleteState((prevState) => ({
                 ...prevState,
                 eventId: state.event?._id,
-                taskListId: tasks.map((task) => task._id),
-                historyFacilityListId: facilities.map((facility) => facility._id),
+                taskListId: tasks?.map((task) => task._id),
+                historyFacilityListId: facilities?.map((facility) => facility._id),
             }));
     }, [isDetailLoading]);
 
@@ -859,7 +868,7 @@ const EventDetail = () => {
                                         Tags
                                 </Typography>
                                     <div className={css.chipContainer}>
-                                        {state.event?.tags.map((tag, index) => (
+                                        {state.event?.tags?.map((tag, index) => (
                                             <Chip key={index} label={tag} size="small" className={css.chip} />
                                         ))}
                                     </div>

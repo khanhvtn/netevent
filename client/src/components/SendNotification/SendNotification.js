@@ -108,6 +108,7 @@ const SendNotification = () => {
                                             value={state.eventID}
                                             onChange={(e) => setState({ ...state, eventID: e.target.value })}
                                             label="Select Event"
+                                            style={{ backgroundColor: 'white' }}
                                         >
                                             <MenuItem value="">
                                                 <em>None</em>
@@ -123,7 +124,7 @@ const SendNotification = () => {
                                     </Grid>
 
                                     <Grid item xs={6} md={6} lg={6} >
-                                        <TextField id="filled-basic" label="Title" value={state.title} fullWidth
+                                        <TextField style={{ backgroundColor: 'white' }} variant="outlined" id="filled-basic" label="Title" value={state.title} fullWidth
                                             onChange={(e) => setState({ ...state, title: e.target.value })} />
                                         {errorTitle === true && <Typography className={css.errorStyle}>Title must not be empty</Typography>}
                                     </Grid>
@@ -134,7 +135,7 @@ const SendNotification = () => {
                                     <Grid item xs={12} md={12} lg={12} align="left">
                                         <Typography align="left">
                                             Description
-                                </Typography>
+                                        </Typography>
                                         <RichTextEditor
                                             disabled={false}
                                             setState={setState} />
@@ -145,8 +146,8 @@ const SendNotification = () => {
                                 <Grid container spacing={2} direction="row" justify="start-end" alignItems="start-end" className={css.buttonSend}>
                                     <Grid item xs={12} md={12} lg={12} align="right">
                                         <Button variant="contained" color="primary" className={css.buttonSend1} onClick={handleSend}>
-                                            Send
-                                </Button>
+                                            Send Email
+                                        </Button>
                                     </Grid>
                                 </Grid>
                             </FormControl>

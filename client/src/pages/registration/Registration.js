@@ -77,12 +77,21 @@ const Registration = () => {
         window.scrollTo(0, 0)
     }, [])
 
+    // Check if page is valid by event name
+    useEffect(() => {
+        if (currentEvent.isLoaded && !currentEvent?.eventName && !isLoading) {
+            console.log("Check push")
+            history.push('/404')
+        }
+    }, [currentEvent.eventName, isLoading])
+
     // Call API to get current event by name
     useEffect(() => {
-        if (!currentEvent?.eventName && !isReviewed) {
+        if (!currentEvent?.eventName && !isReviewed && !currentEvent.isLoaded && !isLoading) {
+            console.log("Check API")
             dispatch(getFacilityAndTaskByEventName(eventName));
         }
-    }, [dispatch, currentEvent])
+    }, [dispatch, currentEvent.eventName, currentEvent.isLoaded, isReviewed, isLoading])
 
     // UseEffect to check review status and load the event detail from history
     useEffect(() => {
@@ -114,14 +123,6 @@ const Registration = () => {
             }));
         }
     }, [currentEvent])
-
-    // Check if page is valid by event name
-    useEffect(() => {
-        if (currentEvent.isLoaded && !currentEvent?.eventName) {
-            history.push('/404')
-        }
-    }, [currentEvent])
-
 
     const contentState = convertFromRaw(JSON.parse(currentEvent?.description ? currentEvent?.description : initialDescription));
     const editorState = EditorState.createWithContent(contentState);
@@ -165,8 +166,8 @@ const Registration = () => {
     const handleOnBackToDetailPage = () => {
         setCurrentEvent(eventInitialState)
         if (history.location?.state) {
-            history.replace();
             history.goBack();
+            // history.replace();
         }
     }
 
@@ -188,7 +189,7 @@ const Registration = () => {
                         <img className={css.responsive} src={currentEvent.image} />
                     </div>
                     <div className={css.root}>
-                        <Paper className={css.wrapper}>
+                        <Paper className={css.wrapper} elevation={5}>
                             <Grid className={css.topDisplay} container>
                                 <Grid item
 
