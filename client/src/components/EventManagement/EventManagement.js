@@ -33,8 +33,10 @@ const initialState = {
     status: '',
     budgetRange: null,
     participantRange: null,
-    startDate: null,
-    endDate: null,
+    startFrom: null,
+    startTo: null,
+    endFrom: null,
+    endTo: null,
     openDeleteSnackBar: false
 }
 
@@ -43,8 +45,10 @@ const filterState = {
     status: '',
     budgetRange: 2500000,
     participantRange: 30,
-    startDate: null,
-    endDate: null,
+    startFrom: null,
+    startTo: null,
+    endFrom: null,
+    endTo: null,
 };
 
 const EventManagement = () => {
@@ -75,8 +79,12 @@ const EventManagement = () => {
                 state.take,
                 state.page,
                 state.type,
-                // state.budgetRange,
-                // state.participantRange
+                state.budgetRange,
+                state.participantRange,
+                state.startFrom,
+                state.startTo,
+                state.endFrom,
+                state.endTo
             ))
         }
         history.replace()
@@ -86,7 +94,13 @@ const EventManagement = () => {
         state.search,
         state.take,
         state.page,
-        state.type
+        state.type,
+        state.budgetRange,
+        state.participantRange,
+        state.startFrom,
+        state.startTo,
+        state.endFrom,
+        state.endTo
     ]);
 
     const { eventTypes } = useSelector(() => ({
@@ -271,8 +285,10 @@ const EventManagement = () => {
                 type={filters.type}
                 budgetRange={filters.budgetRange}
                 participantRange={filters.participantRange}
-                startDate={filters.startDate}
-                endDate={filters.endDate}
+                startFrom={filters.startFrom}
+                startTo={filters.startTo}
+                endFrom={filters.endFrom}
+                endTo={filters.endTo}
                 setFilters={setFilters}
                 handleFilterChange={handleFilterChange}
                 handleToggleFilter={handleToggleFilter}

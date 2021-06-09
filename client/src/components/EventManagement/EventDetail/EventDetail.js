@@ -340,6 +340,7 @@ const EventDetail = () => {
         setState((prevState) => ({
             ...prevState,
             ...filters,
+            page: 1,
             openFilter: !prevState.openFilter,
         }));
         setSelected([])

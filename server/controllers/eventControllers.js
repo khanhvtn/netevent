@@ -166,12 +166,47 @@ const createEvent = async (req, res, next) => {
  */
 const filterEventManagement = async (req, res, next) => {
   try {
+    //get max date and min date of updatedAt and createdAt
+    const startMaxDate = await Event.find()
+      .sort({ startDate: -1 })
+      .limit(1);
+    const startMinDate = await Event.find()
+      .sort({ startDate: 1 })
+      .limit(1);
+    const endMaxDate = await Event.find()
+      .sort({ endDate: -1 })
+      .limit(1);
+    const endMinDate = await Event.find()
+      .sort({ endDate: 1 })
+      .limit(1);
+    const listRangeDate = await Promise.all([
+      startMaxDate,
+      startMinDate,
+      endMaxDate,
+      endMinDate,
+    ]);
+
+    //return empty result to client if database has no data.
+    if (
+      !startMaxDate.length ||
+      !startMinDate.length ||
+      !endMaxDate.length ||
+      !endMinDate.length
+    ) {
+      return cusResponse(res, 200, [], null);
+    }
+
+
     let options = {
       search: '',
       take: 5,
       type: '',
       budgetRange: '',
       participantRange: '',
+      startMaxDate: listRangeDate[0][0].startDate,
+      startMinDate: listRangeDate[1][0].startDate,
+      endMaxDate: listRangeDate[2][0].endDate,
+      endMinDate: listRangeDate[3][0].endDate
     };
     //adding search
     if (req.query.search) {
@@ -225,6 +260,50 @@ const filterEventManagement = async (req, res, next) => {
     }
 
     /* 
+        Add startFrom filter
+         */
+    if (req.query.startFrom) {
+      options = {
+        ...options,
+        startMinDate: new Date(req.query.startFrom),
+      };
+    }
+
+    /* 
+        Add startTo filter
+         */
+
+    if (req.query.startTo) {
+      options = {
+        ...options,
+        startMaxDate: new Date(req.query.startTo),
+      };
+    }
+
+    /* 
+        Add endFrom filter
+         */
+    if (req.query.endFrom) {
+      options = {
+        ...options,
+        endMinDate: new Date(req.query.endFrom),
+      };
+    }
+
+    /* 
+        Add endTo filter
+         */
+
+    if (req.query.endTo) {
+      options = {
+        ...options,
+        endMaxDate: new Date(req.query.endTo),
+      };
+    }
+
+    console.log(options)
+
+    /* 
         Variable page default is 1
          */
     const page = parseInt(req.query.page) || 1;
@@ -235,6 +314,14 @@ const filterEventManagement = async (req, res, next) => {
     if (options.type) {
       const queryEvent = await Event.find({
         $or: [{ eventName: new RegExp(options.search, 'i') }],
+        startDate: {
+          $gte: options.startMinDate,
+          $lte: options.startMaxDate,
+        },
+        endDate: {
+          $gte: options.endMinDate,
+          $lte: options.endMaxDate,
+        },
       })
         .select('-taskListId -facilityHistoryListId')
         .populate({
@@ -454,37 +541,28 @@ const updateEvent = async (req, res, next) => {
       ...tasks.filter((task) => task._id).map((task) => task._id),
       ...newTaskListResult.map((task) => task._id),
     ];
-    console.log('newTaskListIds: ', newTaskListIds);
 
     const newHistoryFacilityListIds = [
       ...borrowFacilities.filter((task) => task._id).map((task) => task._id),
       ...newHistoryFacilityListResult.map((task) => task._id),
     ];
-    console.log('newHistoryFacilityListIds: ', newHistoryFacilityListIds);
 
     // Get current task and history facility
     const currentTaskListIds = currentEvent.taskListId.map((id) =>
       id.toString()
     );
-    console.log('currentTaskListIds: ', currentTaskListIds);
 
     const currentHistoryFacilityListIds =
       currentEvent.facilityHistoryListId.map((id) => id.toString());
-    console.log(
-      'currentHistoryFacilityListIds: ',
-      currentHistoryFacilityListIds
-    );
 
     // Get all delete task and history facility
     const deleteTaskListIds = currentTaskListIds.filter(
       (id) => !newTaskListIds.includes(id)
     );
-    console.log('deleteTaskListIds: ', deleteTaskListIds);
 
     const deleteHistoryFacilityListIds = currentHistoryFacilityListIds.filter(
       (id) => !newHistoryFacilityListIds.includes(id)
     );
-    console.log('deleteHistoryFacilityListIds: ', deleteHistoryFacilityListIds);
 
     // Handle delete tasks
     const handleDeleteTasks = await Task.deleteMany({ _id: deleteTaskListIds });
@@ -500,9 +578,6 @@ const updateEvent = async (req, res, next) => {
       taskListId: newTaskListIds,
       facilityHistoryListId: newHistoryFacilityListIds,
     };
-
-    const { image, ...testEvent } = newUpdateState;
-    console.log('newUpdateState: ', testEvent);
 
     // Update new event
     const updatedEvent = await Event.findOneAndUpdate(
@@ -542,6 +617,7 @@ const updateEvent = async (req, res, next) => {
     );
 
     return cusResponse(res, 200, updatedEvent, null);
+
   } catch (error) {
     console.log(error.message);
     if (error.name == 'ValidationError') {
@@ -636,7 +712,7 @@ const getFacilityAndTaskByEventName = async (req, res, next) => {
       ],
     });
 
-    if(!event){
+    if (!event) {
       return cusResponse(res, 200, [], null);
     }
 

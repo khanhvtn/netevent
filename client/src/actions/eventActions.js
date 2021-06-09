@@ -154,10 +154,10 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
     })
 }
 
-export const getEvents = (search, take, page, type, budgetRange, participantRange) => async (dispatch) => {
+export const getEvents = (search, take, page, type, budgetRange, participantRange, startFrom, startTo, endFrom, endTo) => async (dispatch) => {
     setEventIsLoading(true, dispatch);
     try {
-        const data = await getEventsAPI(search, take, page, type, budgetRange, participantRange);
+        const data = await getEventsAPI(search, take, page, type, budgetRange, participantRange, startFrom, startTo, endFrom, endTo);
 
         dispatch({
             type: EVENT_GET_ALL_FILTER,

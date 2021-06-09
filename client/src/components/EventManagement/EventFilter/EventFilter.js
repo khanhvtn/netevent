@@ -57,8 +57,10 @@ const EventFilter = ({
     type,
     budgetRange,
     participantRange,
-    startDate,
-    endDate,
+    startFrom,
+    startTo,
+    endFrom,
+    endTo,
     setFilters,
     handleToggleFilter,
     handleFilterChange,
@@ -153,14 +155,14 @@ const EventFilter = ({
                                 size="small"
                                 fullWidth
                                 margin="normal"
-                                id="startDate"
-                                label="Start Date"
+                                id="startFrom"
+                                label="Start From"
                                 format="MM/DD/YYYY"
-                                value={startDate}
+                                value={startFrom}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        startDate: date.toDate(),
+                                        startFrom: date.toDate(),
                                     }));
                                 }}
                                 KeyboardButtonProps={{
@@ -172,14 +174,52 @@ const EventFilter = ({
                                 size="small"
                                 fullWidth
                                 margin="normal"
-                                id="endDate"
-                                label="End Date"
+                                id="startTo"
+                                label="Start To"
                                 format="MM/DD/YYYY"
-                                value={endDate}
+                                value={startTo}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        endDate: date.toDate(),
+                                        startTo: date.toDate(),
+                                    }));
+                                }}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                            />
+                            <KeyboardDatePicker
+                                fullWidth
+                                id="endFrom"
+                                label="End From"
+                                size="small"
+                                margin="normal"
+                                format="MM/DD/YYYY"
+                                inputVariant="outlined"
+                                value={endFrom}
+                                onChange={(date) => {
+                                    setFilters((prevState) => ({
+                                        ...prevState,
+                                        endFrom: date.toDate(),
+                                    }));
+                                }}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                            />
+                            <KeyboardDatePicker
+                                fullWidth
+                                id="endTo"
+                                label="End To"
+                                size="small"
+                                margin="normal"
+                                format="MM/DD/YYYY"
+                                inputVariant="outlined"
+                                value={endTo}
+                                onChange={(date) => {
+                                    setFilters((prevState) => ({
+                                        ...prevState,
+                                        endTo: date.toDate(),
                                     }));
                                 }}
                                 KeyboardButtonProps={{

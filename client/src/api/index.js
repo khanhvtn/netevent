@@ -99,10 +99,22 @@ export const recoverEventTypesAPI = (userReq) =>
   AXIOS.patch(`/eventType/recovery`, userReq);
 
 // Event APIs
-export const getEventsAPI = (search, take, page, type, budgetRange, participantRange) =>
-  AXIOS.get(
-    `/event/get?search=${search ? search : ''}&take=${take ? take : ''}&page=${page ? page : ''}&type=${type ? type : ''}&budgetRange=${budgetRange ? budgetRange : ''}&participantRange=${participantRange ? participantRange : ''}`
+export const getEventsAPI = (search, take, page, type, budgetRange, participantRange, startFrom, startTo, endFrom, endTo) => {
+  const searchQuery = `search=${search ? search : ''}`;
+  const takeQuery = `take=${take ? take : ''}`;
+  const pageQuery = `page=${page ? page : ''}`;
+  const typeQuery = `type=${type ? type : ''}`;
+  const budgetQuery = `budgetRange=${budgetRange ? budgetRange : ''}`;
+  const participantQuery = `participantRange=${participantRange ? participantRange : ''}`;
+  const startFromQuery = `startFrom=${startFrom ? startFrom : ''}`;
+  const startToQuery = `startTo=${startTo ? startTo : ''}`;
+  const endFromQuery = `endFrom=${endFrom ? endFrom : ''}`;
+  const endToQuery = `endTo=${endTo ? endTo : ''}`;
+
+  return AXIOS.get(
+    `/event/get?${searchQuery}&${takeQuery}&${pageQuery}&${typeQuery}&${budgetQuery}&${participantQuery}&${startFromQuery}&${startToQuery}&${endFromQuery}&${endToQuery}`
   );
+}
 export const getFacilityAndTaskByEventNameAPI = (eventName) =>
   AXIOS.get(`/event/detail?eventName=${eventName ? eventName : ''}`)
 export const createEventAPI = (userReq) => AXIOS.post(`/event/create`, userReq);
