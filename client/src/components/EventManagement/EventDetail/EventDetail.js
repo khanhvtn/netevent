@@ -824,7 +824,7 @@ const EventDetail = () => {
                                         ).format('LT')}`}
                                     </Typography>
                                     <Typography variant="caption" color="primary">
-                                        <Link style={{ textDecoration: 'none' }}>
+                                        <Link to="/dashboard/creator-calendar" style={{ textDecoration: 'none' }}>
                                             View Calendar
                                     </Link>
                                     </Typography>
