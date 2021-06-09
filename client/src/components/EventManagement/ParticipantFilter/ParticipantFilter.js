@@ -1,10 +1,5 @@
 import React from 'react';
 import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker,
-} from '@material-ui/pickers';
-import {
-    Grid,
     Typography,
     Button,
     Select,
@@ -13,7 +8,6 @@ import {
     InputLabel,
     FormControl,
 } from '@material-ui/core';
-import MomentUtils from '@date-io/moment';
 //import useStyles in the last
 import useStyles from './styles';
 
@@ -24,7 +18,7 @@ const ParticipantFilter = ({
     handleClearFilter,
     handleApplyFilter,
     academic,
-    status,
+    isValid,
 }) => {
     const css = useStyles();
     return (
@@ -55,23 +49,23 @@ const ParticipantFilter = ({
                         </Select>
                     </FormControl>
                     <FormControl size="small" margin="normal" fullWidth variant="outlined">
-                        <InputLabel id="statusFilterLabel">Status</InputLabel>
+                        <InputLabel id="isValidFilterLabel">Status</InputLabel>
                         <Select
-                            id="statusFiler"
-                            label="status"
-                            labelId="statusFilterLabel"
-                            value={status}
+                            id="isValidFiler"
+                            label="Status"
+                            labelId="isValidFilterLabel"
+                            value={isValid}
                             onChange={handleFilterChange}
                             inputProps={{
-                                name: 'status',
+                                name: 'isValid',
                             }}
                         >
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value={1}>Valid</MenuItem>
-                            <MenuItem value={2}>Invalid</MenuItem>
-                            <MenuItem value={3}>Check-in</MenuItem>
+                            <MenuItem value={true}>Verified</MenuItem>
+                            <MenuItem value={false}>Invalid</MenuItem>
+                            <MenuItem value={"null"}>Pending</MenuItem>
                         </Select>
                     </FormControl>
                 </div>

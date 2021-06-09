@@ -46,7 +46,7 @@ const participantSchema = mongoose.Schema({
 
     isValid: {
         type: Boolean,
-        default: false
+        default: null
     },
 
     isAttended: {

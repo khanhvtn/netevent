@@ -34,7 +34,7 @@ import {
     deleteEventWithTaskAndFacilityHistory,
     getFacilityAndTaskByEventName,
 } from '../../../actions/eventActions';
-import { getParticipants } from '../../../actions/participantActions';
+import { getParticipants, setInvalidAndVerifyParticipant } from '../../../actions/participantActions';
 import { Skeleton } from '@material-ui/lab';
 import CreateEvent from '../../CreateEvent/CreateEvent';
 import SystemNotification from '../../Notification/Notification';
@@ -45,6 +45,7 @@ import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
 import useStyles from './styles';
 import ParticipantFilter from '../ParticipantFilter/ParticipantFilter';
+import { is } from 'date-fns/esm/locale';
 
 
 function TabPanel(props) {
@@ -86,12 +87,14 @@ const initialState = {
     openFilter: false,
     status: '',
     academic: '',
+    isValid: '',
     event: null,
     previousPath: null,
     openDeleteDialog: false,
     openUpdateDialog: false,
     openUpdateSnackBar: false,
     isUpdated: false,
+    isParticipantUpdated: false,
 };
 
 const initialDeleteState = {
@@ -101,8 +104,8 @@ const initialDeleteState = {
 };
 
 const filterState = {
-    status: '',
-    academic: ''
+    academic: '',
+    isValid: '',
 }
 
 const EventDetail = () => {
@@ -128,7 +131,7 @@ const EventDetail = () => {
             ...prevState,
             event: {
                 ...(history.location.state?.event || newUpdateEventDetail),
-                description: history.location.state?.event?.description || newUpdateEventDetail.description || '', // Fix later
+                description: history.location?.state?.event?.description || newUpdateEventDetail.description || '', // Fix later
             },
             previousPath: history.location.state?.from
         }));
@@ -148,6 +151,7 @@ const EventDetail = () => {
         isLoading,
         updateEventSuccess,
         newUpdateEventDetail,
+        isParticipantUpdated,
     } = useSelector((state) => ({
         newUpdateEventDetail: state.event.eventDetail,
         facilities: state.event.eventDetail?.facilityHistoryListId,
@@ -155,15 +159,26 @@ const EventDetail = () => {
         isDetailLoading: state.event.isDetailLoading,
         isLoading: state.event.isLoading,
         updateEventSuccess: state.event.updateSuccess,
+        isParticipantUpdated: state.participant.isUpdated
     }));
 
     // UseEffect for update event success
     useEffect(() => {
+        if (isParticipantUpdated) {
+            setSelected([])
+            setState((prevState) => ({
+                ...prevState,
+                academic: '',
+                isValid: '',
+                isParticipantUpdated: !prevState.isParticipantUpdated
+            }));
+        }
+
         setState((prevState) => ({
             ...prevState,
-            openUpdateSnackBar: updateEventSuccess,
+            openUpdateSnackBar: updateEventSuccess || isParticipantUpdated,
         }));
-    }, [updateEventSuccess]);
+    }, [updateEventSuccess, isParticipantUpdated]);
 
     // UseEffect for update event status
     useEffect(() => {
@@ -188,12 +203,27 @@ const EventDetail = () => {
             }));
     }, [isDetailLoading]);
 
-    // Use Effect call participants API after delete state is set
+    // Use Effect call participants API after state is set
     useEffect(() => {
         if (state.event?._id && tabs === 1) {
-            dispatch(getParticipants(state.search, state.take, state.page, state.event._id))
+            dispatch(
+                getParticipants(
+                    state.search,
+                    state.take,
+                    state.page,
+                    state.academic,
+                    state.isValid,
+                    state.event._id))
         }
-    }, [dispatch, state.search, state.take, state.page, tabs])
+    }, [dispatch,
+        state.search,
+        state.take,
+        state.page,
+        state.isValid,
+        state.academic,
+        state.isParticipantUpdated,
+        tabs]
+    );
 
     // Handle expand of accordion
     const handleExpand = (panel) => (event, isExpanded) => {
@@ -201,6 +231,7 @@ const EventDetail = () => {
     };
 
     const handleChangeTabs = (event, newValue) => {
+        setSelected([]);
         setTabs(newValue);
     };
 
@@ -213,7 +244,6 @@ const EventDetail = () => {
     }
 
     const handleOnClickViewTemplate = () => {
-        console.log(`/registration/${state.event.eventName.replace(/\s/g, "-")}`)
         history.push({
             pathname: `/registration/${state.event.eventName.replace(/\s/g, "-")}`,
             state: {
@@ -312,6 +342,7 @@ const EventDetail = () => {
             ...filters,
             openFilter: !prevState.openFilter,
         }));
+        setSelected([])
     };
 
     //handle Clear Filter
@@ -325,7 +356,16 @@ const EventDetail = () => {
             ...filterState,
             openFilter: !prevState.openFilter,
         }));
+        setSelected([])
     };
+
+    const handleSetInvalid = () => {
+        dispatch(setInvalidAndVerifyParticipant({ invalidList: selected, action: false }))
+    }
+
+    const handleSetVerified = () => {
+        dispatch(setInvalidAndVerifyParticipant({ verifiedList: selected, action: true }))
+    }
 
     return (
         <>
@@ -840,7 +880,7 @@ const EventDetail = () => {
                                     <InputBase
                                         onChange={handleChange}
                                         className={css.inputInput}
-                                        placeholder="Search by email"
+                                        placeholder="Search by email, name, university or major"
                                         name="search"
                                         value={state.search}
                                         inputProps={{
@@ -860,6 +900,8 @@ const EventDetail = () => {
                             </Toolbar>
                             <ParticipantTable
                                 take={state.take}
+                                handleSetInvalid={handleSetInvalid}
+                                handleSetVerified={handleSetVerified}
                                 selected={selected}
                                 setSelected={setSelected} />
                             <ParticipantPagination
@@ -878,8 +920,8 @@ const EventDetail = () => {
             <ParticipantFilter
                 openFilter={state.openFilter}
                 handleToggleFilter={handleToggleFilter}
-                status={filters.status}
                 academic={filters.academic}
+                isValid={filters.isValid}
                 handleFilterChange={handleFilterChange}
                 handleApplyFilter={handleApplyFilter}
                 handleClearFilter={handleClearFilter} />

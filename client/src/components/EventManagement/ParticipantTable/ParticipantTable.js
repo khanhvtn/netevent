@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment'
@@ -14,14 +14,13 @@ import {
     TableHead,
     TableSortLabel,
     Typography,
-    Tooltip,
     Button,
     Chip,
+    CircularProgress,
 } from '@material-ui/core';
-import { Delete, Create, Edit } from '@material-ui/icons';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 //import makeStyles in the last
 import useStyles from './styles';
@@ -195,6 +194,9 @@ const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
     const {
         numSelected,
+        handleSetInvalid,
+        handleSetVerified,
+        isLoading
     } = props;
 
     return (
@@ -222,6 +224,29 @@ const EnhancedTableToolbar = (props) => {
                         List of participants
                     </Typography>
                 )}
+
+            {numSelected > 0  &&
+                <>
+                    <Button
+                        disabled={isLoading}
+                        onClick={handleSetInvalid}
+                        variant="contained"
+                        color="secondary"
+                    >
+                        {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Invalid'}
+
+                    </Button>
+                    <Button
+                        disabled={isLoading}
+                        onClick={handleSetVerified}
+                        style={{ marginLeft: '8px' }}
+                        variant="contained"
+                        color="primary"
+                    >
+                        {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Verify'}
+                    </Button>
+                </>
+            }
         </Toolbar>
     );
 };
@@ -234,6 +259,8 @@ const ParticipantTable = ({
     take,
     selected,
     setSelected,
+    handleSetInvalid,
+    handleSetVerified,
 }) => {
     const css = useStyles();
 
@@ -258,19 +285,19 @@ const ParticipantTable = ({
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = participants.map((participant) => participant.email);
+            const newSelecteds = participants.map((participant) => participant._id);
             setSelected(newSelecteds);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event, email) => {
-        const selectedIndex = selected.indexOf(email);
+    const handleClick = (event, _id) => {
+        const selectedIndex = selected.indexOf(_id);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, email);
+            newSelected = newSelected.concat(selected, _id);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -285,7 +312,7 @@ const ParticipantTable = ({
         setSelected(newSelected);
     };
 
-    const isSelected = (email) => selected.indexOf(email) !== -1;
+    const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
     const emptyRows = take - participants.length;
 
@@ -295,6 +322,9 @@ const ParticipantTable = ({
         <Paper className={css.paper1} elevation={0}>
             <EnhancedTableToolbar
                 numSelected={selected.length}
+                handleSetInvalid={handleSetInvalid}
+                handleSetVerified={handleSetVerified}
+                isLoading={isLoading}
             />
             <TableContainer>
                 <Table
@@ -322,9 +352,9 @@ const ParticipantTable = ({
                                                 <TableCell>
                                                     <Skeleton />
                                                 </TableCell>
-                                                {headCells.map(() => {
+                                                {headCells.map((row, index) => {
                                                     return (
-                                                        <TableCell>
+                                                        <TableCell key={index}>
                                                             <Skeleton />
                                                         </TableCell>
                                                     )
@@ -352,14 +382,14 @@ const ParticipantTable = ({
                                         participants,
                                         getComparator(order, orderBy)
                                     ).map((row, index) => {
-                                        const isItemSelected = isSelected(row.email);
+                                        const isItemSelected = isSelected(row._id);
                                         const labelId = `enhanced-table-checkbox-${index}`;
 
                                         return (
                                             <TableRow
                                                 hover
                                                 onClick={(event) =>
-                                                    handleClick(event, row.email)
+                                                    handleClick(event, row._id)
                                                 }
                                                 role="checkbox"
                                                 aria-checked={isItemSelected}
@@ -399,7 +429,29 @@ const ParticipantTable = ({
                                                     {row.academic}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {row.isValid ? 'Valid' : 'Invalid'}
+                                                    {row.isValid === null ?
+                                                        <Chip
+                                                            className={css.fixedWidthChip}
+                                                            size="small"
+                                                            label="Pending"
+                                                            color="default"
+                                                        />
+                                                        : row.isValid
+                                                            ?
+                                                            <Chip
+                                                                className={css.fixedWidthChip}
+                                                                size="small"
+                                                                label="Verified"
+                                                                color="primary"
+                                                            />
+                                                            :
+                                                            <Chip
+                                                                className={css.fixedWidthChip}
+                                                                size="small"
+                                                                label="Invalid"
+                                                                color="secondary"
+                                                            />
+                                                    }
                                                 </TableCell>
                                             </TableRow>
                                         );

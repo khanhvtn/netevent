@@ -146,4 +146,5 @@ export const getAllFacilityHistoriesAPI = () =>
 
 // Participant API
 export const registerParticipantAPI = (participantData) => AXIOS.post('/participant/registerEvent', participantData);
-export const getParticipantsAPI = (search, take, page, eventId) => AXIOS.get(`/participant/filter?search=${search ? search : ''}&take=${take ? take : ''}&page=${page ? page : ''}&eventId=${eventId ? eventId : ''}`);
+export const getParticipantsAPI = (search, take, page, academic, isValid, eventId) => AXIOS.get(`/participant/filter?search=${search ? search : ''}&take=${take ? take : ''}&page=${page ? page : ''}&academic=${academic ? academic : ''}&isValid=${isValid === '' ? '' : isValid}&eventId=${eventId ? eventId : ''}`);
+export const setInvalidAndVerifyParticipantAPI = (userReq) => AXIOS.patch('/participant/update', userReq)

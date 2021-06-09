@@ -3,9 +3,14 @@ import {
     PARTICIPANT_LOADING,
     ERROR,
     ERROR_CLEAR,
-    PARTICIPANT_GET_ALL_FILTER
+    PARTICIPANT_GET_ALL_FILTER,
+    PARTICIPANT_UPDATE_SUCCESS
 } from '../constants';
-import { getParticipantsAPI, registerParticipantAPI } from '../api';
+import {
+    getParticipantsAPI,
+    registerParticipantAPI,
+    setInvalidAndVerifyParticipantAPI
+} from '../api';
 
 
 const sleep = (milliseconds) => {
@@ -66,14 +71,35 @@ export const registerParticipant = (participantData) => async (dispatch) => {
 }
 
 
-export const getParticipants = (search, take, page, eventId) => async (dispatch) => {
+export const getParticipants = (search, take, page, academic, isValid, eventId) => async (dispatch) => {
     setPartiticpantIsLoading(true, dispatch);
     try {
-        const data = await getParticipantsAPI(search, take, page, eventId);
+        const data = await getParticipantsAPI(search, take, page, academic, isValid, eventId);
         dispatch({
             type: PARTICIPANT_GET_ALL_FILTER,
             payload: data
         })
+    } catch (error) {
+        console.log(error.message)
+    }
+    setPartiticpantIsLoading(false, dispatch);
+}
+
+export const setInvalidAndVerifyParticipant = (userReq) => async (dispatch) => {
+    setPartiticpantIsLoading(true, dispatch);
+    try {
+        const data = await setInvalidAndVerifyParticipantAPI(userReq);
+        dispatch({
+            type: PARTICIPANT_UPDATE_SUCCESS,
+            payload: true,
+        });
+
+        setTimeout(() => {
+            dispatch({
+                type: PARTICIPANT_UPDATE_SUCCESS,
+                payload: false,
+            });
+        }, 3000);
     } catch (error) {
         console.log(error.message)
     }
