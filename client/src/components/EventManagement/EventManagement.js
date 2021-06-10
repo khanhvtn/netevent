@@ -98,7 +98,19 @@ const EventManagement = () => {
             );
         }
         history.replace();
-    }, [dispatch, history, state, userId]);
+    }, [dispatch,
+        history,
+        state.search,
+        state.take,
+        state.page,
+        state.type,
+        state.budgetRange,
+        state.participantRange,
+        state.startFrom,
+        state.startTo,
+        state.endFrom,
+        state.endTo,
+        userId]);
 
     const { eventTypes } = useSelector(() => ({
         eventTypes: state.eventType?.eventTypes,
@@ -106,7 +118,7 @@ const EventManagement = () => {
 
     // Request all event type in the first access
     useEffect(() => {
-        if (eventTypes) {
+        if (!eventTypes) {
             dispatch(getAllEventTypes());
         }
     }, []);
@@ -277,17 +289,17 @@ const EventManagement = () => {
                             <Typography>No data matched</Typography>
                         </Grid>
                     ) : (
-                        events.map((event) => {
-                            return (
-                                <EventCard
-                                    event={event}
-                                    key={event._id}
-                                    isLoading={isLoading}
-                                    onClickEvent={handleOnClickEvent}
-                                />
-                            );
-                        })
-                    )}
+                                events.map((event) => {
+                                    return (
+                                        <EventCard
+                                            event={event}
+                                            key={event._id}
+                                            isLoading={isLoading}
+                                            onClickEvent={handleOnClickEvent}
+                                        />
+                                    );
+                                })
+                            )}
                 </Grid>
 
                 {/* Event Pagination */}
