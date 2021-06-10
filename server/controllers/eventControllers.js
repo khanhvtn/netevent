@@ -207,11 +207,34 @@ const filterEventManagement = async (req, res, next) => {
             endMaxDate: listRangeDate[2][0].endDate,
             endMinDate: listRangeDate[3][0].endDate,
         };
+
+        /* Create Query Options */
+        let queryOptions = {};
+
         //adding search
         if (req.query.search) {
             options = {
                 ...options,
                 search: req.query.search.toString(),
+            };
+            queryOptions = {
+                ...queryOptions,
+                $or: [{ eventName: new RegExp(options.search, 'i') }],
+            };
+        }
+
+        /* 
+        Add filer by ownerID
+         */
+
+        if (req.query.ownerId) {
+            options = {
+                ...options,
+                ownerId: req.query.ownerId.toString(),
+            };
+            queryOptions = {
+                ...queryOptions,
+                ownerId: options.ownerId,
             };
         }
 
@@ -300,6 +323,19 @@ const filterEventManagement = async (req, res, next) => {
             };
         }
 
+        /* Set StartDate and EndDate Filter for query options */
+        queryOptions = {
+            ...queryOptions,
+            startDate: {
+                $gte: options.startMinDate,
+                $lte: options.startMaxDate,
+            },
+            endDate: {
+                $gte: options.endMinDate,
+                $lte: options.endMaxDate,
+            },
+        };
+
         /* 
         Variable page default is 1
          */
@@ -309,18 +345,7 @@ const filterEventManagement = async (req, res, next) => {
         Variable total event based on search and filter
          */
         if (options.type) {
-            const queryEvent = await Event.find({
-                $or: [{ eventName: new RegExp(options.search, 'i') }],
-                startDate: {
-                    $gte: options.startMinDate,
-                    $lte: options.startMaxDate,
-                },
-                endDate: {
-                    $gte: options.endMinDate,
-                    $lte: options.endMaxDate,
-                },
-                ownerId: req.user.id,
-            })
+            const queryEvent = await Event.find(queryOptions)
                 .select('-taskListId -facilityHistoryListId')
                 .populate({
                     path: 'eventTypeId',
@@ -346,18 +371,7 @@ const filterEventManagement = async (req, res, next) => {
             return cusResponse(res, 200, events, null, totalPages);
         }
 
-        const queryEvent = await Event.find({
-            $or: [{ eventName: new RegExp(options.search, 'i') }],
-            startDate: {
-                $gte: options.startMinDate,
-                $lte: options.startMaxDate,
-            },
-            endDate: {
-                $gte: options.endMinDate,
-                $lte: options.endMaxDate,
-            },
-            ownerId: req.user.id,
-        })
+        const queryEvent = await Event.find(queryOptions)
             .select('-taskListId -facilityHistoryListId')
             .populate({
                 path: 'eventTypeId',
@@ -684,7 +698,7 @@ const sendNotification = async (req, res, next) => {
     const notification = req.body;
     const participants = await Participant.find({
         event: notification.eventID,
-        isValid: true
+        isValid: true,
     });
     const emailParticipantsList = [];
     for (var i = 0; i < participants.length; i++) {

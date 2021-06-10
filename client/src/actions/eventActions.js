@@ -155,44 +155,20 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
     });
 };
 
-export const getEvents =
-    (
-        search,
-        take,
-        page,
-        type,
-        budgetRange,
-        participantRange,
-        startFrom,
-        startTo,
-        endFrom,
-        endTo
-    ) =>
-    async (dispatch) => {
-        setEventIsLoading(true, dispatch);
-        try {
-            const data = await getEventsAPI(
-                search,
-                take,
-                page,
-                type,
-                budgetRange,
-                participantRange,
-                startFrom,
-                startTo,
-                endFrom,
-                endTo
-            );
+export const getEvents = (userQueries) => async (dispatch) => {
+    setEventIsLoading(true, dispatch);
+    try {
+        const data = await getEventsAPI(userQueries);
 
-            dispatch({
-                type: EVENT_GET_ALL_FILTER,
-                payload: data,
-            });
-        } catch (error) {
-            console.log(error.message);
-        }
-        setEventIsLoading(false, dispatch);
-    };
+        dispatch({
+            type: EVENT_GET_ALL_FILTER,
+            payload: data,
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+    setEventIsLoading(false, dispatch);
+};
 
 export const getFacilityAndTaskByEventName =
     (eventName) => async (dispatch) => {
