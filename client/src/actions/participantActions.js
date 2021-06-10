@@ -9,6 +9,7 @@ import {
 import {
     getParticipantsAPI,
     registerParticipantAPI,
+    setAttendedParticipantAPI,
     setInvalidAndVerifyParticipantAPI
 } from '../api';
 
@@ -71,10 +72,10 @@ export const registerParticipant = (participantData) => async (dispatch) => {
 }
 
 
-export const getParticipants = (search, take, page, academic, isValid, eventId) => async (dispatch) => {
+export const getParticipants = (search, take, page, academic, isValid, isAttended, eventId) => async (dispatch) => {
     setPartiticpantIsLoading(true, dispatch);
     try {
-        const data = await getParticipantsAPI(search, take, page, academic, isValid, eventId);
+        const data = await getParticipantsAPI(search, take, page, academic, isValid, isAttended, eventId);
         dispatch({
             type: PARTICIPANT_GET_ALL_FILTER,
             payload: data
@@ -89,6 +90,27 @@ export const setInvalidAndVerifyParticipant = (userReq) => async (dispatch) => {
     setPartiticpantIsLoading(true, dispatch);
     try {
         const data = await setInvalidAndVerifyParticipantAPI(userReq);
+        dispatch({
+            type: PARTICIPANT_UPDATE_SUCCESS,
+            payload: true,
+        });
+
+        setTimeout(() => {
+            dispatch({
+                type: PARTICIPANT_UPDATE_SUCCESS,
+                payload: false,
+            });
+        }, 3000);
+    } catch (error) {
+        console.log(error.message)
+    }
+    setPartiticpantIsLoading(false, dispatch);
+}
+
+export const setAttendedParticipant = (userReq) => async (dispatch) => {
+    setPartiticpantIsLoading(true, dispatch);
+    try {
+        const data = await setAttendedParticipantAPI(userReq);
         dispatch({
             type: PARTICIPANT_UPDATE_SUCCESS,
             payload: true,

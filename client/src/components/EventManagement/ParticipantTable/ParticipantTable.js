@@ -193,9 +193,11 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
     const {
+        checkInMode,
         numSelected,
         handleSetInvalid,
         handleSetVerified,
+        handleSetAttended,
         isLoading
     } = props;
 
@@ -221,11 +223,33 @@ const EnhancedTableToolbar = (props) => {
                         id="tableTitle"
                         component="div"
                     >
-                        List of participants
+                        {checkInMode ? 'List of check-in participants' : 'List of participants'}
                     </Typography>
                 )}
-
-            {numSelected > 0  &&
+            {checkInMode ?
+                numSelected > 0 &&
+                <>
+                    <Button
+                        disabled={isLoading}
+                        onClick={() => handleSetAttended(false)}
+                        style={{ marginLeft: '8px' }}
+                        variant="contained"
+                        color="secondary"
+                    >
+                        {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Absent'}
+                    </Button>
+                    <Button
+                        disabled={isLoading}
+                        onClick={() => handleSetAttended(true)}
+                        style={{ marginLeft: '8px' }}
+                        variant="contained"
+                        color="primary"
+                    >
+                        {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Attend'}
+                    </Button>
+                </>
+                :
+                numSelected > 0 &&
                 <>
                     <Button
                         disabled={isLoading}
@@ -247,6 +271,7 @@ const EnhancedTableToolbar = (props) => {
                     </Button>
                 </>
             }
+
         </Toolbar>
     );
 };
@@ -256,11 +281,13 @@ EnhancedTableToolbar.propTypes = {
 };
 
 const ParticipantTable = ({
+    checkInMode,
     take,
     selected,
     setSelected,
     handleSetInvalid,
     handleSetVerified,
+    handleSetAttended
 }) => {
     const css = useStyles();
 
@@ -274,8 +301,6 @@ const ParticipantTable = ({
 
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
-
-
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -316,14 +341,16 @@ const ParticipantTable = ({
 
     const emptyRows = take - participants.length;
 
-
+    console.log(checkInMode)
 
     return (
         <Paper className={css.paper1} elevation={0}>
             <EnhancedTableToolbar
+                checkInMode={checkInMode}
                 numSelected={selected.length}
                 handleSetInvalid={handleSetInvalid}
                 handleSetVerified={handleSetVerified}
+                handleSetAttended={handleSetAttended}
                 isLoading={isLoading}
             />
             <TableContainer>
@@ -429,28 +456,51 @@ const ParticipantTable = ({
                                                     {row.academic}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {row.isValid === null ?
-                                                        <Chip
-                                                            className={css.fixedWidthChip}
-                                                            size="small"
-                                                            label="Pending"
-                                                            color="default"
-                                                        />
-                                                        : row.isValid
-                                                            ?
-                                                            <Chip
-                                                                className={css.fixedWidthChip}
-                                                                size="small"
-                                                                label="Verified"
-                                                                color="primary"
-                                                            />
-                                                            :
-                                                            <Chip
-                                                                className={css.fixedWidthChip}
-                                                                size="small"
-                                                                label="Invalid"
-                                                                color="secondary"
-                                                            />
+                                                    {checkInMode ?
+                                                        <>
+                                                            {row.isAttended ?
+                                                                <Chip
+                                                                    className={css.fixedWidthChip}
+                                                                    size="small"
+                                                                    label="Checked"
+                                                                    style={{ backgroundColor: '#4caf50' }}
+                                                                    color="primary"
+                                                                />
+                                                                :
+                                                                <Chip
+                                                                    className={css.fixedWidthChip}
+                                                                    size="small"
+                                                                    label="Verified"
+                                                                    color="primary"
+                                                                />
+                                                            }
+                                                        </>
+                                                        :
+                                                        <>
+                                                            {row.isValid === null ?
+                                                                <Chip
+                                                                    className={css.fixedWidthChip}
+                                                                    size="small"
+                                                                    label="Pending"
+                                                                    color="default"
+                                                                />
+                                                                : row.isValid
+                                                                    ?
+                                                                    <Chip
+                                                                        className={css.fixedWidthChip}
+                                                                        size="small"
+                                                                        label="Verified"
+                                                                        color="primary"
+                                                                    />
+                                                                    :
+                                                                    <Chip
+                                                                        className={css.fixedWidthChip}
+                                                                        size="small"
+                                                                        label="Invalid"
+                                                                        color="secondary"
+                                                                    />
+                                                            }
+                                                        </>
                                                     }
                                                 </TableCell>
                                             </TableRow>

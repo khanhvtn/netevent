@@ -28,6 +28,9 @@ const filterParticipants = async (req, res, next) => {
             isValid: {
                 $in: [true, false, null]
             },
+            isAttended: {
+                $in: [true, false]
+            },
             academic: {
                 $in: ['Bachelor', 'Master', 'PhD'],
             },
@@ -84,6 +87,16 @@ const filterParticipants = async (req, res, next) => {
         }
 
         /* 
+        Add academic row filter
+         */
+        if (req.query.isAttended) {
+            options = {
+                ...options,
+                isAttended: req.query.isAttended.toString() === "true",
+            };
+        }
+
+        /* 
         Variable page default is 1
          */
         const page = parseInt(req.query.page) || 1;
@@ -99,6 +112,7 @@ const filterParticipants = async (req, res, next) => {
                 { major: new RegExp(options.search, 'i') }
             ],
             isValid: options.isValid,
+            isAttended: options.isAttended,
             event: options.eventId,
             academic: options.academic
         }).countDocuments();
@@ -116,6 +130,7 @@ const filterParticipants = async (req, res, next) => {
                 { major: new RegExp(options.search, 'i') }
             ],
             isValid: options.isValid,
+            isAttended: options.isAttended,
             event: options.eventId,
             academic: options.academic
         })
@@ -226,6 +241,28 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
     }
 }
 
+const setAttendedParticipant = async (req, res, next) => {
+    const { attendedList, action } = req.body;
+    try {
+        switch (action) {
+            case false:
+                const updateAttendedParticipant = await Participant.updateMany(
+                    { _id: attendedList },
+                    { $set: { isAttended: action } },
+                );
+                return cusResponse(res, 200, updateAttendedParticipant, null);
+            case true:
+                const updateNotAttendedParticipant = await Participant.updateMany(
+                    { _id: attendedList },
+                    { $set: { isAttended: action } },
+                );
+                return cusResponse(res, 200, updateNotAttendedParticipant, null);
+        }
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+}
+
 module.exports = {
     getParticipants,
     registerEvent,
@@ -233,5 +270,6 @@ module.exports = {
     checkValid,
     checkAttendance,
     filterParticipants,
-    setInvalidAndVerifyParticipant
+    setInvalidAndVerifyParticipant,
+    setAttendedParticipant
 }

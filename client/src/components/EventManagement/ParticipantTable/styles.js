@@ -10,7 +10,7 @@ export default makeStyles((theme) => ({
         minWidth: 750,
     },
     fixedWidthChip: {
-        minWidth: 60,
+        minWidth: 70,
         fontSize: '0.875em'
     },
     visuallyHidden: {

@@ -9,7 +9,7 @@ router.post('/registerEvent', participantControllers.registerEvent);
 router.delete('/:id', participantControllers.deleteParticipant);
 router.patch('/checkValid', participantControllers.checkValid);
 router.patch('/checkAttendance', participantControllers.checkAttendance);
-router.patch('/update', participantControllers.setInvalidAndVerifyParticipant);
-
+router.patch('/update/valid', participantControllers.setInvalidAndVerifyParticipant);
+router.patch('/update/attend', participantControllers.setAttendedParticipant);
 
 module.exports = router;
