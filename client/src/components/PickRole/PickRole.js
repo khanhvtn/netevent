@@ -26,7 +26,7 @@ const roleInfo = {
     3: {
         roleName: 'Creator',
         icon: creatorIcon,
-        defaultPath: 'dashboard/create-event',
+        defaultPath: 'dashboard/event-management',
     },
     4: {
         roleName: 'Team Member',
