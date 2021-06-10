@@ -390,7 +390,7 @@ const EventDetail = () => {
                                                 <Chip
                                                     className={css.chipStatus}
                                                     size="small"
-                                                    label="Expired"
+                                                    label="Done"
                                                     disabled
                                                 />
                                                 : state.event?.isApproved ?
@@ -398,7 +398,7 @@ const EventDetail = () => {
                                                         className={css.chipStatus}
                                                         style={{ backgroundColor: `rgba(52, 211, 153, 1)` }}
                                                         size="small"
-                                                        label="On-going"
+                                                        label="Approved"
                                                     />
                                                     :
                                                     <Chip

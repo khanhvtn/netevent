@@ -147,10 +147,10 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                     <Chip className={css.getButton} style={{ backgroundColor: `rgba(251, 191, 36, 1)`}} label="Pending" />
                                     :
                                     event.isFinished ?
-                                        <Chip className={css.getButton} label="Expired" disabled />
+                                        <Chip className={css.getButton} label="Done" disabled />
                                         :
                                         event.isApproved ?
-                                            <Chip className={css.getButton} style={{ backgroundColor: `rgba(52, 211, 153, 1)` }} label="On-going" />
+                                            <Chip className={css.getButton} style={{ backgroundColor: `rgba(52, 211, 153, 1)` }} label="Approved" />
                                             :
                                             <Chip className={css.getButton} style={{ backgroundColor: `rgba(248, 113, 113, 1)` }} label="Rejected" />
                             }
