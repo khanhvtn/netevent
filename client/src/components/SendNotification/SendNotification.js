@@ -98,7 +98,7 @@ const SendNotification = () => {
                             justify="flex-start"
                             alignItems="flex-start"
                         >
-                            <Grid item xs={6} md={6} lg={6}>
+                            <Grid item xs={12} md={6} lg={6}>
                                 <InputLabel id="demo-simple-select-outlined-label1">
                                     Select Event
                                 </InputLabel>
@@ -138,7 +138,7 @@ const SendNotification = () => {
                                 )}
                             </Grid>
 
-                            <Grid item xs={6} md={6} lg={6}>
+                            <Grid item xs={12} md={6} lg={6}>
                                 <TextField
                                     style={{ backgroundColor: 'white' }}
                                     variant="outlined"

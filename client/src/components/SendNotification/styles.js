@@ -9,11 +9,18 @@ export default makeStyles((theme) => ({
         textAlign: 'center',
         color: theme.palette.text.secondary,
         backgroundColor: theme.palette.background.default,
-        minHeight: '78vh'
+        minHeight: '78vh',
+        [theme.breakpoints.down('xs')]: {
+            padding: theme.spacing(4),
+            minHeight: 0,
+        }
     },
     formControl: {
         margin: theme.spacing(1),
-        minWidth: 500
+        minWidth: 500,
+        [theme.breakpoints.down('xs')]: {
+            minWidth: 0
+        }
     },
     selectEmpty: {
         marginTop: theme.spacing(2),

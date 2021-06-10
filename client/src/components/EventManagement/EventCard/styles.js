@@ -5,23 +5,19 @@ export default makeStyles((theme) => ({
         borderRadius: 16,
         flexDirection: 'column',
         padding: 16,
-        
     },
     titleCard: {
         fontWeight: 'bold',
-        
     },
     content: {
         paddingLeft: 0,
         paddingRight: 0,
-        minHeight: 70
-
     },
     description: {
         flex: '1 0 auto',
         minHeight: 150,
         padding: 0,
-        minHeight: 400
+        minHeight: 300
     },
     cover: {
         width: '100%',

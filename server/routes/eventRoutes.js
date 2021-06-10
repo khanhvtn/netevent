@@ -10,7 +10,7 @@ const { eventControllers } = require('../controllers');
 
 // CRUD
 router.post('/create', eventControllers.createEvent);
-router.get('/get', eventControllers.filterEventManagement);
+router.get('/get', authentication, eventControllers.filterEventManagement);
 router.get('/all', eventControllers.getAllEvent);
 router.get('/detail', eventControllers.getFacilityAndTaskByEventName)
 router.patch('/update', eventControllers.updateEvent);

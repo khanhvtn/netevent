@@ -10,7 +10,13 @@ const mongoose = require('mongoose');
  *  =====================================
  */
 
-
+/**
+ * @decsription Get all participants
+ * @method GET
+ * @route /api/participant/all
+ *
+ * @version 1.0
+ */
 const getParticipants = async (req, res, next) => {
     try {
         const participants = await Participant.find();
@@ -20,6 +26,13 @@ const getParticipants = async (req, res, next) => {
     }
 };
 
+/**
+ * @decsription Filter all participants
+ * @method PATCH
+ * @route /api/participant/filter
+ *
+ * @version 1.0
+ */
 const filterParticipants = async (req, res, next) => {
     try {
         let options = {
@@ -144,6 +157,13 @@ const filterParticipants = async (req, res, next) => {
     }
 }
 
+/**
+ * @decsription Register Event to save participant model
+ * @method POST
+ * @route /api/participant/registerEvent
+ *
+ * @version 1.0
+ */
 const registerEvent = async (req, res, next) => {
 
     try {
@@ -165,6 +185,13 @@ const registerEvent = async (req, res, next) => {
     }
 }
 
+/**
+ * @decsription Delete Participant
+ * @method DELETE
+ * @route /api/participant/:id
+ *
+ * @version 1.0
+ */
 const deleteParticipant = async (req, res, next) => {
     try {
         const { id: _id } = req.params;
@@ -179,46 +206,13 @@ const deleteParticipant = async (req, res, next) => {
     }
 }
 
-
-const checkValid = async (req, res, next) => {
-    const updatedInfo = req.body;
-    try {
-        const { id: _id } = req.params;
-        if (!mongoose.Types.ObjectId.isValid(_id)) {
-            return res.status(404).send('No participant with that id');
-        } else {
-            const update = await Participant.findByIdAndUpdate(
-                updatedInfo._id,
-                { $set: { 'isValid': true } },
-                { new: true }
-            )
-            res.json(update);
-        }
-    } catch (error) {
-        return next(new CustomError(500, error.message));
-    }
-}
-
-
-const checkAttendance = async (req, res, next) => {
-    const updatedInfo = req.body;
-    try {
-        const { id: _id } = req.params;
-        if (!mongoose.Types.ObjectId.isValid(_id)) {
-            return res.status(404).send('No participant with that id');
-        } else {
-            const update = await Participant.findByIdAndUpdate(
-                updatedInfo._id,
-                { $set: { 'isAttended': updatedInfo.isAttended } },
-                { new: true }
-            )
-            res.json(update);
-        }
-    } catch (error) {
-        return next(new CustomError(500, error.message));
-    }
-}
-
+/**
+ * @decsription Set Invalid and Verify participants
+ * @method PATCH
+ * @route /api/participant/update/valid
+ *
+ * @version 1.0
+ */
 const setInvalidAndVerifyParticipant = async (req, res, next) => {
     const { invalidList, verifiedList, action } = req.body;
     try {
@@ -227,12 +221,14 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
                 const updateInvalidParticipant = await Participant.updateMany(
                     { _id: invalidList },
                     { $set: { isValid: action } },
+                    { new: true }
                 );
                 return cusResponse(res, 200, updateInvalidParticipant, null);
             case true:
                 const updateVerifiedParticipant = await Participant.updateMany(
                     { _id: verifiedList },
                     { $set: { isValid: action } },
+                    { new: true }
                 );
                 return cusResponse(res, 200, updateVerifiedParticipant, null);
         }
@@ -241,6 +237,13 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
     }
 }
 
+/**
+ * @decsription Set Attend participants
+ * @method PATCH
+ * @route /api/participant/update/valid
+ *
+ * @version 1.0
+ */
 const setAttendedParticipant = async (req, res, next) => {
     const { attendedList, action } = req.body;
     try {
@@ -249,12 +252,14 @@ const setAttendedParticipant = async (req, res, next) => {
                 const updateAttendedParticipant = await Participant.updateMany(
                     { _id: attendedList },
                     { $set: { isAttended: action } },
+                    { new: true }
                 );
                 return cusResponse(res, 200, updateAttendedParticipant, null);
             case true:
                 const updateNotAttendedParticipant = await Participant.updateMany(
                     { _id: attendedList },
                     { $set: { isAttended: action } },
+                    { new: true }
                 );
                 return cusResponse(res, 200, updateNotAttendedParticipant, null);
         }
@@ -267,8 +272,6 @@ module.exports = {
     getParticipants,
     registerEvent,
     deleteParticipant,
-    checkValid,
-    checkAttendance,
     filterParticipants,
     setInvalidAndVerifyParticipant,
     setAttendedParticipant

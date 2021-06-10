@@ -319,6 +319,7 @@ const filterEventManagement = async (req, res, next) => {
                     $gte: options.endMinDate,
                     $lte: options.endMaxDate,
                 },
+                ownerId: req.user.id,
             })
                 .select('-taskListId -facilityHistoryListId')
                 .populate({
@@ -347,6 +348,15 @@ const filterEventManagement = async (req, res, next) => {
 
         const queryEvent = await Event.find({
             $or: [{ eventName: new RegExp(options.search, 'i') }],
+            startDate: {
+                $gte: options.startMinDate,
+                $lte: options.startMaxDate,
+            },
+            endDate: {
+                $gte: options.endMinDate,
+                $lte: options.endMaxDate,
+            },
+            ownerId: req.user.id,
         })
             .select('-taskListId -facilityHistoryListId')
             .populate({
@@ -370,6 +380,13 @@ const filterEventManagement = async (req, res, next) => {
     }
 };
 
+/**
+ * @decsription Delete all event and task + Facility history
+ * @method DELETE
+ * @route /api/event/deleteManagement
+ *
+ * @version 1.0
+ */
 const deleteEventManagement = async (req, res, next) => {
     try {
         const { eventId, taskListId, historyFacilityListId } = req.body;
@@ -415,6 +432,7 @@ const deleteEvent = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+
 /**
  * @decsription Delete events from the request names
  * @method DELETE
@@ -662,7 +680,6 @@ const getAllEvent = async (req, res, next) => {
  *
  * @version 1.0
  */
-
 const sendNotification = async (req, res, next) => {
     const notification = req.body;
     const participants = await Participant.find({
@@ -736,9 +753,9 @@ module.exports = {
     updateEvent,
     getAllEvent,
     recoveryEvent,
-    deleteEventPermanent,
     sendNotification,
-    getFacilityAndTaskByEventName,
+    deleteEventPermanent,
     filterEventManagement,
     deleteEventManagement,
+    getFacilityAndTaskByEventName,
 };
