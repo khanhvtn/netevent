@@ -423,6 +423,7 @@ const EventDetail = () => {
 
                 <Divider />
 
+                {/* Event Detail Tabs */}
                 <div className={css.grow}>
                     <AppBar position="static" color="default" elevation={0}>
                         <Grid container direction="column">
