@@ -60,12 +60,13 @@ const EventManagement = () => {
         events,
         isLoading,
         totalPages,
-        deleteEventSuccess
+        deleteEventSuccess,
+        
     } = useSelector((state) => ({
         events: state.event.events,
         isLoading: state.event.isLoading,
         totalPages: state.event.totalPages,
-        deleteEventSuccess: state.event.deleteSuccess
+        deleteEventSuccess: state.event.deleteSuccess,
     }));
 
     const [state, setState] = useState(initialState);
