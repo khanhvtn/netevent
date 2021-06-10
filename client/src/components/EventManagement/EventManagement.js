@@ -12,8 +12,7 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import { useDispatch, useSelector } from 'react-redux';
 
-
-import useStyles from './styles'
+import useStyles from './styles';
 import { FilterList } from '@material-ui/icons';
 import EventPagination from './EventPagination/EventPagination';
 import EventCard from './EventCard/EventCard';
@@ -22,7 +21,6 @@ import { useHistory } from 'react-router-dom';
 import { getEvents } from '../../actions/eventActions';
 import { getAllEventTypes } from '../../actions/eventTypeActions';
 import SystemNotification from '../Notification/Notification';
-
 
 const initialState = {
     search: '',
@@ -37,8 +35,8 @@ const initialState = {
     startTo: null,
     endFrom: null,
     endTo: null,
-    openDeleteSnackBar: false
-}
+    openDeleteSnackBar: false,
+};
 
 const filterState = {
     type: '',
@@ -56,72 +54,70 @@ const EventManagement = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const {
-        events,
-        isLoading,
-        totalPages,
-        deleteEventSuccess,
-        
-    } = useSelector((state) => ({
-        events: state.event.events,
-        isLoading: state.event.isLoading,
-        totalPages: state.event.totalPages,
-        deleteEventSuccess: state.event.deleteSuccess,
-    }));
+    const { events, isLoading, totalPages, deleteEventSuccess, userId } =
+        useSelector((state) => ({
+            events: state.event.events,
+            isLoading: state.event.isLoading,
+            totalPages: state.event.totalPages,
+            deleteEventSuccess: state.event.deleteSuccess,
+            userId: state.user.user.id,
+        }));
 
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
 
     // Request to get the events data
     useEffect(() => {
+        const {
+            search,
+            take,
+            page,
+            type,
+            budgetRange,
+            participantRange,
+            startFrom,
+            startTo,
+            endFrom,
+            endTo,
+        } = state;
         if (!history.location.state || history.location.state?.isUpdated) {
-            dispatch(getEvents(
-                state.search,
-                state.take,
-                state.page,
-                state.type,
-                state.budgetRange,
-                state.participantRange,
-                state.startFrom,
-                state.startTo,
-                state.endFrom,
-                state.endTo
-            ))
+            dispatch(
+                getEvents({
+                    search,
+                    take,
+                    page,
+                    type,
+                    budgetRange,
+                    participantRange,
+                    startFrom,
+                    startTo,
+                    endFrom,
+                    endTo,
+                    ownerId: userId,
+                })
+            );
         }
-        history.replace()
-    }, [
-        dispatch,
-        history,
-        state.search,
-        state.take,
-        state.page,
-        state.type,
-        state.budgetRange,
-        state.participantRange,
-        state.startFrom,
-        state.startTo,
-        state.endFrom,
-        state.endTo
-    ]);
+        history.replace();
+    }, [dispatch, history, state, userId]);
 
     const { eventTypes } = useSelector(() => ({
-        eventTypes: state.eventType?.eventTypes
-    }))
+        eventTypes: state.eventType?.eventTypes,
+    }));
 
     // Request all event type in the first access
     useEffect(() => {
         if (eventTypes) {
             dispatch(getAllEventTypes());
         }
-    }, [])
+    }, []);
 
     // UseEffect for delete event success
     useEffect(() => {
         setState((prevState) => ({
             ...prevState,
-            openDeleteSnackBar: deleteEventSuccess
+            openDeleteSnackBar: deleteEventSuccess,
         }));
-    }, [deleteEventSuccess])
+    }, [deleteEventSuccess]);
 
     const handleChangePage = (event, newPage) => {
         setState((prevState) => ({ ...prevState, page: newPage }));
@@ -196,10 +192,10 @@ const EventManagement = () => {
             pathname: '/dashboard/event-detail',
             state: {
                 from: '/dashboard/event-management',
-                event: event
-            }
-        })
-    }
+                event: event,
+            },
+        });
+    };
 
     return (
         <>
@@ -252,34 +248,46 @@ const EventManagement = () => {
                 </Typography>
 
                 {/* Grid view of Event */}
-                <Grid className={css.gridLayout} container justify="flex-start" spacing={2}>
-                    {isLoading ?
-                        Array.apply(null, { length: state.take }).map((skeleton, index) => {
-                            return (
-                                <EventCard key={index} isLoading={isLoading} />
-                            )
-                        })
-                        : events.length === 0
-                            ?
-                            <Grid
-                                container
-                                spacing={0}
-                                direction="column"
-                                alignItems="center"
-                                justify="center"
-                                style={{ minHeight: '50vh' }}
-                            >
-                                <Typography >
-                                    No data matched
-                                </Typography>
-                            </Grid>
-                            :
-                            events.map((event) => {
+                <Grid
+                    className={css.gridLayout}
+                    container
+                    justify="flex-start"
+                    spacing={2}
+                >
+                    {isLoading ? (
+                        Array.apply(null, { length: state.take }).map(
+                            (skeleton, index) => {
                                 return (
-                                    <EventCard event={event} key={event._id} isLoading={isLoading} onClickEvent={handleOnClickEvent} />
-                                )
-                            })
-                    }
+                                    <EventCard
+                                        key={index}
+                                        isLoading={isLoading}
+                                    />
+                                );
+                            }
+                        )
+                    ) : events.length === 0 ? (
+                        <Grid
+                            container
+                            spacing={0}
+                            direction="column"
+                            alignItems="center"
+                            justify="center"
+                            style={{ minHeight: '50vh' }}
+                        >
+                            <Typography>No data matched</Typography>
+                        </Grid>
+                    ) : (
+                        events.map((event) => {
+                            return (
+                                <EventCard
+                                    event={event}
+                                    key={event._id}
+                                    isLoading={isLoading}
+                                    onClickEvent={handleOnClickEvent}
+                                />
+                            );
+                        })
+                    )}
                 </Grid>
 
                 {/* Event Pagination */}
@@ -287,9 +295,7 @@ const EventManagement = () => {
                     totalPages={totalPages}
                     page={state.page}
                     take={state.take}
-                    handleChangeRowsPerPage={
-                        handleChangeRowsPerPage
-                    }
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
                     handleChangePage={handleChangePage}
                 />
             </Paper>
@@ -314,7 +320,7 @@ const EventManagement = () => {
             {/* Notification */}
             <SystemNotification openDeleteSnackBar={state.openDeleteSnackBar} />
         </>
-    )
-}
+    );
+};
 
 export default EventManagement;

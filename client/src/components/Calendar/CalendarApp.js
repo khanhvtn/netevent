@@ -6,7 +6,7 @@ import { Paper, Dialog } from '@material-ui/core';
 import CreateEvent from '../CreateEvent/CreateEvent';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllEvent } from '../../actions/eventActions';
+import { getEvents } from '../../actions/eventActions';
 import { Skeleton } from '@material-ui/lab';
 //import useStyles in the last
 import useStyles from './styles';
@@ -18,29 +18,29 @@ const CalendarApp = () => {
     const [state, setState] = useState({ open: false, start: null, end: null });
     const dispatch = useDispatch();
     const history = useHistory();
-    const { events, eventIsLoading, createEventSuccess } = useSelector(
+    const { events, eventIsLoading, createEventSuccess, userId } = useSelector(
         (state) => ({
             events: state.event.events,
             eventIsLoading: state.event.isLoading,
             createEventSuccess: state.event.createSuccess,
+            userId: state.user.user.id,
         })
     );
     const localizer = momentLocalizer(moment);
     useEffect(() => {
         if (!history.location.state || history.location.state?.isUpdated) {
-            dispatch(getAllEvent());
-            console.log('here');
+            dispatch(getEvents({ ownerId: userId }));
         }
         history.replace();
-    }, [dispatch, history]);
+    }, [dispatch, history, userId]);
 
     //useEffect for create event success
     useEffect(() => {
         if (createEventSuccess) {
             handleClose();
-            dispatch(getAllEvent());
+            dispatch(getEvents({ ownerId: userId }));
         }
-    }, [dispatch, createEventSuccess]);
+    }, [dispatch, createEventSuccess, userId]);
 
     const genEvents = events.map((event) => {
         const { eventName, startDate, endDate, ...rest } = event;
@@ -105,72 +105,72 @@ const CalendarApp = () => {
                     <Skeleton height="100px" />
                 </>
             ) : (
-                    <Calendar
-                        popup
-                        selectable
-                        formats={{
-                            agendaHeaderFormat: (
-                                { start, end },
-                                culture,
-                                localizer
-                            ) =>
-                                localizer.format(start, 'DD/MM/YYYY', culture) +
-                                ' — ' +
-                                localizer.format(end, 'DD/MM/YYYY', culture),
-                        }}
-                        style={{ height: '100vh' }}
-                        localizer={localizer}
-                        events={genEvents}
-                        defaultView={Views.MONTH}
-                        scrollToTime={new Date()}
-                        defaultDate={new Date()}
-                        onSelectEvent={handleSelectEvent}
-                        onSelectSlot={handlePickEventTime}
-                        components={{
-                            event: CalendarEvent,
-                        }}
-                        eventPropGetter={(date) => {
-                            let styleTemplate = {
-                                style: {
-                                    color: '#333',
-                                    outline: 'none',
-                                },
-                            };
-                            const { isApproved } = date.resource;
-                            /* Approve Status
+                <Calendar
+                    popup
+                    selectable
+                    formats={{
+                        agendaHeaderFormat: (
+                            { start, end },
+                            culture,
+                            localizer
+                        ) =>
+                            localizer.format(start, 'DD/MM/YYYY', culture) +
+                            ' — ' +
+                            localizer.format(end, 'DD/MM/YYYY', culture),
+                    }}
+                    style={{ height: '100vh' }}
+                    localizer={localizer}
+                    events={genEvents}
+                    defaultView={Views.MONTH}
+                    scrollToTime={new Date()}
+                    defaultDate={new Date()}
+                    onSelectEvent={handleSelectEvent}
+                    onSelectSlot={handlePickEventTime}
+                    components={{
+                        event: CalendarEvent,
+                    }}
+                    eventPropGetter={(date) => {
+                        let styleTemplate = {
+                            style: {
+                                color: '#333',
+                                outline: 'none',
+                            },
+                        };
+                        const { isApproved } = date.resource;
+                        /* Approve Status
                         Null is pending and color is yellow
                         True Accepted and color is green
                         False Rejected and color is red
                          */
-                            if (isApproved === null) {
-                                styleTemplate = {
-                                    ...styleTemplate,
-                                    style: {
-                                        ...styleTemplate.style,
-                                        backgroundColor: `rgba(251, 191, 36, 1)`,
-                                    },
-                                };
-                            } else if (isApproved === true) {
-                                styleTemplate = {
-                                    ...styleTemplate,
-                                    style: {
-                                        ...styleTemplate.style,
-                                        backgroundColor: `rgba(52, 211, 153, 1)`,
-                                    },
-                                };
-                            } else {
-                                styleTemplate = {
-                                    ...styleTemplate,
-                                    style: {
-                                        ...styleTemplate.style,
-                                        backgroundColor: `rgba(248, 113, 113, 1)`,
-                                    },
-                                };
-                            }
-                            return styleTemplate;
-                        }}
-                    />
-                )}
+                        if (isApproved === null) {
+                            styleTemplate = {
+                                ...styleTemplate,
+                                style: {
+                                    ...styleTemplate.style,
+                                    backgroundColor: `rgba(251, 191, 36, 1)`,
+                                },
+                            };
+                        } else if (isApproved === true) {
+                            styleTemplate = {
+                                ...styleTemplate,
+                                style: {
+                                    ...styleTemplate.style,
+                                    backgroundColor: `rgba(52, 211, 153, 1)`,
+                                },
+                            };
+                        } else {
+                            styleTemplate = {
+                                ...styleTemplate,
+                                style: {
+                                    ...styleTemplate.style,
+                                    backgroundColor: `rgba(248, 113, 113, 1)`,
+                                },
+                            };
+                        }
+                        return styleTemplate;
+                    }}
+                />
+            )}
             {/* Dialog Create Event */}
             <Dialog
                 fullWidth
