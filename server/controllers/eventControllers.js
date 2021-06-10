@@ -667,6 +667,7 @@ const sendNotification = async (req, res, next) => {
     const notification = req.body;
     const participants = await Participant.find({
         event: notification.eventID,
+        isValid: true
     });
     const emailParticipantsList = [];
     for (var i = 0; i < participants.length; i++) {
