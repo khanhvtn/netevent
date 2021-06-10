@@ -1,4 +1,4 @@
-import { Box, Container, Hidden, Typography } from '@material-ui/core';
+import { Box, Grid, Hidden, Typography } from '@material-ui/core';
 import React from 'react';
 import makeStyles from './styles';
 
@@ -7,24 +7,12 @@ const Error = () => {
     return (
         <>
             <Box className={css.errorBox} >
-                <Container maxWidth="md">
-                    <Typography
-                        align="center"
-                        color="textPrimary"
-                        variant="h1"
-                    >
-                        404: Page Not Found
-                    </Typography>
-                    <Hidden smDown>
-                        <Box className={css.imageAlign}>
-                            <img
-                                alt="Under development"
-                                src="/static/images/undraw_page_not_found_su7k.svg"
-                                className={css.handleImage}
-                            />
-                        </Box>
-                    </Hidden>
-                </Container>
+                <Typography
+                    align="center"
+                    variant="caption"
+                >
+                    404: Page Not Found...
+                </Typography>
             </Box>
         </>
     );

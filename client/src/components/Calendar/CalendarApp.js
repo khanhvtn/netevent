@@ -6,35 +6,41 @@ import { Paper, Dialog } from '@material-ui/core';
 import CreateEvent from '../CreateEvent/CreateEvent';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllEvent } from '../../actions/eventActions';
+import { getEvents } from '../../actions/eventActions';
 import { Skeleton } from '@material-ui/lab';
 //import useStyles in the last
 import useStyles from './styles';
 import CalendarEvent from './CalendarEvent/CalendarEvent';
+import { useHistory } from 'react-router-dom';
 
 const CalendarApp = () => {
     const css = useStyles();
     const [state, setState] = useState({ open: false, start: null, end: null });
     const dispatch = useDispatch();
-    const { events, eventIsLoading, createEventSuccess } = useSelector(
+    const history = useHistory();
+    const { events, eventIsLoading, createEventSuccess, userId } = useSelector(
         (state) => ({
             events: state.event.events,
             eventIsLoading: state.event.isLoading,
             createEventSuccess: state.event.createSuccess,
+            userId: state.user.user.id,
         })
     );
     const localizer = momentLocalizer(moment);
     useEffect(() => {
-        dispatch(getAllEvent());
-    }, [dispatch]);
+        if (!history.location.state || history.location.state?.isUpdated) {
+            dispatch(getEvents({ ownerId: userId }));
+        }
+        history.replace();
+    }, [dispatch, history, userId]);
 
     //useEffect for create event success
     useEffect(() => {
         if (createEventSuccess) {
             handleClose();
-            dispatch(getAllEvent());
+            dispatch(getEvents({ ownerId: userId }));
         }
-    }, [dispatch, createEventSuccess]);
+    }, [dispatch, createEventSuccess, userId]);
 
     const genEvents = events.map((event) => {
         const { eventName, startDate, endDate, ...rest } = event;
@@ -48,8 +54,20 @@ const CalendarApp = () => {
     });
 
     const handleSelectEvent = (event) => {
-        alert(`Go to event id : ${event.resource._id}`);
+        history.push({
+            pathname: '/dashboard/event-detail',
+            state: {
+                from: '/dashboard/creator-calendar',
+                event: {
+                    ...event.resource,
+                    eventName: event.title,
+                    endDate: event.end,
+                    startDate: event.start,
+                },
+            },
+        });
     };
+
     const handlePickEventTime = ({ start, end }) => {
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
@@ -64,10 +82,12 @@ const CalendarApp = () => {
             open: !prevState.open,
         }));
     };
+
     //handle toggle create form
     const handleClose = () => {
         setState((prevState) => ({ ...prevState, open: !prevState.open }));
     };
+
     return (
         <Paper
             elevation={3}
@@ -118,10 +138,10 @@ const CalendarApp = () => {
                         };
                         const { isApproved } = date.resource;
                         /* Approve Status
-                    Null is pending and color is yellow
-                    True Accepted and color is green
-                    False Rejected and color is red
-                     */
+                        Null is pending and color is yellow
+                        True Accepted and color is green
+                        False Rejected and color is red
+                         */
                         if (isApproved === null) {
                             styleTemplate = {
                                 ...styleTemplate,

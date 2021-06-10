@@ -18,7 +18,7 @@ const initialState = {
   recoverySuccess: false,
 };
 
-export default function facilityReducers(state = initialState, action) {
+export default function eventTypeReducers(state = initialState, action) {
   switch (action.type) {
     case EVENT_TYPE_GET_ALL:
       return {

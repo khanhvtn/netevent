@@ -2,8 +2,6 @@ import React from 'react';
 import {
     CircularProgress,
     Button,
-    Select,
-    MenuItem,
     Dialog,
     DialogTitle,
     DialogContent,
@@ -12,8 +10,6 @@ import {
     Collapse,
     DialogContentText,
     Slide,
-    InputLabel,
-    FormControl,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useSelector } from 'react-redux';

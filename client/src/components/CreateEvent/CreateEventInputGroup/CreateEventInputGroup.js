@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   Grid,
@@ -29,10 +29,14 @@ const CreateEventInputGroup = ({
   state,
   setState,
   eventTypes,
+  isResetListTag,
   createEventSuccess,
+  updateEventSuccess,
   updateListTag,
+  defaultValueTags,
 }) => {
   const css = useStyles();
+
   return (
     <>
       <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
@@ -131,11 +135,12 @@ const CreateEventInputGroup = ({
       {/* Tags */}
       <Grid item md={6} lg={6} xl={6} sm={12} xs={12}>
         <Autocomplete
-          key={createEventSuccess}
+          id="tags-filled"
+          defaultValue={defaultValueTags}
+          key={isResetListTag}
           disabled={eventIsLoading}
           limitTags={4}
           multiple
-          id="tags-filled"
           options={[]}
           freeSolo
           renderTags={(value, getTagProps) => {
@@ -157,6 +162,7 @@ const CreateEventInputGroup = ({
               {...params}
               variant="outlined"
               label="Tags"
+              name="tags"
               placeholder="Input your tag"
             />
           )}
