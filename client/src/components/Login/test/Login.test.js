@@ -1,33 +1,44 @@
-import expect from 'expect'
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import Login from '../Login'
-import { act } from 'react-dom/test-utils';
+import { Provider } from 'react-redux'
+import { renderer, act, create } from 'react-test-renderer'
+import configureStore from 'redux-mock-store'
+import beforeEach from 'jest-wrap'
+import expect from 'expect'
+import toJson from 'enzyme-to-json'
 
+import Login from '../Login'
+import { userLogin } from '../../../actions/userActions'
+
+const mockStore = configureStore([])
 describe('Login', () => {
-    describe('with valid inputs', () => {
-        it('calls the handleSubmit function',async () => {
-            const mockHandleSubmit= jest.fn()
-            const {getByLabelText, getByRole} = render(<Login handleSubmit={mockHandleSubmit}/>)
-            
-            await act(async () => {
-            fireEvent.change(getByLabelText("Email"), {target: {value: "trantritai99@gmail.com"}})
-            fireEvent.change(getByLabelText("Password"), {target: {value: "123456"}})
+    let store;
+    let component;
+
+    beforeEach(() => {
+        store = mockStore({
+            myState: 'user login'
         })
 
-            await act(async () => {
-                fireEvent.click(getByRole("button"))
-            })
+        store.dispatch = jest.fn()
 
-            expect(mockHandleSubmit).toHaveBeenCalled()
+        component = renderer.create(
+            <Provider store={store}>
+                <Login />
+            </Provider>
+        )
+    })
+    
+    it('should render with given state from Redux store', () => {
+        expect(toJson(component)).toMatchSnapshot()
     });
 
-    describe('with invalid email', () => {
-        it.todo('renders the email validation error')
-    });
-
-    describe('with invalid password', () => {
-        it.todo('renders the password validation error')
-    });
-});
+    // it('should dispatch an action on btutton click', () => {
+    //     const component = renderer.create(
+    //         <Provider store={store}>
+    //             <Login>
+                    
+    //             </Login>
+    //         </Provider>
+    //     )
+    // });
 })

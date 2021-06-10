@@ -64,6 +64,7 @@ const Login = () => {
                         <form
                             className={css.form}
                             onSubmit={handleSubmit}
+                            type="loginForm"
                             noValidate
                         >
                             <TextField

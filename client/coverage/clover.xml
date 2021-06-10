@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1623172976241" clover="3.2.0">
-  <project timestamp="1623172976241" name="All files">
-    <metrics statements="424" coveredstatements="262" conditionals="147" coveredconditionals="67" methods="105" coveredmethods="85" elements="676" coveredelements="414" complexity="0" loc="424" ncloc="424" packages="5" files="17" classes="17"/>
+<coverage generated="1623335963234" clover="3.2.0">
+  <project timestamp="1623335963234" name="All files">
+    <metrics statements="424" coveredstatements="259" conditionals="147" coveredconditionals="67" methods="105" coveredmethods="84" elements="676" coveredelements="410" complexity="0" loc="424" ncloc="424" packages="5" files="17" classes="17"/>
     <package name="src">
       <metrics statements="49" coveredstatements="49" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="constants.js" path="/Users/bennytran/Desktop/NetEvent/netevent/client/src/constants.js">
@@ -385,14 +385,14 @@
       </file>
     </package>
     <package name="src.components.Login">
-      <metrics statements="19" coveredstatements="5" conditionals="14" coveredconditionals="0" methods="8" coveredmethods="1"/>
+      <metrics statements="19" coveredstatements="2" conditionals="14" coveredconditionals="0" methods="8" coveredmethods="0"/>
       <file name="Login.js" path="/Users/bennytran/Desktop/NetEvent/netevent/client/src/components/Login/Login.js">
-        <metrics statements="18" coveredstatements="5" conditionals="14" coveredconditionals="0" methods="7" coveredmethods="1"/>
+        <metrics statements="18" coveredstatements="2" conditionals="14" coveredconditionals="0" methods="7" coveredmethods="0"/>
         <line num="18" count="1" type="stmt"/>
         <line num="22" count="1" type="stmt"/>
-        <line num="23" count="3" type="stmt"/>
-        <line num="24" count="2" type="stmt"/>
-        <line num="25" count="2" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
         <line num="26" count="0" type="stmt"/>
         <line num="30" count="0" type="stmt"/>
         <line num="31" count="0" type="stmt"/>
