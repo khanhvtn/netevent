@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Error Component Matches the snapshot 1`] = `
+<div
+  className="MuiBox-root MuiBox-root-4 makeStyles-errorBox-1"
+>
+  <div
+    className="MuiContainer-root MuiContainer-maxWidthMd"
+  >
+    <h1
+      className="MuiTypography-root MuiTypography-h1 MuiTypography-colorTextPrimary MuiTypography-alignCenter"
+    >
+      404: Page Not Found
+    </h1>
+  </div>
+</div>
+`;
