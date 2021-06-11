@@ -148,6 +148,8 @@ export const sendNotificationAPI = (notificationReq) =>
     AXIOS.post('/event/sendNotification', notificationReq);
 export const updateEventAPI = (userReq) =>
     AXIOS.patch(`/event/update`, userReq);
+export const updateEventStatusAPI = (userReq) => 
+    AXIOS.patch('/event/update/status', userReq);
 export const deleteEventAPI = (userReq) =>
     AXIOS.delete(`/event/delete`, { data: userReq });
 export const deleteEventManagementAPI = (userReq) =>

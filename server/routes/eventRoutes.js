@@ -18,6 +18,7 @@ router.delete('/delete', eventControllers.deleteEvent);
 router.delete('/deleteP', eventControllers.deleteEventPermanent);
 router.delete('/deleteManagement', eventControllers.deleteEventManagement);
 router.patch('/recovery', eventControllers.recoveryEvent);
+router.patch('/update/status', eventControllers.updateEventStatus);
 router.post('/sendNotification', eventControllers.sendNotification);
 
 module.exports = router;

@@ -17,7 +17,6 @@ import {
     Tabs,
     Tab,
     Divider,
-    InputBase,
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import blankPhoto from '../../../images/blankPhoto.png';
@@ -33,17 +32,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     deleteEventWithTaskAndFacilityHistory,
     getFacilityAndTaskByEventName,
+    updateEventStatus,
 } from '../../../actions/eventActions';
-import {
-    getParticipants,
-    setInvalidAndVerifyParticipant,
-} from '../../../actions/participantActions';
 import { Skeleton } from '@material-ui/lab';
 import CreateEvent from '../../CreateEvent/CreateEvent';
 import SystemNotification from '../../Notification/Notification';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import useStyles from './styles';
-import ParticipantFilter from '../ParticipantFilter/ParticipantFilter';
 import CheckInTable from './CheckInTable/CheckInTable';
 import VerifyTable from './VerifyTable/VerifyTable';
 
@@ -94,11 +89,6 @@ const initialDeleteState = {
     eventId: null,
     taskListId: [],
     historyFacilityListId: [],
-};
-
-const filterState = {
-    academic: '',
-    isValid: '',
 };
 
 const EventDetail = () => {
@@ -241,6 +231,11 @@ const EventDetail = () => {
     const handleDeleteEvent = () => {
         dispatch(deleteEventWithTaskAndFacilityHistory(deleteState, history));
     };
+
+    // Handle Update Event Status
+    const handleUpdateEventStatus = () => {
+        dispatch(updateEventStatus({ eventId: state.event?._id, status: true }))
+    }
 
     const contentState = convertFromRaw(
         JSON.parse(
@@ -447,6 +442,8 @@ const EventDetail = () => {
                                             />
                                         ) : state.event?.isApproved ? (
                                             <Chip
+                                                clickable
+                                                onClick={handleUpdateEventStatus}
                                                 className={css.chipStatus}
                                                 style={{
                                                     backgroundColor: `rgba(52, 211, 153, 1)`,
