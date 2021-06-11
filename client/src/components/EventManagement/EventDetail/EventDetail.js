@@ -41,6 +41,7 @@ import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import useStyles from './styles';
 import CheckInTable from './CheckInTable/CheckInTable';
 import VerifyTable from './VerifyTable/VerifyTable';
+import EventCheckingCompletedDialog from '../EventDialog/EventCheckingCompletedDialog';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -79,10 +80,12 @@ const initialState = {
     previousPath: null,
     openDeleteDialog: false,
     openUpdateDialog: false,
+    openCheckingCompletedDialog: false,
     openUpdateSnackBar: false,
     isUpdated: false,
     isParticipantUpdated: false,
     isDetailLoading: false,
+    isCheckingCompletedEvent: false,
 };
 
 const initialDeleteState = {
@@ -136,6 +139,26 @@ const EventDetail = () => {
             previousPath: history.location.state?.from,
         }));
     }, []);
+
+    // Get Facility and Task if state event existed
+    useEffect(() => {
+        if (state.event?.endDate && !state.isCheckingCompletedEvent && !state.event?.isFinished && state.event?.isApproved) {
+            setState((prevState) => ({
+                ...prevState,
+                isCheckingCompletedEvent: !prevState.isCheckingCompletedEvent
+            }))
+            const currentDate = new Date();
+            const endDate = new Date(state.event?.endDate);
+            if (currentDate > endDate) {
+                handleToggleDialogCheckingCompleted();
+            }
+        }
+    }, [dispatch,
+        state.event?.endDate,
+        state.event?.isFinished,
+        state.event?.isApproved,
+        state.isCheckingCompletedEvent]
+    );
 
     // Get Facility and Task if state event existed
     useEffect(() => {
@@ -257,6 +280,13 @@ const EventDetail = () => {
         setState((prevState) => ({
             ...prevState,
             openUpdateDialog: !prevState.openUpdateDialog,
+        }));
+    };
+
+    const handleToggleDialogCheckingCompleted = () => {
+        setState((prevState) => ({
+            ...prevState,
+            openCheckingCompletedDialog: !prevState.openCheckingCompletedDialog,
         }));
     };
 
@@ -420,16 +450,13 @@ const EventDetail = () => {
                                 {/* Event Title, Budget and MaxParticipants */}
                                 <Grid container direction="column" item>
                                     <Typography
-                                        style={{ fontWeight: 'bold' }}
                                         variant="h5"
                                     >
                                         {state.event?.eventName}
                                         {state.event?.isApproved === null ? (
                                             <Chip
                                                 className={css.chipStatus}
-                                                style={{
-                                                    backgroundColor: `rgba(251, 191, 36, 1)`,
-                                                }}
+                                                style={{ backgroundColor: `#9e9e9e` }}
                                                 size="small"
                                                 label="Pending"
                                             />
@@ -437,26 +464,22 @@ const EventDetail = () => {
                                             <Chip
                                                 className={css.chipStatus}
                                                 size="small"
-                                                label="Done"
-                                                disabled
+                                                label="Completed"
+                                                style={{ backgroundColor: `#4caf50` }}
                                             />
                                         ) : state.event?.isApproved ? (
                                             <Chip
                                                 clickable
                                                 onClick={handleUpdateEventStatus}
                                                 className={css.chipStatus}
-                                                style={{
-                                                    backgroundColor: `rgba(52, 211, 153, 1)`,
-                                                }}
+                                                style={{ backgroundColor: `#5c6bc0` }}
                                                 size="small"
                                                 label="Approved"
                                             />
                                         ) : (
                                             <Chip
                                                 className={css.chipStatus}
-                                                style={{
-                                                    backgroundColor: `rgba(248, 113, 113, 1)`,
-                                                }}
+                                                style={{ backgroundColor: `#e53935` }}
                                                 size="small"
                                                 label="Rejected"
                                             />
@@ -1039,6 +1062,12 @@ const EventDetail = () => {
                 handleDeleteEvent={handleDeleteEvent}
             />
 
+            <EventCheckingCompletedDialog 
+                openCheckingCompletedDialog={state.openCheckingCompletedDialog}
+                handleToggleDialogCheckingCompleted={handleToggleDialogCheckingCompleted}
+                handleUpdateEventStatus={handleUpdateEventStatus}
+            />
+
             {/* Event Update Dialog */}
             <Dialog
                 fullWidth
@@ -1055,6 +1084,9 @@ const EventDetail = () => {
                     handleCloseUpdateDialog={handleToggleDialogUpdate}
                 />
             </Dialog>
+
+            {/* Event checking completed dialog */}
+
 
             {/* Notification */}
             <SystemNotification openUpdateSnackBar={state.openUpdateSnackBar} />

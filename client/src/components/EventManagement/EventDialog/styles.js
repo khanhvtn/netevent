@@ -13,5 +13,8 @@ export default makeStyles((theme) => ({
         [theme.breakpoints.down('sm')]: {
             minWidth: 0,
         }
+    },
+    dialogCheckingActions:{
+        margin: 16
     }
 }));
