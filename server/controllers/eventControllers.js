@@ -733,10 +733,10 @@ const sendNotification = async (req, res, next) => {
  *
  * @version 1.0
  */
-const getFacilityAndTaskByEventName = async (req, res, next) => {
+const getFacilityAndTaskByEventCode = async (req, res, next) => {
     try {
         const event = await Event.findOne({
-            eventName: req.query.eventName,
+            urlCode: req.query.code,
         }).populate({
             path: 'taskListId facilityHistoryListId',
             populate: [
@@ -796,6 +796,6 @@ module.exports = {
     deleteEventPermanent,
     filterEventManagement,
     deleteEventManagement,
-    getFacilityAndTaskByEventName,
+    getFacilityAndTaskByEventCode,
     updateEventStatus
 };

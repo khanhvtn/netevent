@@ -341,8 +341,6 @@ const ParticipantTable = ({
 
     const emptyRows = take - participants.length;
 
-    console.log(checkInMode)
-
     return (
         <Paper className={css.paper1} elevation={0}>
             <EnhancedTableToolbar

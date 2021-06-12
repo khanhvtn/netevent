@@ -31,7 +31,7 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     deleteEventWithTaskAndFacilityHistory,
-    getFacilityAndTaskByEventName,
+    getFacilityAndTaskByEventCode,
     updateEventStatus,
 } from '../../../actions/eventActions';
 import { Skeleton } from '@material-ui/lab';
@@ -163,7 +163,7 @@ const EventDetail = () => {
     // Get Facility and Task if state event existed
     useEffect(() => {
         if (state.event && !isDetailLoading) {
-            dispatch(getFacilityAndTaskByEventName(state.event.eventName));
+            dispatch(getFacilityAndTaskByEventCode(state.event.urlCode));
             setState((prevState) => ({
                 ...prevState,
                 isDetailLoading: !prevState.isDetailLoading,
@@ -211,10 +211,7 @@ const EventDetail = () => {
 
     const handleOnClickViewTemplate = () => {
         history.push({
-            pathname: `/registration/${state.event.eventName.replace(
-                /\s/g,
-                '-'
-            )}`,
+            pathname: `/registration/${state.event.urlCode}`,
             state: {
                 from: '/dashboard/event-detail',
                 event: {

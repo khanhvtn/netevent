@@ -20,7 +20,7 @@ import {
     deleteEventAPI,
     deleteEventManagementAPI,
     getEventsAPI,
-    getFacilityAndTaskByEventNameAPI,
+    getFacilityAndTaskByEventCodeAPI,
     updateEventAPI,
     getAllEventAPI,
     sendNotificationAPI,
@@ -171,11 +171,11 @@ export const getEvents = (userQueries) => async (dispatch) => {
     setEventIsLoading(false, dispatch);
 };
 
-export const getFacilityAndTaskByEventName =
-    (eventName) => async (dispatch) => {
+export const getFacilityAndTaskByEventCode =
+    (code) => async (dispatch) => {
         setEventDetailIsLoading(true, dispatch);
         try {
-            const data = await getFacilityAndTaskByEventNameAPI(eventName);
+            const data = await getFacilityAndTaskByEventCodeAPI(code);
             dispatch({
                 type: EVENT_GET_FACILITY_AND_TASK,
                 payload: data,

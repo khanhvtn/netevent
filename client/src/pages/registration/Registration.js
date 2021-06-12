@@ -18,7 +18,7 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFacilityAndTaskByEventName } from '../../actions/eventActions';
+import { getFacilityAndTaskByEventCode } from '../../actions/eventActions';
 import { registerParticipant } from '../../actions/participantActions';
 import { useParams, useHistory } from 'react-router';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
@@ -59,10 +59,11 @@ const Registration = () => {
     const dispatch = useDispatch();
 
     // UseParams to get pathname
-    const pathname = useParams();
-    const eventName = pathname.eventName.replace(/-/g, ' ');
+    const { code } = useParams();
 
     const isReviewed = history.location?.state?.isReviewed;
+
+
 
     const { isLoading, eventDetail, error, isRegistered, registerSuccess } = useSelector((state) => ({
         isLoading: state.event.isDetailLoading,
@@ -79,19 +80,17 @@ const Registration = () => {
 
     // Check if page is valid by event name
     useEffect(() => {
-        if (currentEvent.isLoaded && !currentEvent?.eventName && !isLoading) {
-            console.log("Check push")
+        if (currentEvent.isLoaded && !currentEvent?.urlCode && !isLoading) {
             history.push('/404')
         }
-    }, [currentEvent.eventName, isLoading])
+    }, [currentEvent.urlCode, isLoading])
 
     // Call API to get current event by name
     useEffect(() => {
-        if (!currentEvent?.eventName && !isReviewed && !currentEvent.isLoaded && !isLoading) {
-            console.log("Check API")
-            dispatch(getFacilityAndTaskByEventName(eventName));
+        if (!currentEvent?.urlCode && !isReviewed && !currentEvent.isLoaded && !isLoading) {
+            dispatch(getFacilityAndTaskByEventCode(code));
         }
-    }, [dispatch, currentEvent.eventName, currentEvent.isLoaded, isReviewed, isLoading])
+    }, [dispatch, currentEvent.urlCode, currentEvent.isLoaded, isReviewed, isLoading])
 
     // UseEffect to check review status and load the event detail from history
     useEffect(() => {
@@ -166,8 +165,13 @@ const Registration = () => {
     const handleOnBackToDetailPage = () => {
         setCurrentEvent(eventInitialState)
         if (history.location?.state) {
-            history.goBack();
-            // history.replace();
+            history.push({
+                pathname: '/dashboard/event-detail',
+                state: {
+                    from: `/dashboard/registration/${currentEvent.urlCode}`,
+                    event: history.location.state.event,
+                },
+            });
         }
     }
 

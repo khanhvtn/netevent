@@ -141,8 +141,8 @@ export const getEventsAPI = (userQueries) => {
         `/event/filter?${searchQuery}&${takeQuery}&${pageQuery}&${typeQuery}&${budgetQuery}&${participantQuery}&${ownerIdQuery}&${startFromQuery}&${startToQuery}&${endFromQuery}&${endToQuery}`
     );
 };
-export const getFacilityAndTaskByEventNameAPI = (eventName) =>
-    AXIOS.get(`/event/detail?eventName=${eventName ? eventName : ''}`);
+export const getFacilityAndTaskByEventCodeAPI = (code) =>
+    AXIOS.get(`/event/detail?code=${code ? code : ''}`);
 export const createEventAPI = (userReq) => AXIOS.post(`/event/create`, userReq);
 export const sendNotificationAPI = (notificationReq) =>
     AXIOS.post('/event/sendNotification', notificationReq);
