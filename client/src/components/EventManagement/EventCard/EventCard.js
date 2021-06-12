@@ -143,16 +143,18 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                             {/* Event Status Display */}
                             {isLoading ? <Skeleton variant="text" width="15%" />
                                 :
+
                                 event.isApproved === null ?
-                                    <Chip className={css.getButton} style={{ backgroundColor: `rgba(251, 191, 36, 1)`}} label="Pending" />
+                                    <Chip className={css.getButton} style={{ backgroundColor: `#9e9e9e` }} label="Pending" />
                                     :
                                     event.isFinished ?
-                                        <Chip className={css.getButton} label="Done" disabled />
+                                        <Chip className={css.getButton} style={{ backgroundColor: `#4caf50` }} label="Completed" />
                                         :
                                         event.isApproved ?
-                                            <Chip className={css.getButton} style={{ backgroundColor: `rgba(52, 211, 153, 1)` }} label="Approved" />
+                                            <Chip className={css.getButton} style={{ backgroundColor: `#5c6bc0` }} label="Approved" /> //5c6bc0
                                             :
-                                            <Chip className={css.getButton} style={{ backgroundColor: `rgba(248, 113, 113, 1)` }} label="Rejected" />
+                                            <Chip className={css.getButton} style={{ backgroundColor: `#e53935` }} label="Rejected" />
+                            
                             }
                         </CardActions>
                     </Card>

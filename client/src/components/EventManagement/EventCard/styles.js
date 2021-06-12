@@ -33,7 +33,7 @@ export default makeStyles((theme) => ({
         paddingTop: 16,
     },
     getButton: {
-        fontWeight: 'bold',
+        color: 'white',
     },
     schedule: {
         marginBottom: 10,

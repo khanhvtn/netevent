@@ -64,7 +64,8 @@ export default makeStyles((theme) => ({
     },
     chipStatus: {
         marginLeft: 8,
-        marginBottom: 4
+        marginBottom: 4,
+        color: 'white'
     },
     mt48: {
         marginTop: 48

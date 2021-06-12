@@ -52,7 +52,7 @@ const App = () => {
 
                         <Route
                             exact
-                            path="/registration/:eventName"
+                            path="/registration/:code"
                             component={Registration}
                         />
 

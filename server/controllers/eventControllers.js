@@ -733,10 +733,10 @@ const sendNotification = async (req, res, next) => {
  *
  * @version 1.0
  */
-const getFacilityAndTaskByEventName = async (req, res, next) => {
+const getFacilityAndTaskByEventCode = async (req, res, next) => {
     try {
         const event = await Event.findOne({
-            eventName: req.query.eventName,
+            urlCode: req.query.code,
         }).populate({
             path: 'taskListId facilityHistoryListId',
             populate: [
@@ -761,6 +761,31 @@ const getFacilityAndTaskByEventName = async (req, res, next) => {
     }
 };
 
+/**
+ * @decsription Get specific event detail
+ * @method PATCH
+ * @route /api/event/detail
+ *
+ * @version 1.0
+ */
+const updateEventStatus = async (req, res, next) => {
+    try {
+        const { eventId, status } = req.body;
+        // Update new event
+        const updatedEvent = await Event.findOneAndUpdate(
+            { _id: eventId },
+            { isFinished: status },
+            { new: true, context: 'query' }
+        ).populate({
+            path: 'eventTypeId',
+        });
+
+        return cusResponse(res, 200, updatedEvent, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
     createEvent,
     deleteEvent,
@@ -771,5 +796,6 @@ module.exports = {
     deleteEventPermanent,
     filterEventManagement,
     deleteEventManagement,
-    getFacilityAndTaskByEventName,
+    getFacilityAndTaskByEventCode,
+    updateEventStatus
 };

@@ -20,11 +20,12 @@ import {
     deleteEventAPI,
     deleteEventManagementAPI,
     getEventsAPI,
-    getFacilityAndTaskByEventNameAPI,
+    getFacilityAndTaskByEventCodeAPI,
     updateEventAPI,
     getAllEventAPI,
     sendNotificationAPI,
     fetchEventsAPI,
+    updateEventStatusAPI,
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -170,11 +171,11 @@ export const getEvents = (userQueries) => async (dispatch) => {
     setEventIsLoading(false, dispatch);
 };
 
-export const getFacilityAndTaskByEventName =
-    (eventName) => async (dispatch) => {
+export const getFacilityAndTaskByEventCode =
+    (code) => async (dispatch) => {
         setEventDetailIsLoading(true, dispatch);
         try {
-            const data = await getFacilityAndTaskByEventNameAPI(eventName);
+            const data = await getFacilityAndTaskByEventCodeAPI(code);
             dispatch({
                 type: EVENT_GET_FACILITY_AND_TASK,
                 payload: data,
@@ -251,3 +252,30 @@ export const updateEvent = (userReq) => async (dispatch) => {
     }
     setEventIsLoading(false, dispatch);
 };
+
+export const updateEventStatus = (userReq) => async (dispatch) => {
+    setEventIsLoading(true, dispatch);
+    try {
+        const data = await updateEventStatusAPI(userReq);
+
+        dispatch({
+            type: EVENT_UPDATE,
+            payload: data,
+        });
+
+        dispatch({
+            type: EVENT_UPDATE_SUCCESS,
+            payload: true,
+        });
+
+        setTimeout(() => {
+            dispatch({
+                type: EVENT_UPDATE_SUCCESS,
+                payload: false,
+            });
+        }, 3000);
+    } catch (error) {
+        console.log(error);
+    }
+    setEventIsLoading(false, dispatch);
+}

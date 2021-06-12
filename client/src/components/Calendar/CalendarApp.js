@@ -132,7 +132,7 @@ const CalendarApp = () => {
                     eventPropGetter={(date) => {
                         let styleTemplate = {
                             style: {
-                                color: '#333',
+                                color: 'white',
                                 outline: 'none',
                             },
                         };
@@ -147,7 +147,7 @@ const CalendarApp = () => {
                                 ...styleTemplate,
                                 style: {
                                     ...styleTemplate.style,
-                                    backgroundColor: `rgba(251, 191, 36, 1)`,
+                                    backgroundColor: `#9e9e9e`,
                                 },
                             };
                         } else if (isApproved === true) {
@@ -155,7 +155,7 @@ const CalendarApp = () => {
                                 ...styleTemplate,
                                 style: {
                                     ...styleTemplate.style,
-                                    backgroundColor: `rgba(52, 211, 153, 1)`,
+                                    backgroundColor: `#5c6bc0`,
                                 },
                             };
                         } else {
@@ -163,7 +163,7 @@ const CalendarApp = () => {
                                 ...styleTemplate,
                                 style: {
                                     ...styleTemplate.style,
-                                    backgroundColor: `rgba(248, 113, 113, 1)`,
+                                    backgroundColor: `#e53935`,
                                 },
                             };
                         }

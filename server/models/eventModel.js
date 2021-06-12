@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
+const { customAlphabet } = require('nanoid');
+const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const nanoid = customAlphabet(alphabet, 7);
 
 /**
  *  =====================================
@@ -131,6 +134,10 @@ const eventSchema = mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'FacilityHistory',
     },
+    urlCode: {
+      type: String,
+      default: () => nanoid()
+    }
   },
   { timestamps: true }
 );
