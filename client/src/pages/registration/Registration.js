@@ -168,7 +168,7 @@ const Registration = () => {
             history.push({
                 pathname: '/dashboard/event-detail',
                 state: {
-                    from: `/dashboard/registration/${currentEvent.urlCode}`,
+                    from: `/dashboard/event-management`,
                     event: history.location.state.event,
                 },
             });
