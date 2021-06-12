@@ -181,6 +181,9 @@ const EventDetail = () => {
                 event: { ...newUpdateEventDetail },
                 isUpdated: true,
             }));
+            if (state.openCheckingCompletedDialog) {
+                handleToggleDialogCheckingCompleted();
+            }
             history.replace();
         }
         setState((prevState) => ({
@@ -1072,8 +1075,8 @@ const EventDetail = () => {
                 handleDeleteEvent={handleDeleteEvent}
             />
 
-            {/* Event checking complete dialog */}
-            <EventCheckingCompletedDialog 
+            {/* Event Checking Completed Dialog */}
+            <EventCheckingCompletedDialog
                 openCheckingCompletedDialog={state.openCheckingCompletedDialog}
                 handleToggleDialogCheckingCompleted={handleToggleDialogCheckingCompleted}
                 handleUpdateEventStatus={handleUpdateEventStatus}

@@ -24,14 +24,9 @@ const EventCheckingCompletedDialog = ({
 }) => {
     const css = useStyles();
 
-    const { isDetailLoading } = useSelector((state) => ({
-        isDetailLoading: state.event.isDetailLoading
+    const { isLoading } = useSelector((state) => ({
+        isLoading: state.event.isLoading
     }))
-
-    const handleUpdateEvent = () => {
-        handleUpdateEventStatus();
-        handleToggleDialogCheckingCompleted();
-    }
 
     return (
         <>
@@ -54,12 +49,12 @@ const EventCheckingCompletedDialog = ({
                 <DialogActions className={css.dialogCheckingActions}>
                     <Button
                         fullWidth
-                        disabled={isDetailLoading ? true : false}
-                        onClick={handleUpdateEvent}
+                        disabled={isLoading ? true : false}
+                        onClick={handleUpdateEventStatus}
                         variant="contained"
                         color="primary"
                     >
-                        {isDetailLoading ? <CircularProgress size={25} color="inherit" /> : 'Confirm Completed'}
+                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Confirm Completed'}
                     </Button>
                 </DialogActions>
             </Dialog>
