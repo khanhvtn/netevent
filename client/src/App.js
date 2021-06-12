@@ -15,7 +15,6 @@ import User from './components/User/User';
 import EventType from './components/EventType/EventType';
 import CreateEvent from './components/CreateEvent/CreateEvent';
 import CalendarApp from './components/Calendar/CalendarApp';
-import SendNotification from './components/SendNotification/SendNotification';
 import EventManagement from './components/EventManagement/EventManagement';
 import EventDetail from './components/EventManagement/EventDetail/EventDetail';
 
@@ -115,14 +114,6 @@ const App = () => {
                                     render={() => (
                                         <DashboardLayout>
                                             <CalendarApp />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/send-notification"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <SendNotification />
                                         </DashboardLayout>
                                     )}
                                 />
