@@ -42,6 +42,8 @@ import useStyles from './styles';
 import CheckInTable from './CheckInTable/CheckInTable';
 import VerifyTable from './VerifyTable/VerifyTable';
 import EventCheckingCompletedDialog from '../EventDialog/EventCheckingCompletedDialog';
+import SendNotification from './SendNotification/SendNotification';
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -369,6 +371,12 @@ const EventDetail = () => {
                                     textColor="inherit"
                                     label="Check-in"
                                     {...a11yProps(2)}
+                                />
+                                  <Tab
+                                    style={{ textTransform: 'none' }}
+                                    textColor="inherit"
+                                    label="Send Notification"
+                                    {...a11yProps(3)}
                                 />
                             </Tabs>
                         </Grid>
@@ -1050,6 +1058,11 @@ const EventDetail = () => {
                 <TabPanel value={tabs} index={2}>
                     <CheckInTable eventId={state.event?._id} tabs={tabs} />
                 </TabPanel>
+
+                {/* Send notification Tabs */}
+                <TabPanel value={tabs} index={3}>
+                    <SendNotification eventId={state.event?._id} eventName={state.event?.eventName} tabs={tabs} />
+                </TabPanel>
             </Paper>
 
             {/* Event Delete Dialog */}
@@ -1059,6 +1072,7 @@ const EventDetail = () => {
                 handleDeleteEvent={handleDeleteEvent}
             />
 
+            {/* Event checking complete dialog */}
             <EventCheckingCompletedDialog 
                 openCheckingCompletedDialog={state.openCheckingCompletedDialog}
                 handleToggleDialogCheckingCompleted={handleToggleDialogCheckingCompleted}
