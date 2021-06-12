@@ -12,31 +12,26 @@ import RichTextEditor from './RichTextEditor/RichTextEditor';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchEvents, sendNotification } from '../../actions/eventActions';
+import { fetchEvents, sendNotification } from '../../../../actions/eventActions';
 import { convertFromRaw } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
-import SystemNotification from '../Notification/Notification';
+import SystemNotification from '../../../Notification/Notification';
 
 const initialState = {
-    eventID: '',
+   
     title: '',
     description: '',
 };
 
-const SendNotification = () => {
+const SendNotification = ({eventId, eventName}) => {
     const css = useStyles();
     const [state, setState] = useState(initialState);
     const dispatch = useDispatch();
     const { event, error } = useSelector((state) => state);
-    const [errorEvent, setErrorEvent] = useState(false);
     const [errorTitle, setErrorTitle] = useState(false);
     const [errorDescription, setErrorDescription] = useState(false);
 
-    useEffect(() => {
-        dispatch(fetchEvents());
-        console.log(event.events);
-        console.log(error.errors);
-    }, [dispatch]);
+  
 
     useEffect(() => {
         if (event.isSendingNotification === true) {
@@ -51,32 +46,28 @@ const SendNotification = () => {
     const handleSend = (e) => {
         e.preventDefault();
         const descriptionText = JSON.parse(state.description);
-        if (state.eventID === '') {
-            setErrorEvent(true);
-        } else if (state.title === '') {
+        if (state.title === '') {
             setErrorTitle(true);
-            setErrorEvent(false);
         } else if (descriptionText.blocks[0].text === '') {
             setErrorTitle(false);
-            setErrorEvent(false);
             setErrorDescription(true);
         } else {
             const data = convertFromRaw(JSON.parse(state.description));
             const html = stateToHTML(data);
             const notificationBody = {
-                eventID: state.eventID,
+                eventID: eventId,
                 title: state.title,
                 description: html,
             };
 
+
             dispatch(sendNotification(notificationBody));
             setErrorTitle(false);
-            setErrorEvent(false);
             setErrorDescription(false);
         }
     };
 
-    return event.isLoading ? (
+    return eventId === null ? (
         <Paper className={css.paper} color="inherit">
             <div className={css.contentWrapper} align="center">
                 <CircularProgress color="primary" />
@@ -98,47 +89,21 @@ const SendNotification = () => {
                             justify="flex-start"
                             alignItems="flex-start"
                         >
-                            <Grid item xs={12} md={6} lg={6}>
-                                <InputLabel id="demo-simple-select-outlined-label1">
-                                    Select Event
-                                </InputLabel>
-                                <Select
-                                    fullWidth
-                                    style={{ backgroundColor: 'white' }}
-                                    labelId="demo-simple-select-outlined-label1"
-                                    id="demo-simple-select-outlined"
-                                    value={state.eventID}
-                                    onChange={(e) =>
-                                        setState({
-                                            ...state,
-                                            eventID: e.target.value,
-                                        })
-                                    }
-                                    label="Select Event"
-                                >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {event.events.map((event) => (
-                                        <MenuItem value={event._id}>
-                                            {event.eventName}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
+                            <Grid item xs={12} md={12} lg={12}>
+                                    <Typography className={css.eventTitle}>
+                                        {eventName}
+                                    </Typography>
+                                
                                 {error.errors !== null && (
                                     <Typography className={css.errorStyle}>
                                         This event does not have any
                                         participants
                                     </Typography>
                                 )}
-                                {errorEvent === true && (
-                                    <Typography className={css.errorStyle}>
-                                        Event must be selected
-                                    </Typography>
-                                )}
+                               
                             </Grid>
 
-                            <Grid item xs={12} md={6} lg={6}>
+                            <Grid item xs={12} md={12} lg={12}>
                                 <TextField
                                     style={{ backgroundColor: 'white' }}
                                     variant="outlined"
@@ -214,36 +179,9 @@ const SendNotification = () => {
                                     justify="flex-start"
                                     alignItems="flex-start"
                                 >
-                                    <Grid item xs={6} md={6} lg={6}>
-                                        <InputLabel id="demo-simple-select-outlined-label">
-                                            Select Event
-                                </InputLabel>
-                                        <Select
-                                            fullWidth
-                                            labelId="demo-simple-select-outlined-label"
-                                            id="demo-simple-select-outlined"
-                                            value={state.eventID}
-                                            onChange={(e) =>
-                                                setState({
-                                                    ...state,
-                                                    eventID: e.target.value,
-                                                })
-                                            }
-                                            label="Select Event"
-                                            disabled
-                                        >
-                                            <MenuItem value="">
-                                                <em>None</em>
-                                            </MenuItem>
-                                            {event.events.map((event) => (
-                                                <MenuItem value={event._id}>
-                                                    {event.eventName}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </Grid>
+                                  
 
-                                    <Grid item xs={6} md={6} lg={6}>
+                                    <Grid item xs={12} md={12} lg={12}>
                                         <TextField
                                             id="filled-basic"
                                             label="Title"

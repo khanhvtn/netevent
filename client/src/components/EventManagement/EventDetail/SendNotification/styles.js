@@ -44,5 +44,12 @@ export default makeStyles((theme) => ({
     errorStyle: {
         color: "red",
         fontSize: 14
+    },
+
+    eventTitle: {
+        fontWeight: 'bold',
+        [theme.breakpoints.down('xs')]: {
+            fontSize: '2.5em'
+        },
     }
 }))

@@ -46,6 +46,8 @@ import useStyles from './styles';
 import ParticipantFilter from '../ParticipantFilter/ParticipantFilter';
 import CheckInTable from './CheckInTable/CheckInTable';
 import VerifyTable from './VerifyTable/VerifyTable';
+import SendNotification from './SendNotification/SendNotification';
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -347,6 +349,12 @@ const EventDetail = () => {
                                     textColor="inherit"
                                     label="Check-in"
                                     {...a11yProps(2)}
+                                />
+                                  <Tab
+                                    style={{ textTransform: 'none' }}
+                                    textColor="inherit"
+                                    label="Send Notification"
+                                    {...a11yProps(3)}
                                 />
                             </Tabs>
                         </Grid>
@@ -1032,6 +1040,9 @@ const EventDetail = () => {
                 {/* Participant Tabs */}
                 <TabPanel value={tabs} index={2}>
                     <CheckInTable eventId={state.event?._id} tabs={tabs} />
+                </TabPanel>
+                <TabPanel value={tabs} index={3}>
+                    <SendNotification eventId={state.event?._id} eventName={state.event?.eventName} tabs={tabs} />
                 </TabPanel>
             </Paper>
 
