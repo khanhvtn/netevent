@@ -43,6 +43,7 @@ import CheckInTable from './CheckInTable/CheckInTable';
 import VerifyTable from './VerifyTable/VerifyTable';
 import EventCheckingCompletedDialog from '../EventDialog/EventCheckingCompletedDialog';
 import SendNotification from './SendNotification/SendNotification';
+import NotificationHistory from './NotificationHistory/NotificationHistory';
 
 
 function TabPanel(props) {
@@ -380,6 +381,12 @@ const EventDetail = () => {
                                     textColor="inherit"
                                     label="Send Notification"
                                     {...a11yProps(3)}
+                                />
+                                <Tab
+                                    style={{ textTransform: 'none' }}
+                                    textColor="inherit"
+                                    label="History"
+                                    {...a11yProps(4)}
                                 />
                             </Tabs>
                         </Grid>
@@ -1065,6 +1072,11 @@ const EventDetail = () => {
                 {/* Send notification Tabs */}
                 <TabPanel value={tabs} index={3}>
                     <SendNotification eventId={state.event?._id} eventName={state.event?.eventName} tabs={tabs} />
+                </TabPanel>
+
+                {/* Send notification Tabs */}
+                <TabPanel value={tabs} index={4}>
+                    <NotificationHistory eventCode={state.event?.urlCode} tabs={tabs} />
                 </TabPanel>
             </Paper>
 

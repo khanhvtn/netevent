@@ -7,7 +7,7 @@ const taskControllers = require('./taskControllers');
 const facilityHistoryControllers = require('./facilityHistoryControllers');
 const linkControllers = require('./linkControllers')
 const participantControllers = require('./participantControllers')
-
+const notificationControllers = require('./notificationHistoryControllers');
 
 /**
  *  =====================================
@@ -24,5 +24,6 @@ module.exports = {
     taskControllers,
     facilityHistoryControllers,
     linkControllers,
-    participantControllers
+    participantControllers,
+    notificationControllers
 };
