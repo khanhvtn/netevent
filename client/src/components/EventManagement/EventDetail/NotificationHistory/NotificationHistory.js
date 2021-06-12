@@ -84,7 +84,7 @@ const NotificationHistory = ({ eventCode, tabs }) => {
                                                         {notification.description}
                                                     </TableCell>
                                                     <TableCell className={css.tableText} align="left">
-                                                        {moment(notification.createdAt).startOf('day').fromNow()}
+                                                        {moment(notification.createdAt).calendar()}
                                                     </TableCell>
                                                 </TableRow>
                                             ))}
