@@ -53,11 +53,11 @@ const roleActions = {
         },
         {
             title: 'Event Analysis',
-            icon: EventAvailableIcon,
+            icon: EventIcon,
             href: ['/dashboard/event-analysis']
         },
         {
-            title: 'Event Request',
+            title: 'Facility Usage',
             icon: EventAvailableIcon,
             href: ['/dashboard/facility-usage']
         },
