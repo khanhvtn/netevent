@@ -5,9 +5,14 @@ export default makeStyles((theme) => ({
     },
     paper: {
         margin: '18px 80px',
+        backgroundColor: '#f5f5f5',
         [theme.breakpoints.down('md')]: {
             margin: '20px',
         },
+    },
+    paper1: {
+        borderStartStartRadius: 16,
+        borderTopRightRadius: 16,
     },
     title: {
         flex: '1 1 100%',

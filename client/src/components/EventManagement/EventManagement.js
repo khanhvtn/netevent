@@ -249,58 +249,61 @@ const EventManagement = () => {
                     </AppBar>
                 </div>
 
-                {/* Event Header */}
-                <Typography
-                    className={css.title}
-                    variant="h6"
-                    id="tableTitle"
-                    component="div"
-                >
-                    List of events
-                </Typography>
+
 
                 {/* Grid view of Event */}
-                <Grid
-                    className={css.gridLayout}
-                    container
-                    justify="flex-start"
-                    spacing={2}
-                >
-                    {isLoading ? (
-                        Array.apply(null, { length: state.take }).map(
-                            (skeleton, index) => {
-                                return (
-                                    <EventCard
-                                        key={index}
-                                        isLoading={isLoading}
-                                    />
-                                );
-                            }
-                        )
-                    ) : events.length === 0 ? (
-                        <Grid
-                            container
-                            spacing={0}
-                            direction="column"
-                            alignItems="center"
-                            justify="center"
-                            style={{ minHeight: '50vh' }}
-                        >
-                            <Typography>No data matched</Typography>
-                        </Grid>
-                    ) : (
-                                events.map((event) => {
+                <Paper className={css.paper1} elevation={0}>
+                    {/* Event Header */}
+                    <Typography
+                        className={css.title}
+                        variant="h6"
+                        id="tableTitle"
+                        component="div"
+                    >
+                        List of events
+                    </Typography>
+                    <Grid
+                        className={css.gridLayout}
+                        container
+                        justify="flex-start"
+                        spacing={2}
+                    >
+                        {isLoading ? (
+                            Array.apply(null, { length: state.take }).map(
+                                (skeleton, index) => {
                                     return (
                                         <EventCard
-                                            event={event}
-                                            key={event._id}
+                                            key={index}
                                             isLoading={isLoading}
-                                            onClickEvent={handleOnClickEvent}
                                         />
                                     );
-                                })
-                            )}
-                </Grid>
+                                }
+                            )
+                        ) : events.length === 0 ? (
+                            <Grid
+                                container
+                                spacing={0}
+                                direction="column"
+                                alignItems="center"
+                                justify="center"
+                                style={{ minHeight: '50vh' }}
+                            >
+                                <Typography>No data matched</Typography>
+                            </Grid>
+                        ) : (
+                                    events.map((event) => {
+                                        return (
+                                            <EventCard
+                                                event={event}
+                                                key={event._id}
+                                                isLoading={isLoading}
+                                                onClickEvent={handleOnClickEvent}
+                                            />
+                                        );
+                                    })
+                                )}
+                    </Grid>
+                </Paper>
 
                 {/* Event Pagination */}
                 <EventPagination
