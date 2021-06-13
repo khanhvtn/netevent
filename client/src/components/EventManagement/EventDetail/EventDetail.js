@@ -376,17 +376,11 @@ const EventDetail = () => {
                                     label="Check-in"
                                     {...a11yProps(2)}
                                 />
-                                  <Tab
-                                    style={{ textTransform: 'none' }}
-                                    textColor="inherit"
-                                    label="Send Notification"
-                                    {...a11yProps(3)}
-                                />
                                 <Tab
                                     style={{ textTransform: 'none' }}
                                     textColor="inherit"
-                                    label="History"
-                                    {...a11yProps(4)}
+                                    label="Notification"
+                                    {...a11yProps(3)}
                                 />
                             </Tabs>
                         </Grid>
@@ -1071,12 +1065,11 @@ const EventDetail = () => {
 
                 {/* Send notification Tabs */}
                 <TabPanel value={tabs} index={3}>
-                    <SendNotification eventId={state.event?._id} eventName={state.event?.eventName} tabs={tabs} />
-                </TabPanel>
-
-                {/* Send notification Tabs */}
-                <TabPanel value={tabs} index={4}>
-                    <NotificationHistory eventCode={state.event?.urlCode} tabs={tabs} />
+                    <NotificationHistory
+                        eventCode={state.event?.urlCode}
+                        eventId={state.event?._id}
+                        eventName={state.event?.eventName}
+                        tabs={tabs} />
                 </TabPanel>
             </Paper>
 

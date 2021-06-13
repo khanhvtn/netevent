@@ -5,6 +5,7 @@ export default makeStyles((theme) => ({
     },
     paper: {
         margin: '40px 80px',
+        paddingBottom: 80,
         minHeight: '70vh',
         [theme.breakpoints.down('md')]: {
             margin: '20px',
@@ -18,12 +19,28 @@ export default makeStyles((theme) => ({
         margin: 36
     },
     tableText: {
-        fontSize: "14pt"
+        fontSize: "14pt",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        maxWidth: 150
     },
     mtb36: {
         margin: 36
     },
     table:{
         
+    },
+    colapseWrapper:{
+        paddingBottom: 0, 
+        paddingTop: 0,
+    },
+    title:{
+        flex: '1 1 100%',
+        fontWeight: 'bold'
+    },
+    sendEmailButton:{
+        textTransform: 'none',
+        width: 120
     }
 }));

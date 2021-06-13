@@ -5,7 +5,7 @@ export default makeStyles((theme) => ({
         flexGrow: 1
     },
     paper: {
-        padding: theme.spacing(9),
+        padding: '36px 72px',
         textAlign: 'center',
         color: theme.palette.text.secondary,
         backgroundColor: theme.palette.background.default,
@@ -28,8 +28,8 @@ export default makeStyles((theme) => ({
     notificationDescription: {
         paddingTop: 20
     },
-    buttonSend: {
-        paddingTop: theme.spacing(2),
+    dialogAction: {
+        marginTop: theme.spacing(2),
     },
     contentWrapper: {
         marginTop: '20%'
@@ -38,14 +38,17 @@ export default makeStyles((theme) => ({
         width: '10%',
         height: '10%'
     },
-    buttonSend1: {
-        minWidth: 40
+    buttonSend: {
+        textTransform: 'none'
     },
     errorStyle: {
         color: "red",
         fontSize: 14
     },
-
+    buttonCancel:{
+        marginRight: 16,
+        textTransform: 'none'
+    },
     eventTitle: {
         fontWeight: 'bold',
         [theme.breakpoints.down('xs')]: {
