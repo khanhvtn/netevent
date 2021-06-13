@@ -98,8 +98,17 @@ const NotificationHistory = ({ eventCode, eventName, eventId, tabs }) => {
     useEffect(() => {
         if (sendEmailSuccess) {
             dispatch(getNotificationHistoryByEventCode(eventCode))
+            setState((prevState) => ({
+                ...prevState,
+                openSendNotificationSnackbar: sendEmailSuccess
+            }))
         }
+        setState((prevState) => ({
+            ...prevState,
+            openSendNotificationSnackbar: sendEmailSuccess
+        }))
     }, [dispatch, sendEmailSuccess])
+
 
     const { isLoading, notifications } = useSelector((state) => ({
         isLoading: state.notificationHistory.isLoading,
@@ -131,7 +140,7 @@ const NotificationHistory = ({ eventCode, eventName, eventId, tabs }) => {
                             justify="center"
                             style={{ minHeight: '50vh' }}
                         >
-                            <Typography>There is no history for email. Would you like to send new?</Typography>
+                            <Typography align="center">There is no history for email. Would you like to send new?</Typography>
                             <Button
                                 fullWidth
                                 onClick={handleToggleSendNotificationDialog}
@@ -150,7 +159,7 @@ const NotificationHistory = ({ eventCode, eventName, eventId, tabs }) => {
                         <Paper elevation={0} className={css.paper} elevation={0}>
                             <Grid container direction="column">
                                 <Toolbar>
-                                    <Typography className={css.title} style={{ fontWeight: 'bold' }} align="flex-start" variant="h4">
+                                    <Typography className={css.title} style={{ fontWeight: 'bold' }} align="left" variant="h4">
                                         Email Notifications
                                     </Typography>
                                     <Button
@@ -202,7 +211,7 @@ const NotificationHistory = ({ eventCode, eventName, eventId, tabs }) => {
             </Dialog>
 
             {/* Notification */}
-            <SystemNotification openSendSnackBar={sendEmailSuccess} />
+            <SystemNotification openSendSnackBar={state.openSendNotificationSnackbar} />
         </>
     )
 }

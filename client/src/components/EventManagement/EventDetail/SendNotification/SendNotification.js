@@ -31,7 +31,7 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
             handleClearField();
             onClose();
         }
-    });
+    }, [event.sendNotiSuccess]);
 
     const handleClearField = () => {
         setState(initialState);
@@ -89,7 +89,7 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                                 <TextField
                                     style={{ backgroundColor: 'white', marginTop: 16 }}
                                     variant="outlined"
-                                    id="filled-basic"
+                                    id="filled-basic-event"
                                     value={eventName}
                                     fullWidth
                                     InputProps={{
@@ -98,8 +98,7 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                                                 disableFocusRipple
                                                 disableTouchRipple
                                                 disableRipple size="small"
-                                                className={css.eventNameButton}
-                                                position="start">
+                                                className={css.eventNameButton}>
                                                 Event
                                             </Button>,
                                     }}
@@ -118,7 +117,7 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                                     disabled={event.isSendingNotification}
                                     style={{ backgroundColor: 'white' }}
                                     variant="outlined"
-                                    id="filled-basic"
+                                    id="filled-basic-title"
                                     value={state.title}
                                     fullWidth
                                     InputProps={{
@@ -128,8 +127,7 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                                                 disableTouchRipple
                                                 disableRipple
                                                 size="small"
-                                                className={css.eventNameButton}
-                                                position="start">
+                                                className={css.eventNameButton}>
                                                 Title
                                             </Button>,
                                     }}
@@ -173,7 +171,7 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={2} direction="row" justify="start-end" alignItems="start-end" className={css.buttonSend}>
+                        <Grid container spacing={2} direction="row" justify="flex-end" alignItems="flex-end" className={css.buttonSend}>
                             <Grid className={css.dialogAction} item xs={12} md={12} lg={12} align="right">
                                 <Button
                                     disabled={event.isSendingNotification}

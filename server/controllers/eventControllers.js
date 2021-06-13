@@ -721,6 +721,8 @@ const sendNotification = async (req, res, next) => {
             const newNotificatioHistory = await notificationHistory.save();
         }
 
+        console.log(isSend)
+
         return cusResponse(res, 200, isSend, null);
     } catch (error) {
         if (error.name == 'ValidationError') {

@@ -118,7 +118,7 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
     });
     try {
         await sendNotificationAPI(notificationReq);
-
+        
         dispatch({
             type: SEND_NOTI_SUCCESS,
             payload: true,
