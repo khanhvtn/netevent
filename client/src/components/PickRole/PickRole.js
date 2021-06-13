@@ -58,7 +58,7 @@ const PickRole = () => {
             <Container maxWidth="lg" style={{ margin: 'auto' }}>
                 <DashboardNavbar onPickRole={true} />
                 <Typography
-                    style={{ textAlign: 'center', marginBottom: '40px' }}
+                    style={{ textAlign: 'center', marginBottom: '30px' }}
                     variant="h4"
                 >
                     Choose your role to continue...
