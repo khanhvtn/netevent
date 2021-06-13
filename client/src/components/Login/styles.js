@@ -8,6 +8,7 @@ export default makeStyles(() => ({
     wrapper: {
         width: '350px',
         margin: 'auto',
+        padding: 32
     },
     form: {
         display: 'flex',
@@ -16,14 +17,33 @@ export default makeStyles(() => ({
         width: '90%',
         margin: 'auto',
     },
-    textField: {
+    emailField: {
+        margin: '40px 0 0 0',
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderRadius: 8,
+            },
+        },
+    },
+    passwordField: {
         margin: '20px 0',
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderRadius: 8,
+            },
+        },
     },
     btnSubmit: {
         margin: '20px 0',
+        textTransform: 'none',
+        borderRadius: 8,
+        minHeight: 48
     },
     media: {
         height: 100,
     },
     errorDrop: { width: '90%', margin: '0 auto' },
+    loginWrapper: {
+        borderRadius: 16,
+    }
 }));

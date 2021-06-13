@@ -55,7 +55,7 @@ const Login = () => {
         <div className={css.main}>
             <div className={css.wrapper}>
                 <Zoom in>
-                    <Paper elevation={3}>
+                    <Paper className={css.loginWrapper} elevation={3}>
                         <CardMedia
                             className={css.media}
                             image={logo}
@@ -70,9 +70,9 @@ const Login = () => {
                                 helperText={errors?.email ? errors?.email : ''}
                                 error={errors?.email ? true : false}
                                 variant="outlined"
-                                className={css.textField}
+                                className={css.emailField}
                                 type="email"
-                                label="Email"
+                                label="Your email"
                                 value={state.email}
                                 name="email"
                                 fullWidth
@@ -84,9 +84,9 @@ const Login = () => {
                                 }
                                 error={errors?.password ? true : false}
                                 variant="outlined"
-                                className={css.textField}
+                                className={css.passwordField}
                                 type="password"
-                                label="Password"
+                                label="Enter your password"
                                 value={state.password}
                                 name="password"
                                 fullWidth
@@ -103,7 +103,7 @@ const Login = () => {
                                 {user.isLoading ? (
                                     <CircularProgress color="inherit" />
                                 ) : (
-                                    'Login'
+                                    'Sign in'
                                 )}
                             </Button>
                         </form>
