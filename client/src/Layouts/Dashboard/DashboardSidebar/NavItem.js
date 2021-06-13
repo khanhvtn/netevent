@@ -33,7 +33,13 @@ const NavItem = ({ href, icon: Icon, title, ...rest }) => {
         >
             <Button
                 className={css.sidebarListButton}
-                color={active ? 'primary' : 'default'}
+                // color={active ? 'primary' : 'default'}
+                style={active ?
+                    {
+                        backgroundColor: '#eceef7',
+                        color: '#3f51b5',
+                    } : null
+                }
                 onClick={handleAction}
             >
                 {Icon && <Icon size="20" />}
