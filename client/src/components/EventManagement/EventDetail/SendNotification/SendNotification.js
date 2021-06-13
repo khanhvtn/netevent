@@ -16,6 +16,7 @@ import { fetchEvents, sendNotification } from '../../../../actions/eventActions'
 import { convertFromRaw } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
 import SystemNotification from '../../../Notification/Notification';
+import { InputAdornment } from '@material-ui/core';
 
 const initialState = {
     title: '',
@@ -91,13 +92,17 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                         >
                             <Grid item xs={12} md={12} lg={12}>
                                 <TextField
-                                    disabled={true}
                                     style={{ backgroundColor: 'white', marginTop: 16 }}
                                     variant="outlined"
                                     id="filled-basic"
-                                    label="Event Name"
                                     value={eventName}
                                     fullWidth
+                                    InputProps={{
+                                        startAdornment:
+                                            <Button disableFocusRipple disableTouchRipple disableRipple size="small" className={css.eventNameButton} position="start">
+                                                Event
+                                            </Button>,
+                                    }}
                                 />
 
                                 {error.errors !== null && (
@@ -114,9 +119,14 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                                     style={{ backgroundColor: 'white' }}
                                     variant="outlined"
                                     id="filled-basic"
-                                    label="Title"
                                     value={state.title}
                                     fullWidth
+                                    InputProps={{
+                                        startAdornment:
+                                            <Button disableFocusRipple disableTouchRipple disableRipple size="small" className={css.eventNameButton} position="start">
+                                                Title
+                                            </Button>,
+                                    }}
                                     onChange={(e) =>
                                         setState({
                                             ...state,

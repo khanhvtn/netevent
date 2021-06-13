@@ -45,7 +45,7 @@ export default makeStyles((theme) => ({
         color: "red",
         fontSize: 14
     },
-    buttonCancel:{
+    buttonCancel: {
         marginRight: 16,
         textTransform: 'none'
     },
@@ -54,5 +54,14 @@ export default makeStyles((theme) => ({
         [theme.breakpoints.down('xs')]: {
             fontSize: '2.5em'
         },
+    },
+    eventNameButton: {
+        textTransform: 'none',
+        backgroundColor: '#eceef7',
+        color: '#3f51b5',
+        marginRight: 8,
+        "&:hover": {
+            backgroundColor: "#eceef7"
+        }
     }
 }))
