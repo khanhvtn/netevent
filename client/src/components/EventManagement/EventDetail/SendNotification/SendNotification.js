@@ -4,19 +4,14 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchEvents, sendNotification } from '../../../../actions/eventActions';
+import { sendNotification } from '../../../../actions/eventActions';
 import { convertFromRaw } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
-import SystemNotification from '../../../Notification/Notification';
-import { InputAdornment } from '@material-ui/core';
 
 const initialState = {
     title: '',
@@ -99,7 +94,12 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                                     fullWidth
                                     InputProps={{
                                         startAdornment:
-                                            <Button disableFocusRipple disableTouchRipple disableRipple size="small" className={css.eventNameButton} position="start">
+                                            <Button
+                                                disableFocusRipple
+                                                disableTouchRipple
+                                                disableRipple size="small"
+                                                className={css.eventNameButton}
+                                                position="start">
                                                 Event
                                             </Button>,
                                     }}
@@ -123,7 +123,13 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                                     fullWidth
                                     InputProps={{
                                         startAdornment:
-                                            <Button disableFocusRipple disableTouchRipple disableRipple size="small" className={css.eventNameButton} position="start">
+                                            <Button
+                                                disableFocusRipple
+                                                disableTouchRipple
+                                                disableRipple
+                                                size="small"
+                                                className={css.eventNameButton}
+                                                position="start">
                                                 Title
                                             </Button>,
                                     }}
