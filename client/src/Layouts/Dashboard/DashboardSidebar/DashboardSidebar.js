@@ -40,7 +40,28 @@ const roleActions = {
             href: ['/dashboard/facility']
         },
     ],
-    2: [],
+    2: [
+        {
+            title: 'Event Request',
+            icon: EventAvailableIcon,
+            href: ['/dashboard/event-request']
+        },
+        {
+            title: 'Calendar',
+            icon: CalendarToday,
+            href: ['/dashboard/reviewer-calendar']
+        },
+        {
+            title: 'Event Analysis',
+            icon: EventAvailableIcon,
+            href: ['/dashboard/event-analysis']
+        },
+        {
+            title: 'Event Request',
+            icon: EventAvailableIcon,
+            href: ['/dashboard/facility-usage']
+        },
+    ],
     3: [
         {
             title: 'Event Management',
@@ -62,7 +83,7 @@ const roleActions = {
             icon: CalendarToday,
             href: ['/dashboard/creator-calendar'],
         },
-       
+
     ],
     4: [],
 };

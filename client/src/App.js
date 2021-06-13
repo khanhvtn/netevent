@@ -17,6 +17,7 @@ import CreateEvent from './components/CreateEvent/CreateEvent';
 import CalendarApp from './components/Calendar/CalendarApp';
 import EventManagement from './components/EventManagement/EventManagement';
 import EventDetail from './components/EventManagement/EventDetail/EventDetail';
+import EventRequest from './components/EventRequest/EventRequest';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -117,6 +118,41 @@ const App = () => {
                                         </DashboardLayout>
                                     )}
                                 />
+
+                                {/* Reviewer role */}
+                                <Route
+                                    path="/dashboard/event-request"
+                                    render={() => (
+                                        <DashboardLayout>
+                                            <EventRequest />
+                                        </DashboardLayout>
+                                    )}
+                                />
+                                <Route
+                                    path="/dashboard/reviewer-calendar"
+                                    render={() => (
+                                        <DashboardLayout>
+                                            Calendar
+                                        </DashboardLayout>
+                                    )}
+                                />
+                                <Route
+                                    path="/dashboard/event-analysis"
+                                    render={() => (
+                                        <DashboardLayout>
+                                            Event Analysis
+                                        </DashboardLayout>
+                                    )}
+                                />
+                                <Route
+                                    path="/dashboard/facility-usage"
+                                    render={() => (
+                                        <DashboardLayout>
+                                            Facility Usage History
+                                        </DashboardLayout>
+                                    )}
+                                />
+
                                 <Route path="*" component={Error} />
                             </Switch>
                         </Route>

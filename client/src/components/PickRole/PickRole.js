@@ -21,7 +21,7 @@ const roleInfo = {
     2: {
         roleName: 'Reviewer',
         icon: reviewerIcon,
-        defaultPath: 'dashboard/event-reviewer',
+        defaultPath: 'dashboard/event-request',
     },
     3: {
         roleName: 'Creator',
