@@ -4,26 +4,21 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchEvents, sendNotification } from '../../../../actions/eventActions';
+import { sendNotification } from '../../../../actions/eventActions';
 import { convertFromRaw } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
-import SystemNotification from '../../../Notification/Notification';
 
 const initialState = {
-   
     title: '',
     description: '',
 };
 
-const SendNotification = ({eventId, eventName}) => {
+const SendNotification = ({ eventId, eventName, onClose }) => {
     const css = useStyles();
     const [state, setState] = useState(initialState);
     const dispatch = useDispatch();
@@ -31,13 +26,12 @@ const SendNotification = ({eventId, eventName}) => {
     const [errorTitle, setErrorTitle] = useState(false);
     const [errorDescription, setErrorDescription] = useState(false);
 
-  
-
     useEffect(() => {
-        if (event.isSendingNotification === true) {
+        if (event.sendNotiSuccess) {
             handleClearField();
+            onClose();
         }
-    });
+    }, [event.sendNotiSuccess]);
 
     const handleClearField = () => {
         setState(initialState);
@@ -55,11 +49,10 @@ const SendNotification = ({eventId, eventName}) => {
             const data = convertFromRaw(JSON.parse(state.description));
             const html = stateToHTML(data);
             const notificationBody = {
-                eventID: eventId,
+                eventId: eventId,
                 title: state.title,
                 description: html,
             };
-
 
             dispatch(sendNotification(notificationBody));
             setErrorTitle(false);
@@ -71,12 +64,15 @@ const SendNotification = ({eventId, eventName}) => {
         <Paper className={css.paper} color="inherit">
             <div className={css.contentWrapper} align="center">
                 <CircularProgress color="primary" />
-            </div>{' '}
+            </div>
         </Paper>
-    ) : event.isSendingNotification === false ? (
+    ) :
         <div className={css.grow}>
             <Paper className={css.paper} color="inherit">
                 <div className={css.grow}>
+                    <div className={css.sendNotiTitle}>
+                        <Typography style={{ fontWeight: 'bold' }} align="center" variant="h4">Notification Email</Typography>
+                    </div>
                     <FormControl
                         className={css.formControl}
                         variant="outlined"
@@ -90,27 +86,51 @@ const SendNotification = ({eventId, eventName}) => {
                             alignItems="flex-start"
                         >
                             <Grid item xs={12} md={12} lg={12}>
-                                    <Typography className={css.eventTitle}>
-                                        {eventName}
-                                    </Typography>
-                                
+                                <TextField
+                                    style={{ backgroundColor: 'white', marginTop: 16 }}
+                                    variant="outlined"
+                                    id="filled-basic-event"
+                                    value={eventName}
+                                    fullWidth
+                                    InputProps={{
+                                        startAdornment:
+                                            <Button
+                                                disableFocusRipple
+                                                disableTouchRipple
+                                                disableRipple size="small"
+                                                className={css.eventNameButton}>
+                                                Event
+                                            </Button>,
+                                    }}
+                                />
+
                                 {error.errors !== null && (
                                     <Typography className={css.errorStyle}>
-                                        This event does not have any
-                                        participants
+                                        This event does not have any participants
                                     </Typography>
                                 )}
-                               
+
                             </Grid>
 
                             <Grid item xs={12} md={12} lg={12}>
                                 <TextField
+                                    disabled={event.isSendingNotification}
                                     style={{ backgroundColor: 'white' }}
                                     variant="outlined"
-                                    id="filled-basic"
-                                    label="Title"
+                                    id="filled-basic-title"
                                     value={state.title}
                                     fullWidth
+                                    InputProps={{
+                                        startAdornment:
+                                            <Button
+                                                disableFocusRipple
+                                                disableTouchRipple
+                                                disableRipple
+                                                size="small"
+                                                className={css.eventNameButton}>
+                                                Title
+                                            </Button>,
+                                    }}
                                     onChange={(e) =>
                                         setState({
                                             ...state,
@@ -139,7 +159,8 @@ const SendNotification = ({eventId, eventName}) => {
                                     Description
                                 </Typography>
                                 <RichTextEditor
-                                    disabled={false}
+                                    key={event.sendNotiSuccess}
+                                    disabled={event.isSendingNotification}
                                     setState={setState}
                                 />
                                 {errorDescription === true && (
@@ -150,99 +171,35 @@ const SendNotification = ({eventId, eventName}) => {
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={2} direction="row" justify="start-end" alignItems="start-end" className={css.buttonSend}>
-                            <Grid item xs={12} md={12} lg={12} align="right">
-                                <Button variant="contained" color="primary" className={css.buttonSend1} onClick={handleSend}>
-                                    Send Email
+                        <Grid container spacing={2} direction="row" justify="flex-end" alignItems="flex-end" className={css.buttonSend}>
+                            <Grid className={css.dialogAction} item xs={12} md={12} lg={12} align="right">
+                                <Button
+                                    disabled={event.isSendingNotification}
+                                    className={css.buttonCancel}
+                                    onClick={onClose}>
+                                    Cancel
+                                </Button>
+                                <Button
+                                    disabled={event.isSendingNotification}
+                                    variant="contained"
+                                    color="primary"
+                                    className={css.buttonSend}
+                                    onClick={handleSend}>
+                                    {event.isSendingNotification ?
+                                        <CircularProgress
+                                            size={26}
+                                            color="inherit"
+                                        />
+                                        :
+                                        'Send Email'
+                                    }
                                 </Button>
                             </Grid>
                         </Grid>
                     </FormControl>
                 </div>
             </Paper>
-            {/* Notification */}
-            <SystemNotification openSendSnackBar={event.sendNotiSuccess} />
         </div >
-    ) : (
-                <div className={css.grow}>
-                    <Paper className={css.paper} color="inherit">
-                        <div className={css.grow}>
-                            <FormControl
-                                className={css.formControl}
-                                variant="outlined"
-                                fullWidth
-                            >
-                                <Grid
-                                    container
-                                    spacing={2}
-                                    direction="row"
-                                    justify="flex-start"
-                                    alignItems="flex-start"
-                                >
-                                  
-
-                                    <Grid item xs={12} md={12} lg={12}>
-                                        <TextField
-                                            id="filled-basic"
-                                            label="Title"
-                                            value={state.title}
-                                            fullWidth
-                                            onChange={(e) =>
-                                                setState({
-                                                    ...state,
-                                                    title: e.target.value,
-                                                })
-                                            }
-                                            disabled
-                                        />
-                                    </Grid>
-                                </Grid>
-
-                                <Grid
-                                    container
-                                    spacing={2}
-                                    direction="row"
-                                    justify="flex-start"
-                                    className={css.notificationDescription}
-                                    alignItems="flex-start"
-                                >
-                                    <Grid item xs={12} md={12} lg={12} align="left">
-                                        <Typography align="left">
-                                            Description
-                                </Typography>
-                                        <RichTextEditor
-                                            key={event.createSuccess}
-                                            disabled={true}
-                                            setState={setState}
-                                        />
-                                    </Grid>
-                                </Grid>
-
-                                <Grid
-                                    container
-                                    spacing={2}
-                                    direction="row"
-                                    justify="start-end"
-                                    alignItems="start-end"
-                                    className={css.buttonSend}
-                                >
-                                    <Grid item xs={12} md={12} lg={12} align="right">
-                                        <Button
-                                            disabled
-                                            variant="contained"
-                                            color="primary"
-                                            className={css.buttonSend1}
-                                            onClick={handleSend}
-                                        >
-                                            <CircularProgress color="primary" />
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </FormControl>
-                        </div>
-                    </Paper>
-                </div>
-            );
 };
 
 export default SendNotification;

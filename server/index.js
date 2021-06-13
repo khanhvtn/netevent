@@ -10,7 +10,8 @@ const {
     eventRoutes,
     taskRoutes,
     facilityHistoryRoutes,
-    participantRoutes
+    participantRoutes,
+    notificationHistoryRoutes
 } = require('./routes');
 const cors = require('cors');
 const { errorHandler } = require('./middlewares');
@@ -47,6 +48,7 @@ app.use('/api/event', eventRoutes);
 app.use('/api/task', taskRoutes);
 app.use('/api/facilityHistory', facilityHistoryRoutes);
 app.use('/api/participant', participantRoutes);
+app.use('/api/notificationHistory', notificationHistoryRoutes)
 
 
 // Serve static access an production mode

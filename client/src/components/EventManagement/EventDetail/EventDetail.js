@@ -43,6 +43,7 @@ import CheckInTable from './CheckInTable/CheckInTable';
 import VerifyTable from './VerifyTable/VerifyTable';
 import EventCheckingCompletedDialog from '../EventDialog/EventCheckingCompletedDialog';
 import SendNotification from './SendNotification/SendNotification';
+import NotificationHistory from './NotificationHistory/NotificationHistory';
 
 
 function TabPanel(props) {
@@ -375,10 +376,10 @@ const EventDetail = () => {
                                     label="Check-in"
                                     {...a11yProps(2)}
                                 />
-                                  <Tab
+                                <Tab
                                     style={{ textTransform: 'none' }}
                                     textColor="inherit"
-                                    label="Send Notification"
+                                    label="Notification"
                                     {...a11yProps(3)}
                                 />
                             </Tabs>
@@ -1064,7 +1065,11 @@ const EventDetail = () => {
 
                 {/* Send notification Tabs */}
                 <TabPanel value={tabs} index={3}>
-                    <SendNotification eventId={state.event?._id} eventName={state.event?.eventName} tabs={tabs} />
+                    <NotificationHistory
+                        eventCode={state.event?.urlCode}
+                        eventId={state.event?._id}
+                        eventName={state.event?.eventName}
+                        tabs={tabs} />
                 </TabPanel>
             </Paper>
 

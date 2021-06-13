@@ -7,7 +7,7 @@ const eventRoutes = require('./eventRoutes');
 const taskRoutes = require('./taskRoutes');
 const facilityHistoryRoutes = require('./facilityHistoryRoutes');
 const participantRoutes = require('./participantRoutes');
-
+const notificationHistoryRoutes = require('./notificationHistoryRoutes')
 /**
  *  =====================================
  *          ALL ROUTES EXPORT
@@ -23,5 +23,6 @@ module.exports = {
     eventRoutes,
     taskRoutes,
     facilityHistoryRoutes,
-    participantRoutes
+    participantRoutes,
+    notificationHistoryRoutes
 };

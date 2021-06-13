@@ -112,14 +112,13 @@ const sleep = (milliseconds) => {
 };
 
 export const sendNotification = (notificationReq) => async (dispatch) => {
+    dispatch({
+        type: IS_SENDING_NOTIFICATION,
+        payload: true,
+    });
     try {
-        dispatch({
-            type: IS_SENDING_NOTIFICATION,
-            payload: true,
-        });
-
         await sendNotificationAPI(notificationReq);
-
+        
         dispatch({
             type: SEND_NOTI_SUCCESS,
             payload: true,
@@ -128,11 +127,6 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
         dispatch({
             type: ERROR_CLEAR,
             payload: null,
-        });
-
-        dispatch({
-            type: IS_SENDING_NOTIFICATION,
-            payload: false,
         });
 
         setTimeout(() => {

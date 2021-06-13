@@ -4,6 +4,7 @@ const {
     FacilityHistory,
     Facility,
     Participant,
+    NotificationHistory,
 } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
@@ -697,7 +698,7 @@ const getAllEvent = async (req, res, next) => {
 const sendNotification = async (req, res, next) => {
     const notification = req.body;
     const participants = await Participant.find({
-        event: notification.eventID,
+        event: notification.eventId,
         isValid: true,
     });
     const emailParticipantsList = [];
@@ -713,6 +714,15 @@ const sendNotification = async (req, res, next) => {
             notification.title,
             notification.description
         );
+        
+        // Save notification history when email is sent
+        if(isSend){
+            const notificationHistory = new NotificationHistory(notification);
+            const newNotificatioHistory = await notificationHistory.save();
+        }
+
+        console.log(isSend)
+
         return cusResponse(res, 200, isSend, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
