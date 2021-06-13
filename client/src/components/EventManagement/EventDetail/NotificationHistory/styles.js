@@ -23,24 +23,30 @@ export default makeStyles((theme) => ({
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
-        maxWidth: 150
+        maxWidth: 150,
+        [theme.breakpoints.down('xs')]: {
+            fontSize: '15px',
+        }
     },
     mtb36: {
         margin: 36
     },
-    table:{
-        
+    table: {
+
     },
-    colapseWrapper:{
-        paddingBottom: 0, 
+    colapseWrapper: {
+        paddingBottom: 0,
         paddingTop: 0,
     },
-    title:{
+    title: {
         flex: '1 1 100%',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        [theme.breakpoints.down('xs')]: {
+            fontSize: '16px',
+        }
     },
-    sendEmailButton:{
+    sendEmailButton: {
         textTransform: 'none',
-        width: 120
+        width: 150,
     }
 }));
