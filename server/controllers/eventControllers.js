@@ -698,7 +698,7 @@ const getAllEvent = async (req, res, next) => {
 const sendNotification = async (req, res, next) => {
     const notification = req.body;
     const participants = await Participant.find({
-        event: notification.eventID,
+        event: notification.eventId,
         isValid: true,
     });
     const emailParticipantsList = [];
@@ -717,11 +717,7 @@ const sendNotification = async (req, res, next) => {
         
         // Save notification history when email is sent
         if(isSend){
-            const notificationHistory = new NotificationHistory({
-                eventId: notification.eventID,
-                title: notification.title,
-                description: notification.description
-            });
+            const notificationHistory = new NotificationHistory(notification);
             const newNotificatioHistory = await notificationHistory.save();
         }
 
