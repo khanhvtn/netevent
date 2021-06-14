@@ -13,7 +13,7 @@ import useStyles from './styles';
 import CalendarEvent from './CalendarEvent/CalendarEvent';
 import { useHistory } from 'react-router-dom';
 
-const CalendarApp = () => {
+const CalendarApp = ({ targetRole }) => {
     const css = useStyles();
     const [state, setState] = useState({ open: false, start: null, end: null });
     const dispatch = useDispatch();
@@ -29,10 +29,15 @@ const CalendarApp = () => {
     const localizer = momentLocalizer(moment);
     useEffect(() => {
         if (!history.location.state || history.location.state?.isUpdated) {
-            dispatch(getEvents({ ownerId: userId }));
+            if (targetRole === 3) {
+                dispatch(getEvents({ ownerId: userId }));
+            }
+            if (targetRole === 2) {
+                dispatch(getEvents({}));
+            }
         }
         history.replace();
-    }, [dispatch, history, userId]);
+    }, [dispatch, history, userId, targetRole]);
 
     //useEffect for create event success
     useEffect(() => {
@@ -57,7 +62,10 @@ const CalendarApp = () => {
         history.push({
             pathname: '/dashboard/event-detail',
             state: {
-                from: '/dashboard/creator-calendar',
+                from:
+                    targetRole === 3
+                        ? '/dashboard/creator-calendar'
+                        : '/dashboard/reviewer-calendar',
                 event: {
                     ...event.resource,
                     eventName: event.title,
@@ -69,18 +77,21 @@ const CalendarApp = () => {
     };
 
     const handlePickEventTime = ({ start, end }) => {
-        const currentDate = new Date();
-        currentDate.setHours(0, 0, 0, 0);
-        if (moment(start).isBefore(currentDate)) {
-            alert('Invalid Range Time');
-            return;
+        if (targetRole === 3) {
+            console.log('here');
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+            if (moment(start).isBefore(currentDate)) {
+                alert('Invalid Range Time');
+                return;
+            }
+            setState((prevState) => ({
+                ...prevState,
+                start,
+                end,
+                open: !prevState.open,
+            }));
         }
-        setState((prevState) => ({
-            ...prevState,
-            start,
-            end,
-            open: !prevState.open,
-        }));
     };
 
     //handle toggle create form

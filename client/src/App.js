@@ -41,124 +41,124 @@ const App = () => {
                     />
                 </Grid>
             ) : (
-                    <Switch>
-                        <Route exact path="/" component={Login} />
-                        <Route exact path="/login" component={Login} />
-                        <PrivateRoute exact path="/pickrole" component={PickRole} />
-                        <Route
-                            exact
-                            path="/confirmation/:id"
-                            component={Confirmation}
-                        />
+                <Switch>
+                    <Route exact path="/" component={Login} />
+                    <Route exact path="/login" component={Login} />
+                    <PrivateRoute exact path="/pickrole" component={PickRole} />
+                    <Route
+                        exact
+                        path="/confirmation/:id"
+                        component={Confirmation}
+                    />
 
-                        <Route
-                            exact
-                            path="/registration/:code"
-                            component={Registration}
-                        />
+                    <Route
+                        exact
+                        path="/registration/:code"
+                        component={Registration}
+                    />
 
-                        {/* Here is the place to add route for dashboard layout */}
-                        <Route>
-                            <Switch>
-                                <Route
-                                    path="/dashboard/user"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <User />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/facility"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <Facility />
-                                        </DashboardLayout>
-                                    )}
-                                />
+                    {/* Here is the place to add route for dashboard layout */}
+                    <Route>
+                        <Switch>
+                            <Route
+                                path="/dashboard/user"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <User />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/facility"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <Facility />
+                                    </DashboardLayout>
+                                )}
+                            />
 
-                                {/* Creator Role */}
-                                <Route
-                                    path="/dashboard/event-management"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <EventManagement />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/event-detail"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <EventDetail />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/event-type"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <EventType />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/create-event"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <CreateEvent />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/creator-calendar"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <CalendarApp />
-                                        </DashboardLayout>
-                                    )}
-                                />
+                            {/* Creator Role */}
+                            <Route
+                                path="/dashboard/event-management"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <EventManagement />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/event-detail"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <EventDetail />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/event-type"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <EventType />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/create-event"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <CreateEvent />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/creator-calendar"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <CalendarApp targetRole={3} />
+                                    </DashboardLayout>
+                                )}
+                            />
 
-                                {/* Reviewer role */}
-                                <Route
-                                    path="/dashboard/event-request"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            <EventRequest />
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/reviewer-calendar"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            Calendar
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/event-analysis"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            Event Analysis
-                                        </DashboardLayout>
-                                    )}
-                                />
-                                <Route
-                                    path="/dashboard/facility-usage"
-                                    render={() => (
-                                        <DashboardLayout>
-                                            Facility Usage History
-                                        </DashboardLayout>
-                                    )}
-                                />
+                            {/* Reviewer role */}
+                            <Route
+                                path="/dashboard/event-request"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <EventRequest />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/reviewer-calendar"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <CalendarApp targetRole={2} />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/event-analysis"
+                                render={() => (
+                                    <DashboardLayout>
+                                        Event Analysis
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/facility-usage"
+                                render={() => (
+                                    <DashboardLayout>
+                                        Facility Usage History
+                                    </DashboardLayout>
+                                )}
+                            />
 
-                                <Route path="*" component={Error} />
-                            </Switch>
-                        </Route>
-                        <Route path="*" component={Error} />
-                    </Switch>
-                )}
+                            <Route path="*" component={Error} />
+                        </Switch>
+                    </Route>
+                    <Route path="*" component={Error} />
+                </Switch>
+            )}
         </div>
     );
 };
