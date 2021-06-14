@@ -72,10 +72,10 @@ export const registerParticipant = (participantData) => async (dispatch) => {
 }
 
 
-export const getParticipants = (search, take, page, academic, isValid, isAttended, eventId) => async (dispatch) => {
+export const getParticipants = (search, take, page, academic, isValid, isAttended, eventId, status) => async (dispatch) => {
     setPartiticpantIsLoading(true, dispatch);
     try {
-        const data = await getParticipantsAPI(search, take, page, academic, isValid, isAttended, eventId);
+        const data = await getParticipantsAPI(search, take, page, academic, isValid, isAttended, eventId, status);
         dispatch({
             type: PARTICIPANT_GET_ALL_FILTER,
             payload: data

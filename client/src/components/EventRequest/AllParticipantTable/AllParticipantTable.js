@@ -7,16 +7,17 @@ import {
     Tooltip,
     InputBase,
 } from '@material-ui/core';
-import ParticipantPagination from '../../ParticipantPagination/ParticipantPagination';
-import ParticipantTable from '../../ParticipantTable/ParticipantTable';
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
 import useStyles from './styles';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getParticipants, setInvalidAndVerifyParticipant } from '../../../../actions/participantActions';
-import ParticipantFilter from '../../ParticipantFilter/ParticipantFilter';
-import SystemNotification from '../../../Notification/Notification';
+import ParticipantTable from '../../EventManagement/ParticipantTable/ParticipantTable';
+import ParticipantPagination from '../../EventManagement/ParticipantPagination/ParticipantPagination';
+import ParticipantFilter from '../../EventManagement/ParticipantFilter/ParticipantFilter';
+import SystemNotification from '../../Notification/Notification';
+import { getParticipants } from '../../../actions/participantActions';
+
 
 
 const initialState = {
@@ -26,7 +27,8 @@ const initialState = {
     openFilter: false,
     academic: '',
     isValid: '',
-    isAttended: false,
+    isAttended: '',
+    status: '',
     isParticipantUpdated: false,
     checkInMode: false,
     openUpdateSnackBar: false
@@ -34,54 +36,16 @@ const initialState = {
 
 const filterState = {
     academic: '',
-    isValid: '',
+    status: ''
 }
 
-const VerifyTable = ({ eventId, tabs }) => {
+const AllParticipantTable = ({ eventId, tabs }) => {
     const css = useStyles();
     const history = useHistory();
     const dispatch = useDispatch();
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
     const [selected, setSelected] = useState([]);
-
-    const {
-        isParticipantUpdated,
-    } = useSelector((state) => ({
-        isParticipantUpdated: state.participant.isUpdated
-    }));
-
-    // UseEffect for update event success
-    useEffect(() => {
-        if (isParticipantUpdated) {
-            setSelected([]);
-            setState(initialState);
-            dispatch(
-                getParticipants(
-                    state.search,
-                    state.take,
-                    state.page,
-                    state.academic,
-                    state.isValid,
-                    state.isAttended,
-                    eventId
-                )
-            )
-        }
-        setState((prevState) => ({
-            ...prevState,
-            openUpdateSnackBar: isParticipantUpdated,
-        }));
-    }, [dispatch,
-        state.search,
-        state.take,
-        state.page,
-        state.academic,
-        state.isValid,
-        state.isAttended,
-        eventId,
-        isParticipantUpdated]
-    );
 
     // Use Effect call participants API after state is set
     useEffect(() => {
@@ -94,7 +58,8 @@ const VerifyTable = ({ eventId, tabs }) => {
                     state.academic,
                     state.isValid,
                     state.isAttended,
-                    eventId
+                    eventId,
+                    state.status
                 )
             )
         }
@@ -106,16 +71,9 @@ const VerifyTable = ({ eventId, tabs }) => {
         state.isValid,
         state.isAttended,
         eventId,
+        state.status,
         tabs]
     );
-
-    const handleSetInvalid = () => {
-        dispatch(setInvalidAndVerifyParticipant({ invalidList: selected, action: false }))
-    }
-
-    const handleSetVerified = () => {
-        dispatch(setInvalidAndVerifyParticipant({ verifiedList: selected, action: true }))
-    }
 
     const handleChangePage = (event, newPage) => {
         setState((prevState) => ({ ...prevState, page: newPage }));
@@ -210,9 +168,6 @@ const VerifyTable = ({ eventId, tabs }) => {
 
                 <ParticipantTable
                     take={state.take}
-                    handleSetInvalid={handleSetInvalid}
-                    handleSetVerified={handleSetVerified}
-                    checkInMode={state.checkInMode}
                     selected={selected}
                     setSelected={setSelected} />
 
@@ -224,10 +179,10 @@ const VerifyTable = ({ eventId, tabs }) => {
 
                 {/* Participant Filter */}
                 <ParticipantFilter
-                    checkInMode={state.checkInMode}
                     openFilter={state.openFilter}
                     academic={filters.academic}
-                    isValid={filters.isValid}
+                    status={filters.status}
+                    isReviewer={true}
                     handleToggleFilter={handleToggleFilter}
                     handleFilterChange={handleFilterChange}
                     handleApplyFilter={handleApplyFilter}
@@ -240,4 +195,4 @@ const VerifyTable = ({ eventId, tabs }) => {
     )
 }
 
-export default VerifyTable;
+export default AllParticipantTable;

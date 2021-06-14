@@ -122,6 +122,7 @@ export const getEventsAPI = (userQueries) => {
         endFrom,
         endTo,
         ownerId,
+        status
     } = userQueries;
     const searchQuery = `search=${search ? search : ''}`;
     const ownerIdQuery = `ownerId=${ownerId ? ownerId : ''}`;
@@ -136,9 +137,10 @@ export const getEventsAPI = (userQueries) => {
     const startToQuery = `startTo=${startTo ? startTo : ''}`;
     const endFromQuery = `endFrom=${endFrom ? endFrom : ''}`;
     const endToQuery = `endTo=${endTo ? endTo : ''}`;
+    const statusQuery = `status=${status ? status : ''}`;
 
     return AXIOS.get(
-        `/event/filter?${searchQuery}&${takeQuery}&${pageQuery}&${typeQuery}&${budgetQuery}&${participantQuery}&${ownerIdQuery}&${startFromQuery}&${startToQuery}&${endFromQuery}&${endToQuery}`
+        `/event/filter?${searchQuery}&${takeQuery}&${pageQuery}&${typeQuery}&${budgetQuery}&${participantQuery}&${ownerIdQuery}&${startFromQuery}&${startToQuery}&${endFromQuery}&${endToQuery}&${statusQuery}`
     );
 };
 export const getFacilityAndTaskByEventCodeAPI = (code) =>
@@ -204,16 +206,14 @@ export const getParticipantsAPI = (
     academic,
     isValid,
     isAttended,
-    eventId
+    eventId,
+    status
 ) =>
     AXIOS.get(
-        `/participant/filter?search=${search ? search : ''}&take=${
-            take ? take : ''
-        }&page=${page ? page : ''}&academic=${
-            academic ? academic : ''
-        }&isValid=${isValid === '' ? '' : isValid}&isAttended=${
-            isAttended === '' ? '' : isAttended
-        }&eventId=${eventId ? eventId : ''}`
+        `/participant/filter?search=${search ? search : ''}&take=${take ? take : ''
+        }&page=${page ? page : ''}&academic=${academic ? academic : ''
+        }&isValid=${isValid === '' ? '' : isValid}&isAttended=${isAttended === '' ? '' : isAttended
+        }&eventId=${eventId ? eventId : ''}&status=${status ? status : ''}`
     );
 export const setInvalidAndVerifyParticipantAPI = (userReq) =>
     AXIOS.patch('/participant/update/valid', userReq);
