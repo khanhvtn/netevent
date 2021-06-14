@@ -79,7 +79,7 @@ const initialState = {
     openSendNotificationDialog: false
 }
 
-const NotificationHistory = ({ eventCode, eventName, eventId, tabs }) => {
+const NotificationHistory = ({ eventCode, eventName, eventId, tabs, isReviewer }) => {
     const css = useStyles();
     const dispatch = useDispatch();
     const [state, setState] = useState(initialState);
@@ -87,12 +87,19 @@ const NotificationHistory = ({ eventCode, eventName, eventId, tabs }) => {
         sendEmailSuccess: state.event.sendNotiSuccess
     }))
 
-    // Use Effect to get notification history by urlCode
+    // Use Effect to get notification history by urlCode from Creator
     useEffect(() => {
         if (eventCode && tabs === 3) {
             dispatch(getNotificationHistoryByEventCode(eventCode))
         }
     }, [dispatch, eventCode, tabs])
+
+    // Use Effect to get notification history by urlCode from Reviewer
+    useEffect(() => {
+        if (eventCode && tabs === 2 && isReviewer) {
+            dispatch(getNotificationHistoryByEventCode(eventCode))
+        }
+    }, [dispatch, eventCode, tabs, isReviewer])
 
     // Use Effect popup send notification snackbar and update new notfication history
     useEffect(() => {

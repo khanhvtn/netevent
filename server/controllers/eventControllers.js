@@ -370,9 +370,6 @@ const filterEventManagement = async (req, res, next) => {
             },
         };
 
-        console.log(req.query.status.toString())
-        console.log(queryOptions)
-
         /* 
         Variable page default is 1
          */

@@ -53,10 +53,14 @@ export const getFacilitiesAPI = (userQueries) => {
         updatedTo,
     } = userQueries;
     return AXIOS.get(
-        `/facility/filter?search=${search ? search : ''}&take=${take ? take : ''
-        }&page=${page ? page : ''}&isDeleted=${isDeleted ? isDeleted : ''
-        }&createdFrom=${createdFrom ? createdFrom : ''}&createdTo=${createdTo ? createdTo : ''
-        }&updatedFrom=${updatedFrom ? updatedFrom : ''}&updatedTo=${updatedTo ? updatedTo : ''
+        `/facility/filter?search=${search ? search : ''}&take=${
+            take ? take : ''
+        }&page=${page ? page : ''}&isDeleted=${
+            isDeleted ? isDeleted : ''
+        }&createdFrom=${createdFrom ? createdFrom : ''}&createdTo=${
+            createdTo ? createdTo : ''
+        }&updatedFrom=${updatedFrom ? updatedFrom : ''}&updatedTo=${
+            updatedTo ? updatedTo : ''
         }`
     );
 };
@@ -83,10 +87,14 @@ export const getEventTypesAPI = (userQueries) => {
         updatedTo,
     } = userQueries;
     return AXIOS.get(
-        `/eventType/filter?search=${search ? search : ''}&take=${take ? take : ''
-        }&page=${page ? page : ''}&isDeleted=${isDeleted ? isDeleted : ''
-        }&createdFrom=${createdFrom ? createdFrom : ''}&createdTo=${createdTo ? createdTo : ''
-        }&updatedFrom=${updatedFrom ? updatedFrom : ''}&updatedTo=${updatedTo ? updatedTo : ''
+        `/eventType/filter?search=${search ? search : ''}&take=${
+            take ? take : ''
+        }&page=${page ? page : ''}&isDeleted=${
+            isDeleted ? isDeleted : ''
+        }&createdFrom=${createdFrom ? createdFrom : ''}&createdTo=${
+            createdTo ? createdTo : ''
+        }&updatedFrom=${updatedFrom ? updatedFrom : ''}&updatedTo=${
+            updatedTo ? updatedTo : ''
         }`
     );
 };
@@ -122,8 +130,9 @@ export const getEventsAPI = (userQueries) => {
     const pageQuery = `page=${page ? page : ''}`;
     const typeQuery = `type=${type ? type : ''}`;
     const budgetQuery = `budgetRange=${budgetRange ? budgetRange : ''}`;
-    const participantQuery = `participantRange=${participantRange ? participantRange : ''
-        }`;
+    const participantQuery = `participantRange=${
+        participantRange ? participantRange : ''
+    }`;
     const startFromQuery = `startFrom=${startFrom ? startFrom : ''}`;
     const startToQuery = `startTo=${startTo ? startTo : ''}`;
     const endFromQuery = `endFrom=${endFrom ? endFrom : ''}`;
@@ -141,7 +150,7 @@ export const sendNotificationAPI = (notificationReq) =>
     AXIOS.post('/event/sendNotification', notificationReq);
 export const updateEventAPI = (userReq) =>
     AXIOS.patch(`/event/update`, userReq);
-export const updateEventStatusAPI = (userReq) =>
+export const updateEventStatusAPI = (userReq) => 
     AXIOS.patch('/event/update/status', userReq);
 export const deleteEventAPI = (userReq) =>
     AXIOS.delete(`/event/delete`, { data: userReq });
@@ -155,22 +164,30 @@ export const getAllEventAPI = () => AXIOS.get(`/event/all`);
 export const getFacilityHistoriesAPI = (userQueries) => {
     const takeQuery = `take=${userQueries?.take ? userQueries?.take : ''}`;
     const pageQuery = `page=${userQueries?.page ? userQueries?.page : ''}`;
-    const createdFromQuery = `createdFrom=${userQueries?.createdFrom ? userQueries?.createdFrom : ''
-        }`;
-    const createdToQuery = `createdTo=${userQueries?.createdTo ? userQueries?.createdTo : ''
-        }`;
-    const updatedFromQuery = `updatedFrom=${userQueries?.updatedFrom ? userQueries?.updatedFrom : ''
-        }`;
-    const updatedToQuery = `updatedTo=${userQueries?.updatedTo ? userQueries?.updatedTo : ''
-        }`;
-    const borrowFromQuery = `borrowFrom=${userQueries?.borrowFrom ? userQueries?.borrowFrom : ''
-        }`;
-    const borrowToQuery = `borrowTo=${userQueries?.borrowTo ? userQueries?.borrowTo : ''
-        }`;
-    const returnFromQuery = `returnFrom=${userQueries?.returnFrom ? userQueries?.returnFrom : ''
-        }`;
-    const returnToQuery = `returnTo=${userQueries?.returnTo ? userQueries?.returnTo : ''
-        }`;
+    const createdFromQuery = `createdFrom=${
+        userQueries?.createdFrom ? userQueries?.createdFrom : ''
+    }`;
+    const createdToQuery = `createdTo=${
+        userQueries?.createdTo ? userQueries?.createdTo : ''
+    }`;
+    const updatedFromQuery = `updatedFrom=${
+        userQueries?.updatedFrom ? userQueries?.updatedFrom : ''
+    }`;
+    const updatedToQuery = `updatedTo=${
+        userQueries?.updatedTo ? userQueries?.updatedTo : ''
+    }`;
+    const borrowFromQuery = `borrowFrom=${
+        userQueries?.borrowFrom ? userQueries?.borrowFrom : ''
+    }`;
+    const borrowToQuery = `borrowTo=${
+        userQueries?.borrowTo ? userQueries?.borrowTo : ''
+    }`;
+    const returnFromQuery = `returnFrom=${
+        userQueries?.returnFrom ? userQueries?.returnFrom : ''
+    }`;
+    const returnToQuery = `returnTo=${
+        userQueries?.returnTo ? userQueries?.returnTo : ''
+    }`;
     return AXIOS.get(
         `/facilityHistory/filter?${takeQuery}&${pageQuery}&${createdFromQuery}&${createdToQuery}&${updatedFromQuery}&${updatedToQuery}&${borrowFromQuery}&${borrowToQuery}&${returnFromQuery}&${returnToQuery}`
     );
@@ -189,13 +206,14 @@ export const getParticipantsAPI = (
     academic,
     isValid,
     isAttended,
-    eventId
+    eventId,
+    status
 ) =>
     AXIOS.get(
         `/participant/filter?search=${search ? search : ''}&take=${take ? take : ''
         }&page=${page ? page : ''}&academic=${academic ? academic : ''
         }&isValid=${isValid === '' ? '' : isValid}&isAttended=${isAttended === '' ? '' : isAttended
-        }&eventId=${eventId ? eventId : ''}`
+        }&eventId=${eventId ? eventId : ''}&status=${status ? status : ''}`
     );
 export const setInvalidAndVerifyParticipantAPI = (userReq) =>
     AXIOS.patch('/participant/update/valid', userReq);

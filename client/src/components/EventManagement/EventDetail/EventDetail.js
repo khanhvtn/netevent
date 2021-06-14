@@ -42,7 +42,6 @@ import useStyles from './styles';
 import CheckInTable from './CheckInTable/CheckInTable';
 import VerifyTable from './VerifyTable/VerifyTable';
 import EventCheckingCompletedDialog from '../EventDialog/EventCheckingCompletedDialog';
-import SendNotification from './SendNotification/SendNotification';
 import NotificationHistory from './NotificationHistory/NotificationHistory';
 
 

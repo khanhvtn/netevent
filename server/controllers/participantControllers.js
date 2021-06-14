@@ -110,6 +110,42 @@ const filterParticipants = async (req, res, next) => {
         }
 
         /* 
+        Add status row filter
+         */
+        if (req.query.status) {
+            switch (req.query.status) {
+                case 'Verified':
+                    options = {
+                        ...options,
+                        isValid: true,
+                        isAttended: false
+                    }
+                    break;
+                case 'Invalid':
+                    options = {
+                        ...options,
+                        isValid: false,
+                        isAttended: false
+                    }
+                    break;
+                case 'Pending':
+                    options = {
+                        ...options,
+                        isValid: null,
+                        isAttended: false
+                    }
+                    break;
+                case 'Checked':
+                    options = {
+                        ...options,
+                        isValid: true,
+                        isAttended: true
+                    }
+                    break;
+            }
+        }
+
+        /* 
         Variable page default is 1
          */
         const page = parseInt(req.query.page) || 1;
