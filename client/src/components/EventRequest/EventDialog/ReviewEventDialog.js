@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     CircularProgress,
     Button,
@@ -24,17 +24,17 @@ const ReviewEventDialog = ({
 }) => {
     const css = useStyles();
 
+    const { isLoading, updateEventSuccess } = useSelector((state) => ({
+        isLoading: state.event.isLoading,
+        updateEventSuccess: state.event.updateSuccess
+    }));
+
     //useEffect for create event success
     useEffect(() => {
         if (updateEventSuccess) {
             handleToggleDialogReviewEvent();
         }
     }, [updateEventSuccess]);
-
-    const { isLoading, updateEventSuccess } = useSelector((state) => ({
-        isLoading: state.event.isLoading,
-        updateEventSuccess: state.event.updateSuccess
-    }))
 
     return (
         <>

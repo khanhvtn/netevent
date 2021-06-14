@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import {
     Paper,
     Typography,
@@ -13,9 +12,6 @@ import {
     Tooltip,
     Button,
     Chip,
-    Dialog,
-    Tabs,
-    Tab,
     Divider,
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -26,20 +22,17 @@ import LanguageIcon from '@material-ui/icons/Language';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
 import TimelapseOutlinedIcon from '@material-ui/icons/TimelapseOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import EventDeleteDialog from '../EventDialog/EventDeleteDialog';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    deleteEventWithTaskAndFacilityHistory,
     getFacilityAndTaskByEventCode,
     updateEventStatus,
 } from '../../../actions/eventActions';
 import { Skeleton } from '@material-ui/lab';
-import CreateEvent from '../../CreateEvent/CreateEvent';
 import SystemNotification from '../../Notification/Notification';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
-import EventCheckingCompletedDialog from '../EventDialog/EventCheckingCompletedDialog';
 import ReviewEventDialog from '../EventDialog/ReviewEventDialog';
+import useStyles from './styles';
 
 const initialDescription =
     '{"blocks":[{"key":"4jrep","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}';
@@ -59,7 +52,7 @@ const initialDeleteState = {
     historyFacilityListId: [],
 };
 
-const EventDetail = () => {
+const EventReview = () => {
     const css = useStyles();
     const history = useHistory();
     const dispatch = useDispatch();
@@ -905,4 +898,4 @@ const EventDetail = () => {
     );
 };
 
-export default EventDetail;
+export default EventReview;

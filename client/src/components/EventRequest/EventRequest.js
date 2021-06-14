@@ -14,13 +14,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import useStyles from './styles';
 import { FilterList } from '@material-ui/icons';
-import EventPagination from './EventPagination/EventPagination';
-import EventCard from './EventCard/EventCard';
-import EventFilter from './EventFilter/EventFilter';
 import { useHistory } from 'react-router-dom';
 import { getEvents } from '../../actions/eventActions';
 import { getAllEventTypes } from '../../actions/eventTypeActions';
 import SystemNotification from '../Notification/Notification';
+import EventCard from '../EventManagement/EventCard/EventCard';
+import EventFilter from '../EventManagement/EventFilter/EventFilter';
+import EventPagination from '../EventManagement/EventPagination/EventPagination';
 
 
 const initialState = {
@@ -78,6 +78,7 @@ const EventRequest = () => {
             startTo,
             endFrom,
             endTo,
+            status
         } = state;
         if (!history.location.state || history.location.state?.isUpdated) {
             dispatch(
@@ -92,6 +93,8 @@ const EventRequest = () => {
                     startTo,
                     endFrom,
                     endTo,
+                    ownerId: null,
+                    status
                 })
             );
         }
@@ -107,7 +110,8 @@ const EventRequest = () => {
         state.startFrom,
         state.startTo,
         state.endFrom,
-        state.endTo]);
+        state.endTo,
+        state.status]);
 
     const { eventTypes } = useSelector(() => ({
         eventTypes: state.eventType?.eventTypes,
@@ -119,14 +123,6 @@ const EventRequest = () => {
             dispatch(getAllEventTypes());
         }
     }, []);
-
-    // UseEffect for delete event success
-    useEffect(() => {
-        setState((prevState) => ({
-            ...prevState,
-            openDeleteSnackBar: deleteEventSuccess,
-        }));
-    }, [deleteEventSuccess]);
 
     const handleChangePage = (event, newPage) => {
         setState((prevState) => ({ ...prevState, page: newPage }));
@@ -198,7 +194,7 @@ const EventRequest = () => {
     // Push to the event-detail page with event props
     const handleOnClickEvent = (event) => {
         history.push({
-            pathname: '/dashboard/event-detail',
+            pathname: '/dashboard/event-review',
             state: {
                 from: '/dashboard/event-request',
                 event: event,
@@ -315,6 +311,7 @@ const EventRequest = () => {
 
             {/* Event Filter */}
             <EventFilter
+                isReviewer={true}
                 openFilter={state.openFilter}
                 type={filters.type}
                 budgetRange={filters.budgetRange}
@@ -323,6 +320,7 @@ const EventRequest = () => {
                 startTo={filters.startTo}
                 endFrom={filters.endFrom}
                 endTo={filters.endTo}
+                status={filters.status}
                 setFilters={setFilters}
                 handleFilterChange={handleFilterChange}
                 handleToggleFilter={handleToggleFilter}

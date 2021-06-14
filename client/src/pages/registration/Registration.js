@@ -176,7 +176,7 @@ const Registration = () => {
                     });
                 case '/dashboard/event-review':
                     history.push({
-                        pathname: '/dashboard/event-detail',
+                        pathname: '/dashboard/event-review',
                         state: {
                             from: `/dashboard/event-request`,
                             event: history.location.state.event,

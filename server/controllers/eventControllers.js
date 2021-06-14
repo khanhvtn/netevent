@@ -324,6 +324,39 @@ const filterEventManagement = async (req, res, next) => {
             };
         }
 
+        if (req.query.status) {
+            switch (req.query.status) {
+                case 'Approved':
+                    queryOptions = {
+                        ...queryOptions,
+                        isApproved: true,
+                        isFinished: false
+                    }
+                    break;
+                case 'Rejected':
+                    queryOptions = {
+                        ...queryOptions,
+                        isApproved: false,
+                        isFinished: false
+                    }
+                    break;
+                case 'Pending':
+                    queryOptions = {
+                        ...queryOptions,
+                        isApproved: null,
+                        isFinished: false
+                    }
+                    break;
+                case 'Completed':
+                    queryOptions = {
+                        ...queryOptions,
+                        isApproved: true,
+                        isFinished: true
+                    }
+                    break;
+            }
+        }
+
         /* Set StartDate and EndDate Filter for query options */
         queryOptions = {
             ...queryOptions,
@@ -336,6 +369,9 @@ const filterEventManagement = async (req, res, next) => {
                 $lte: options.endMaxDate,
             },
         };
+
+        console.log(req.query.status.toString())
+        console.log(queryOptions)
 
         /* 
         Variable page default is 1
@@ -784,23 +820,23 @@ const updateEventStatus = async (req, res, next) => {
         // Update new event
         switch (action) {
             case 'approve':
-                const updatedEvent = await Event.findOneAndUpdate(
+                const approveEvent = await Event.findOneAndUpdate(
                     { _id: eventId },
                     { isApproved: status },
                     { new: true, context: 'query' }
                 ).populate({
                     path: 'eventTypeId',
                 });
-                return cusResponse(res, 200, updatedEvent, null);
+                return cusResponse(res, 200, approveEvent, null);
             case 'finish':
-                const updatedEvent = await Event.findOneAndUpdate(
+                const finishEvent = await Event.findOneAndUpdate(
                     { _id: eventId },
                     { isFinished: status },
                     { new: true, context: 'query' }
                 ).populate({
                     path: 'eventTypeId',
                 });
-                return cusResponse(res, 200, updatedEvent, null);
+                return cusResponse(res, 200, finishEvent, null);
         }
     } catch (error) {
         return next(new CustomError(500, error.message));
