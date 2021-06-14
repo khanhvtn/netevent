@@ -1,6 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import useStyles from './styles'
+import {
+    Paper,
+    Typography,
+    AppBar,
+    Grid,
+    Toolbar,
+    InputBase,
+    Tooltip,
+    IconButton,
+} from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
+import { useDispatch, useSelector } from 'react-redux';
+
+import useStyles from './styles';
+import { FilterList } from '@material-ui/icons';
+import EventPagination from './EventPagination/EventPagination';
+import EventCard from './EventCard/EventCard';
+import EventFilter from './EventFilter/EventFilter';
+import { useHistory } from 'react-router-dom';
+import { getEvents } from '../../actions/eventActions';
+import { getAllEventTypes } from '../../actions/eventTypeActions';
+import SystemNotification from '../Notification/Notification';
+
 
 const initialState = {
     search: '',
@@ -32,6 +53,7 @@ const filterState = {
 const EventRequest = () => {
     const css = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
@@ -70,7 +92,6 @@ const EventRequest = () => {
                     startTo,
                     endFrom,
                     endTo,
-                    ownerId: '',
                 })
             );
         }
@@ -86,8 +107,7 @@ const EventRequest = () => {
         state.startFrom,
         state.startTo,
         state.endFrom,
-        state.endTo,
-        userId]);
+        state.endTo]);
 
     const { eventTypes } = useSelector(() => ({
         eventTypes: state.eventType?.eventTypes,

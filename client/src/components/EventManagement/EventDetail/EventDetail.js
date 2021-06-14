@@ -260,7 +260,7 @@ const EventDetail = () => {
 
     // Handle Update Event Status
     const handleUpdateEventStatus = () => {
-        dispatch(updateEventStatus({ eventId: state.event?._id, status: true }))
+        dispatch(updateEventStatus({ eventId: state.event?._id, status: true, action: 'finish' }))
     }
 
     const contentState = convertFromRaw(
