@@ -60,7 +60,7 @@ const CalendarApp = ({ targetRole }) => {
 
     const handleSelectEvent = (event) => {
         history.push({
-            pathname: '/dashboard/event-detail',
+            pathname: targetRole === 3 ? '/dashboard/event-detail' : '/dashboard/event-review',
             state: {
                 from:
                     targetRole === 3
