@@ -26,23 +26,19 @@ import LanguageIcon from '@material-ui/icons/Language';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
 import TimelapseOutlinedIcon from '@material-ui/icons/TimelapseOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import EventDeleteDialog from '../EventDialog/EventDeleteDialog';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    deleteEventWithTaskAndFacilityHistory,
     getFacilityAndTaskByEventCode,
     updateEventStatus,
 } from '../../../actions/eventActions';
 import { Skeleton } from '@material-ui/lab';
-import CreateEvent from '../../CreateEvent/CreateEvent';
 import SystemNotification from '../../Notification/Notification';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import ReviewEventDialog from '../EventDialog/ReviewEventDialog';
 import useStyles from './styles';
-import CheckInTable from './CheckInTable/CheckInTable';
-import VerifyTable from './VerifyTable/VerifyTable';
-import EventCheckingCompletedDialog from '../EventDialog/EventCheckingCompletedDialog';
-import NotificationHistory from './NotificationHistory/NotificationHistory';
+import NotificationHistory from '../../EventManagement/EventDetail/NotificationHistory/NotificationHistory';
+import AllParticipantTable from '../AllParticipantTable/AllParticipantTable';
 
 
 function TabPanel(props) {
@@ -80,14 +76,10 @@ const initialDescription =
 const initialState = {
     event: null,
     previousPath: null,
-    openDeleteDialog: false,
-    openUpdateDialog: false,
-    openCheckingCompletedDialog: false,
     openUpdateSnackBar: false,
     isUpdated: false,
-    isParticipantUpdated: false,
     isDetailLoading: false,
-    isCheckingCompletedEvent: false,
+    openReviewEventDialog: false
 };
 
 const initialDeleteState = {
@@ -96,12 +88,11 @@ const initialDeleteState = {
     historyFacilityListId: [],
 };
 
-const EventDetail = () => {
+const EventReview = () => {
     const css = useStyles();
     const history = useHistory();
     const dispatch = useDispatch();
     const [state, setState] = useState(initialState);
-    const [deleteState, setDeleteState] = useState(initialDeleteState);
     const [expanded, setExpanded] = useState(false);
     const [tabs, setTabs] = useState(0);
 
@@ -144,26 +135,6 @@ const EventDetail = () => {
 
     // Get Facility and Task if state event existed
     useEffect(() => {
-        if (state.event?.endDate && !state.isCheckingCompletedEvent && !state.event?.isFinished && state.event?.isApproved) {
-            setState((prevState) => ({
-                ...prevState,
-                isCheckingCompletedEvent: !prevState.isCheckingCompletedEvent
-            }))
-            const currentDate = new Date();
-            const endDate = new Date(state.event?.endDate);
-            if (currentDate > endDate) {
-                handleToggleDialogCheckingCompleted();
-            }
-        }
-    }, [dispatch,
-        state.event?.endDate,
-        state.event?.isFinished,
-        state.event?.isApproved,
-        state.isCheckingCompletedEvent]
-    );
-
-    // Get Facility and Task if state event existed
-    useEffect(() => {
         if (state.event && !isDetailLoading) {
             dispatch(getFacilityAndTaskByEventCode(state.event.urlCode));
             setState((prevState) => ({
@@ -181,9 +152,6 @@ const EventDetail = () => {
                 event: { ...newUpdateEventDetail },
                 isUpdated: true,
             }));
-            if (state.openCheckingCompletedDialog) {
-                handleToggleDialogCheckingCompleted();
-            }
             history.replace();
         }
         setState((prevState) => ({
@@ -192,33 +160,21 @@ const EventDetail = () => {
         }));
     }, [updateEventSuccess]);
 
-    // Update Delete State
-    useEffect(() => {
-        if (state.event && !isDetailLoading)
-            setDeleteState((prevState) => ({
-                ...prevState,
-                eventId: state.event?._id,
-                taskListId: tasks?.map((task) => task._id),
-                historyFacilityListId: facilities?.map(
-                    (facility) => facility._id
-                ),
-            }));
-    }, [isDetailLoading]);
+    const handleChangeTabs = (event, newValue) => {
+        setTabs(newValue);
+    };
+
 
     // Handle expand of accordion
     const handleExpand = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    const handleChangeTabs = (event, newValue) => {
-        setTabs(newValue);
-    };
-
     const handleOnClickViewTemplate = () => {
         history.push({
             pathname: `/registration/${state.event.urlCode}`,
             state: {
-                from: '/dashboard/event-detail',
+                from: '/dashboard/event-review',
                 event: {
                     ...state.event,
                     taskListId: tasks,
@@ -233,14 +189,14 @@ const EventDetail = () => {
         setState(initialState);
 
         switch (state.previousPath) {
-            case '/dashboard/creator-calendar':
+            case '/dashboard/reviewer-calendar':
                 return history.push({
                     pathname: `${state.previousPath}`,
                     state: {
                         isUpdated: state.isUpdated,
                     },
                 });
-            case '/dashboard/event-management':
+            case '/dashboard/event-request':
                 return history.push({
                     pathname: `${state.previousPath}`,
                     state: {
@@ -252,14 +208,9 @@ const EventDetail = () => {
         }
     };
 
-    // Handle Delete Event
-    const handleDeleteEvent = () => {
-        dispatch(deleteEventWithTaskAndFacilityHistory(deleteState, history));
-    };
-
     // Handle Update Event Status
-    const handleUpdateEventStatus = () => {
-        dispatch(updateEventStatus({ eventId: state.event?._id, status: true, action: 'finish' }))
+    const handleUpdateEventStatus = (status, action) => {
+        dispatch(updateEventStatus({ eventId: state.event?._id, status: status, action: action }))
     }
 
     const contentState = convertFromRaw(
@@ -271,26 +222,12 @@ const EventDetail = () => {
     );
     const editorState = EditorState.createWithContent(contentState);
 
-    const handleToggleDialogDelete = () => {
+    const handleToggleDialogReviewEvent = () => {
         setState((prevState) => ({
             ...prevState,
-            openDeleteDialog: !prevState.openDeleteDialog,
-        }));
-    };
-
-    const handleToggleDialogUpdate = () => {
-        setState((prevState) => ({
-            ...prevState,
-            openUpdateDialog: !prevState.openUpdateDialog,
-        }));
-    };
-
-    const handleToggleDialogCheckingCompleted = () => {
-        setState((prevState) => ({
-            ...prevState,
-            openCheckingCompletedDialog: !prevState.openCheckingCompletedDialog,
-        }));
-    };
+            openReviewEventDialog: !prevState.openReviewEventDialog
+        }))
+    }
 
     return (
         <>
@@ -307,22 +244,9 @@ const EventDetail = () => {
                                     className={css.toolbarEventDetail}
                                     variant="h6"
                                 >
-                                    Event Management
+                                    Event Review
                                 </Typography>
                                 <div className={css.grow} />
-                                <Tooltip title="Delete">
-                                    <div>
-                                        <Button
-                                            disabled={
-                                                isDetailLoading || isLoading
-                                            }
-                                            color="inherit"
-                                            onClick={handleToggleDialogDelete}
-                                        >
-                                            Delete
-                                        </Button>
-                                    </div>
-                                </Tooltip>
                                 <Tooltip title="Edit">
                                     <div>
                                         <Button
@@ -332,7 +256,7 @@ const EventDetail = () => {
                                             color="inherit"
                                             variant="outlined"
                                             style={{ margin: '0 8px' }}
-                                            onClick={handleToggleDialogUpdate}
+                                            onClick={handleToggleDialogReviewEvent}
                                         >
                                             Update
                                         </Button>
@@ -380,22 +304,13 @@ const EventDetail = () => {
                                     disableTouchRipple
                                     className={css.tabDesign}
                                     textColor="inherit"
-                                    label="Check-in"
-                                    {...a11yProps(2)}
-                                />
-                                <Tab
-                                    disableTouchRipple
-                                    className={css.tabDesign}
-                                    textColor="inherit"
                                     label="Notification"
-                                    {...a11yProps(3)}
+                                    {...a11yProps(2)}
                                 />
                             </Tabs>
                         </Grid>
                     </AppBar>
                 </div>
-
-                <Divider />
 
                 {/* Event detail tabs */}
                 <TabPanel value={tabs} index={0}>
@@ -934,10 +849,7 @@ const EventDetail = () => {
                                         variant="h6"
                                     >
                                         Description
-                                    </Typography>
-                                    {/* <Typography variant="body2">
-                                    {state.event?.description}
-                                </Typography> */}
+                                </Typography>
                                     <Editor
                                         editorState={editorState}
                                         readOnly={true}
@@ -993,11 +905,11 @@ const EventDetail = () => {
                                         color="primary"
                                     >
                                         <Link
-                                            to="/dashboard/creator-calendar"
+                                            to="/dashboard/reviewer-calendar"
                                             style={{ textDecoration: 'none' }}
                                         >
                                             View Calendar
-                                        </Link>
+                                    </Link>
                                     </Typography>
                                 </Grid>
 
@@ -1062,17 +974,13 @@ const EventDetail = () => {
 
                 {/* Participant Tabs */}
                 <TabPanel value={tabs} index={1}>
-                    <VerifyTable eventId={state.event?._id} tabs={tabs} />
+                    <AllParticipantTable eventId={state.event?._id} tabs={tabs} />
                 </TabPanel>
 
                 {/* Participant Tabs */}
                 <TabPanel value={tabs} index={2}>
-                    <CheckInTable eventId={state.event?._id} tabs={tabs} />
-                </TabPanel>
-
-                {/* Send notification Tabs */}
-                <TabPanel value={tabs} index={3}>
                     <NotificationHistory
+                        isReviewer={true}
                         eventCode={state.event?.urlCode}
                         eventId={state.event?._id}
                         eventName={state.event?.eventName}
@@ -1080,39 +988,10 @@ const EventDetail = () => {
                 </TabPanel>
             </Paper>
 
-            {/* Event Delete Dialog */}
-            <EventDeleteDialog
-                openDeleteDialog={state.openDeleteDialog}
-                handleToggleDialogDelete={handleToggleDialogDelete}
-                handleDeleteEvent={handleDeleteEvent}
-            />
-
-            {/* Event Checking Completed Dialog */}
-            <EventCheckingCompletedDialog
-                openCheckingCompletedDialog={state.openCheckingCompletedDialog}
-                handleToggleDialogCheckingCompleted={handleToggleDialogCheckingCompleted}
-                handleUpdateEventStatus={handleUpdateEventStatus}
-            />
-
-            {/* Event Update Dialog */}
-            <Dialog
-                fullWidth
-                maxWidth="lg"
-                open={state.openUpdateDialog}
-                onClose={handleToggleDialogUpdate}
-                aria-labelledby="max-width-dialog-title"
-            >
-                <CreateEvent
-                    isUpdateMode={state.openUpdateDialog}
-                    updateEventDetail={state.event}
-                    updateFacilities={facilities}
-                    updateTasks={tasks}
-                    handleCloseUpdateDialog={handleToggleDialogUpdate}
-                />
-            </Dialog>
-
-            {/* Event checking completed dialog */}
-
+            <ReviewEventDialog
+                handleToggleDialogReviewEvent={handleToggleDialogReviewEvent}
+                openReviewEventDialog={state.openReviewEventDialog}
+                handleUpdateEventStatus={handleUpdateEventStatus} />
 
             {/* Notification */}
             <SystemNotification openUpdateSnackBar={state.openUpdateSnackBar} />
@@ -1120,4 +999,4 @@ const EventDetail = () => {
     );
 };
 
-export default EventDetail;
+export default EventReview;

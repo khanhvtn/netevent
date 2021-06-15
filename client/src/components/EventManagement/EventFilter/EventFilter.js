@@ -55,6 +55,7 @@ const PrettoSlider = withStyles({
 const EventFilter = ({
     openFilter,
     type,
+    status,
     budgetRange,
     participantRange,
     startFrom,
@@ -66,6 +67,7 @@ const EventFilter = ({
     handleFilterChange,
     handleClearFilter,
     handleApplyFilter,
+    isReviewer
 }) => {
     const css = useStyles();
 
@@ -120,6 +122,40 @@ const EventFilter = ({
                             })}
                         </Select>
                     </FormControl>
+                    {isReviewer &&
+                        <>
+                            <FormControl size="small" margin="normal" fullWidth variant="outlined">
+                                <InputLabel id="statusFilterLabel">Status</InputLabel>
+                                <Select
+                                    disabled={isLoading}
+                                    id="statusFilter"
+                                    label="Status"
+                                    labelId="statusFilterLabel"
+                                    value={status}
+                                    onChange={handleFilterChange}
+                                    inputProps={{
+                                        name: 'status',
+                                    }}
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    <MenuItem value="Approved">
+                                        Approved
+                                    </MenuItem>
+                                    <MenuItem value="Rejected">
+                                        Rejected
+                                    </MenuItem>
+                                    <MenuItem value="Completed">
+                                        Completed
+                                    </MenuItem>
+                                    <MenuItem value="Pending">
+                                        Pending
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </>
+                    }
                     <FormControl size="small" margin="normal" fullWidth>
                         <Typography variant="caption">Bugdet Range: {budgetRange} vnd</Typography>
                         <PrettoSlider
