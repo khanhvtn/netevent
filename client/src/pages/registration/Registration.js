@@ -63,8 +63,6 @@ const Registration = () => {
 
     const isReviewed = history.location?.state?.isReviewed;
 
-
-
     const { isLoading, eventDetail, error, isRegistered, registerSuccess } = useSelector((state) => ({
         isLoading: state.event.isDetailLoading,
         eventDetail: state.event.eventDetail,
@@ -80,7 +78,7 @@ const Registration = () => {
 
     // Check if page is valid by event name
     useEffect(() => {
-        if (currentEvent.isLoaded && !currentEvent?.urlCode && !isLoading) {
+        if (currentEvent.isLoaded && !currentEvent?.isApproved && !isLoading) {
             history.push('/404')
         }
     }, [currentEvent.urlCode, isLoading])
