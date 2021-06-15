@@ -115,7 +115,7 @@ const App = () => {
                                     path="/dashboard/creator-calendar"
                                     render={() => (
                                         <DashboardLayout>
-                                            <CalendarApp />
+                                            <CalendarApp targetRole={3} />
                                         </DashboardLayout>
                                     )}
                                 />
@@ -141,7 +141,7 @@ const App = () => {
                                     path="/dashboard/reviewer-calendar"
                                     render={() => (
                                         <DashboardLayout>
-                                            Calendar
+                                            <CalendarApp targetRole={2} />
                                         </DashboardLayout>
                                     )}
                                 />
