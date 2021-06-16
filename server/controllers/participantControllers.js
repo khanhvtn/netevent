@@ -1,7 +1,9 @@
-const { Participant } = require('../models');
+const { Participant, Event } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
 const mongoose = require('mongoose');
+const { sendInvitation } = require('./misc/mailerInvitation');
+
 
 
 /**
@@ -242,6 +244,20 @@ const deleteParticipant = async (req, res, next) => {
     }
 }
 
+function formatDateTime(date) {
+    const year = date.getUTCFullYear();
+    const month = pad(date.getUTCMonth() + 1);
+    const day = pad(date.getUTCDate());
+    const hour = pad(date.getUTCHours());
+    const minute = pad(date.getUTCMinutes());
+    const second = pad(date.getUTCSeconds());
+    return `${year}${month}${day}T${hour}${minute}${second}Z`;
+}
+
+function pad(i) {
+    return i < 10 ? `0${i}` : `${i}`;
+}
+
 /**
  * @decsription Set Invalid and Verify participants
  * @method PATCH
@@ -266,6 +282,58 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
                     { $set: { isValid: action } },
                     { new: true }
                 );
+
+                // Send Invitation
+                const participants = await Participant.find({
+                    _id: verifiedList,
+                });
+
+                const event = await Event.findOne({
+                    _id: participants[0].event
+                })
+
+                const dateStart = new Date(event.startDate);
+                const dateEnd = new Date(event.endDate);
+
+                const emailParticipantsList = [];
+                for (var i = 0; i < participants.length; i++) {
+                    emailParticipantsList.push(participants[i].email);
+                }
+                const stringUsersMail = emailParticipantsList.join(', ');
+
+                const description = JSON.parse(event.description)
+
+                //Calendar Content
+                
+
+                let content = 'BEGIN:VCALENDAR\n' +
+                    'VERSION:2.0\n' +
+                    'BEGIN:VEVENT\n' +
+                    'DTSTART:' + formatDateTime(dateStart) + '\r\n' +
+                    'DTEND:' + formatDateTime(dateEnd) + '\r\n' +
+                    'SUMMARY:' + event.eventName + '\r\n' +
+                    'DESCRIPTION:' + description.blocks[0].text + ' \r\n' +
+                    'LOCATION:' + event.location + '\r\n' +
+                    'ORGANIZER;CN=' + "NetCompanyy" + ':mailto:' + "netevent@gmail.com" + '\r\n' +
+                    'STATUS:CONFIRMED\n' +
+                    'SEQUENCE:0\n' +
+                    'ACTION:DISPLAY\n' +
+                    'END:VEVENT\n' +
+                    'END:VCALENDAR';
+
+
+                await sendInvitation({
+                    from: 'noreply@netevent.com',
+                    to: stringUsersMail,
+                    subject: `NetEvent - ${event.eventName} - Invitation`,
+                    text: "Your event registration has been verified. You can now come to an event!",
+                    icalEvent: {
+                        filename: "invitation.ics",
+                        method: 'request',
+                        content: content
+                    }
+                });
+
                 return cusResponse(res, 200, updateVerifiedParticipant, null);
         }
     } catch (error) {
