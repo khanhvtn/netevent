@@ -434,7 +434,6 @@ const CreateEvent = ({
                 }
             ),
         };
-        console.log(templateRequest);
         if (!isUpdateMode) {
             dispatch(createEvent(templateRequest));
         } else {
@@ -479,8 +478,6 @@ const CreateEvent = ({
                     ...taskState.tasks.filter((task) => task._id),
                 ],
             };
-            console.log(updateTemplate);
-            console.log('Update');
             dispatch(updateEvent(updateTemplate));
         }
     };

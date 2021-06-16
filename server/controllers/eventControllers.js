@@ -9,6 +9,12 @@ const {
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
 const { sendEmail } = require('./misc/mailer');
+const { Types } = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+const { bucketInstance } = require(`../services/firebase`);
+const { createPersistentDownloadUrl } = require('../utils');
+const path = require('path');
 
 function limit(c) {
     return this.filter((x, i) => {
@@ -46,8 +52,12 @@ Array.prototype.skip = skip;
 const createEvent = async (req, res, next) => {
     let errors = {};
     try {
-        const { tasks, borrowFacilities } = req.body;
-        let event = new Event(req.body);
+        const { tasks, borrowFacilities, image } = req.body;
+        //generate new Mongo Object ID
+        const _id = new Types.ObjectId();
+
+        let event = new Event({ ...req.body, _id });
+
         //validate tasks list
         if (Object.keys(tasks).length === 0) {
             errors = { ...errors, taskListId: 'Task cannot be blanked' };
@@ -99,60 +109,100 @@ const createEvent = async (req, res, next) => {
             ),
         };
 
-        //renew event instance
-        event = new Event(req.body);
-
-        //create new event
-        const newEvent = await event.save();
-
-        //update id event back to above tasks.
-        await Promise.all(
-            taskResult.map(async (task) => {
-                try {
-                    return await Task.findByIdAndUpdate(task._id, {
-                        ...task._doc,
-                        eventId: newEvent._id,
-                    });
-                } catch (error) {
-                    throw error;
-                }
-            })
+        //upload image onto firebase
+        const base64EncodedString = image.replace(/^data:\w+\/\w+;base64,/, '');
+        const file = bucketInstance.file(`${_id}.jpg`);
+        const downloadToken = uuidv4();
+        fs.writeFileSync(
+            path.join(__dirname, `${_id}.jpg`),
+            Buffer.from(base64EncodedString, 'base64')
         );
+        fs.createReadStream(path.join(__dirname, `${_id}.jpg`))
+            .pipe(
+                file.createWriteStream({
+                    metadata: {
+                        public: true,
+                        resumable: false,
+                        contentType: 'image/png',
+                        metadata: {
+                            firebaseStorageDownloadTokens: downloadToken,
+                        },
+                    },
+                })
+            )
+            .on('error', function (err) {
+                throw err;
+            })
+            .on('finish', async function () {
+                //remove tmp.png file
+                fs.unlinkSync(path.join(__dirname, `${_id}.jpg`));
 
-        //update id event back to above facility histories.
-        await Promise.all(
-            facilityHistoryResult.map(async (facilityHistory) => {
-                try {
-                    return await FacilityHistory.findByIdAndUpdate(
-                        facilityHistory._id,
-                        {
-                            ...facilityHistory._doc,
-                            eventId: newEvent._id,
+                //add linkImage into mongodb
+                const persistentDownloadUrl = createPersistentDownloadUrl(
+                    'netevent-b5dd4.appspot.com',
+                    _id.toHexString(),
+                    downloadToken
+                );
+
+                //update req.body
+                req.body = {
+                    ...req.body,
+                    image: persistentDownloadUrl,
+                };
+                //renew event instance
+                event = new Event({ ...req.body, _id });
+
+                //create new event
+                const newEvent = await event.save();
+
+                //update id event back to above tasks.
+                await Promise.all(
+                    taskResult.map(async (task) => {
+                        try {
+                            return await Task.findByIdAndUpdate(task._id, {
+                                ...task._doc,
+                                eventId: newEvent._id,
+                            });
+                        } catch (error) {
+                            throw error;
                         }
-                    );
-                } catch (error) {
-                    throw error;
-                }
-            })
-        );
+                    })
+                );
 
-        //update facility status
-        await Promise.all(
-            facilityHistoryResult.map(async (facilityHistory) => {
-                try {
-                    return await Facility.findByIdAndUpdate(
-                        facilityHistory.facilityId,
-                        {
-                            $set: { status: false },
+                //update id event back to above facility histories.
+                await Promise.all(
+                    facilityHistoryResult.map(async (facilityHistory) => {
+                        try {
+                            return await FacilityHistory.findByIdAndUpdate(
+                                facilityHistory._id,
+                                {
+                                    ...facilityHistory._doc,
+                                    eventId: newEvent._id,
+                                }
+                            );
+                        } catch (error) {
+                            throw error;
                         }
-                    );
-                } catch (error) {
-                    throw error;
-                }
-            })
-        );
+                    })
+                );
 
-        return cusResponse(res, 200, newEvent, null);
+                //update facility status
+                await Promise.all(
+                    facilityHistoryResult.map(async (facilityHistory) => {
+                        try {
+                            return await Facility.findByIdAndUpdate(
+                                facilityHistory.facilityId,
+                                {
+                                    $set: { status: false },
+                                }
+                            );
+                        } catch (error) {
+                            throw error;
+                        }
+                    })
+                );
+                return cusResponse(res, 200, newEvent, null);
+            });
     } catch (error) {
         if (error.name == 'ValidationError') {
             for (field in error.errors) {
@@ -330,29 +380,29 @@ const filterEventManagement = async (req, res, next) => {
                     queryOptions = {
                         ...queryOptions,
                         isApproved: true,
-                        isFinished: false
-                    }
+                        isFinished: false,
+                    };
                     break;
                 case 'Rejected':
                     queryOptions = {
                         ...queryOptions,
                         isApproved: false,
-                        isFinished: false
-                    }
+                        isFinished: false,
+                    };
                     break;
                 case 'Pending':
                     queryOptions = {
                         ...queryOptions,
                         isApproved: null,
-                        isFinished: false
-                    }
+                        isFinished: false,
+                    };
                     break;
                 case 'Completed':
                     queryOptions = {
                         ...queryOptions,
                         isApproved: true,
-                        isFinished: true
-                    }
+                        isFinished: true,
+                    };
                     break;
             }
         }
@@ -642,54 +692,147 @@ const updateEvent = async (req, res, next) => {
             _id: deleteHistoryFacilityListIds,
         });
 
-        // Add task list id into update
-        newUpdateState = {
-            ...eventDetail,
-            taskListId: newTaskListIds,
-            facilityHistoryListId: newHistoryFacilityListIds,
-        };
+        //upload image onto firebase
+        /* Only update image on firebase when user change to new image */
+        const regex = /^data:\w+\/\w+;base64,/g;
+        if (regex.test(eventDetail.image)) {
+            const base64EncodedString = eventDetail.image.replace(
+                /^data:\w+\/\w+;base64,/,
+                ''
+            );
+            const file = bucketInstance.file(`${_id}.jpg`);
+            const downloadToken = uuidv4();
+            fs.writeFileSync(
+                path.join(__dirname, `${_id}.jpg`),
+                Buffer.from(base64EncodedString, 'base64')
+            );
+            fs.createReadStream(path.join(__dirname, `${_id}.jpg`))
+                .pipe(
+                    file.createWriteStream({
+                        metadata: {
+                            public: true,
+                            resumable: false,
+                            contentType: 'image/png',
+                            metadata: {
+                                firebaseStorageDownloadTokens: downloadToken,
+                            },
+                        },
+                    })
+                )
+                .on('error', function (err) {
+                    throw err;
+                })
+                .on('finish', async function () {
+                    //remove tmp.png file
+                    fs.unlinkSync(path.join(__dirname, `${_id}.jpg`));
 
-        // Update new event
-        const updatedEvent = await Event.findOneAndUpdate(
-            { _id: _id },
-            newUpdateState,
-            { new: true, context: 'query' }
-        ).populate({
-            path: 'eventTypeId',
-        });
-
-        // update id event back to above tasks.
-        await Promise.all(
-            newTaskListResult.map(async (task) => {
-                try {
-                    return await Task.findByIdAndUpdate(task._id, {
-                        ...task._doc,
-                        eventId: updatedEvent._id,
-                    });
-                } catch (error) {
-                    throw error;
-                }
-            })
-        );
-
-        // update id event back to above facility histories.
-        await Promise.all(
-            newHistoryFacilityListResult.map(async (facilityHistory) => {
-                try {
-                    return await FacilityHistory.findByIdAndUpdate(
-                        facilityHistory._id,
-                        {
-                            ...facilityHistory._doc,
-                            eventId: updatedEvent._id,
-                        }
+                    //add linkImage into mongodb
+                    const persistentDownloadUrl = createPersistentDownloadUrl(
+                        'netevent-b5dd4.appspot.com',
+                        _id,
+                        downloadToken
                     );
-                } catch (error) {
-                    throw error;
-                }
-            })
-        );
+                    // Add task list id into update
+                    newUpdateState = {
+                        ...eventDetail,
+                        taskListId: newTaskListIds,
+                        facilityHistoryListId: newHistoryFacilityListIds,
+                        image: persistentDownloadUrl,
+                    };
 
-        return cusResponse(res, 200, updatedEvent, null);
+                    // Update new event
+                    const updatedEvent = await Event.findOneAndUpdate(
+                        { _id: _id },
+                        newUpdateState,
+                        { new: true, context: 'query' }
+                    ).populate({
+                        path: 'eventTypeId',
+                    });
+
+                    // update id event back to above tasks.
+                    await Promise.all(
+                        newTaskListResult.map(async (task) => {
+                            try {
+                                return await Task.findByIdAndUpdate(task._id, {
+                                    ...task._doc,
+                                    eventId: updatedEvent._id,
+                                });
+                            } catch (error) {
+                                throw error;
+                            }
+                        })
+                    );
+
+                    // update id event back to above facility histories.
+                    await Promise.all(
+                        newHistoryFacilityListResult.map(
+                            async (facilityHistory) => {
+                                try {
+                                    return await FacilityHistory.findByIdAndUpdate(
+                                        facilityHistory._id,
+                                        {
+                                            ...facilityHistory._doc,
+                                            eventId: updatedEvent._id,
+                                        }
+                                    );
+                                } catch (error) {
+                                    throw error;
+                                }
+                            }
+                        )
+                    );
+
+                    return cusResponse(res, 200, updatedEvent, null);
+                });
+        } else {
+            // Add task list id into update
+            newUpdateState = {
+                ...eventDetail,
+                taskListId: newTaskListIds,
+                facilityHistoryListId: newHistoryFacilityListIds,
+            };
+
+            // Update new event
+            const updatedEvent = await Event.findOneAndUpdate(
+                { _id: _id },
+                newUpdateState,
+                { new: true, context: 'query' }
+            ).populate({
+                path: 'eventTypeId',
+            });
+
+            // update id event back to above tasks.
+            await Promise.all(
+                newTaskListResult.map(async (task) => {
+                    try {
+                        return await Task.findByIdAndUpdate(task._id, {
+                            ...task._doc,
+                            eventId: updatedEvent._id,
+                        });
+                    } catch (error) {
+                        throw error;
+                    }
+                })
+            );
+
+            // update id event back to above facility histories.
+            await Promise.all(
+                newHistoryFacilityListResult.map(async (facilityHistory) => {
+                    try {
+                        return await FacilityHistory.findByIdAndUpdate(
+                            facilityHistory._id,
+                            {
+                                ...facilityHistory._doc,
+                                eventId: updatedEvent._id,
+                            }
+                        );
+                    } catch (error) {
+                        throw error;
+                    }
+                })
+            );
+            return cusResponse(res, 200, updatedEvent, null);
+        }
     } catch (error) {
         if (error.name == 'ValidationError') {
             for (field in error.errors) {
@@ -754,7 +897,7 @@ const sendNotification = async (req, res, next) => {
             const newNotificatioHistory = await notificationHistory.save();
         }
 
-        console.log(isSend)
+        console.log(isSend);
 
         return cusResponse(res, 200, isSend, null);
     } catch (error) {
@@ -851,5 +994,5 @@ module.exports = {
     filterEventManagement,
     deleteEventManagement,
     getFacilityAndTaskByEventCode,
-    updateEventStatus
+    updateEventStatus,
 };
