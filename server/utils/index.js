@@ -33,7 +33,11 @@ const cusResponse = (res, code, data, errors, totalPages) => {
 
     return res.status(code).json(responseTemplate);
 };
+const createPersistentDownloadUrl = (bucket, fileName, downloadToken) => {
+    return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${fileName}.jpg?alt=media&token=${downloadToken}`;
+};
 
 module.exports = {
     cusResponse,
+    createPersistentDownloadUrl,
 };
