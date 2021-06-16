@@ -40,9 +40,9 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
     const handleSend = (e) => {
         e.preventDefault();
         const descriptionText = JSON.parse(state.description);
-        if (state.title === '') {
+        if (state.title.replace(/\s/g,"") === "") {
             setErrorTitle(true);
-        } else if (descriptionText.blocks[0].text === '') {
+        } else if (descriptionText.blocks[0].text.replace(/\s/g,"") === '') {
             setErrorTitle(false);
             setErrorDescription(true);
         } else {
