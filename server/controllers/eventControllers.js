@@ -324,6 +324,39 @@ const filterEventManagement = async (req, res, next) => {
             };
         }
 
+        if (req.query.status) {
+            switch (req.query.status) {
+                case 'Approved':
+                    queryOptions = {
+                        ...queryOptions,
+                        isApproved: true,
+                        isFinished: false
+                    }
+                    break;
+                case 'Rejected':
+                    queryOptions = {
+                        ...queryOptions,
+                        isApproved: false,
+                        isFinished: false
+                    }
+                    break;
+                case 'Pending':
+                    queryOptions = {
+                        ...queryOptions,
+                        isApproved: null,
+                        isFinished: false
+                    }
+                    break;
+                case 'Completed':
+                    queryOptions = {
+                        ...queryOptions,
+                        isApproved: true,
+                        isFinished: true
+                    }
+                    break;
+            }
+        }
+
         /* Set StartDate and EndDate Filter for query options */
         queryOptions = {
             ...queryOptions,
@@ -714,9 +747,9 @@ const sendNotification = async (req, res, next) => {
             notification.title,
             notification.description
         );
-        
+
         // Save notification history when email is sent
-        if(isSend){
+        if (isSend) {
             const notificationHistory = new NotificationHistory(notification);
             const newNotificatioHistory = await notificationHistory.save();
         }
@@ -780,17 +813,28 @@ const getFacilityAndTaskByEventCode = async (req, res, next) => {
  */
 const updateEventStatus = async (req, res, next) => {
     try {
-        const { eventId, status } = req.body;
+        const { eventId, status, action } = req.body;
         // Update new event
-        const updatedEvent = await Event.findOneAndUpdate(
-            { _id: eventId },
-            { isFinished: status },
-            { new: true, context: 'query' }
-        ).populate({
-            path: 'eventTypeId',
-        });
-
-        return cusResponse(res, 200, updatedEvent, null);
+        switch (action) {
+            case 'approve':
+                const approveEvent = await Event.findOneAndUpdate(
+                    { _id: eventId },
+                    { isApproved: status },
+                    { new: true, context: 'query' }
+                ).populate({
+                    path: 'eventTypeId',
+                });
+                return cusResponse(res, 200, approveEvent, null);
+            case 'finish':
+                const finishEvent = await Event.findOneAndUpdate(
+                    { _id: eventId },
+                    { isFinished: status },
+                    { new: true, context: 'query' }
+                ).populate({
+                    path: 'eventTypeId',
+                });
+                return cusResponse(res, 200, finishEvent, null);
+        }
     } catch (error) {
         return next(new CustomError(500, error.message));
     }

@@ -63,8 +63,6 @@ const Registration = () => {
 
     const isReviewed = history.location?.state?.isReviewed;
 
-
-
     const { isLoading, eventDetail, error, isRegistered, registerSuccess } = useSelector((state) => ({
         isLoading: state.event.isDetailLoading,
         eventDetail: state.event.eventDetail,
@@ -80,7 +78,7 @@ const Registration = () => {
 
     // Check if page is valid by event name
     useEffect(() => {
-        if (currentEvent.isLoaded && !currentEvent?.urlCode && !isLoading) {
+        if (currentEvent.isLoaded && !currentEvent?.isApproved && !isLoading) {
             history.push('/404')
         }
     }, [currentEvent.urlCode, isLoading])
@@ -165,13 +163,24 @@ const Registration = () => {
     const handleOnBackToDetailPage = () => {
         setCurrentEvent(eventInitialState)
         if (history.location?.state) {
-            history.push({
-                pathname: '/dashboard/event-detail',
-                state: {
-                    from: `/dashboard/event-management`,
-                    event: history.location.state.event,
-                },
-            });
+            switch (history.location.state.from) {
+                case '/dashboard/event-detail':
+                    history.push({
+                        pathname: '/dashboard/event-detail',
+                        state: {
+                            from: `/dashboard/event-management`,
+                            event: history.location.state.event,
+                        },
+                    });
+                case '/dashboard/event-review':
+                    history.push({
+                        pathname: '/dashboard/event-review',
+                        state: {
+                            from: `/dashboard/event-request`,
+                            event: history.location.state.event,
+                        },
+                    });
+            }
         }
     }
 

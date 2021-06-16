@@ -30,7 +30,7 @@ const EventCheckingCompletedDialog = ({
 
     return (
         <>
-            {/* Dialog Confirm Delete */}
+            {/* Dialog Checking completed */}
             <Dialog
                 TransitionComponent={Transition}
                 open={openCheckingCompletedDialog}

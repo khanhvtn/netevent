@@ -18,6 +18,7 @@ import CalendarApp from './components/Calendar/CalendarApp';
 import EventManagement from './components/EventManagement/EventManagement';
 import EventDetail from './components/EventManagement/EventDetail/EventDetail';
 import EventRequest from './components/EventRequest/EventRequest';
+import EventReview from './components/EventRequest/EventReview/EventReview';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -114,7 +115,7 @@ const App = () => {
                                     path="/dashboard/creator-calendar"
                                     render={() => (
                                         <DashboardLayout>
-                                            <CalendarApp />
+                                            <CalendarApp targetRole={3} />
                                         </DashboardLayout>
                                     )}
                                 />
@@ -129,10 +130,18 @@ const App = () => {
                                     )}
                                 />
                                 <Route
+                                    path="/dashboard/event-review"
+                                    render={() => (
+                                        <DashboardLayout>
+                                            <EventReview />
+                                        </DashboardLayout>
+                                    )}
+                                />
+                                <Route
                                     path="/dashboard/reviewer-calendar"
                                     render={() => (
                                         <DashboardLayout>
-                                            Calendar
+                                            <CalendarApp targetRole={2} />
                                         </DashboardLayout>
                                     )}
                                 />
