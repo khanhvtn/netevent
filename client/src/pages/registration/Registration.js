@@ -41,6 +41,7 @@ const participantInitialState = {
 }
 
 const eventInitialState = {
+    event: null,
     isLoaded: false,
     isReviewed: false
 }
@@ -51,7 +52,7 @@ const initialDescription =
 
 const Registration = () => {
     const css = useStyles();
-    const [currentEvent, setCurrentEvent] = useState(eventInitialState);
+    const [state, setState] = useState(eventInitialState);
     const [participant, setParticipant] = useState(participantInitialState);
 
     const myRef = useRef(null)
@@ -76,52 +77,56 @@ const Registration = () => {
         window.scrollTo(0, 0)
     }, [])
 
-    // Check if page is valid by event name
+    // Check if page is valid by event status
     useEffect(() => {
-        if (currentEvent.isLoaded && !currentEvent?.isApproved && !isLoading) {
-            history.push('/404')
+        if (state.isLoaded && !isLoading && !isReviewed) {
+            if (!state.event?.isApproved || (state.event?.isApproved && state.event?.isFinished)) {
+                history.push('/404')
+            }
         }
-    }, [currentEvent.urlCode, isLoading])
+    }, [state.event?.isApproved, state.event?.isFinished, state.isLoaded, isLoading, isReviewed])
 
-    // Call API to get current event by name
+    // Call API to get current event by urlCode
     useEffect(() => {
-        if (!currentEvent?.urlCode && !isReviewed && !currentEvent.isLoaded && !isLoading) {
+        if (!state.event?.urlCode && !isReviewed && !state.isLoaded) {
             dispatch(getFacilityAndTaskByEventCode(code));
         }
-    }, [dispatch, currentEvent.urlCode, currentEvent.isLoaded, isReviewed, isLoading])
+    }, [dispatch, state.event?.urlCode, state.isLoaded, isReviewed])
 
     // UseEffect to check review status and load the event detail from history
     useEffect(() => {
         if (isReviewed) {
-            setCurrentEvent((prevState) => ({
-                ...history.location.state.event,
+            setState((prevState) => ({
+                ...prevState,
+                event: eventDetail,
                 isLoaded: !prevState.isLoaded,
                 isReviewed: isReviewed
             }));
         }
     }, [isReviewed])
 
-    // UseEffect to set state of the event, delete in redux store after finish
+    // UseEffect to set state of the event
     useEffect(() => {
-        if (eventDetail && !currentEvent.isLoaded) {
-            setCurrentEvent((prevState) => ({
-                ...eventDetail,
+        if (eventDetail && !state.isLoaded) {
+            setState((prevState) => ({
+                ...prevState,
+                event: eventDetail,
                 isLoaded: !prevState.isLoaded
             }));
         }
-    }, [eventDetail, currentEvent])
+    }, [eventDetail, state.isLoaded])
 
     // UseEffect to set current event for participant when get the event state
     useEffect(() => {
-        if (!currentEvent.event) {
+        if (!state.event?._id) {
             setParticipant((prevState) => ({
                 ...prevState,
-                event: currentEvent._id
+                event: state.event?._id
             }));
         }
-    }, [currentEvent])
+    }, [state.event?._id])
 
-    const contentState = convertFromRaw(JSON.parse(currentEvent?.description ? currentEvent?.description : initialDescription));
+    const contentState = convertFromRaw(JSON.parse(state.event?.description ? state.event?.description : initialDescription));
     const editorState = EditorState.createWithContent(contentState);
 
 
@@ -161,11 +166,11 @@ const Registration = () => {
 
     // Back to detail page and set review to false
     const handleOnBackToDetailPage = () => {
-        setCurrentEvent(eventInitialState)
+        setState(eventInitialState)
         if (history.location?.state) {
             switch (history.location.state.from) {
                 case '/dashboard/event-detail':
-                    history.push({
+                    return history.push({
                         pathname: '/dashboard/event-detail',
                         state: {
                             from: `/dashboard/event-management`,
@@ -173,7 +178,7 @@ const Registration = () => {
                         },
                     });
                 case '/dashboard/event-review':
-                    history.push({
+                    return history.push({
                         pathname: '/dashboard/event-review',
                         state: {
                             from: `/dashboard/event-request`,
@@ -199,7 +204,7 @@ const Registration = () => {
             <>
                 <div className={css.screen}>
                     <div className={css.background}>
-                        <img className={css.responsive} src={currentEvent.image} />
+                        <img className={css.responsive} src={state.event?.image} />
                     </div>
                     <div className={css.root}>
                         <Paper className={css.wrapper} elevation={5}>
@@ -215,7 +220,7 @@ const Registration = () => {
                                             width: '100%',
                                             height: 345,
                                             maxHeight: 345,
-                                            backgroundImage: `url(${currentEvent.image})`,
+                                            backgroundImage: `url(${state.event?.image})`,
 
                                         }}
                                     />
@@ -238,10 +243,10 @@ const Registration = () => {
                                         lg={12}
                                         item>
                                         <Typography style={{ fontWeight: 'bold' }}>
-                                            {moment(currentEvent.startDate).format("MMM")}
+                                            {moment(state.event?.startDate).format("MMM")}
                                         </Typography>
                                         <Typography style={{ fontWeight: 'bold', fontSize: '1.5em' }}>
-                                            {moment(currentEvent.startDate).format("DD")}
+                                            {moment(state.event?.startDate).format("DD")}
                                         </Typography>
                                     </Grid>
 
@@ -254,14 +259,14 @@ const Registration = () => {
                                         container
                                         direction="column"
                                         item>
-                                        <Typography variant="h6">{currentEvent.eventName}</Typography>
+                                        <Typography variant="h6">{state.event?.eventName}</Typography>
                                         <Typography variant="caption">Hosted by NetCompany</Typography>
                                     </Grid>
 
                                     {/* <Grid container direction="row" item>
                                         <LocationOnIcon style={{ marginRight: 8 }} />
                                         <Typography >
-                                            {currentEvent.location}
+                                            {state.event?.location}
                                         </Typography>
                                     </Grid> */}
                                     <Grid className={css.registerBottomButton} container justify="flex-start" alignItems="flex-end" item>
@@ -299,15 +304,15 @@ const Registration = () => {
                                             </Typography>
                                             <Typography variant="body2">
                                                 {
-                                                    moment(currentEvent.startDate).format('DD MMM') === moment(currentEvent.endDate).format('DD MMM')
+                                                    moment(state.event?.startDate).format('DD MMM') === moment(state.event?.endDate).format('DD MMM')
                                                         ?
-                                                        `${moment(currentEvent.startDate).format('DD MMM, YYYY')}`
+                                                        `${moment(state.event?.startDate).format('DD MMM, YYYY')}`
                                                         :
-                                                        `${moment(currentEvent.startDate).format('DD MMM')} - ${moment(currentEvent.endDate).format('DD MMM')}`
+                                                        `${moment(state.event?.startDate).format('DD MMM')} - ${moment(state.event?.endDate).format('DD MMM')}`
                                                 }
                                             </Typography>
                                             <Typography variant="body2">
-                                                {`${moment(currentEvent.startDate).format('LT')} - ${moment(currentEvent.endDate).format('LT')}`}
+                                                {`${moment(state.event?.startDate).format('LT')} - ${moment(state.event?.endDate).format('LT')}`}
                                             </Typography>
                                         </Grid>
 
@@ -317,10 +322,10 @@ const Registration = () => {
                                                 Registration deadline
                                             </Typography>
                                             <Typography variant="body2">
-                                                {`${moment(currentEvent.registrationCloseDate).format('DD MMM, YYYY')}`}
+                                                {`${moment(state.event?.registrationCloseDate).format('DD MMM, YYYY')}`}
                                             </Typography>
                                             <Typography variant="body2">
-                                                {`${moment(currentEvent.registrationCloseDate).format('LT')}`}
+                                                {`${moment(state.event?.registrationCloseDate).format('LT')}`}
                                             </Typography>
                                         </Grid>
 
@@ -330,7 +335,7 @@ const Registration = () => {
                                                 Location
                                             </Typography>
                                             <Typography variant="body2">
-                                                {currentEvent.location}
+                                                {state.event?.location}
                                             </Typography>
                                         </Grid>
 
@@ -341,7 +346,7 @@ const Registration = () => {
                                             </Typography>
                                             <div className={css.chipContainer}>
 
-                                                {currentEvent.tags?.map((tag, index) => (
+                                                {state.event?.tags?.map((tag, index) => (
                                                     <Chip key={index} label={tag} size="small" className={css.chip} />
                                                 ))}
                                             </div>
@@ -390,7 +395,7 @@ const Registration = () => {
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
-                                                        {currentEvent.taskListId?.map((task) => (
+                                                        {state.event?.taskListId?.map((task) => (
                                                             <TableRow key={task._id}>
                                                                 <TableCell className={css.tableText} component="th" scope="row">
                                                                     {task.name}
@@ -606,13 +611,13 @@ const Registration = () => {
                                     <Grid container className={css.mtb36} item>
                                         <Container fixed className={css.bodyActivity}>
                                             <Typography style={{ fontWeight: 'bold', marginBottom: 8 }} align="center" variant="subtitle2">
-                                                {currentEvent.eventName}
+                                                {state.event?.eventName}
                                             </Typography>
                                             <Typography align="center" variant="body2">
                                                 at
                                             </Typography>
                                             <Typography style={{ fontWeight: 'bold', marginTop: 8 }} align="center" variant="subtitle2">
-                                                {currentEvent.location}
+                                                {state.event?.location}
                                             </Typography>
                                         </Container>
                                     </Grid>

@@ -171,7 +171,7 @@ const EventReview = () => {
     };
 
     const handleOnClickViewTemplate = () => {
-        history.push({
+        return history.push({
             pathname: `/registration/${state.event.urlCode}`,
             state: {
                 from: '/dashboard/event-review',
@@ -247,21 +247,23 @@ const EventReview = () => {
                                     Event Review
                                 </Typography>
                                 <div className={css.grow} />
-                                <Tooltip title="Edit">
-                                    <div>
-                                        <Button
-                                            disabled={
-                                                isDetailLoading || isLoading
-                                            }
-                                            color="inherit"
-                                            variant="outlined"
-                                            style={{ margin: '0 8px' }}
-                                            onClick={handleToggleDialogReviewEvent}
-                                        >
-                                            Update
+                                {!state.event?.isFinished &&
+                                    <Tooltip title="Edit">
+                                        <div>
+                                            <Button
+                                                disabled={
+                                                    isDetailLoading || isLoading
+                                                }
+                                                color="inherit"
+                                                variant="outlined"
+                                                style={{ margin: '0 8px' }}
+                                                onClick={handleToggleDialogReviewEvent}
+                                            >
+                                                Update
                                         </Button>
-                                    </div>
-                                </Tooltip>
+                                        </div>
+                                    </Tooltip>
+                                }
                             </Toolbar>
                         </Grid>
                     </AppBar>

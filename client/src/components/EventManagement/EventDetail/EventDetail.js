@@ -142,6 +142,8 @@ const EventDetail = () => {
         }));
     }, []);
 
+    console.log(state)
+
     // Get Facility and Task if state event existed
     useEffect(() => {
         if (state.event?.endDate && !state.isCheckingCompletedEvent && !state.event?.isFinished && state.event?.isApproved) {
@@ -164,6 +166,7 @@ const EventDetail = () => {
 
     // Get Facility and Task if state event existed
     useEffect(() => {
+        console.log("Check API")
         if (state.event && !isDetailLoading) {
             dispatch(getFacilityAndTaskByEventCode(state.event.urlCode));
             setState((prevState) => ({
@@ -215,7 +218,7 @@ const EventDetail = () => {
     };
 
     const handleOnClickViewTemplate = () => {
-        history.push({
+        return history.push({
             pathname: `/registration/${state.event.urlCode}`,
             state: {
                 from: '/dashboard/event-detail',
@@ -231,25 +234,13 @@ const EventDetail = () => {
     // Return to previous page with status
     const handleOnClickReturn = () => {
         setState(initialState);
+        return history.push({
+            pathname: `${state.previousPath}`,
+            state: {
+                isUpdated: state.isUpdated,
+            },
+        });
 
-        switch (state.previousPath) {
-            case '/dashboard/creator-calendar':
-                return history.push({
-                    pathname: `${state.previousPath}`,
-                    state: {
-                        isUpdated: state.isUpdated,
-                    },
-                });
-            case '/dashboard/event-management':
-                return history.push({
-                    pathname: `${state.previousPath}`,
-                    state: {
-                        isUpdated: state.isUpdated,
-                    },
-                });
-            default:
-                return history.goBack();
-        }
     };
 
     // Handle Delete Event
