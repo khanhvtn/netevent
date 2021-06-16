@@ -10,7 +10,7 @@ admin.initializeApp({
             process.env.PROJECT_KEY_ID ||
             require(`../serviceAccountKey.json`).private_key_id,
         private_key:
-            process.env.PRIVATE_KEY ||
+            process.env.PRIVATE_KEY.replace(/\\n/g, '\n') ||
             require(`../serviceAccountKey.json`).private_key,
         client_email:
             process.env.CLIENT_EMAIL ||
