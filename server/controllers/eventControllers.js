@@ -10,11 +10,7 @@ const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
 const { sendEmail } = require('./misc/mailer');
 const { Types } = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs');
 const { bucketInstance } = require(`../services/firebase`);
-const { createPersistentDownloadUrl } = require('../utils');
-const path = require('path');
 
 function limit(c) {
     return this.filter((x, i) => {
