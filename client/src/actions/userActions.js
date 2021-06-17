@@ -82,19 +82,18 @@ export const userLogout = (history) => async (dispatch) => {
 };
 
 export const fetchCurrentUser = (currentUser, history) => async (dispatch) => {
-
     try {
         const { data } = await api.fetchCurrentUser({ email: currentUser });
-        console.log(data)
+        console.log(data);
         dispatch({
             type: FETCH_CURRENT_USER,
             payload: data.data,
         });
-        history.push('/pickrole')
+        history.push('/pickrole');
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 export const userCheck = (history) => async (dispatch) => {
     setUserIsChecking(true, dispatch);
@@ -102,13 +101,6 @@ export const userCheck = (history) => async (dispatch) => {
         ? history.location.state?.prevPath
         : history.location.pathname;
 
-    //set numRole
-    dispatch({
-        type: USER_PICK_ROLE,
-        payload: localStorage.getItem('roleNum')
-            ? localStorage.getItem('roleNum')
-            : null,
-    });
     /*
         Check user token.
         Then, sen request to the server to check the token.
@@ -122,10 +114,28 @@ export const userCheck = (history) => async (dispatch) => {
             type: USER_CHECK,
             payload: data.data,
         });
+
+        //check valid Role and set numRole
+        const userRole = data.data.role;
+        const currentRoleBasedOnPath = prevPath.includes('dashboard/admin')
+            ? '1'
+            : prevPath.includes('dashboard/reviewer')
+            ? '2'
+            : prevPath.includes('dashboard/creator')
+            ? '3'
+            : prevPath.includes('dashboard/member')
+            ? '4'
+            : null;
+        dispatch({
+            type: USER_PICK_ROLE,
+            payload: currentRoleBasedOnPath,
+        });
         /* 
-        Prevent user already login but access to login by inputing link.
+        Prevent user already login but access to login by inputting link.
          */
-        prevPath === '/' || prevPath === '/login'
+        prevPath === '/' ||
+        prevPath === '/login' ||
+        !userRole.includes(currentRoleBasedOnPath)
             ? history.push('/pickrole')
             : history.push(prevPath);
     } catch (error) {
@@ -159,34 +169,36 @@ export const userConfirm = (id, password, history) => async (dispatch) => {
     }
 };
 
-export const getUsers = (
-    search,
-    take,
-    page,
-    role,
-    createdFrom,
-    createdTo,
-    updatedFrom,
-    updatedTo
-) => async (dispatch) => {
-    setUserIsLoading(true, dispatch);
-    try {
-        const data = await api.getUsersAPI(
-            search,
-            take,
-            page,
-            role,
-            createdFrom,
-            createdTo,
-            updatedFrom,
-            updatedTo
-        );
-        dispatch({ type: FETCH_ALL_USERS, payload: data });
-    } catch (error) {
-        console.log(error);
-    }
-    setUserIsLoading(false, dispatch);
-};
+export const getUsers =
+    (
+        search,
+        take,
+        page,
+        role,
+        createdFrom,
+        createdTo,
+        updatedFrom,
+        updatedTo
+    ) =>
+    async (dispatch) => {
+        setUserIsLoading(true, dispatch);
+        try {
+            const data = await api.getUsersAPI(
+                search,
+                take,
+                page,
+                role,
+                createdFrom,
+                createdTo,
+                updatedFrom,
+                updatedTo
+            );
+            dispatch({ type: FETCH_ALL_USERS, payload: data });
+        } catch (error) {
+            console.log(error);
+        }
+        setUserIsLoading(false, dispatch);
+    };
 export const getAllUsers = () => async (dispatch) => {
     setUserIsLoading(true, dispatch);
     try {
@@ -225,61 +237,61 @@ export const createUser = (userData) => async (dispatch) => {
     setUserIsLoading(false, dispatch);
 };
 
-
-export const updateUser = (updateUser, currentUser, history) => async (dispatch) => {
-    setUserIsLoading(true, dispatch);
-    try {
-        await api.updateUserAPI(updateUser);
-        dispatch({ type: USER_UPDATE_SUCCESS, payload: true });
-        dispatch({
-            type: ERROR_CLEAR,
-            payload: null,
-        });
-        setTimeout(() => {
-            dispatch({ type: USER_UPDATE_SUCCESS, payload: false });
-        }, 3000);
-
-        if (updateUser.filter === currentUser) {
-            dispatch(fetchCurrentUser(currentUser, history))
-        }
-    } catch (error) {
-        if (error.response.data?.errors) {
+export const updateUser =
+    (updateUser, currentUser, history) => async (dispatch) => {
+        setUserIsLoading(true, dispatch);
+        try {
+            await api.updateUserAPI(updateUser);
+            dispatch({ type: USER_UPDATE_SUCCESS, payload: true });
             dispatch({
-                type: ERROR,
-                payload: error.response.data?.errors,
+                type: ERROR_CLEAR,
+                payload: null,
             });
+            setTimeout(() => {
+                dispatch({ type: USER_UPDATE_SUCCESS, payload: false });
+            }, 3000);
+
+            if (updateUser.filter === currentUser) {
+                dispatch(fetchCurrentUser(currentUser, history));
+            }
+        } catch (error) {
+            if (error.response.data?.errors) {
+                dispatch({
+                    type: ERROR,
+                    payload: error.response.data?.errors,
+                });
+            }
+            console.log(error);
         }
-        console.log(error);
-    }
-    setUserIsLoading(false, dispatch);
-};
+        setUserIsLoading(false, dispatch);
+    };
 
-export const deleteUsers = (userReq, currentUser, history) => async (dispatch) => {
-    setUserIsLoading(true, dispatch);
-    try {
-        await api.deleteUsersAPI(userReq);
-        dispatch({
-            type: USER_DELETE_SUCCESS,
-            payload: true,
-        });
-
-        dispatch({
-            type: ERROR_CLEAR,
-            payload: null,
-        });
-
-        setTimeout(() => {
+export const deleteUsers =
+    (userReq, currentUser, history) => async (dispatch) => {
+        setUserIsLoading(true, dispatch);
+        try {
+            await api.deleteUsersAPI(userReq);
             dispatch({
                 type: USER_DELETE_SUCCESS,
-                payload: false,
+                payload: true,
             });
-        }, 3000);
 
+            dispatch({
+                type: ERROR_CLEAR,
+                payload: null,
+            });
 
-        if (Object.values(userReq)[0].includes(currentUser)) {
-            dispatch(userLogout(history))
+            setTimeout(() => {
+                dispatch({
+                    type: USER_DELETE_SUCCESS,
+                    payload: false,
+                });
+            }, 3000);
+
+            if (Object.values(userReq)[0].includes(currentUser)) {
+                dispatch(userLogout(history));
+            }
+        } catch (error) {
+            console.log(error);
         }
-    } catch (error) {
-        console.log(error);
-    }
-};
+    };

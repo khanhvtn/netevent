@@ -16,22 +16,22 @@ const roleInfo = {
     1: {
         roleName: 'Admin',
         icon: adminIcon,
-        defaultPath: 'dashboard/user',
+        defaultPath: 'dashboard/admin/user',
     },
     2: {
         roleName: 'Reviewer',
         icon: reviewerIcon,
-        defaultPath: 'dashboard/event-request',
+        defaultPath: 'dashboard/reviewer/event-request',
     },
     3: {
         roleName: 'Creator',
         icon: creatorIcon,
-        defaultPath: 'dashboard/event-management',
+        defaultPath: 'dashboard/creator/event-management',
     },
     4: {
         roleName: 'Team Member',
         icon: memberIcon,
-        defaultPath: 'dashboard/task',
+        defaultPath: 'dashboard/member/task',
     },
 };
 
