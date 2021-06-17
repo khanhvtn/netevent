@@ -150,7 +150,7 @@ const CalendarApp = ({ targetRole }) => {
                                 outline: 'none',
                             },
                         };
-                        const { isApproved } = date.resource;
+                        const { isApproved, isFinished } = date.resource;
                         /* Approve Status
                         Null is pending and color is yellow
                         True Accepted and color is green
@@ -162,6 +162,14 @@ const CalendarApp = ({ targetRole }) => {
                                 style: {
                                     ...styleTemplate.style,
                                     backgroundColor: `#9e9e9e`,
+                                },
+                            };
+                        } else if (isFinished === true){
+                            styleTemplate = {
+                                ...styleTemplate,
+                                style: {
+                                    ...styleTemplate.style,
+                                    backgroundColor: `#4caf50`,
                                 },
                             };
                         } else if (isApproved === true) {

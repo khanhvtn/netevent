@@ -118,7 +118,7 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
     });
     try {
         await sendNotificationAPI(notificationReq);
-        
+
         dispatch({
             type: SEND_NOTI_SUCCESS,
             payload: true,
@@ -184,8 +184,8 @@ export const deleteEventWithTaskAndFacilityHistory =
     (userReq, history) => async (dispatch) => {
         setEventIsLoading(true, dispatch);
         try {
-            const data = await deleteEventManagementAPI(userReq);
-            history.push('/dashboard/creator/event-detail');
+            await deleteEventManagementAPI(userReq);
+            history.push('/dashboard/creator/event-management');
             dispatch({
                 type: EVENT_DELETE_SUCCESS,
                 payload: true,
