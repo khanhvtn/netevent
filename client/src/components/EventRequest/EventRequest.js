@@ -22,7 +22,6 @@ import EventCard from '../EventManagement/EventCard/EventCard';
 import EventFilter from '../EventManagement/EventFilter/EventFilter';
 import EventPagination from '../EventManagement/EventPagination/EventPagination';
 
-
 const initialState = {
     search: '',
     take: 3,
@@ -78,7 +77,7 @@ const EventRequest = () => {
             startTo,
             endFrom,
             endTo,
-            status
+            status,
         } = state;
         if (!history.location.state || history.location.state?.isUpdated) {
             dispatch(
@@ -94,12 +93,13 @@ const EventRequest = () => {
                     endFrom,
                     endTo,
                     ownerId: null,
-                    status
+                    status,
                 })
             );
         }
         history.replace();
-    }, [dispatch,
+    }, [
+        dispatch,
         history,
         state.search,
         state.take,
@@ -111,7 +111,8 @@ const EventRequest = () => {
         state.startTo,
         state.endFrom,
         state.endTo,
-        state.status]);
+        state.status,
+    ]);
 
     const { eventTypes } = useSelector(() => ({
         eventTypes: state.eventType?.eventTypes,
@@ -194,11 +195,11 @@ const EventRequest = () => {
     // Push to the event-detail page with event props
     const handleOnClickEvent = (event) => {
         history.push({
-            pathname: '/dashboard/event-review',
+            pathname: '/dashboard/reviewer/event-review',
             state: {
-                from: '/dashboard/event-request',
+                from: '/dashboard/reviewer/event-request',
                 event: event,
-                reviewer: true
+                reviewer: true,
             },
         });
     };
@@ -243,8 +244,6 @@ const EventRequest = () => {
                     </AppBar>
                 </div>
 
-
-
                 {/* Grid view of Event */}
                 <Paper className={css.paper1} elevation={0}>
                     {/* Event Header */}
@@ -285,17 +284,17 @@ const EventRequest = () => {
                                 <Typography>No data matched</Typography>
                             </Grid>
                         ) : (
-                                    events.map((event) => {
-                                        return (
-                                            <EventCard
-                                                event={event}
-                                                key={event._id}
-                                                isLoading={isLoading}
-                                                onClickEvent={handleOnClickEvent}
-                                            />
-                                        );
-                                    })
-                                )}
+                            events.map((event) => {
+                                return (
+                                    <EventCard
+                                        event={event}
+                                        key={event._id}
+                                        isLoading={isLoading}
+                                        onClickEvent={handleOnClickEvent}
+                                    />
+                                );
+                            })
+                        )}
                     </Grid>
                 </Paper>
 

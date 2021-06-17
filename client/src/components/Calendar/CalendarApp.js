@@ -60,12 +60,15 @@ const CalendarApp = ({ targetRole }) => {
 
     const handleSelectEvent = (event) => {
         history.push({
-            pathname: targetRole === 3 ? '/dashboard/event-detail' : '/dashboard/event-review',
+            pathname:
+                targetRole === 3
+                    ? '/dashboard/creator/event-detail'
+                    : '/dashboard/reviewer/event-review',
             state: {
                 from:
                     targetRole === 3
-                        ? '/dashboard/creator-calendar'
-                        : '/dashboard/reviewer-calendar',
+                        ? '/dashboard/creator/calendar'
+                        : '/dashboard/reviewer/calendar',
                 event: {
                     ...event.resource,
                     eventName: event.title,

@@ -32,58 +32,57 @@ const roleActions = {
         {
             title: 'User',
             icon: People,
-            href: ['/dashboard/user']
+            href: ['/dashboard/admin/user'],
         },
         {
             title: 'Facility',
             icon: DevicesOther,
-            href: ['/dashboard/facility']
+            href: ['/dashboard/admin/facility'],
         },
     ],
     2: [
         {
             title: 'Event Request',
             icon: EventAvailableIcon,
-            href: ['/dashboard/event-request']
+            href: ['/dashboard/reviewer/event-request'],
         },
         {
             title: 'Calendar',
             icon: CalendarToday,
-            href: ['/dashboard/reviewer-calendar']
+            href: ['/dashboard/reviewer/calendar'],
         },
         {
             title: 'Event Analysis',
             icon: EventIcon,
-            href: ['/dashboard/event-analysis']
+            href: ['/dashboard/reviewer/event-analysis'],
         },
         {
             title: 'Facility Usage',
             icon: EventAvailableIcon,
-            href: ['/dashboard/facility-usage']
+            href: ['/dashboard/reviewer/facility-usage'],
         },
     ],
     3: [
         {
             title: 'Event Management',
             icon: EventAvailableIcon,
-            href: ['/dashboard/event-management']
+            href: ['/dashboard/creator/event-management'],
         },
         {
             title: 'Create Event',
             icon: EventIcon,
-            href: ['/dashboard/create-event']
+            href: ['/dashboard/creator/create-event'],
         },
         {
             title: 'Event Type',
             icon: EventNoteIcon,
-            href: ['/dashboard/event-type']
+            href: ['/dashboard/creator/event-type'],
         },
         {
             title: 'Calendar',
             icon: CalendarToday,
-            href: ['/dashboard/creator-calendar'],
+            href: ['/dashboard/creator/calendar'],
         },
-
     ],
     4: [],
 };
@@ -193,7 +192,7 @@ DashboardSidebar.propTypes = {
 };
 
 DashboardSidebar.defaultProps = {
-    onMobileClose: () => { },
+    onMobileClose: () => {},
     openMobile: false,
 };
 

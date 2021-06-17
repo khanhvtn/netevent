@@ -98,7 +98,8 @@ const EventManagement = () => {
             );
         }
         history.replace();
-    }, [dispatch,
+    }, [
+        dispatch,
         history,
         state.search,
         state.take,
@@ -110,7 +111,8 @@ const EventManagement = () => {
         state.startTo,
         state.endFrom,
         state.endTo,
-        userId]);
+        userId,
+    ]);
 
     const { eventTypes } = useSelector(() => ({
         eventTypes: state.eventType?.eventTypes,
@@ -201,9 +203,9 @@ const EventManagement = () => {
     // Push to the event-detail page with event props
     const handleOnClickEvent = (event) => {
         history.push({
-            pathname: '/dashboard/event-detail',
+            pathname: '/dashboard/creator/event-detail',
             state: {
-                from: '/dashboard/event-management',
+                from: '/dashboard/creator/event-management',
                 event: event,
             },
         });
@@ -249,8 +251,6 @@ const EventManagement = () => {
                     </AppBar>
                 </div>
 
-
-
                 {/* Grid view of Event */}
                 <Paper className={css.paper1} elevation={0}>
                     {/* Event Header */}
@@ -291,17 +291,17 @@ const EventManagement = () => {
                                 <Typography>No data matched</Typography>
                             </Grid>
                         ) : (
-                                    events.map((event) => {
-                                        return (
-                                            <EventCard
-                                                event={event}
-                                                key={event._id}
-                                                isLoading={isLoading}
-                                                onClickEvent={handleOnClickEvent}
-                                            />
-                                        );
-                                    })
-                                )}
+                            events.map((event) => {
+                                return (
+                                    <EventCard
+                                        event={event}
+                                        key={event._id}
+                                        isLoading={isLoading}
+                                        onClickEvent={handleOnClickEvent}
+                                    />
+                                );
+                            })
+                        )}
                     </Grid>
                 </Paper>
 
