@@ -143,8 +143,6 @@ const EventDetail = () => {
         }));
     }, []);
 
-    console.log(state);
-
     // Get Facility and Task if state event existed
     useEffect(() => {
         if (
@@ -173,7 +171,6 @@ const EventDetail = () => {
 
     // Get Facility and Task if state event existed
     useEffect(() => {
-        console.log('Check API');
         if (state.event && !isDetailLoading) {
             dispatch(getFacilityAndTaskByEventCode(state.event.urlCode));
             setState((prevState) => ({
