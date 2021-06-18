@@ -19,6 +19,7 @@ import EventManagement from './components/EventManagement/EventManagement';
 import EventDetail from './components/EventManagement/EventDetail/EventDetail';
 import EventRequest from './components/EventRequest/EventRequest';
 import EventReview from './components/EventRequest/EventReview/EventReview';
+import MemberTask from './components/MemberTask/MemberTask';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -167,7 +168,7 @@ const App = () => {
                                 path="/dashboard/member/task"
                                 render={() => (
                                     <DashboardLayout>
-                                        Team member task
+                                        <MemberTask />
                                     </DashboardLayout>
                                 )}
                             />

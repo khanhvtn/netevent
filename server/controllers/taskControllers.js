@@ -48,31 +48,25 @@ const createTask = async (req, res, next) => {
 const filter = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
-        const createdMaxDate = await Task.find()
-            .sort({ createdAt: -1 })
+        const startMaxDate = await Task.find()
+            .sort({ startDate: -1 })
             .limit(1);
-        const createdMinDate = await Task.find()
-            .sort({ createdAt: 1 })
-            .limit(1);
-        const updatedMaxDate = await Task.find()
-            .sort({ updatedAt: -1 })
-            .limit(1);
-        const updatedMinDate = await Task.find()
-            .sort({ updatedAt: 1 })
-            .limit(1);
+        const startMinDate = await Task.find().sort({ startDate: 1 }).limit(1);
+        const endMaxDate = await Task.find().sort({ endDate: -1 }).limit(1);
+        const endMinDate = await Task.find().sort({ endDate: 1 }).limit(1);
         const listRangeDate = await Promise.all([
-            createdMaxDate,
-            createdMinDate,
-            updatedMaxDate,
-            updatedMinDate,
+            startMaxDate,
+            startMinDate,
+            endMaxDate,
+            endMinDate,
         ]);
 
         //return empty result to client if database has no data.
         if (
-            !createdMaxDate.length ||
-            !createdMinDate.length ||
-            !updatedMaxDate.length ||
-            !updatedMinDate.length
+            !startMaxDate.length ||
+            !startMinDate.length ||
+            !endMaxDate.length ||
+            !endMinDate.length
         ) {
             return cusResponse(res, 200, [], null);
         }
@@ -80,11 +74,15 @@ const filter = async (req, res, next) => {
         let options = {
             search: '',
             take: 5,
-            createdMaxDate: listRangeDate[0][0].createdAt,
-            createdMinDate: listRangeDate[1][0].createdAt,
-            updatedMaxDate: listRangeDate[2][0].updatedAt,
-            updatedMinDate: listRangeDate[3][0].updatedAt,
+            type: '',
+            budgetRange: '',
+            participantRange: '',
+            startMaxDate: listRangeDate[0][0].startDate,
+            startMinDate: listRangeDate[1][0].startDate,
+            endMaxDate: listRangeDate[2][0].endDate,
+            endMinDate: listRangeDate[3][0].endDate,
         };
+
         //adding search
         if (req.query.search) {
             options = {
@@ -105,46 +103,44 @@ const filter = async (req, res, next) => {
         }
 
         /* 
-        Add createdFrom filter
+        Add startFrom filter
          */
-
-        if (req.query.createdFrom) {
+        if (req.query.startFrom) {
             options = {
                 ...options,
-                createdMinDate: req.query.createdFrom,
-                // createdMinDate: new Date(req.query.createdFrom),
+                startMinDate: new Date(req.query.startFrom),
             };
         }
+
         /* 
-        Add createdTo filter
+        Add startTo filter
          */
 
-        if (req.query.createdTo) {
+        if (req.query.startTo) {
             options = {
                 ...options,
-                createdMaxDate: req.query.createdTo,
-                // createdMaxDate: new Date(req.query.createdTo),
+                startMaxDate: new Date(req.query.startTo),
             };
         }
-        /* 
-        Add updatedFrom filter
-         */
 
-        if (req.query.updatedFrom) {
+        /* 
+        Add endFrom filter
+         */
+        if (req.query.endFrom) {
             options = {
                 ...options,
-                updatedMinDate: req.query.updatedFrom,
-                // updatedMinDate: new Date(req.query.updatedFrom),
+                endMinDate: new Date(req.query.endFrom),
             };
         }
+
         /* 
-        Add updatedTo filter
+        Add endTo filter
          */
 
-        if (req.query.updatedTo) {
+        if (req.query.endTo) {
             options = {
                 ...options,
-                updatedMaxDate: req.query.updatedTo,
+                endMaxDate: new Date(req.query.endTo),
             };
         }
 
@@ -158,13 +154,13 @@ const filter = async (req, res, next) => {
          */
         const totalTask = await Task.find({
             $or: [{ name: new RegExp(options.search, 'i') }],
-            createdAt: {
-                $gte: options.createdMinDate,
-                $lte: options.createdMaxDate,
+            startDate: {
+                $gte: options.startMinDate,
+                $lte: options.startMaxDate,
             },
-            updatedAt: {
-                $gte: options.updatedMinDate,
-                $lte: options.updatedMaxDate,
+            endDate: {
+                $gte: options.endMinDate,
+                $lte: options.endMaxDate,
             },
         }).countDocuments();
 
@@ -175,13 +171,13 @@ const filter = async (req, res, next) => {
         //return data to client
         const tasks = await Task.find({
             $or: [{ name: new RegExp(options.search, 'i') }],
-            createdAt: {
-                $gte: options.createdMinDate,
-                $lte: options.createdMaxDate,
+            startDate: {
+                $gte: options.startMinDate,
+                $lte: options.startMaxDate,
             },
-            updatedAt: {
-                $gte: options.updatedMinDate,
-                $lte: options.updatedMaxDate,
+            endDate: {
+                $gte: options.endMinDate,
+                $lte: options.endMaxDate,
             },
         })
             .sort({ updatedAt: -1 })
@@ -272,8 +268,42 @@ const updateTask = async (req, res, next) => {
 */
 const getAllTask = async (req, res, next) => {
     try {
-        const tasks = await Task.find({});
-        return cusResponse(res, 200, tasks, null);
+        const tasks = await Task.find({
+            userId: req.query.userId
+        }).populate({
+            path: 'userId eventId'
+        }).sort({ startDate: -1 });
+
+        // Remove all task not have eventId
+        let checkCode = []
+        let result = []
+        const filterTasks = tasks.filter(task => task.eventId)
+        for (task of filterTasks) {
+            let tmpObj = {
+                code: null,
+                eventName: null,
+                startDate: null,
+                tasks: []
+            }
+            if (!checkCode.includes(task.eventId?.urlCode)) {
+                tmpObj.code = task.eventId?.urlCode;
+                tmpObj.eventName = task.eventId?.eventName;
+                tmpObj.startDate = task.eventId?.startDate;
+                tmpObj.tasks.push(task)
+
+                result.push(tmpObj);
+                checkCode.push(task.eventId?.urlCode);
+            } else {
+                for (currentTask of result) {
+                    if (currentTask.code === task.eventId?.urlCode) {
+                        currentTask.tasks.push(task)
+                        break;
+                    }
+                }
+            }
+        }
+
+        return cusResponse(res, 200, result, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
