@@ -596,7 +596,7 @@ const EventReview = () => {
                                         ) : (
                                                 tasks?.map((task, index) => {
                                                     return (
-                                                        <AccordionSummary
+                                                        <Accordion
                                                             key={index}
                                                             expanded={
                                                                 expanded ===
@@ -715,7 +715,7 @@ const EventReview = () => {
                                                                     </Grid>
                                                                 </Grid>
                                                             </AccordionDetails>
-                                                        </AccordionSummary>
+                                                        </Accordion>
                                                     );
                                                 })
                                             )}
@@ -740,7 +740,7 @@ const EventReview = () => {
                                                 facilities?.map(
                                                     (facility, index) => {
                                                         return (
-                                                            <AccordionSummary
+                                                            <Accordion
                                                                 key={index}
                                                                 expanded={
                                                                     expanded ===
@@ -842,7 +842,7 @@ const EventReview = () => {
                                                                         </Grid>
                                                                     </Grid>
                                                                 </AccordionDetails>
-                                                            </AccordionSummary>
+                                                            </Accordion>
                                                         );
                                                     }
                                                 )

@@ -698,7 +698,7 @@ const EventDetail = () => {
                                         ) : (
                                                 tasks?.map((task, index) => {
                                                     return (
-                                                        <Accordion
+                                                       <Accordion
                                                             key={index}
                                                             expanded={
                                                                 expanded ===
@@ -842,7 +842,7 @@ const EventDetail = () => {
                                                 facilities?.map(
                                                     (facility, index) => {
                                                         return (
-                                                            <AccordionSummary
+                                                            <Accordion
                                                                 key={index}
                                                                 expanded={
                                                                     expanded ===
@@ -944,7 +944,7 @@ const EventDetail = () => {
                                                                         </Grid>
                                                                     </Grid>
                                                                 </AccordionDetails>
-                                                            </AccordionSummary>
+                                                            </Accordion>
                                                         );
                                                     }
                                                 )
