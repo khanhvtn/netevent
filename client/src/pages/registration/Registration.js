@@ -135,7 +135,7 @@ const Registration = () => {
 
     // UseEffect to set current event for participant when get the event state
     useEffect(() => {
-        if (!state.event?._id) {
+        if (state.event?._id) {
             setParticipant((prevState) => ({
                 ...prevState,
                 event: state.event?._id,
