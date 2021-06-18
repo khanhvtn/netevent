@@ -88,7 +88,7 @@ const App = () => {
                                 )}
                             />
                             <Route
-                                path="/dashboard/creator/event-detail"
+                                path="/dashboard/creator/event-detail/:code"
                                 render={() => (
                                     <DashboardLayout>
                                         <EventDetail />
@@ -130,7 +130,7 @@ const App = () => {
                                 )}
                             />
                             <Route
-                                path="/dashboard/reviewer/event-review"
+                                path="/dashboard/reviewer/event-review/:code"
                                 render={() => (
                                     <DashboardLayout>
                                         <EventReview />

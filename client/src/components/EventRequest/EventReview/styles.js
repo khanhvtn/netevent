@@ -108,5 +108,10 @@ export default makeStyles((theme) => ({
             minWidth: 0,
             margin: '0 8px',
         },
+    },
+    circularProgress: {
+        position: "absolute",
+        top: "50%",
+        left: "55%",
     }
 }));

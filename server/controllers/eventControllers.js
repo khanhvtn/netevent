@@ -703,7 +703,21 @@ const updateEvent = async (req, res, next) => {
                 newUpdateState,
                 { new: true, context: 'query' }
             ).populate({
-                path: 'eventTypeId',
+                path: 'taskListId facilityHistoryListId eventTypeId',
+                populate: [
+                    {
+                        path: 'facilityId',
+                        model: 'Facility',
+                    },
+                    {
+                        path: 'userId',
+                        model: 'User',
+                    },
+                    {
+                        path: 'eventTypeId',
+                        model: 'EventType'
+                    }
+                ],
             });
 
             // update id event back to above tasks.
@@ -752,7 +766,21 @@ const updateEvent = async (req, res, next) => {
                 newUpdateState,
                 { new: true, context: 'query' }
             ).populate({
-                path: 'eventTypeId',
+                path: 'taskListId facilityHistoryListId eventTypeId',
+                populate: [
+                    {
+                        path: 'facilityId',
+                        model: 'Facility',
+                    },
+                    {
+                        path: 'userId',
+                        model: 'User',
+                    },
+                    {
+                        path: 'eventTypeId',
+                        model: 'EventType'
+                    }
+                ],
             });
 
             // update id event back to above tasks.
@@ -878,7 +906,7 @@ const getFacilityAndTaskByEventCode = async (req, res, next) => {
         const event = await Event.findOne({
             urlCode: req.query.code,
         }).populate({
-            path: 'taskListId facilityHistoryListId',
+            path: 'taskListId facilityHistoryListId eventTypeId',
             populate: [
                 {
                     path: 'facilityId',
@@ -888,6 +916,10 @@ const getFacilityAndTaskByEventCode = async (req, res, next) => {
                     path: 'userId',
                     model: 'User',
                 },
+                {
+                    path: 'eventTypeId',
+                    model: 'EventType'
+                }
             ],
         });
 
