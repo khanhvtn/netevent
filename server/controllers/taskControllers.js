@@ -275,9 +275,35 @@ const getAllTask = async (req, res, next) => {
         }).sort({ startDate: -1 });
 
         // Remove all task not have eventId
+        let checkCode = []
+        let result = []
         const filterTasks = tasks.filter(task => task.eventId)
+        for (task of filterTasks) {
+            let tmpObj = {
+                code: null,
+                eventName: null,
+                startDate: null,
+                tasks: []
+            }
+            if (!checkCode.includes(task.eventId?.urlCode)) {
+                tmpObj.code = task.eventId?.urlCode;
+                tmpObj.eventName = task.eventId?.eventName;
+                tmpObj.startDate = task.eventId?.startDate;
+                tmpObj.tasks.push(task)
 
-        return cusResponse(res, 200, filterTasks, null);
+                result.push(tmpObj);
+                checkCode.push(task.eventId?.urlCode);
+            } else {
+                for (currentTask of result) {
+                    if (currentTask.code === task.eventId?.urlCode) {
+                        currentTask.tasks.push(task)
+                        break;
+                    }
+                }
+            }
+        }
+
+        return cusResponse(res, 200, result, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
     }

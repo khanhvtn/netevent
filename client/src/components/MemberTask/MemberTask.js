@@ -21,15 +21,13 @@ const MemberTask = () => {
         dispatch(getTasks(userId))
     }, [dispatch])
 
-    console.log(tasks)
-
     return (
         isLoading ?
             <div className={css.circularProgress} align="center">
                 <CircularProgress color="primary" />
             </div>
             :
-            
+
             tasks.map((task, index) => {
                 return (
                     <Box key={task.startDate} className={css.paper} color="inherit" elevation={3}>
@@ -41,7 +39,7 @@ const MemberTask = () => {
                             id="tableTitle"
                             component="div"
                         >
-                            {moment(task.eventId?.startDate).format('LL')}
+                            {moment(task.startDate).format('LL')}
                         </Typography>
                         <Box border={0.1}>
                             <Grid container>
@@ -52,7 +50,7 @@ const MemberTask = () => {
                                             variant="body2"
                                             component="div"
                                         >
-                                            {task.eventId?.urlCode}
+                                            {task.code}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -64,39 +62,47 @@ const MemberTask = () => {
                                                 variant="h6"
                                                 component="div"
                                             >
-                                                {task.eventId?.eventName}
+                                                {task.eventName}
                                             </Typography>
                                         </Grid>
-                                        <Grid direction="column" container item>
-                                            <Typography
-                                                className={css.title}
-                                                variant="h6"
-                                                component="div"
-                                            >
-                                                Task title: {task.name}
-                                            </Typography>
-                                            <Typography
-                                                className={css.title}
-                                                variant="h6"
-                                                component="div"
-                                            >
-                                                Task type: {task.type}
-                                            </Typography>
-                                            <Typography
-                                                className={css.title}
-                                                variant="h6"
-                                                component="div"
-                                            >
-                                                Start time: {moment(task.startDate).format('LT')}
-                                            </Typography>
-                                            <Typography
-                                                className={css.title}
-                                                variant="h6"
-                                                component="div"
-                                            >
-                                                End time: {moment(task.endDate).format('LT')}
-                                            </Typography>
-                                        </Grid>
+                                        {task.tasks.map((block) => {
+                                            return (
+                                                <div key={block._id}>
+
+                                                    <Grid direction="column" container item>
+                                                        <Typography
+                                                            className={css.title}
+                                                            variant="h6"
+                                                            component="div"
+                                                        >
+                                                            Task title: {block.name}
+                                                        </Typography>
+                                                        <Typography
+                                                            className={css.title}
+                                                            variant="h6"
+                                                            component="div"
+                                                        >
+                                                            Task type: {block.type}
+                                                        </Typography>
+                                                        <Typography
+                                                            className={css.title}
+                                                            variant="h6"
+                                                            component="div"
+                                                        >
+                                                            Start time: {moment(block.startDate).format('LT')}
+                                                        </Typography>
+                                                        <Typography
+                                                            className={css.title}
+                                                            variant="h6"
+                                                            component="div"
+                                                        >
+                                                            End time: {moment(block.endDate).format('LT')}
+                                                        </Typography>
+                                                    </Grid>
+                                                </div>
+                                            )
+                                        })
+                                        }
                                     </Box>
                                 </Grid>
                             </Grid>
