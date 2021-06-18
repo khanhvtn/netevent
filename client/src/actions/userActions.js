@@ -115,6 +115,18 @@ export const userCheck = (history) => async (dispatch) => {
             payload: data.data,
         });
 
+        //default state
+        let defaultHistoryOptions = {
+            pathname: prevPath,
+        };
+        //set isRecoveryMode from local storage
+        const stateHistory = JSON.parse(localStorage.getItem('stateHistory'));
+        if (stateHistory) {
+            defaultHistoryOptions = {
+                ...defaultHistoryOptions,
+                state: { isRecycleMode: stateHistory.isRecycleMode },
+            };
+        }
         //check valid Role and set numRole
         const userRole = data.data.role;
         const currentRoleBasedOnPath = prevPath.includes('dashboard/admin')
@@ -137,7 +149,7 @@ export const userCheck = (history) => async (dispatch) => {
         prevPath === '/login' ||
         !userRole.includes(currentRoleBasedOnPath)
             ? history.push('/pickrole')
-            : history.push(prevPath);
+            : history.push(defaultHistoryOptions);
     } catch (error) {
         dispatch({
             type: USER_CHECK,

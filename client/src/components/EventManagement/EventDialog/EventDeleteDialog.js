@@ -24,7 +24,6 @@ const EventDeleteDialog = ({
     isRecoveryMode,
 }) => {
     const css = useStyles();
-    console.log(isRecoveryMode);
 
     const { isLoading } = useSelector((state) => ({
         isLoading: state.event.isLoading,

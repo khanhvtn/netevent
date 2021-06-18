@@ -226,7 +226,6 @@ const EventManagement = () => {
         localStorage.setItem(
             'stateHistory',
             JSON.stringify({
-                from: '/dashboard/creator/event-management',
                 isRecycleMode: state.isRecycleMode,
             })
         );
@@ -342,17 +341,17 @@ const EventManagement = () => {
                                 <Typography>No data matched</Typography>
                             </Grid>
                         ) : (
-                                    events.map((event) => {
-                                        return (
-                                            <EventCard
-                                                event={event}
-                                                key={event._id}
-                                                isLoading={isLoading}
-                                                onClickEvent={handleOnClickEvent}
-                                            />
-                                        );
-                                    })
-                                )}
+                            events.map((event) => {
+                                return (
+                                    <EventCard
+                                        event={event}
+                                        key={event._id}
+                                        isLoading={isLoading}
+                                        onClickEvent={handleOnClickEvent}
+                                    />
+                                );
+                            })
+                        )}
                     </Grid>
                 </Paper>
 
