@@ -31,6 +31,7 @@ const FacilityDialog = ({
     handleCreateAndUpdate,
     handleToggleDialogDelete,
     handleDelete,
+    isRecoveryMode,
 }) => {
     const css = useStyles();
     const { isLoading, errors, createSuccess } = useSelector((state) => ({
@@ -140,7 +141,9 @@ const FacilityDialog = ({
                 <DialogTitle id="delete-dialog">{'Warning!!!'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="delete-dialog-description">
-                        Are you sure with your action ?
+                        {isRecoveryMode
+                            ? 'This action will delete the facility permanently. Are you sure with your action ?'
+                            : 'Are you sure with your action ?'}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>

@@ -198,7 +198,7 @@ const EnhancedTableToolbar = (props) => {
                             variant="contained"
                             color={isRecoveryMode ? 'default' : 'secondary'}
                         >
-                            {isRecoveryMode ? 'Close' : 'Recycle'}
+                            {isRecoveryMode ? 'Close' : 'Bin'}
                         </Button>
                     )}
 

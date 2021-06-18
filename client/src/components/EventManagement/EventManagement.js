@@ -283,9 +283,7 @@ const EventManagement = () => {
                                         )
                                     }
                                 >
-                                    {state.isRecycleMode
-                                        ? 'Close'
-                                        : 'Recycle Bin'}
+                                    {state.isRecycleMode ? 'Close' : 'Bin'}
                                 </Button>
                                 <Tooltip
                                     title="Filter"
