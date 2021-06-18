@@ -32,6 +32,13 @@ export default makeStyles((theme) => ({
         alignItems: 'center',
         paddingTop: 16,
     },
+    reviewBy: {
+        display: 'flex',
+        flex: '1 1 100%',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        paddingTop: 16,
+    },
     getButton: {
         color: 'white',
     },

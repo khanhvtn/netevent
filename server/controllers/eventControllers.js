@@ -418,7 +418,7 @@ const filterEventManagement = async (req, res, next) => {
             const queryEvent = await Event.find(queryOptions)
                 .select('-taskListId -facilityHistoryListId')
                 .populate({
-                    path: 'eventTypeId',
+                    path: 'eventTypeId reviewerId',
                     match: { name: new RegExp(options.type, 'i') },
                 })
                 .sort({ updatedAt: -1 });
@@ -444,7 +444,7 @@ const filterEventManagement = async (req, res, next) => {
         const queryEvent = await Event.find(queryOptions)
             .select('-taskListId -facilityHistoryListId')
             .populate({
-                path: 'eventTypeId',
+                path: 'eventTypeId reviewerId',
             })
             .sort({ updatedAt: -1 });
 
@@ -726,7 +726,21 @@ const updateEvent = async (req, res, next) => {
                 newUpdateState,
                 { new: true, context: 'query' }
             ).populate({
-                path: 'eventTypeId',
+                path: 'taskListId facilityHistoryListId eventTypeId reviewerId',
+                populate: [
+                    {
+                        path: 'facilityId',
+                        model: 'Facility',
+                    },
+                    {
+                        path: 'userId',
+                        model: 'User',
+                    },
+                    {
+                        path: 'eventTypeId',
+                        model: 'EventType'
+                    }
+                ],
             });
 
             // update id event back to above tasks.
@@ -775,7 +789,21 @@ const updateEvent = async (req, res, next) => {
                 newUpdateState,
                 { new: true, context: 'query' }
             ).populate({
-                path: 'eventTypeId',
+                path: 'taskListId facilityHistoryListId eventTypeId reviewerId',
+                populate: [
+                    {
+                        path: 'facilityId',
+                        model: 'Facility',
+                    },
+                    {
+                        path: 'userId',
+                        model: 'User',
+                    },
+                    {
+                        path: 'eventTypeId',
+                        model: 'EventType'
+                    }
+                ],
             });
 
             // update id event back to above tasks.
@@ -901,7 +929,7 @@ const getFacilityAndTaskByEventCode = async (req, res, next) => {
         const event = await Event.findOne({
             urlCode: req.query.code,
         }).populate({
-            path: 'taskListId facilityHistoryListId',
+            path: 'taskListId facilityHistoryListId eventTypeId reviewerId',
             populate: [
                 {
                     path: 'facilityId',
@@ -911,6 +939,10 @@ const getFacilityAndTaskByEventCode = async (req, res, next) => {
                     path: 'userId',
                     model: 'User',
                 },
+                {
+                    path: 'eventTypeId',
+                    model: 'EventType'
+                }
             ],
         });
 
@@ -933,16 +965,30 @@ const getFacilityAndTaskByEventCode = async (req, res, next) => {
  */
 const updateEventStatus = async (req, res, next) => {
     try {
-        const { eventId, status, action } = req.body;
+        const { eventId, status, action, reviewerId } = req.body;
         // Update new event
         switch (action) {
             case 'approve':
                 const approveEvent = await Event.findOneAndUpdate(
                     { _id: eventId },
-                    { isApproved: status },
+                    { isApproved: status, reviewerId: reviewerId },
                     { new: true, context: 'query' }
                 ).populate({
-                    path: 'eventTypeId',
+                    path: 'taskListId facilityHistoryListId eventTypeId reviewerId',
+                    populate: [
+                        {
+                            path: 'facilityId',
+                            model: 'Facility',
+                        },
+                        {
+                            path: 'userId',
+                            model: 'User',
+                        },
+                        {
+                            path: 'eventTypeId',
+                            model: 'EventType'
+                        }
+                    ],
                 });
                 return cusResponse(res, 200, approveEvent, null);
             case 'finish':
@@ -951,7 +997,21 @@ const updateEventStatus = async (req, res, next) => {
                     { isFinished: status },
                     { new: true, context: 'query' }
                 ).populate({
-                    path: 'eventTypeId',
+                    path: 'taskListId facilityHistoryListId eventTypeId reviewerId',
+                    populate: [
+                        {
+                            path: 'facilityId',
+                            model: 'Facility',
+                        },
+                        {
+                            path: 'userId',
+                            model: 'User',
+                        },
+                        {
+                            path: 'eventTypeId',
+                            model: 'EventType'
+                        }
+                    ],
                 });
                 return cusResponse(res, 200, finishEvent, null);
         }

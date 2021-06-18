@@ -195,7 +195,7 @@ const EventRequest = () => {
     // Push to the event-detail page with event props
     const handleOnClickEvent = (event) => {
         history.push({
-            pathname: '/dashboard/reviewer/event-review',
+            pathname: `/dashboard/reviewer/event-review/${event.urlCode}`,
             state: {
                 from: '/dashboard/reviewer/event-request',
                 event: event,

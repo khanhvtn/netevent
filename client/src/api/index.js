@@ -234,3 +234,7 @@ export const setAttendedParticipantAPI = (userReq) =>
 // Notification History API
 export const getNotificationHistoryByEventCodeAPI = (code) =>
     AXIOS.get(`/notificationHistory/all?code=${code ? code : ''}`);
+
+// Task API
+export const getTasksAPI = (userId) =>
+    AXIOS.get(`/task/all?userId=${userId ? userId : ''}`);
