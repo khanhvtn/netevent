@@ -112,6 +112,7 @@ function EnhancedTableHead(props) {
         numSelected,
         rowCount,
         onRequestSort,
+        reviewerMode
     } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
@@ -120,7 +121,7 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="checkbox">
+                {!reviewerMode && <TableCell TableCell padding="checkbox">
                     <Checkbox
                         indeterminate={
                             numSelected > 0 && numSelected < rowCount
@@ -129,7 +130,7 @@ function EnhancedTableHead(props) {
                         onChange={onSelectAllClick}
                         inputProps={{ 'aria-label': 'select all desserts' }}
                     />
-                </TableCell>
+                </TableCell>}
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
@@ -155,7 +156,7 @@ function EnhancedTableHead(props) {
                     </TableCell>
                 ))}
             </TableRow>
-        </TableHead>
+        </TableHead >
     );
 }
 
@@ -194,6 +195,7 @@ const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
     const {
         checkInMode,
+        reviewerMode,
         numSelected,
         handleSetInvalid,
         handleSetVerified,
@@ -202,77 +204,95 @@ const EnhancedTableToolbar = (props) => {
     } = props;
 
     return (
-        <Toolbar
-            className={clsx(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
-        >
-            {numSelected > 0 ? (
+        reviewerMode ?
+            <Toolbar
+                className={clsx(classes.root, {
+                    [classes.highlight]: numSelected > 0,
+                })}
+            >
                 <Typography
                     className={classes.title}
-                    color="inherit"
-                    variant="subtitle1"
+                    variant="h6"
+                    id="tableTitle"
                     component="div"
                 >
-                    {numSelected} selected
+                    {checkInMode ? 'List of check-in participants' : 'List of participants'}
                 </Typography>
-            ) : (
-                    <Typography
-                        className={classes.title}
-                        variant="h6"
-                        id="tableTitle"
-                        component="div"
-                    >
-                        {checkInMode ? 'List of check-in participants' : 'List of participants'}
-                    </Typography>
-                )}
-            {checkInMode ?
-                numSelected > 0 &&
-                <>
-                    <Button
-                        disabled={isLoading}
-                        onClick={() => handleSetAttended(false)}
-                        style={{ marginLeft: '8px' }}
-                        variant="contained"
-                        color="secondary"
-                    >
-                        {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Absent'}
-                    </Button>
-                    <Button
-                        disabled={isLoading}
-                        onClick={() => handleSetAttended(true)}
-                        style={{ marginLeft: '8px' }}
-                        variant="contained"
-                        color="primary"
-                    >
-                        {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Attend'}
-                    </Button>
-                </>
-                :
-                numSelected > 0 &&
-                <>
-                    <Button
-                        disabled={isLoading}
-                        onClick={handleSetInvalid}
-                        variant="contained"
-                        color="secondary"
-                    >
-                        {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Invalid'}
+            </Toolbar>
+            :
+            <>
+                <Toolbar
+                    className={clsx(classes.root, {
+                        [classes.highlight]: numSelected > 0,
+                    })}
+                >
+                    {numSelected > 0 ? (
+                        <Typography
+                            className={classes.title}
+                            color="inherit"
+                            variant="subtitle1"
+                            component="div"
+                        >
+                            {numSelected} selected
+                        </Typography>
+                    ) : (
+                            <Typography
+                                className={classes.title}
+                                variant="h6"
+                                id="tableTitle"
+                                component="div"
+                            >
+                                {checkInMode ? 'List of check-in participants' : 'List of participants'}
+                            </Typography>
+                        )}
+                    {checkInMode ?
+                        numSelected > 0 &&
+                        <>
+                            <Button
+                                disabled={isLoading}
+                                onClick={() => handleSetAttended(false)}
+                                style={{ marginLeft: '8px' }}
+                                variant="contained"
+                                color="secondary"
+                            >
+                                {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Absent'}
+                            </Button>
+                            <Button
+                                disabled={isLoading}
+                                onClick={() => handleSetAttended(true)}
+                                style={{ marginLeft: '8px' }}
+                                variant="contained"
+                                color="primary"
+                            >
+                                {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Attend'}
+                            </Button>
+                        </>
+                        :
+                        numSelected > 0 &&
+                        <>
+                            <Button
+                                disabled={isLoading}
+                                onClick={handleSetInvalid}
+                                variant="contained"
+                                color="secondary"
+                            >
+                                {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Invalid'}
 
-                    </Button>
-                    <Button
-                        disabled={isLoading}
-                        onClick={handleSetVerified}
-                        style={{ marginLeft: '8px' }}
-                        variant="contained"
-                        color="primary"
-                    >
-                        {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Verify'}
-                    </Button>
-                </>
-            }
+                            </Button>
+                            <Button
+                                disabled={isLoading}
+                                onClick={handleSetVerified}
+                                style={{ marginLeft: '8px' }}
+                                variant="contained"
+                                color="primary"
+                            >
+                                {isLoading ? <CircularProgress size={26} color="inherit" /> : 'Verify'}
+                            </Button>
+                        </>
+                    }
 
-        </Toolbar>
+                </Toolbar>
+            </>
     );
 };
 
@@ -282,6 +302,7 @@ EnhancedTableToolbar.propTypes = {
 
 const ParticipantTable = ({
     checkInMode,
+    reviewerMode,
     take,
     selected,
     setSelected,
@@ -318,23 +339,25 @@ const ParticipantTable = ({
     };
 
     const handleClick = (event, _id) => {
-        const selectedIndex = selected.indexOf(_id);
-        let newSelected = [];
+        if (!reviewerMode) {
+            const selectedIndex = selected.indexOf(_id);
+            let newSelected = [];
 
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, _id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1)
-            );
+            if (selectedIndex === -1) {
+                newSelected = newSelected.concat(selected, _id);
+            } else if (selectedIndex === 0) {
+                newSelected = newSelected.concat(selected.slice(1));
+            } else if (selectedIndex === selected.length - 1) {
+                newSelected = newSelected.concat(selected.slice(0, -1));
+            } else if (selectedIndex > 0) {
+                newSelected = newSelected.concat(
+                    selected.slice(0, selectedIndex),
+                    selected.slice(selectedIndex + 1)
+                );
+            }
+
+            setSelected(newSelected);
         }
-
-        setSelected(newSelected);
     };
 
     const isSelected = (_id) => selected.indexOf(_id) !== -1;
@@ -344,6 +367,7 @@ const ParticipantTable = ({
     return (
         <Paper className={css.paper1} elevation={0}>
             <EnhancedTableToolbar
+                reviewerMode={reviewerMode}
                 checkInMode={checkInMode}
                 numSelected={selected.length}
                 handleSetInvalid={handleSetInvalid}
@@ -359,6 +383,7 @@ const ParticipantTable = ({
                     aria-label="enhanced table"
                 >
                     <EnhancedTableHead
+                        reviewerMode={reviewerMode}
                         classes={css}
                         numSelected={selected.length}
                         order={order}
@@ -374,9 +399,11 @@ const ParticipantTable = ({
                                     return (
                                         <>
                                             <TableRow key={index}>
-                                                <TableCell>
-                                                    <Skeleton />
-                                                </TableCell>
+                                                {!reviewerMode &&
+                                                    <TableCell>
+                                                        <Skeleton />
+                                                    </TableCell>
+                                                }
                                                 {headCells.map((row, index) => {
                                                     return (
                                                         <TableCell key={index}>
@@ -396,7 +423,7 @@ const ParticipantTable = ({
                                             height: 50 * take,
                                         }}
                                     >
-                                        <TableCell colSpan={headCells.length + 1} align="center">
+                                        <TableCell colSpan={reviewerMode ? headCells.length + 1 : headCells.length} align="center">
                                             <Typography>No Data Matched</Typography>
                                         </TableCell>
                                     </TableRow>
@@ -422,14 +449,15 @@ const ParticipantTable = ({
                                                 key={row._id}
                                                 selected={isItemSelected}
                                             >
-                                                <TableCell padding="checkbox">
+
+                                                {!reviewerMode && <TableCell padding="checkbox">
                                                     <Checkbox
                                                         checked={isItemSelected}
                                                         inputProps={{
                                                             'aria-labelledby': labelId,
                                                         }}
                                                     />
-                                                </TableCell>
+                                                </TableCell>}
                                                 <TableCell component="th" scope="row">
                                                     {row.name}
                                                 </TableCell>
@@ -510,7 +538,7 @@ const ParticipantTable = ({
                                                 height: 50 * emptyRows,
                                             }}
                                         >
-                                            <TableCell colSpan={headCells.length + 1} />
+                                            <TableCell colSpan={reviewerMode ? headCells.length + 1 : headCells.length} />
                                         </TableRow>
                                     )}
                                 </>
