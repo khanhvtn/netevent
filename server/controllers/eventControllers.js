@@ -471,6 +471,9 @@ const deleteEventManagement = async (req, res, next) => {
         // Delete Event
         const deleteEvent = await Event.deleteOne({ _id: eventId });
 
+        //delete image from firebase
+        await bucketInstance.file(`${eventId}.jpg`).delete();
+
         return cusResponse(res, 200, deleteEvent, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
