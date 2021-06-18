@@ -269,7 +269,7 @@ const updateTask = async (req, res, next) => {
 const getAllTask = async (req, res, next) => {
     try {
         const tasks = await Task.find({
-            id: req.body.userId
+            userId: req.query.userId
         }).populate({
             path: 'userId eventId'
         }).sort({ startDate: -1 });
