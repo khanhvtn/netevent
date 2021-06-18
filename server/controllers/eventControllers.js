@@ -951,7 +951,21 @@ const updateEventStatus = async (req, res, next) => {
                     { isApproved: status },
                     { new: true, context: 'query' }
                 ).populate({
-                    path: 'eventTypeId',
+                    path: 'taskListId facilityHistoryListId eventTypeId',
+                    populate: [
+                        {
+                            path: 'facilityId',
+                            model: 'Facility',
+                        },
+                        {
+                            path: 'userId',
+                            model: 'User',
+                        },
+                        {
+                            path: 'eventTypeId',
+                            model: 'EventType'
+                        }
+                    ],
                 });
                 return cusResponse(res, 200, approveEvent, null);
             case 'finish':
@@ -960,7 +974,21 @@ const updateEventStatus = async (req, res, next) => {
                     { isFinished: status },
                     { new: true, context: 'query' }
                 ).populate({
-                    path: 'eventTypeId',
+                    path: 'taskListId facilityHistoryListId eventTypeId',
+                    populate: [
+                        {
+                            path: 'facilityId',
+                            model: 'Facility',
+                        },
+                        {
+                            path: 'userId',
+                            model: 'User',
+                        },
+                        {
+                            path: 'eventTypeId',
+                            model: 'EventType'
+                        }
+                    ],
                 });
                 return cusResponse(res, 200, finishEvent, null);
         }
