@@ -12,6 +12,7 @@ import {
     EVENT_GET_FACILITY_AND_TASK,
     EVENT_DETAIL_LOADING,
     EVENT_UPDATE,
+    EVENT_RECOVERY_SUCCESS,
 } from '../constants';
 
 const initialState = {
@@ -24,6 +25,7 @@ const initialState = {
     createSuccess: false,
     updateSuccess: false,
     deleteSuccess: false,
+    recoverySuccess: false,
     isSendingNotification: false,
     sendNotiSuccess: false,
 };
@@ -66,6 +68,8 @@ export default function eventReducers(state = initialState, action) {
             return { ...state, updateSuccess: action.payload };
         case EVENT_DELETE_SUCCESS:
             return { ...state, deleteSuccess: action.payload };
+        case EVENT_RECOVERY_SUCCESS:
+            return { ...state, recoverySuccess: action.payload };
         default:
             return state;
     }

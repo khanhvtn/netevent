@@ -225,6 +225,7 @@ const filterEventManagement = async (req, res, next) => {
             take: 5,
             type: '',
             budgetRange: '',
+            isDeleted: false,
             participantRange: '',
             startMaxDate: listRangeDate[0][0].startDate,
             startMinDate: listRangeDate[1][0].startDate,
@@ -232,8 +233,10 @@ const filterEventManagement = async (req, res, next) => {
             endMinDate: listRangeDate[3][0].endDate,
         };
 
-        /* Create Query Options */
-        let queryOptions = {};
+        /* Create Default Query Options */
+        let queryOptions = {
+            isDeleted: options.isDeleted,
+        };
 
         //adding search
         if (req.query.search) {
@@ -262,6 +265,17 @@ const filterEventManagement = async (req, res, next) => {
             };
         }
 
+        /* Add filter by  */
+        if (req.query.isDeleted) {
+            options = {
+                ...options,
+                isDeleted: req.query.isDeleted.toLowerCase() === 'true',
+            };
+            queryOptions = {
+                ...queryOptions,
+                isDeleted: options.isDeleted,
+            };
+        }
         /* 
         Add take row filter
         Default take is 5
@@ -392,7 +406,6 @@ const filterEventManagement = async (req, res, next) => {
                 $lte: options.endMaxDate,
             },
         };
-
         /* 
         Variable page default is 1
          */
@@ -489,9 +502,9 @@ const deleteEventManagement = async (req, res, next) => {
  */
 const deleteEvent = async (req, res, next) => {
     try {
-        const { deleteList } = req.body;
-        const deletedEvent = await Event.updateMany(
-            { name: { $in: deleteList } },
+        const { eventId: _id } = req.body;
+        const deletedEvent = await Event.updateOne(
+            { _id },
             { $set: { isDeleted: true } }
         );
         return cusResponse(res, 200, deletedEvent, null);
@@ -516,11 +529,21 @@ const deleteEvent = async (req, res, next) => {
  */
 const deleteEventPermanent = async (req, res, next) => {
     try {
-        const { deleteList } = req.body;
-        const deletedEvent = await Event.deleteMany({
-            name: { $in: deleteList },
-        });
-        return cusResponse(res, 200, deletedEvent, null);
+        const { eventId, taskListId, historyFacilityListId } = req.body;
+
+        // Delete all reference Task
+        await Task.deleteMany({ _id: taskListId });
+
+        // Delete all reference Facility History
+        await FacilityHistory.deleteMany({ _id: historyFacilityListId });
+
+        // Delete Event
+        const deleteEvent = await Event.deleteOne({ _id: eventId });
+
+        //delete image from firebase
+        await bucketInstance.file(`${eventId}.jpg`).delete();
+
+        return cusResponse(res, 200, deleteEvent, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
@@ -542,9 +565,9 @@ const deleteEventPermanent = async (req, res, next) => {
  */
 const recoveryEvent = async (req, res, next) => {
     try {
-        const { recoveryList } = req.body;
-        const recoveryEvent = await Event.updateMany(
-            { name: { $in: recoveryList } },
+        const { eventId: _id } = req.body;
+        const recoveryEvent = await Event.updateOne(
+            { _id },
             { $set: { isDeleted: false } }
         );
         return cusResponse(res, 200, recoveryEvent, null);

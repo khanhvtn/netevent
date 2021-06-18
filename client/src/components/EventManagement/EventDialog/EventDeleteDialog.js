@@ -21,12 +21,14 @@ const EventDeleteDialog = ({
     openDeleteDialog,
     handleToggleDialogDelete,
     handleDeleteEvent,
+    isRecoveryMode,
 }) => {
     const css = useStyles();
+    console.log(isRecoveryMode);
 
     const { isLoading } = useSelector((state) => ({
-        isLoading: state.event.isLoading
-    }))
+        isLoading: state.event.isLoading,
+    }));
 
     return (
         <>
@@ -43,7 +45,9 @@ const EventDeleteDialog = ({
                 <DialogTitle id="delete-dialog">{'Warning!!!'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="delete-dialog-description">
-                        Are you sure with your action ?
+                        {isRecoveryMode
+                            ? 'This action will delete the event permanently. Are you sure with your action ?'
+                            : 'Are you sure with your action ?'}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
@@ -60,7 +64,11 @@ const EventDeleteDialog = ({
                         onClick={handleDeleteEvent}
                         color="secondary"
                     >
-                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Delete'}
+                        {isLoading ? (
+                            <CircularProgress size={25} color="inherit" />
+                        ) : (
+                            'Delete'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>

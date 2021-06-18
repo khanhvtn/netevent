@@ -14,11 +14,12 @@ import {
     EVENT_DELETE_SUCCESS,
     EVENT_UPDATE_SUCCESS,
     EVENT_UPDATE,
+    EVENT_RECOVERY_SUCCESS,
 } from '../constants';
 import {
     createEventAPI,
     deleteEventAPI,
-    deleteEventManagementAPI,
+    deleteEventPermanentAPI,
     getEventsAPI,
     getFacilityAndTaskByEventCodeAPI,
     updateEventAPI,
@@ -26,6 +27,7 @@ import {
     sendNotificationAPI,
     fetchEventsAPI,
     updateEventStatusAPI,
+    recoveryEventAPI,
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -165,47 +167,95 @@ export const getEvents = (userQueries) => async (dispatch) => {
     setEventIsLoading(false, dispatch);
 };
 
-export const getFacilityAndTaskByEventCode =
-    (code) => async (dispatch) => {
-        setEventDetailIsLoading(true, dispatch);
-        try {
-            const data = await getFacilityAndTaskByEventCodeAPI(code);
-            dispatch({
-                type: EVENT_GET_FACILITY_AND_TASK,
-                payload: data,
-            });
-        } catch (error) {
-            console.log(error.message);
-        }
-        setEventDetailIsLoading(false, dispatch);
-    };
+export const getFacilityAndTaskByEventCode = (code) => async (dispatch) => {
+    setEventDetailIsLoading(true, dispatch);
+    try {
+        const data = await getFacilityAndTaskByEventCodeAPI(code);
+        dispatch({
+            type: EVENT_GET_FACILITY_AND_TASK,
+            payload: data,
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+    setEventDetailIsLoading(false, dispatch);
+};
 
-export const deleteEventWithTaskAndFacilityHistory =
-    (userReq, history) => async (dispatch) => {
-        setEventIsLoading(true, dispatch);
-        try {
-            await deleteEventManagementAPI(userReq);
+export const deleteEventPermanent = (userReq) => async (dispatch) => {
+    setEventIsLoading(true, dispatch);
+    try {
+        await deleteEventPermanentAPI(userReq);
+        dispatch({
+            type: EVENT_DELETE_SUCCESS,
+            payload: true,
+        });
+        setTimeout(() => {
             dispatch({
                 type: EVENT_DELETE_SUCCESS,
-                payload: true,
+                payload: false,
             });
-            setTimeout(() => {
-                dispatch({
-                    type: EVENT_DELETE_SUCCESS,
-                    payload: false,
-                });
-            }, 3000);
-        } catch (error) {
-            if (error.response.data?.errors) {
-                dispatch({
-                    type: ERROR,
-                    payload: error.response.data?.errors,
-                });
-            }
-            console.log(error.message);
+        }, 3000);
+    } catch (error) {
+        if (error.response.data?.errors) {
+            dispatch({
+                type: ERROR,
+                payload: error.response.data?.errors,
+            });
         }
-        setEventIsLoading(false, dispatch);
-    };
+        console.log(error.message);
+    }
+    setEventIsLoading(false, dispatch);
+};
+export const deleteEvent = (userReq) => async (dispatch) => {
+    setEventIsLoading(true, dispatch);
+    try {
+        await deleteEventAPI(userReq);
+        dispatch({
+            type: EVENT_DELETE_SUCCESS,
+            payload: true,
+        });
+        setTimeout(() => {
+            dispatch({
+                type: EVENT_DELETE_SUCCESS,
+                payload: false,
+            });
+        }, 3000);
+    } catch (error) {
+        if (error.response.data?.errors) {
+            dispatch({
+                type: ERROR,
+                payload: error.response.data?.errors,
+            });
+        }
+        console.log(error.message);
+    }
+    setEventIsLoading(false, dispatch);
+};
+export const recoveryEvent = (userReq) => async (dispatch) => {
+    setEventIsLoading(true, dispatch);
+    try {
+        await recoveryEventAPI(userReq);
+        dispatch({
+            type: EVENT_RECOVERY_SUCCESS,
+            payload: true,
+        });
+        setTimeout(() => {
+            dispatch({
+                type: EVENT_RECOVERY_SUCCESS,
+                payload: false,
+            });
+        }, 3000);
+    } catch (error) {
+        if (error.response?.data?.errors) {
+            dispatch({
+                type: ERROR,
+                payload: error.response.data?.errors,
+            });
+        }
+        console.log(error.message);
+    }
+    setEventIsLoading(false, dispatch);
+};
 
 export const updateEvent = (userReq) => async (dispatch) => {
     setEventIsLoading(true, dispatch);
@@ -270,4 +320,4 @@ export const updateEventStatus = (userReq) => async (dispatch) => {
         console.log(error);
     }
     setEventIsLoading(false, dispatch);
-}
+};

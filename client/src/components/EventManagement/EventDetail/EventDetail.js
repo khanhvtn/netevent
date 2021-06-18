@@ -30,8 +30,10 @@ import EventDeleteDialog from '../EventDialog/EventDeleteDialog';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    deleteEventWithTaskAndFacilityHistory,
+    deleteEvent,
+    deleteEventPermanent,
     getFacilityAndTaskByEventCode,
+    recoveryEvent,
     updateEventStatus,
 } from '../../../actions/eventActions';
 import { Skeleton } from '@material-ui/lab';
@@ -111,7 +113,8 @@ const EventDetail = () => {
         isLoading,
         updateEventSuccess,
         newUpdateEventDetail,
-        deleteEventSuccess
+        deleteEventSuccess,
+        recoverySuccess,
     } = useSelector((state) => ({
         newUpdateEventDetail: state.event.eventDetail,
         facilities: state.event.eventDetail?.facilityHistoryListId,
@@ -119,7 +122,8 @@ const EventDetail = () => {
         isDetailLoading: state.event.isDetailLoading,
         isLoading: state.event.isLoading,
         updateEventSuccess: state.event.updateSuccess,
-        deleteEventSuccess: state.event.deleteSuccess
+        deleteEventSuccess: state.event.deleteSuccess,
+        recoverySuccess: state.event.recoverySuccess,
     }));
 
     // Update new state when getting props from event-management page
@@ -141,6 +145,9 @@ const EventDetail = () => {
             },
             previousPath: history.location.state?.from,
         }));
+        return () => {
+            localStorage.removeItem('stateHistory');
+        };
     }, []);
 
     // Get Facility and Task if state event existed
@@ -199,17 +206,34 @@ const EventDetail = () => {
         }));
     }, [updateEventSuccess]);
 
+    //userEffect to toggle notification for recovery success
+    useEffect(() => {
+        if (recoverySuccess) {
+            setState((prevState) => ({
+                ...prevState,
+                openRecoverySnackBar: recoverySuccess,
+            }));
+            history.push({
+                pathname: '/dashboard/creator/event-management',
+                state: {
+                    isRecycleMode: history.location.state?.isRecycleMode,
+                    isUpdated: true,
+                },
+            });
+        }
+    }, [history, recoverySuccess]);
+
     useEffect(() => {
         if (deleteEventSuccess) {
             handleToggleDialogDelete();
             history.push({
                 pathname: '/dashboard/creator/event-management',
                 state: {
-                    isUpdated: true
-                }
+                    isUpdated: true,
+                },
             });
         }
-    }, [deleteEventSuccess])
+    }, [deleteEventSuccess]);
 
     // Update Delete State
     useEffect(() => {
@@ -250,17 +274,29 @@ const EventDetail = () => {
     // Return to previous page with status
     const handleOnClickReturn = () => {
         setState(initialState);
+        let defaultHistoryState = {
+            isUpdated: state.isUpdated,
+        };
+        //add isRecycleMode into history state if it exists
+        if (history.location.state?.isRecycleMode) {
+            defaultHistoryState = {
+                ...defaultHistoryState,
+                isRecycleMode: history.location.state.isRecycleMode,
+            };
+        }
         return history.push({
             pathname: `${state.previousPath}`,
-            state: {
-                isUpdated: state.isUpdated,
-            },
+            state: defaultHistoryState,
         });
     };
 
     // Handle Delete Event
     const handleDeleteEvent = () => {
-        dispatch(deleteEventWithTaskAndFacilityHistory(deleteState, history));
+        if (history.location.state?.isRecycleMode) {
+            dispatch(deleteEventPermanent(deleteState));
+        } else {
+            dispatch(deleteEvent({ eventId: deleteState.eventId }));
+        }
     };
 
     // Handle Update Event Status
@@ -304,6 +340,11 @@ const EventDetail = () => {
         }));
     };
 
+    //handle recovery envent
+    const handleRecoveryEvent = () => {
+        dispatch(recoveryEvent({ eventId: deleteState.eventId }));
+    };
+
     return (
         <>
             <Paper className={css.paper} color="inherit" elevation={3}>
@@ -335,21 +376,41 @@ const EventDetail = () => {
                                         </Button>
                                     </div>
                                 </Tooltip>
-                                <Tooltip title="Edit">
-                                    <div>
-                                        <Button
-                                            disabled={
-                                                isDetailLoading || isLoading
-                                            }
-                                            color="inherit"
-                                            variant="outlined"
-                                            style={{ margin: '0 8px' }}
-                                            onClick={handleToggleDialogUpdate}
-                                        >
-                                            Update
-                                        </Button>
-                                    </div>
-                                </Tooltip>
+                                {history.location.state.isRecycleMode ? (
+                                    <Tooltip title="Edit">
+                                        <div>
+                                            <Button
+                                                disabled={
+                                                    isDetailLoading || isLoading
+                                                }
+                                                color="primary"
+                                                variant="contained"
+                                                style={{ margin: '0 8px' }}
+                                                onClick={handleRecoveryEvent}
+                                            >
+                                                Recovery
+                                            </Button>
+                                        </div>
+                                    </Tooltip>
+                                ) : (
+                                    <Tooltip title="Edit">
+                                        <div>
+                                            <Button
+                                                disabled={
+                                                    isDetailLoading || isLoading
+                                                }
+                                                color="inherit"
+                                                variant="outlined"
+                                                style={{ margin: '0 8px' }}
+                                                onClick={
+                                                    handleToggleDialogUpdate
+                                                }
+                                            >
+                                                Update
+                                            </Button>
+                                        </div>
+                                    </Tooltip>
+                                )}
                             </Toolbar>
                         </Grid>
                     </AppBar>
@@ -450,10 +511,11 @@ const EventDetail = () => {
                                 style={{
                                     width: '100%',
                                     height: '345px',
-                                    backgroundImage: `url(${!state.event?.image
-                                        ? blankPhoto
-                                        : state.event?.image
-                                        })`,
+                                    backgroundImage: `url(${
+                                        !state.event?.image
+                                            ? blankPhoto
+                                            : state.event?.image
+                                    })`,
                                     backgroundRepeat: 'no-repeat',
                                     backgroundPosition: 'center',
                                     backgroundSize: 'contain',
@@ -516,15 +578,15 @@ const EventDetail = () => {
                                                 label="Approved"
                                             />
                                         ) : (
-                                                        <Chip
-                                                            className={css.chipStatus}
-                                                            style={{
-                                                                backgroundColor: `#e53935`,
-                                                            }}
-                                                            size="small"
-                                                            label="Rejected"
-                                                        />
-                                                    )}
+                                            <Chip
+                                                className={css.chipStatus}
+                                                style={{
+                                                    backgroundColor: `#e53935`,
+                                                }}
+                                                size="small"
+                                                label="Rejected"
+                                            />
+                                        )}
                                     </Typography>
                                     <Typography
                                         variant="caption"
@@ -696,131 +758,131 @@ const EventDetail = () => {
                                                 <Skeleton />
                                             </>
                                         ) : (
-                                                tasks?.map((task, index) => {
-                                                    return (
-                                                       <Accordion
-                                                            key={index}
-                                                            expanded={
-                                                                expanded ===
-                                                                `task-panel${index}`
+                                            tasks?.map((task, index) => {
+                                                return (
+                                                    <Accordion
+                                                        key={index}
+                                                        expanded={
+                                                            expanded ===
+                                                            `task-panel${index}`
+                                                        }
+                                                        onChange={handleExpand(
+                                                            `task-panel${index}`
+                                                        )}
+                                                    >
+                                                        <AccordionSummary
+                                                            expandIcon={
+                                                                <ExpandMoreIcon />
                                                             }
-                                                            onChange={handleExpand(
-                                                                `task-panel${index}`
-                                                            )}
+                                                            aria-controls={`task-panel${index}bh-content`}
+                                                            id={`task-panel${index}bh-header`}
                                                         >
-                                                            <AccordionSummary
-                                                                expandIcon={
-                                                                    <ExpandMoreIcon />
-                                                                }
-                                                                aria-controls={`task-panel${index}bh-content`}
-                                                                id={`task-panel${index}bh-header`}
-                                                            >
-                                                                <Typography
-                                                                    className={
-                                                                        css.heading
-                                                                    }
-                                                                >
-                                                                    {task.name}
-                                                                </Typography>
-                                                                <Typography
-                                                                    className={
-                                                                        css.secondaryHeading
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        task.userId
-                                                                            ?.email
-                                                                    }
-                                                                </Typography>
-                                                            </AccordionSummary>
-                                                            <AccordionDetails
+                                                            <Typography
                                                                 className={
-                                                                    css.expandRoot
+                                                                    css.heading
                                                                 }
+                                                            >
+                                                                {task.name}
+                                                            </Typography>
+                                                            <Typography
+                                                                className={
+                                                                    css.secondaryHeading
+                                                                }
+                                                            >
+                                                                {
+                                                                    task.userId
+                                                                        ?.email
+                                                                }
+                                                            </Typography>
+                                                        </AccordionSummary>
+                                                        <AccordionDetails
+                                                            className={
+                                                                css.expandRoot
+                                                            }
+                                                        >
+                                                            <Grid
+                                                                className={
+                                                                    css.schedule
+                                                                }
+                                                                container
                                                             >
                                                                 <Grid
-                                                                    className={
-                                                                        css.schedule
-                                                                    }
+                                                                    xs
                                                                     container
+                                                                    direction="column"
+                                                                    justify="center"
+                                                                    item
                                                                 >
-                                                                    <Grid
-                                                                        xs
-                                                                        container
-                                                                        direction="column"
-                                                                        justify="center"
-                                                                        item
+                                                                    <Typography
+                                                                        variant="caption"
+                                                                        color="textSecondary"
+                                                                        style={{
+                                                                            fontWeight:
+                                                                                'bold',
+                                                                        }}
                                                                     >
-                                                                        <Typography
-                                                                            variant="caption"
-                                                                            color="textSecondary"
-                                                                            style={{
-                                                                                fontWeight:
-                                                                                    'bold',
-                                                                            }}
-                                                                        >
-                                                                            Type
+                                                                        Type
                                                                     </Typography>
-                                                                        <Typography variant="body2">
-                                                                            {
-                                                                                task.type
-                                                                            }
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                    <Grid
-                                                                        xs
-                                                                        container
-                                                                        direction="column"
-                                                                        item
-                                                                    >
-                                                                        <Typography
-                                                                            variant="caption"
-                                                                            color="textSecondary"
-                                                                            style={{
-                                                                                fontWeight:
-                                                                                    'bold',
-                                                                            }}
-                                                                        >
-                                                                            From
+                                                                    <Typography variant="body2">
+                                                                        {
+                                                                            task.type
+                                                                        }
                                                                     </Typography>
-                                                                        <Typography variant="body2">
-                                                                            {`${moment(
-                                                                                task.startDate
-                                                                            ).format(
-                                                                                'LT'
-                                                                            )}`}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                    <Grid
-                                                                        xs
-                                                                        container
-                                                                        direction="column"
-                                                                        item
-                                                                    >
-                                                                        <Typography
-                                                                            variant="caption"
-                                                                            color="textSecondary"
-                                                                            style={{
-                                                                                fontWeight:
-                                                                                    'bold',
-                                                                            }}
-                                                                        >
-                                                                            To
-                                                                    </Typography>
-                                                                        <Typography variant="body2">
-                                                                            {`${moment(
-                                                                                task.endDate
-                                                                            ).format(
-                                                                                'LT'
-                                                                            )}`}
-                                                                        </Typography>
-                                                                    </Grid>
                                                                 </Grid>
-                                                            </AccordionDetails>
-                                                        </Accordion>
-                                                    );
-                                                })
-                                            )}
+                                                                <Grid
+                                                                    xs
+                                                                    container
+                                                                    direction="column"
+                                                                    item
+                                                                >
+                                                                    <Typography
+                                                                        variant="caption"
+                                                                        color="textSecondary"
+                                                                        style={{
+                                                                            fontWeight:
+                                                                                'bold',
+                                                                        }}
+                                                                    >
+                                                                        From
+                                                                    </Typography>
+                                                                    <Typography variant="body2">
+                                                                        {`${moment(
+                                                                            task.startDate
+                                                                        ).format(
+                                                                            'LT'
+                                                                        )}`}
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid
+                                                                    xs
+                                                                    container
+                                                                    direction="column"
+                                                                    item
+                                                                >
+                                                                    <Typography
+                                                                        variant="caption"
+                                                                        color="textSecondary"
+                                                                        style={{
+                                                                            fontWeight:
+                                                                                'bold',
+                                                                        }}
+                                                                    >
+                                                                        To
+                                                                    </Typography>
+                                                                    <Typography variant="body2">
+                                                                        {`${moment(
+                                                                            task.endDate
+                                                                        ).format(
+                                                                            'LT'
+                                                                        )}`}
+                                                                    </Typography>
+                                                                </Grid>
+                                                            </Grid>
+                                                        </AccordionDetails>
+                                                    </Accordion>
+                                                );
+                                            })
+                                        )}
                                     </div>
                                 </Grid>
 
@@ -839,116 +901,116 @@ const EventDetail = () => {
                                                 <Skeleton />
                                             </>
                                         ) : (
-                                                facilities?.map(
-                                                    (facility, index) => {
-                                                        return (
-                                                            <Accordion
-                                                                key={index}
-                                                                expanded={
-                                                                    expanded ===
-                                                                    `facility-panel${index}`
+                                            facilities?.map(
+                                                (facility, index) => {
+                                                    return (
+                                                        <Accordion
+                                                            key={index}
+                                                            expanded={
+                                                                expanded ===
+                                                                `facility-panel${index}`
+                                                            }
+                                                            onChange={handleExpand(
+                                                                `facility-panel${index}`
+                                                            )}
+                                                        >
+                                                            <AccordionSummary
+                                                                expandIcon={
+                                                                    <ExpandMoreIcon />
                                                                 }
-                                                                onChange={handleExpand(
-                                                                    `facility-panel${index}`
-                                                                )}
+                                                                aria-controls={`facility-panel${index}bh-content`}
+                                                                id={`facility-panel${index}bh-header`}
                                                             >
-                                                                <AccordionSummary
-                                                                    expandIcon={
-                                                                        <ExpandMoreIcon />
+                                                                <Typography>
+                                                                    {
+                                                                        facility
+                                                                            .facilityId
+                                                                            ?.name
                                                                     }
-                                                                    aria-controls={`facility-panel${index}bh-content`}
-                                                                    id={`facility-panel${index}bh-header`}
-                                                                >
-                                                                    <Typography>
-                                                                        {
-                                                                            facility
-                                                                                .facilityId
-                                                                                ?.name
-                                                                        }
-                                                                    </Typography>
-                                                                </AccordionSummary>
-                                                                <AccordionDetails
+                                                                </Typography>
+                                                            </AccordionSummary>
+                                                            <AccordionDetails
+                                                                className={
+                                                                    css.expandRoot
+                                                                }
+                                                            >
+                                                                <Grid
                                                                     className={
-                                                                        css.expandRoot
+                                                                        css.schedule
                                                                     }
+                                                                    container
                                                                 >
                                                                     <Grid
-                                                                        className={
-                                                                            css.schedule
-                                                                        }
+                                                                        xs
                                                                         container
+                                                                        direction="column"
+                                                                        item
                                                                     >
-                                                                        <Grid
-                                                                            xs
-                                                                            container
-                                                                            direction="column"
-                                                                            item
+                                                                        <Typography
+                                                                            variant="caption"
+                                                                            color="textSecondary"
+                                                                            style={{
+                                                                                fontWeight:
+                                                                                    'bold',
+                                                                            }}
                                                                         >
-                                                                            <Typography
-                                                                                variant="caption"
-                                                                                color="textSecondary"
-                                                                                style={{
-                                                                                    fontWeight:
-                                                                                        'bold',
-                                                                                }}
-                                                                            >
-                                                                                Borrow
-                                                                                date
+                                                                            Borrow
+                                                                            date
                                                                         </Typography>
-                                                                            <Typography variant="body2">
-                                                                                {`${moment(
-                                                                                    facility.borrowDate
-                                                                                ).format(
-                                                                                    'DD MMM, YYYY'
-                                                                                )}`}
-                                                                            </Typography>
-                                                                            <Typography variant="body2">
-                                                                                {`${moment(
-                                                                                    facility.borrowDate
-                                                                                ).format(
-                                                                                    'LT'
-                                                                                )}`}
-                                                                            </Typography>
-                                                                        </Grid>
-                                                                        <Grid
-                                                                            xs
-                                                                            container
-                                                                            direction="column"
-                                                                            item
-                                                                        >
-                                                                            <Typography
-                                                                                variant="caption"
-                                                                                color="textSecondary"
-                                                                                style={{
-                                                                                    fontWeight:
-                                                                                        'bold',
-                                                                                }}
-                                                                            >
-                                                                                Return
-                                                                                date
+                                                                        <Typography variant="body2">
+                                                                            {`${moment(
+                                                                                facility.borrowDate
+                                                                            ).format(
+                                                                                'DD MMM, YYYY'
+                                                                            )}`}
                                                                         </Typography>
-                                                                            <Typography variant="body2">
-                                                                                {`${moment(
-                                                                                    facility.returnDate
-                                                                                ).format(
-                                                                                    'DD MMM, YYYY'
-                                                                                )}`}
-                                                                            </Typography>
-                                                                            <Typography variant="body2">
-                                                                                {`${moment(
-                                                                                    facility.returnDate
-                                                                                ).format(
-                                                                                    'LT'
-                                                                                )}`}
-                                                                            </Typography>
-                                                                        </Grid>
+                                                                        <Typography variant="body2">
+                                                                            {`${moment(
+                                                                                facility.borrowDate
+                                                                            ).format(
+                                                                                'LT'
+                                                                            )}`}
+                                                                        </Typography>
                                                                     </Grid>
-                                                                </AccordionDetails>
-                                                            </Accordion>
-                                                        );
-                                                    }
-                                                )
-                                            )}
+                                                                    <Grid
+                                                                        xs
+                                                                        container
+                                                                        direction="column"
+                                                                        item
+                                                                    >
+                                                                        <Typography
+                                                                            variant="caption"
+                                                                            color="textSecondary"
+                                                                            style={{
+                                                                                fontWeight:
+                                                                                    'bold',
+                                                                            }}
+                                                                        >
+                                                                            Return
+                                                                            date
+                                                                        </Typography>
+                                                                        <Typography variant="body2">
+                                                                            {`${moment(
+                                                                                facility.returnDate
+                                                                            ).format(
+                                                                                'DD MMM, YYYY'
+                                                                            )}`}
+                                                                        </Typography>
+                                                                        <Typography variant="body2">
+                                                                            {`${moment(
+                                                                                facility.returnDate
+                                                                            ).format(
+                                                                                'LT'
+                                                                            )}`}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </AccordionDetails>
+                                                        </Accordion>
+                                                    );
+                                                }
+                                            )
+                                        )}
                                     </div>
                                 </Grid>
 
@@ -994,17 +1056,17 @@ const EventDetail = () => {
                                         {moment(state.event?.startDate).format(
                                             'DD MMM'
                                         ) ===
-                                            moment(state.event?.endDate).format(
-                                                'DD MMM'
-                                            )
+                                        moment(state.event?.endDate).format(
+                                            'DD MMM'
+                                        )
                                             ? `${moment(
-                                                state.event?.startDate
-                                            ).format('DD MMM, YYYY')}`
+                                                  state.event?.startDate
+                                              ).format('DD MMM, YYYY')}`
                                             : `${moment(
-                                                state.event?.startDate
-                                            ).format('DD MMM')} - ${moment(
-                                                state.event?.endDate
-                                            ).format('DD MMM')}`}
+                                                  state.event?.startDate
+                                              ).format('DD MMM')} - ${moment(
+                                                  state.event?.endDate
+                                              ).format('DD MMM')}`}
                                     </Typography>
                                     <Typography variant="body2">
                                         {`${moment(
@@ -1111,6 +1173,7 @@ const EventDetail = () => {
                 openDeleteDialog={state.openDeleteDialog}
                 handleToggleDialogDelete={handleToggleDialogDelete}
                 handleDeleteEvent={handleDeleteEvent}
+                isRecoveryMode={history.location.state.isRecycleMode}
             />
 
             {/* Event Checking Completed Dialog */}

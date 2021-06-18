@@ -52,4 +52,7 @@ export default makeStyles((theme) => ({
     gridLayout: {
         padding: 16,
     },
+    filterButton: {
+        marginLeft: '10px',
+    },
 }));

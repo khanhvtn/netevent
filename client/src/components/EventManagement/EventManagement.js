@@ -8,12 +8,13 @@ import {
     InputBase,
     Tooltip,
     IconButton,
+    Button,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useStyles from './styles';
-import { FilterList } from '@material-ui/icons';
+import { FilterList, Delete, Close } from '@material-ui/icons';
 import EventPagination from './EventPagination/EventPagination';
 import EventCard from './EventCard/EventCard';
 import EventFilter from './EventFilter/EventFilter';
@@ -36,6 +37,7 @@ const initialState = {
     endFrom: null,
     endTo: null,
     openDeleteSnackBar: false,
+    isRecycleMode: false,
 };
 
 const filterState = {
@@ -54,16 +56,29 @@ const EventManagement = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const { events, isLoading, totalPages, deleteEventSuccess, userId } =
-        useSelector((state) => ({
-            events: state.event.events,
-            isLoading: state.event.isLoading,
-            totalPages: state.event.totalPages,
-            deleteEventSuccess: state.event.deleteSuccess,
-            userId: state.user.user.id,
-        }));
+    const {
+        events,
+        isLoading,
+        totalPages,
+        deleteEventSuccess,
+        userId,
+        eventTypes,
+    } = useSelector((state) => ({
+        events: state.event.events,
+        isLoading: state.event.isLoading,
+        totalPages: state.event.totalPages,
+        deleteEventSuccess: state.event.deleteSuccess,
+        userId: state.user.user.id,
+        eventTypes: state.eventType?.eventTypes,
+    }));
 
-    const [state, setState] = useState(initialState);
+    /* Change isRecycleMode if use turn back from event detail */
+    const [state, setState] = useState({
+        ...initialState,
+        isRecycleMode: history.location.state?.isRecycleMode
+            ? history.location.state?.isRecycleMode
+            : false,
+    });
     const [filters, setFilters] = useState(filterState);
 
     // Request to get the events data
@@ -79,6 +94,7 @@ const EventManagement = () => {
             startTo,
             endFrom,
             endTo,
+            isRecycleMode,
         } = state;
         if (!history.location.state || history.location.state?.isUpdated) {
             dispatch(
@@ -94,6 +110,7 @@ const EventManagement = () => {
                     endFrom,
                     endTo,
                     ownerId: userId,
+                    isDeleted: isRecycleMode,
                 })
             );
         }
@@ -111,12 +128,9 @@ const EventManagement = () => {
         state.startTo,
         state.endFrom,
         state.endTo,
+        state.isRecycleMode,
         userId,
     ]);
-
-    const { eventTypes } = useSelector(() => ({
-        eventTypes: state.eventType?.eventTypes,
-    }));
 
     // Request all event type in the first access
     useEffect(() => {
@@ -207,8 +221,25 @@ const EventManagement = () => {
             state: {
                 from: '/dashboard/creator/event-management',
                 event: event,
+                isRecycleMode: state.isRecycleMode,
             },
         });
+        localStorage.setItem(
+            'stateHistory',
+            JSON.stringify({
+                from: '/dashboard/creator/event-management',
+                event: event,
+                isRecycleMode: state.isRecycleMode,
+            })
+        );
+    };
+
+    //toggle recycle mode
+    const handleToggleRecycleMode = () => {
+        setState((prevState) => ({
+            ...prevState,
+            isRecycleMode: !prevState.isRecycleMode,
+        }));
     };
 
     return (
@@ -235,7 +266,31 @@ const EventManagement = () => {
                                     />
                                 </div>
                                 <div className={css.grow} />
-                                <Tooltip title="Filter">
+                                <Button
+                                    disabled={isLoading}
+                                    onClick={handleToggleRecycleMode}
+                                    variant="contained"
+                                    color={
+                                        state.isRecycleMode
+                                            ? 'default'
+                                            : 'secondary'
+                                    }
+                                    endIcon={
+                                        state.isRecycleMode ? (
+                                            <Close />
+                                        ) : (
+                                            <Delete />
+                                        )
+                                    }
+                                >
+                                    {state.isRecycleMode
+                                        ? 'Close'
+                                        : 'Recycle Bin'}
+                                </Button>
+                                <Tooltip
+                                    title="Filter"
+                                    className={css.filterButton}
+                                >
                                     <div>
                                         <IconButton
                                             disabled={isLoading}

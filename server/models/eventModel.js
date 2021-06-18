@@ -142,6 +142,10 @@ const eventSchema = mongoose.Schema(
             type: String,
             default: () => nanoid(),
         },
+        isDeleted: {
+            type: Boolean,
+            default: false,
+        },
     },
     { timestamps: true }
 );
