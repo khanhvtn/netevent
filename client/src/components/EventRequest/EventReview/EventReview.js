@@ -105,6 +105,7 @@ const EventReview = () => {
         isLoading,
         updateEventSuccess,
         newUpdateEventDetail,
+        userId
     } = useSelector((state) => ({
         newUpdateEventDetail: state.event.eventDetail,
         facilities: state.event.eventDetail?.facilityHistoryListId,
@@ -112,6 +113,7 @@ const EventReview = () => {
         isDetailLoading: state.event.isDetailLoading,
         isLoading: state.event.isLoading,
         updateEventSuccess: state.event.updateSuccess,
+        userId: state.user.user.id,
     }));
 
     // Get Facility and Task if state event existed
@@ -209,6 +211,7 @@ const EventReview = () => {
                 eventId: state.event?._id,
                 status: status,
                 action: action,
+                reviewerId: userId
             })
         );
     };
@@ -989,6 +992,21 @@ const EventReview = () => {
                                             )}
                                         </div>
                                     </Grid>
+
+                                    {/* Reviewer */}
+                                    {state.event?.reviewerId?.email &&
+                                        <Grid className={css.mt36} item>
+                                            <Typography
+                                                style={{ fontWeight: 'bold' }}
+                                                variant="h6"
+                                            >
+                                                Reviewer
+                                            </Typography>
+                                            <Typography variant="body2">
+                                                {state.event?.reviewerId?.email}
+                                            </Typography>
+                                        </Grid>
+                                    }
                                 </Grid>
                             </Grid>
                         </Grid>

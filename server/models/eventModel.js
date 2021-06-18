@@ -123,7 +123,7 @@ const eventSchema = mongoose.Schema(
         },
         reviewerId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Reviewer',
+            ref: 'User',
             default: null,
         },
         isFinished: {

@@ -774,7 +774,7 @@ const EventDetail = () => {
                                                                                 }}
                                                                             >
                                                                                 Type
-                                                                    </Typography>
+                                                                            </Typography>
                                                                             <Typography variant="body2">
                                                                                 {
                                                                                     task.type
@@ -796,7 +796,7 @@ const EventDetail = () => {
                                                                                 }}
                                                                             >
                                                                                 From
-                                                                    </Typography>
+                                                                            </Typography>
                                                                             <Typography variant="body2">
                                                                                 {`${moment(
                                                                                     task.startDate
@@ -820,7 +820,7 @@ const EventDetail = () => {
                                                                                 }}
                                                                             >
                                                                                 To
-                                                                    </Typography>
+                                                                            </Typography>
                                                                             <Typography variant="body2">
                                                                                 {`${moment(
                                                                                     task.endDate
@@ -908,7 +908,7 @@ const EventDetail = () => {
                                                                                 >
                                                                                     Borrow
                                                                                     date
-                                                                        </Typography>
+                                                                                </Typography>
                                                                                 <Typography variant="body2">
                                                                                     {`${moment(
                                                                                         facility.borrowDate
@@ -940,7 +940,7 @@ const EventDetail = () => {
                                                                                 >
                                                                                     Return
                                                                                     date
-                                                                        </Typography>
+                                                                                </Typography>
                                                                                 <Typography variant="body2">
                                                                                     {`${moment(
                                                                                         facility.returnDate
@@ -1067,7 +1067,7 @@ const EventDetail = () => {
                                             variant="h6"
                                         >
                                             Location
-                                    </Typography>
+                                        </Typography>
                                         <Typography variant="body2">
                                             {state.event?.location}
                                         </Typography>
@@ -1094,6 +1094,21 @@ const EventDetail = () => {
                                             )}
                                         </div>
                                     </Grid>
+
+                                    {/* Reviewer */}
+                                    {state.event?.reviewerId?.email &&
+                                        <Grid className={css.mt36} item>
+                                            <Typography
+                                                style={{ fontWeight: 'bold' }}
+                                                variant="h6"
+                                            >
+                                                Reviewer
+                                            </Typography>
+                                            <Typography variant="body2">
+                                                {state.event?.reviewerId?.email}
+                                            </Typography>
+                                        </Grid>
+                                    }
                                 </Grid>
                             </Grid>
                         </Grid>
