@@ -84,7 +84,18 @@ const roleActions = {
             href: ['/dashboard/creator/calendar'],
         },
     ],
-    4: [],
+    4: [
+        {
+            title: 'Task',
+            icon: EventAvailableIcon,
+            href: ['/dashboard/member/task'],
+        },
+        {
+            title: 'Calendar',
+            icon: CalendarToday,
+            href: ['/dashboard/member/calendar'],
+        },
+    ],
 };
 
 const defaultActions = [

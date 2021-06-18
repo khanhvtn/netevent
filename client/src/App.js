@@ -162,6 +162,24 @@ const App = () => {
                                 )}
                             />
 
+                            {/* Team member role */}
+                            <Route
+                                path="/dashboard/member/task"
+                                render={() => (
+                                    <DashboardLayout>
+                                        Team member task
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/member/calendar"
+                                render={() => (
+                                    <DashboardLayout>
+                                        Calendar Team Member
+                                    </DashboardLayout>
+                                )}
+                            />
+
                             <Route path="*" component={Error} />
                         </Switch>
                     </Route>
