@@ -8,12 +8,12 @@ import {
   DialogActions,
   TextField,
   DialogContentText,
-  Slide,
+  Slide
 } from '@material-ui/core';
 import MomentUtils from '@date-io/moment';
 import {
   MuiPickersUtilsProvider,
-  KeyboardDateTimePicker,
+  KeyboardDateTimePicker
 } from '@material-ui/pickers';
 import { Autocomplete } from '@material-ui/lab';
 //import useStyles in the last
@@ -34,7 +34,7 @@ const BorrowFacilityDialog = () => {
     setBorrowFacilityState,
     handleCreateAndUpdateBorrowFacility,
     handleToggleDialogDeleteBorrowFacility,
-    handleDeleteBorrowFacility,
+    handleDeleteBorrowFacility
   } = useContext(CreateEventInterface);
   /* if isBorrowFacilityCreateMode is true, 
   then render facilities that are not in borrow facility table, vice versa.*/
@@ -81,8 +81,7 @@ const BorrowFacilityDialog = () => {
         fullWidth
         open={borrowFacilityState.openCreateAndUpdateDialogBorrowFacility}
         onClose={(e) => handleToggleDialogCreateAndUpdateBorrowFacility(e)}
-        aria-labelledby="form-dialog-title"
-      >
+        aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">
           {borrowFacilityState.isBorrowFacilityCreateMode
             ? 'Create New Borrow Facility'
@@ -107,11 +106,11 @@ const BorrowFacilityDialog = () => {
                   ...prevState,
                   borrowDate: date?.toDate() ? date?.toDate() : null,
                   name: '',
-                  returnDate: null,
+                  returnDate: null
                 }));
               }}
               KeyboardButtonProps={{
-                'aria-label': 'change date',
+                'aria-label': 'change date'
               }}
             />
             <KeyboardDateTimePicker
@@ -134,11 +133,11 @@ const BorrowFacilityDialog = () => {
               onChange={(date) => {
                 setBorrowFacilityState((prevState) => ({
                   ...prevState,
-                  returnDate: date?.toDate() ? date?.toDate() : null,
+                  returnDate: date?.toDate() ? date?.toDate() : null
                 }));
               }}
               KeyboardButtonProps={{
-                'aria-label': 'change date',
+                'aria-label': 'change date'
               }}
             />
           </MuiPickersUtilsProvider>
@@ -149,7 +148,7 @@ const BorrowFacilityDialog = () => {
             onChange={(event, newValue) => {
               setBorrowFacilityState((prevState) => ({
                 ...prevState,
-                name: newValue,
+                name: newValue
               }));
             }}
             id="controllable-states-demo"
@@ -176,8 +175,7 @@ const BorrowFacilityDialog = () => {
                 : false
             }
             onClick={handleToggleDialogCreateAndUpdateBorrowFacility}
-            color="default"
-          >
+            color="default">
             Cancel
           </Button>
           <Button
@@ -189,8 +187,7 @@ const BorrowFacilityDialog = () => {
             }
             variant="contained"
             onClick={handleCreateAndUpdateBorrowFacility}
-            color="primary"
-          >
+            color="primary">
             {borrowFacilityState.borrowFacilityLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : borrowFacilityState.isBorrowFacilityCreateMode ? (
@@ -210,8 +207,7 @@ const BorrowFacilityDialog = () => {
         onClose={handleToggleDialogDeleteBorrowFacility}
         className={css.dialogDeleteFac}
         aria-labelledby="delete-dialog"
-        aria-describedby="delete-dialog-description"
-      >
+        aria-describedby="delete-dialog-description">
         <DialogTitle id="delete-dialog">{'Warning!!!'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-dialog-description">
@@ -222,16 +218,14 @@ const BorrowFacilityDialog = () => {
           <Button
             disabled={borrowFacilityState.borrowFacilityLoading ? true : false}
             onClick={handleToggleDialogDeleteBorrowFacility}
-            color="default"
-          >
+            color="default">
             Cancel
           </Button>
           <Button
             disabled={borrowFacilityState.borrowFacilityLoading ? true : false}
             variant="contained"
             onClick={handleDeleteBorrowFacility}
-            color="secondary"
-          >
+            color="secondary">
             {borrowFacilityState.borrowFacilityLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (

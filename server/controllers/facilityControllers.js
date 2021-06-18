@@ -64,7 +64,7 @@ const filter = async (req, res, next) => {
       createdMaxDate,
       createdMinDate,
       updatedMaxDate,
-      updatedMinDate,
+      updatedMinDate
     ]);
 
     //return empty result to client if database has no data.
@@ -84,13 +84,13 @@ const filter = async (req, res, next) => {
       createdMaxDate: listRangeDate[0][0].createdAt,
       createdMinDate: listRangeDate[1][0].createdAt,
       updatedMaxDate: listRangeDate[2][0].updatedAt,
-      updatedMinDate: listRangeDate[3][0].updatedAt,
+      updatedMinDate: listRangeDate[3][0].updatedAt
     };
     //adding search
     if (req.query.search) {
       options = {
         ...options,
-        search: req.query.search.toString(),
+        search: req.query.search.toString()
       };
     }
 
@@ -101,7 +101,7 @@ const filter = async (req, res, next) => {
     if (req.query.take) {
       options = {
         ...options,
-        take: parseInt(req.query.take.toString()),
+        take: parseInt(req.query.take.toString())
       };
     }
     /* 
@@ -111,7 +111,7 @@ const filter = async (req, res, next) => {
     if (req.query.isDeleted) {
       options = {
         ...options,
-        isDeleted: req.query.isDeleted,
+        isDeleted: req.query.isDeleted
       };
     }
 
@@ -122,7 +122,7 @@ const filter = async (req, res, next) => {
     if (req.query.createdFrom) {
       options = {
         ...options,
-        createdMinDate: req.query.createdFrom,
+        createdMinDate: req.query.createdFrom
         // createdMinDate: new Date(req.query.createdFrom),
       };
     }
@@ -133,7 +133,7 @@ const filter = async (req, res, next) => {
     if (req.query.createdTo) {
       options = {
         ...options,
-        createdMaxDate: req.query.createdTo,
+        createdMaxDate: req.query.createdTo
         // createdMaxDate: new Date(req.query.createdTo),
       };
     }
@@ -144,7 +144,7 @@ const filter = async (req, res, next) => {
     if (req.query.updatedFrom) {
       options = {
         ...options,
-        updatedMinDate: req.query.updatedFrom,
+        updatedMinDate: req.query.updatedFrom
         // updatedMinDate: new Date(req.query.updatedFrom),
       };
     }
@@ -155,7 +155,7 @@ const filter = async (req, res, next) => {
     if (req.query.updatedTo) {
       options = {
         ...options,
-        updatedMaxDate: req.query.updatedTo,
+        updatedMaxDate: req.query.updatedTo
         // updatedMaxDate: new Date(req.query.updatedTo),
       };
     }
@@ -171,17 +171,17 @@ const filter = async (req, res, next) => {
       $or: [
         { name: new RegExp(options.search, 'i') },
         { type: new RegExp(options.search, 'i') },
-        { code: new RegExp(options.search, 'i') },
+        { code: new RegExp(options.search, 'i') }
       ],
       createdAt: {
         $gte: options.createdMinDate,
-        $lte: options.createdMaxDate,
+        $lte: options.createdMaxDate
       },
       updatedAt: {
         $gte: options.updatedMinDate,
-        $lte: options.updatedMaxDate,
+        $lte: options.updatedMaxDate
       },
-      isDeleted: options.isDeleted,
+      isDeleted: options.isDeleted
     }).countDocuments();
 
     let totalPages = (totalFacilities / options.take).toString().includes('.')
@@ -193,17 +193,17 @@ const filter = async (req, res, next) => {
       $or: [
         { name: new RegExp(options.search, 'i') },
         { type: new RegExp(options.search, 'i') },
-        { code: new RegExp(options.search, 'i') },
+        { code: new RegExp(options.search, 'i') }
       ],
       createdAt: {
         $gte: options.createdMinDate,
-        $lte: options.createdMaxDate,
+        $lte: options.createdMaxDate
       },
       updatedAt: {
         $gte: options.updatedMinDate,
-        $lte: options.updatedMaxDate,
+        $lte: options.updatedMaxDate
       },
-      isDeleted: options.isDeleted,
+      isDeleted: options.isDeleted
     })
       .sort({ updatedAt: -1 })
       .skip((page - 1) * options.take)
@@ -282,7 +282,7 @@ const deleteFacilityPermanent = async (req, res, next) => {
   try {
     const { deleteList } = req.body;
     const deletedFacilities = await Facility.deleteMany({
-      name: { $in: deleteList },
+      name: { $in: deleteList }
     });
     return cusResponse(res, 200, deletedFacilities, null);
   } catch (error) {
@@ -339,5 +339,5 @@ module.exports = {
   updateFacility,
   getAllFacility,
   deleteFacilityPermanent,
-  recoveryFacility,
+  recoveryFacility
 };

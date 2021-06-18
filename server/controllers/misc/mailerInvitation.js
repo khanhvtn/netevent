@@ -1,22 +1,22 @@
-const nodemailer = require('nodemailer')
-const { keyMailer } = require('../../keys/mailer')
+const nodemailer = require('nodemailer');
+const { keyMailer } = require('../../keys/mailer');
 const transport = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: keyMailer.GOOGLE_USER,
-        pass: keyMailer.GOOGLE_PASSWORD
-    }
+  service: 'gmail',
+  auth: {
+    user: keyMailer.GOOGLE_USER,
+    pass: keyMailer.GOOGLE_PASSWORD
+  }
 });
 
 const sendInvitation = (mailOption) => {
-    return new Promise((resolve, reject) => {
-        transport.sendMail(mailOption, (err, info) => {
-            if (err) reject(err);
-            resolve(info);
-        })
-    })
-}
+  return new Promise((resolve, reject) => {
+    transport.sendMail(mailOption, (err, info) => {
+      if (err) reject(err);
+      resolve(info);
+    });
+  });
+};
 
 module.exports = {
-    sendInvitation
-}
+  sendInvitation
+};

@@ -1,8 +1,6 @@
 import React from 'react';
 import MUIRichTextEditor from 'mui-rte';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-//import useStyles in the last
-import useStyles from './styles';
 import { Paper } from '@material-ui/core';
 import { convertToRaw } from 'draft-js';
 
@@ -13,24 +11,23 @@ Object.assign(defaultTheme, {
   overrides: {
     MUIRichTextEditor: {
       root: {
-        minHeight: '500px',
+        minHeight: '500px'
       },
       editor: {
         // backgroundColor: '#ebebeb',
         padding: '0 20px',
-        height: '100%',
+        height: '100%'
       },
       placeHolder: {
         paddingLeft: '20px',
         width: `calc(100% - 20px)`,
-        height: '400px',
-      },
-    },
-  },
+        height: '400px'
+      }
+    }
+  }
 });
 
 const RichTextEditor = ({ setState, disabled, value }) => {
-  const css = useStyles();
   return (
     <Paper elevation={3}>
       <MuiThemeProvider theme={defaultTheme}>
@@ -44,7 +41,7 @@ const RichTextEditor = ({ setState, disabled, value }) => {
             );
             setState((prevState) => ({
               ...prevState,
-              description: content1,
+              description: content1
             }));
           }}
           inlineToolbar={true}

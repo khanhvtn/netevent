@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 /**
  *  =====================================
@@ -6,24 +6,27 @@ const mongoose = require('mongoose')
  *  =====================================
  */
 
-const notificationHistorySchema = mongoose.Schema({
+const notificationHistorySchema = mongoose.Schema(
+  {
     eventId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Event",
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Event',
+      required: true
     },
     title: {
-        type: String,
-        require: [true, "Title cannot be blanked"]
+      type: String,
+      require: [true, 'Title cannot be blanked']
     },
     description: {
-        type: String,
-        require: [true, "Description cannot be blanked"]
+      type: String,
+      require: [true, 'Description cannot be blanked']
     }
-},
-    { timestamps: true }
+  },
+  { timestamps: true }
+);
 
-)
-
-const NotificationHistoryModel = mongoose.model('NotificationHistory', notificationHistorySchema);
+const NotificationHistoryModel = mongoose.model(
+  'NotificationHistory',
+  notificationHistorySchema
+);
 module.exports = NotificationHistoryModel;

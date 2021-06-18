@@ -13,12 +13,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  FormHelperText,
+  FormHelperText
 } from '@material-ui/core';
 import MomentUtils from '@date-io/moment';
 import {
   MuiPickersUtilsProvider,
-  KeyboardDateTimePicker,
+  KeyboardDateTimePicker
 } from '@material-ui/pickers';
 import { Autocomplete } from '@material-ui/lab';
 //import useStyles in the last
@@ -40,7 +40,7 @@ const TaskDialog = () => {
     handleDeleteTask,
     errors,
     users,
-    user,
+    user
   } = useContext(CreateEventInterface);
   /* 
   if isTaskCreateMode is true, 
@@ -62,8 +62,7 @@ const TaskDialog = () => {
         maxWidth="sm"
         open={taskState.openCreateAndUpdateDialogTask}
         onClose={(e) => handleToggleDialogCreateAndUpdateTask(e)}
-        aria-labelledby="form-dialog-title"
-      >
+        aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">
           {taskState.isTaskCreateMode ? 'Create New Task' : 'Update a Task'}
         </DialogTitle>
@@ -86,7 +85,7 @@ const TaskDialog = () => {
             onChange={(event, newValue) => {
               setTaskState((prevState) => ({
                 ...prevState,
-                email: newValue,
+                email: newValue
               }));
             }}
             id="controllable-states-demo"
@@ -107,8 +106,7 @@ const TaskDialog = () => {
             margin="normal"
             variant="outlined"
             fullWidth
-            error={errors?.type ? true : false}
-          >
+            error={errors?.type ? true : false}>
             <InputLabel id="select-label-type">Type</InputLabel>
             <Select
               labelId="select-label-type"
@@ -117,8 +115,7 @@ const TaskDialog = () => {
               margin="normal"
               value={taskState.type}
               onChange={handleChangeTask}
-              label="Type"
-            >
+              label="Type">
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
@@ -144,11 +141,11 @@ const TaskDialog = () => {
               onChange={(date) => {
                 setTaskState((prevState) => ({
                   ...prevState,
-                  startTime: date?.toDate() ? date?.toDate() : null,
+                  startTime: date?.toDate() ? date?.toDate() : null
                 }));
               }}
               KeyboardButtonProps={{
-                'aria-label': 'change date',
+                'aria-label': 'change date'
               }}
             />
             <KeyboardDateTimePicker
@@ -172,11 +169,11 @@ const TaskDialog = () => {
               onChange={(date) => {
                 setTaskState((prevState) => ({
                   ...prevState,
-                  endTime: date?.toDate() ? date?.toDate() : null,
+                  endTime: date?.toDate() ? date?.toDate() : null
                 }));
               }}
               KeyboardButtonProps={{
-                'aria-label': 'change date',
+                'aria-label': 'change date'
               }}
             />
           </MuiPickersUtilsProvider>
@@ -187,8 +184,7 @@ const TaskDialog = () => {
               taskState.isLoading || taskState.taskCreatSuccess ? true : false
             }
             onClick={handleToggleDialogCreateAndUpdateTask}
-            color="default"
-          >
+            color="default">
             Cancel
           </Button>
           <Button
@@ -197,8 +193,7 @@ const TaskDialog = () => {
             }
             variant="contained"
             onClick={handleCreateAndUpdateTask}
-            color="primary"
-          >
+            color="primary">
             {taskState.isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : taskState.isTaskCreateMode ? (
@@ -218,8 +213,7 @@ const TaskDialog = () => {
         open={taskState.openDeleteDialogTask}
         onClose={handleToggleDialogDeleteTask}
         aria-labelledby="delete-dialog"
-        aria-describedby="delete-dialog-task"
-      >
+        aria-describedby="delete-dialog-task">
         <DialogTitle id="delete-dialog">{'Warning!!!'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-dialog-task">
@@ -230,16 +224,14 @@ const TaskDialog = () => {
           <Button
             disabled={taskState.isLoading ? true : false}
             onClick={handleToggleDialogDeleteTask}
-            color="default"
-          >
+            color="default">
             Cancel
           </Button>
           <Button
             disabled={taskState.isLoading ? true : false}
             variant="contained"
             onClick={handleDeleteTask}
-            color="secondary"
-          >
+            color="secondary">
             {taskState.isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (

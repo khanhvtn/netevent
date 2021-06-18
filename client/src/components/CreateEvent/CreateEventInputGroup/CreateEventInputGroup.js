@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import {
   Grid,
@@ -9,18 +9,16 @@ import {
   MenuItem,
   Chip,
   FormHelperText,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 
 import MomentUtils from '@date-io/moment';
 import {
   MuiPickersUtilsProvider,
-  KeyboardDateTimePicker,
+  KeyboardDateTimePicker
 } from '@material-ui/pickers';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
-//import useStyles in the last
-import useStyles from './styles';
 const filter = createFilterOptions();
 const CreateEventInputGroup = ({
   eventIsLoading,
@@ -30,13 +28,9 @@ const CreateEventInputGroup = ({
   setState,
   eventTypes,
   isResetListTag,
-  createEventSuccess,
-  updateEventSuccess,
   updateListTag,
-  defaultValueTags,
+  defaultValueTags
 }) => {
-  const css = useStyles();
-
   return (
     <>
       <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
@@ -74,19 +68,19 @@ const CreateEventInputGroup = ({
                   ...prevState,
                   openDialogCreateEventType:
                     !prevState.openDialogCreateEventType,
-                  eventTypeTarget: newValue,
+                  eventTypeTarget: newValue
                 }));
               });
             } else if (newValue && newValue.inputValue) {
               setState((prevState) => ({
                 ...prevState,
                 openDialogCreateEventType: !prevState.openDialogCreateEventType,
-                eventTypeTarget: newValue.inputValue,
+                eventTypeTarget: newValue.inputValue
               }));
             } else {
               setState((prevState) => ({
                 ...prevState,
-                eventTypeTarget: newValue?.name ? newValue?.name : '',
+                eventTypeTarget: newValue?.name ? newValue?.name : ''
               }));
             }
           }}
@@ -95,7 +89,7 @@ const CreateEventInputGroup = ({
             if (params.inputValue !== '') {
               filtered.push({
                 inputValue: params.inputValue,
-                name: `Add "${params.inputValue}"`,
+                name: `Add "${params.inputValue}"`
               });
             }
 
@@ -147,6 +141,7 @@ const CreateEventInputGroup = ({
             updateListTag(value);
             return value.map((option, index) => (
               <Chip
+                key={index}
                 color="primary"
                 variant="default"
                 label={option}
@@ -176,8 +171,7 @@ const CreateEventInputGroup = ({
           size="medium"
           variant="outlined"
           fullWidth
-          error={errors?.language ? true : false}
-        >
+          error={errors?.language ? true : false}>
           <InputLabel id="select-label-language">Language</InputLabel>
           <Select
             labelId="select-label-language"
@@ -185,8 +179,7 @@ const CreateEventInputGroup = ({
             name="language"
             value={state.language}
             onChange={handleChange}
-            label="Language"
-          >
+            label="Language">
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
@@ -250,7 +243,7 @@ const CreateEventInputGroup = ({
                 ? value
                 : event.currentTarget?.value
                 ? event.currentTarget?.value
-                : '',
+                : ''
             }))
           }
           currencySymbol="🚹"
@@ -258,7 +251,7 @@ const CreateEventInputGroup = ({
           decimalCharacter="."
           digitGroupSeparator=","
           preDefined={{
-            decimalPlaces: 0,
+            decimalPlaces: 0
           }}
         />
       </Grid>
@@ -281,7 +274,7 @@ const CreateEventInputGroup = ({
                 ? value
                 : event.currentTarget?.value
                 ? event.currentTarget?.value
-                : '',
+                : ''
             }));
           }}
           currencySymbol="VND"
@@ -289,7 +282,7 @@ const CreateEventInputGroup = ({
           decimalCharacter="."
           digitGroupSeparator=","
           preDefined={{
-            allowDecimalPadding: false,
+            allowDecimalPadding: false
           }}
         />
       </Grid>
@@ -301,8 +294,7 @@ const CreateEventInputGroup = ({
         lg={12}
         xl={12}
         sm={12}
-        xs={12}
-      >
+        xs={12}>
         <Typography style={{ fontWeight: 'bold' }} variant="h6">
           Time & Location
         </Typography>
@@ -326,11 +318,11 @@ const CreateEventInputGroup = ({
             onChange={(date) => {
               setState((prevState) => ({
                 ...prevState,
-                startDate: date?.toDate() ? date?.toDate() : null,
+                startDate: date?.toDate() ? date?.toDate() : null
               }));
             }}
             KeyboardButtonProps={{
-              'aria-label': 'change date',
+              'aria-label': 'change date'
             }}
           />
         </MuiPickersUtilsProvider>
@@ -354,11 +346,11 @@ const CreateEventInputGroup = ({
             onChange={(date) => {
               setState((prevState) => ({
                 ...prevState,
-                endDate: date?.toDate() ? date?.toDate() : null,
+                endDate: date?.toDate() ? date?.toDate() : null
               }));
             }}
             KeyboardButtonProps={{
-              'aria-label': 'change date',
+              'aria-label': 'change date'
             }}
           />
         </MuiPickersUtilsProvider>
@@ -393,11 +385,11 @@ const CreateEventInputGroup = ({
             onChange={(date) => {
               setState((prevState) => ({
                 ...prevState,
-                registrationCloseDate: date?.toDate() ? date?.toDate() : null,
+                registrationCloseDate: date?.toDate() ? date?.toDate() : null
               }));
             }}
             KeyboardButtonProps={{
-              'aria-label': 'change date',
+              'aria-label': 'change date'
             }}
           />
         </MuiPickersUtilsProvider>

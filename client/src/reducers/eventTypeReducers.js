@@ -5,7 +5,7 @@ import {
   EVENT_TYPE_UPDATE_SUCCESS,
   EVENT_TYPE_DELETE_SUCCESS,
   EVENT_TYPE_GET_ALL_FILTER,
-  EVENT_TYPE_RECOVERY_SUCCESS,
+  EVENT_TYPE_RECOVERY_SUCCESS
 } from '../constants';
 
 const initialState = {
@@ -15,7 +15,7 @@ const initialState = {
   createSuccess: false,
   updateSuccess: false,
   deleteSuccess: false,
-  recoverySuccess: false,
+  recoverySuccess: false
 };
 
 export default function eventTypeReducers(state = initialState, action) {
@@ -23,13 +23,13 @@ export default function eventTypeReducers(state = initialState, action) {
     case EVENT_TYPE_GET_ALL:
       return {
         ...state,
-        eventTypes: action.payload.data.data,
+        eventTypes: action.payload.data.data
       };
     case EVENT_TYPE_GET_ALL_FILTER:
       return {
         ...state,
         eventTypes: action.payload.data.data,
-        totalPages: action.payload.data.totalPages,
+        totalPages: action.payload.data.totalPages
       };
     case EVENT_TYPE_LOADING:
       return { ...state, isLoading: action.payload };
