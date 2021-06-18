@@ -145,8 +145,6 @@ const EventDetail = () => {
         }
     }, [dispatch, history, state.event, state.previousPath]);
 
-    console.log(state.previousPath)
-
     // Update new state when getting props from event-management page
     useEffect(() => {
         if (newUpdateEventDetail) {
@@ -194,7 +192,6 @@ const EventDetail = () => {
             if (state.openCheckingCompletedDialog) {
                 handleToggleDialogCheckingCompleted();
             }
-            history.replace();
         }
         setState((prevState) => ({
             ...prevState,
@@ -249,8 +246,6 @@ const EventDetail = () => {
             },
         });
     };
-
-    console.log(history.location.pathname)
 
     // Return to previous page with status
     const handleOnClickReturn = () => {

@@ -152,7 +152,6 @@ const EventReview = () => {
                 event: newUpdateEventDetail,
                 isUpdated: true,
             }));
-            history.replace();
         }
         setState((prevState) => ({
             ...prevState,
