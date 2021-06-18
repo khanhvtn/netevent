@@ -698,7 +698,7 @@ const EventDetail = () => {
                                         ) : (
                                                 tasks?.map((task, index) => {
                                                     return (
-                                                        <AccordionSummary
+                                                        <Accordion
                                                             key={index}
                                                             expanded={
                                                                 expanded ===
@@ -817,7 +817,7 @@ const EventDetail = () => {
                                                                     </Grid>
                                                                 </Grid>
                                                             </AccordionDetails>
-                                                        </AccordionSummary>
+                                                        </Accordion>
                                                     );
                                                 })
                                             )}
