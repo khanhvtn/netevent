@@ -66,6 +66,8 @@ const EventManagement = () => {
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
 
+    console.log(history.location)
+
     // Request to get the events data
     useEffect(() => {
         const {

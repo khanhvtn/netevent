@@ -185,7 +185,6 @@ export const deleteEventWithTaskAndFacilityHistory =
         setEventIsLoading(true, dispatch);
         try {
             await deleteEventManagementAPI(userReq);
-            history.push('/dashboard/creator/event-management');
             dispatch({
                 type: EVENT_DELETE_SUCCESS,
                 payload: true,
