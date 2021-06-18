@@ -217,10 +217,9 @@ const EventManagement = () => {
     // Push to the event-detail page with event props
     const handleOnClickEvent = (event) => {
         history.push({
-            pathname: '/dashboard/creator/event-detail',
+            pathname: `/dashboard/creator/event-detail/${event.urlCode}`,
             state: {
                 from: '/dashboard/creator/event-management',
-                event: event,
                 isRecycleMode: state.isRecycleMode,
             },
         });
@@ -228,7 +227,6 @@ const EventManagement = () => {
             'stateHistory',
             JSON.stringify({
                 from: '/dashboard/creator/event-management',
-                event: event,
                 isRecycleMode: state.isRecycleMode,
             })
         );
@@ -344,17 +342,17 @@ const EventManagement = () => {
                                 <Typography>No data matched</Typography>
                             </Grid>
                         ) : (
-                            events.map((event) => {
-                                return (
-                                    <EventCard
-                                        event={event}
-                                        key={event._id}
-                                        isLoading={isLoading}
-                                        onClickEvent={handleOnClickEvent}
-                                    />
-                                );
-                            })
-                        )}
+                                    events.map((event) => {
+                                        return (
+                                            <EventCard
+                                                event={event}
+                                                key={event._id}
+                                                isLoading={isLoading}
+                                                onClickEvent={handleOnClickEvent}
+                                            />
+                                        );
+                                    })
+                                )}
                     </Grid>
                 </Paper>
 

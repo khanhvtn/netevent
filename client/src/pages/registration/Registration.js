@@ -194,18 +194,18 @@ const Registration = () => {
             switch (history.location.state.from) {
                 case '/dashboard/creator/event-detail':
                     return history.push({
-                        pathname: '/dashboard/creator/event-detail',
+                        pathname: `/dashboard/creator/event-detail/${code}`,
                         state: {
                             from: `/dashboard/creator/event-management`,
-                            event: history.location.state.event,
+                            isReviewed: true
                         },
                     });
                 case '/dashboard/reviewer/event-review':
                     return history.push({
-                        pathname: '/dashboard/reviewer/event-review',
+                        pathname: `/dashboard/reviewer/event-review/${code}`,
                         state: {
                             from: `/dashboard/reviewer/event-request`,
-                            event: history.location.state.event,
+                            isReviewed: true
                         },
                     });
             }

@@ -17,10 +17,11 @@ import {
     Tabs,
     Tab,
     Divider,
+    CircularProgress,
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import blankPhoto from '../../../images/blankPhoto.png';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import AssignmentIndOutlinedIcon from '@material-ui/icons/AssignmentIndOutlined';
 import LanguageIcon from '@material-ui/icons/Language';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
@@ -105,6 +106,8 @@ const EventDetail = () => {
     const [deleteState, setDeleteState] = useState(initialDeleteState);
     const [expanded, setExpanded] = useState(false);
     const [tabs, setTabs] = useState(0);
+    // UseParams to get pathname
+    const { code } = useParams();
 
     const {
         facilities,
@@ -126,29 +129,39 @@ const EventDetail = () => {
         recoverySuccess: state.event.recoverySuccess,
     }));
 
+    // Get Facility and Task if state event existed
+    useEffect(() => {
+        if (!state.event) {
+            dispatch(getFacilityAndTaskByEventCode(code));
+        }
+        if (!state.previousPath) {
+            if (history.location.state?.from) {
+                setState((prevState) => ({
+                    ...prevState,
+                    previousPath: history.location.state?.from
+                }));
+            } else {
+                setState((prevState) => ({
+                    ...prevState,
+                    isUpdated: true
+                }));
+            }
+        }
+    }, [dispatch, history, state.event, state.previousPath]);
+
     // Update new state when getting props from event-management page
     useEffect(() => {
-        // Return the previous page when there is no props passing
-        if (!history.location.state && !state?.event) {
-            history.goBack();
+        if (newUpdateEventDetail) {
+            setState((prevState) => ({
+                ...prevState,
+                event: newUpdateEventDetail,
+            }));
         }
 
-        // Set state for the event
-        setState((prevState) => ({
-            ...prevState,
-            event: {
-                ...(history.location.state?.event || newUpdateEventDetail),
-                description:
-                    history.location?.state?.event?.description ||
-                    newUpdateEventDetail?.description ||
-                    '', // Fix later
-            },
-            previousPath: history.location.state?.from,
-        }));
         return () => {
             localStorage.removeItem('stateHistory');
         };
-    }, []);
+    }, [newUpdateEventDetail]);
 
     // Get Facility and Task if state event existed
     useEffect(() => {
@@ -176,29 +189,17 @@ const EventDetail = () => {
         state.isCheckingCompletedEvent,
     ]);
 
-    // Get Facility and Task if state event existed
-    useEffect(() => {
-        if (state.event && !isDetailLoading) {
-            dispatch(getFacilityAndTaskByEventCode(state.event.urlCode));
-            setState((prevState) => ({
-                ...prevState,
-                isDetailLoading: !prevState.isDetailLoading,
-            }));
-        }
-    }, [dispatch, state.event]);
-
     // UseEffect for update event status
     useEffect(() => {
         if (updateEventSuccess) {
             setState((prevState) => ({
                 ...prevState,
-                event: { ...newUpdateEventDetail },
+                event: newUpdateEventDetail,
                 isUpdated: true,
             }));
             if (state.openCheckingCompletedDialog) {
                 handleToggleDialogCheckingCompleted();
             }
-            history.replace();
         }
         setState((prevState) => ({
             ...prevState,
@@ -281,13 +282,21 @@ const EventDetail = () => {
         if (history.location.state?.isRecycleMode) {
             defaultHistoryState = {
                 ...defaultHistoryState,
-                isRecycleMode: history.location.state.isRecycleMode,
+                isRecycleMode: history.location.state?.isRecycleMode,
             };
         }
-        return history.push({
-            pathname: `${state.previousPath}`,
-            state: defaultHistoryState,
-        });
+
+        if (state.previousPath) {
+            return history.push({
+                pathname: state.previousPath,
+                state: defaultHistoryState,
+            });
+        } else {
+            return history.push({
+                pathname: '/dashboard/creator/event-management',
+                state: defaultHistoryState,
+            });
+        }
     };
 
     // Handle Delete Event
@@ -346,867 +355,885 @@ const EventDetail = () => {
     };
 
     return (
-        <>
-            <Paper className={css.paper} color="inherit" elevation={3}>
-                {/* Event Detail Toolbar */}
-                <div className={css.grow}>
-                    <AppBar position="static" color="default" elevation={0}>
-                        <Grid container direction="column">
-                            <Toolbar>
-                                <IconButton onClick={handleOnClickReturn}>
-                                    <ArrowBackIcon />
-                                </IconButton>
-                                <Typography
-                                    className={css.toolbarEventDetail}
-                                    variant="h6"
-                                >
-                                    Event Management
-                                </Typography>
-                                <div className={css.grow} />
-                                <Tooltip title="Delete">
-                                    <div>
-                                        <Button
-                                            disabled={
-                                                isDetailLoading || isLoading
-                                            }
-                                            color="inherit"
-                                            onClick={handleToggleDialogDelete}
-                                        >
-                                            Delete
-                                        </Button>
-                                    </div>
-                                </Tooltip>
-                                {history.location.state.isRecycleMode ? (
-                                    <Tooltip title="Edit">
-                                        <div>
-                                            <Button
-                                                disabled={
-                                                    isDetailLoading || isLoading
-                                                }
-                                                color="primary"
-                                                variant="contained"
-                                                style={{ margin: '0 8px' }}
-                                                onClick={handleRecoveryEvent}
-                                            >
-                                                Recovery
-                                            </Button>
-                                        </div>
-                                    </Tooltip>
-                                ) : (
-                                    <Tooltip title="Edit">
+        isDetailLoading ?
+            <div className={css.circularProgress} align="center">
+                <CircularProgress color="primary" />
+            </div>
+            :
+            <>
+                <Paper className={css.paper} color="inherit" elevation={3}>
+                    {/* Event Detail Toolbar */}
+                    <div className={css.grow}>
+                        <AppBar position="static" color="default" elevation={0}>
+                            <Grid container direction="column">
+                                <Toolbar>
+                                    <IconButton onClick={handleOnClickReturn}>
+                                        <ArrowBackIcon />
+                                    </IconButton>
+                                    <Typography
+                                        className={css.toolbarEventDetail}
+                                        variant="h6"
+                                    >
+                                        Event Management
+                                    </Typography>
+                                    <div className={css.grow} />
+                                    <Tooltip title="Delete">
                                         <div>
                                             <Button
                                                 disabled={
                                                     isDetailLoading || isLoading
                                                 }
                                                 color="inherit"
-                                                variant="outlined"
-                                                style={{ margin: '0 8px' }}
-                                                onClick={
-                                                    handleToggleDialogUpdate
-                                                }
+                                                onClick={handleToggleDialogDelete}
                                             >
-                                                Update
-                                            </Button>
+                                                Delete
+                                        </Button>
                                         </div>
                                     </Tooltip>
-                                )}
-                            </Toolbar>
-                        </Grid>
-                    </AppBar>
-                </div>
+                                    {history.location.state.isRecycleMode ? (
+                                        <Tooltip title="Edit">
+                                            <div>
+                                                <Button
+                                                    disabled={
+                                                        isDetailLoading || isLoading
+                                                    }
+                                                    color="primary"
+                                                    variant="contained"
+                                                    style={{ margin: '0 8px' }}
+                                                    onClick={handleRecoveryEvent}
+                                                >
+                                                    Recovery
+                                            </Button>
+                                            </div>
+                                        </Tooltip>
+                                    ) : (
+                                            <Tooltip title="Edit">
+                                                <div>
+                                                    <Button
+                                                        disabled={
+                                                            isDetailLoading || isLoading
+                                                        }
+                                                        color="inherit"
+                                                        variant="outlined"
+                                                        style={{ margin: '0 8px' }}
+                                                        onClick={handleToggleDialogUpdate}
+                                                    >
+                                                        Update
+                                                    </Button>
+                                                </div>
+                                            </Tooltip>
+                                        )
+                                    }
+                                </Toolbar>
+                            </Grid>
+                        </AppBar>
+                    </div>
 
-                <Divider />
+                    <Divider />
 
-                {/* Event Detail Tabs */}
-                <div className={css.grow}>
-                    <AppBar
-                        component="div"
-                        position="static"
-                        color="default"
-                        elevation={0}
-                    >
-                        <Grid container direction="column">
-                            <Tabs
-                                value={tabs}
-                                onChange={handleChangeTabs}
-                                textColor="inherit"
-                                TabIndicatorProps={{
-                                    style: {
-                                        background: 'black',
-                                        height: 3,
-                                        borderTopLeftRadius: 3,
-                                        borderTopRightRadius: 3,
-                                    },
-                                }}
-                            >
-                                <Tab
-                                    disableTouchRipple
-                                    className={css.tabDesign}
-                                    textColor="inherit"
-                                    label="Detail"
-                                    {...a11yProps(0)}
-                                />
-                                <Tab
-                                    disableTouchRipple
-                                    className={css.tabDesign}
-                                    textColor="inherit"
-                                    label="Participant"
-                                    {...a11yProps(1)}
-                                />
-                                <Tab
-                                    disableTouchRipple
-                                    className={css.tabDesign}
-                                    textColor="inherit"
-                                    label="Check-in"
-                                    {...a11yProps(2)}
-                                />
-                                <Tab
-                                    disableTouchRipple
-                                    className={css.tabDesign}
-                                    textColor="inherit"
-                                    label="Notification"
-                                    {...a11yProps(3)}
-                                />
-                            </Tabs>
-                        </Grid>
-                    </AppBar>
-                </div>
-
-                <Divider />
-
-                {/* Event detail tabs */}
-                <TabPanel value={tabs} index={0}>
-                    {/* Event Detail */}
-                    <Grid
-                        container
-                        justify="center"
-                        alignItems="center"
-                        direction="column"
-                    >
-                        {/* Event Header */}
-                        <Grid item>
-                            <Typography
-                                className={css.eventDetailTitle}
-                                variant="h3"
-                            >
-                                Event Detail
-                            </Typography>
-                        </Grid>
-
-                        {/* Event Image */}
-                        <Grid
-                            container
-                            justify="center"
-                            alignItems="center"
-                            item
-                            md={12}
-                            lg={12}
-                            xl={12}
-                            sm={12}
-                            xs={12}
-                            className={css.imageWrapper}
+                    {/* Event Detail Tabs */}
+                    <div className={css.grow}>
+                        <AppBar
+                            component="div"
+                            position="static"
+                            color="default"
+                            elevation={0}
                         >
-                            <div
-                                style={{
-                                    width: '100%',
-                                    height: '345px',
-                                    backgroundImage: `url(${
-                                        !state.event?.image
-                                            ? blankPhoto
-                                            : state.event?.image
-                                    })`,
-                                    backgroundRepeat: 'no-repeat',
-                                    backgroundPosition: 'center',
-                                    backgroundSize: 'contain',
-                                }}
-                            ></div>
-                        </Grid>
+                            <Grid container direction="column">
+                                <Tabs
+                                    value={tabs}
+                                    onChange={handleChangeTabs}
+                                    textColor="inherit"
+                                    TabIndicatorProps={{
+                                        style: {
+                                            background: 'black',
+                                            height: 3,
+                                            borderTopLeftRadius: 3,
+                                            borderTopRightRadius: 3,
+                                        },
+                                    }}
+                                >
+                                    <Tab
+                                        disableTouchRipple
+                                        className={css.tabDesign}
+                                        textColor="inherit"
+                                        label="Detail"
+                                        {...a11yProps(0)}
+                                    />
+                                    <Tab
+                                        disableTouchRipple
+                                        className={css.tabDesign}
+                                        textColor="inherit"
+                                        label="Participant"
+                                        {...a11yProps(1)}
+                                    />
+                                    <Tab
+                                        disableTouchRipple
+                                        className={css.tabDesign}
+                                        textColor="inherit"
+                                        label="Check-in"
+                                        {...a11yProps(2)}
+                                    />
+                                    <Tab
+                                        disableTouchRipple
+                                        className={css.tabDesign}
+                                        textColor="inherit"
+                                        label="Notification"
+                                        {...a11yProps(3)}
+                                    />
+                                </Tabs>
+                            </Grid>
+                        </AppBar>
+                    </div>
 
+                    <Divider />
+
+                    {/* Event detail tabs */}
+                    <TabPanel value={tabs} index={0}>
                         {/* Event Detail */}
                         <Grid
                             container
                             justify="center"
-                            alignItems="flex-start"
-                            direction="row"
+                            alignItems="center"
+                            direction="column"
                         >
-                            {/* Left-side Detail */}
-                            <Grid
-                                className={css.detailWrapper}
-                                xs={12}
-                                sm={12}
-                                md={8}
-                                container
-                                alignItems="flex-start"
-                                justify="center"
-                                direction="column"
-                                item
-                            >
-                                {/* Event Title, Budget and MaxParticipants */}
-                                <Grid container direction="column" item>
-                                    <Typography variant="h5">
-                                        {state.event?.eventName}
-                                        {state.event?.isApproved === null ? (
-                                            <Chip
-                                                className={css.chipStatus}
-                                                style={{
-                                                    backgroundColor: `#9e9e9e`,
-                                                }}
-                                                size="small"
-                                                label="Pending"
-                                            />
-                                        ) : state.event?.isFinished ? (
-                                            <Chip
-                                                className={css.chipStatus}
-                                                size="small"
-                                                label="Completed"
-                                                style={{
-                                                    backgroundColor: `#4caf50`,
-                                                }}
-                                            />
-                                        ) : state.event?.isApproved ? (
-                                            <Chip
-                                                clickable
-                                                onClick={
-                                                    handleUpdateEventStatus
-                                                }
-                                                className={css.chipStatus}
-                                                style={{
-                                                    backgroundColor: `#5c6bc0`,
-                                                }}
-                                                size="small"
-                                                label="Approved"
-                                            />
-                                        ) : (
-                                            <Chip
-                                                className={css.chipStatus}
-                                                style={{
-                                                    backgroundColor: `#e53935`,
-                                                }}
-                                                size="small"
-                                                label="Rejected"
-                                            />
-                                        )}
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        color="textSecondary"
-                                    >
-                                        {`${state.event?.budget} vnd | ${state.event?.maxParticipants} participants`}
-                                    </Typography>
-                                    <div>
-                                        <Button
-                                            disabled={
-                                                isDetailLoading || isLoading
-                                            }
-                                            onClick={handleOnClickViewTemplate}
-                                            className={css.viewTemplateButton}
-                                            variant="outlined"
-                                            size="small"
-                                        >
-                                            View template
-                                        </Button>
-                                    </div>
-                                </Grid>
-
-                                {/* Event Language, Type, Mode, Accomodation */}
-                                <Grid className={css.mt48} container item>
-                                    <Grid
-                                        className={css.schedule}
-                                        direction="row"
-                                        alignItems="flex-start"
-                                        justify="center"
-                                        container
-                                        item
-                                    >
-                                        <Grid
-                                            xs={1}
-                                            container
-                                            alignItems="center"
-                                            justify="center"
-                                            item
-                                        >
-                                            <AssignmentIndOutlinedIcon />
-                                        </Grid>
-                                        <Grid
-                                            xs={5}
-                                            container
-                                            direction="column"
-                                            item
-                                        >
-                                            <Typography
-                                                variant="caption"
-                                                color="textSecondary"
-                                            >
-                                                Category (type)
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                style={{ fontWeight: 'bold' }}
-                                            >
-                                                {state.event?.eventTypeId?.name}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid
-                                            xs={1}
-                                            container
-                                            alignItems="center"
-                                            justify="center"
-                                            item
-                                        >
-                                            <LanguageIcon />
-                                        </Grid>
-                                        <Grid
-                                            xs={5}
-                                            container
-                                            direction="column"
-                                            item
-                                        >
-                                            <Typography
-                                                variant="caption"
-                                                color="textSecondary"
-                                            >
-                                                Language
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                style={{ fontWeight: 'bold' }}
-                                            >
-                                                {state.event?.language}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid
-                                        style={{ marginTop: 24 }}
-                                        direction="row"
-                                        alignItems="flex-start"
-                                        justify="center"
-                                        container
-                                        item
-                                    >
-                                        <Grid
-                                            xs={1}
-                                            container
-                                            alignItems="center"
-                                            justify="center"
-                                            item
-                                        >
-                                            <ErrorOutlineOutlinedIcon />
-                                        </Grid>
-                                        <Grid
-                                            xs={5}
-                                            container
-                                            direction="column"
-                                            item
-                                        >
-                                            <Typography
-                                                variant="caption"
-                                                color="textSecondary"
-                                            >
-                                                Mode
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                style={{ fontWeight: 'bold' }}
-                                            >
-                                                {state.event?.mode}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid
-                                            xs={1}
-                                            container
-                                            alignItems="center"
-                                            justify="center"
-                                            item
-                                        >
-                                            <TimelapseOutlinedIcon />
-                                        </Grid>
-                                        <Grid
-                                            xs={5}
-                                            container
-                                            direction="column"
-                                            item
-                                        >
-                                            <Typography
-                                                variant="caption"
-                                                color="textSecondary"
-                                            >
-                                                Accomodation
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                style={{ fontWeight: 'bold' }}
-                                            >
-                                                {state.event?.accommodation}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-
-                                {/* Event Task List */}
-                                <Grid className={css.mt48} container item>
-                                    <Typography
-                                        style={{ fontWeight: 'bold' }}
-                                        variant="h6"
-                                    >
-                                        Tasks
-                                    </Typography>
-                                    <div className={css.expandRoot}>
-                                        {isDetailLoading ? (
-                                            <>
-                                                <Skeleton />
-                                                <Skeleton />
-                                            </>
-                                        ) : (
-                                            tasks?.map((task, index) => {
-                                                return (
-                                                    <Accordion
-                                                        key={index}
-                                                        expanded={
-                                                            expanded ===
-                                                            `task-panel${index}`
-                                                        }
-                                                        onChange={handleExpand(
-                                                            `task-panel${index}`
-                                                        )}
-                                                    >
-                                                        <AccordionSummary
-                                                            expandIcon={
-                                                                <ExpandMoreIcon />
-                                                            }
-                                                            aria-controls={`task-panel${index}bh-content`}
-                                                            id={`task-panel${index}bh-header`}
-                                                        >
-                                                            <Typography
-                                                                className={
-                                                                    css.heading
-                                                                }
-                                                            >
-                                                                {task.name}
-                                                            </Typography>
-                                                            <Typography
-                                                                className={
-                                                                    css.secondaryHeading
-                                                                }
-                                                            >
-                                                                {
-                                                                    task.userId
-                                                                        ?.email
-                                                                }
-                                                            </Typography>
-                                                        </AccordionSummary>
-                                                        <AccordionDetails
-                                                            className={
-                                                                css.expandRoot
-                                                            }
-                                                        >
-                                                            <Grid
-                                                                className={
-                                                                    css.schedule
-                                                                }
-                                                                container
-                                                            >
-                                                                <Grid
-                                                                    xs
-                                                                    container
-                                                                    direction="column"
-                                                                    justify="center"
-                                                                    item
-                                                                >
-                                                                    <Typography
-                                                                        variant="caption"
-                                                                        color="textSecondary"
-                                                                        style={{
-                                                                            fontWeight:
-                                                                                'bold',
-                                                                        }}
-                                                                    >
-                                                                        Type
-                                                                    </Typography>
-                                                                    <Typography variant="body2">
-                                                                        {
-                                                                            task.type
-                                                                        }
-                                                                    </Typography>
-                                                                </Grid>
-                                                                <Grid
-                                                                    xs
-                                                                    container
-                                                                    direction="column"
-                                                                    item
-                                                                >
-                                                                    <Typography
-                                                                        variant="caption"
-                                                                        color="textSecondary"
-                                                                        style={{
-                                                                            fontWeight:
-                                                                                'bold',
-                                                                        }}
-                                                                    >
-                                                                        From
-                                                                    </Typography>
-                                                                    <Typography variant="body2">
-                                                                        {`${moment(
-                                                                            task.startDate
-                                                                        ).format(
-                                                                            'LT'
-                                                                        )}`}
-                                                                    </Typography>
-                                                                </Grid>
-                                                                <Grid
-                                                                    xs
-                                                                    container
-                                                                    direction="column"
-                                                                    item
-                                                                >
-                                                                    <Typography
-                                                                        variant="caption"
-                                                                        color="textSecondary"
-                                                                        style={{
-                                                                            fontWeight:
-                                                                                'bold',
-                                                                        }}
-                                                                    >
-                                                                        To
-                                                                    </Typography>
-                                                                    <Typography variant="body2">
-                                                                        {`${moment(
-                                                                            task.endDate
-                                                                        ).format(
-                                                                            'LT'
-                                                                        )}`}
-                                                                    </Typography>
-                                                                </Grid>
-                                                            </Grid>
-                                                        </AccordionDetails>
-                                                    </Accordion>
-                                                );
-                                            })
-                                        )}
-                                    </div>
-                                </Grid>
-
-                                {/* Event Facility List */}
-                                <Grid className={css.mt48} container item>
-                                    <Typography
-                                        style={{ fontWeight: 'bold' }}
-                                        variant="h6"
-                                    >
-                                        Facilities
-                                    </Typography>
-                                    <div className={css.expandRoot}>
-                                        {isDetailLoading ? (
-                                            <>
-                                                <Skeleton />
-                                                <Skeleton />
-                                            </>
-                                        ) : (
-                                            facilities?.map(
-                                                (facility, index) => {
-                                                    return (
-                                                        <Accordion
-                                                            key={index}
-                                                            expanded={
-                                                                expanded ===
-                                                                `facility-panel${index}`
-                                                            }
-                                                            onChange={handleExpand(
-                                                                `facility-panel${index}`
-                                                            )}
-                                                        >
-                                                            <AccordionSummary
-                                                                expandIcon={
-                                                                    <ExpandMoreIcon />
-                                                                }
-                                                                aria-controls={`facility-panel${index}bh-content`}
-                                                                id={`facility-panel${index}bh-header`}
-                                                            >
-                                                                <Typography>
-                                                                    {
-                                                                        facility
-                                                                            .facilityId
-                                                                            ?.name
-                                                                    }
-                                                                </Typography>
-                                                            </AccordionSummary>
-                                                            <AccordionDetails
-                                                                className={
-                                                                    css.expandRoot
-                                                                }
-                                                            >
-                                                                <Grid
-                                                                    className={
-                                                                        css.schedule
-                                                                    }
-                                                                    container
-                                                                >
-                                                                    <Grid
-                                                                        xs
-                                                                        container
-                                                                        direction="column"
-                                                                        item
-                                                                    >
-                                                                        <Typography
-                                                                            variant="caption"
-                                                                            color="textSecondary"
-                                                                            style={{
-                                                                                fontWeight:
-                                                                                    'bold',
-                                                                            }}
-                                                                        >
-                                                                            Borrow
-                                                                            date
-                                                                        </Typography>
-                                                                        <Typography variant="body2">
-                                                                            {`${moment(
-                                                                                facility.borrowDate
-                                                                            ).format(
-                                                                                'DD MMM, YYYY'
-                                                                            )}`}
-                                                                        </Typography>
-                                                                        <Typography variant="body2">
-                                                                            {`${moment(
-                                                                                facility.borrowDate
-                                                                            ).format(
-                                                                                'LT'
-                                                                            )}`}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                    <Grid
-                                                                        xs
-                                                                        container
-                                                                        direction="column"
-                                                                        item
-                                                                    >
-                                                                        <Typography
-                                                                            variant="caption"
-                                                                            color="textSecondary"
-                                                                            style={{
-                                                                                fontWeight:
-                                                                                    'bold',
-                                                                            }}
-                                                                        >
-                                                                            Return
-                                                                            date
-                                                                        </Typography>
-                                                                        <Typography variant="body2">
-                                                                            {`${moment(
-                                                                                facility.returnDate
-                                                                            ).format(
-                                                                                'DD MMM, YYYY'
-                                                                            )}`}
-                                                                        </Typography>
-                                                                        <Typography variant="body2">
-                                                                            {`${moment(
-                                                                                facility.returnDate
-                                                                            ).format(
-                                                                                'LT'
-                                                                            )}`}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                </Grid>
-                                                            </AccordionDetails>
-                                                        </Accordion>
-                                                    );
-                                                }
-                                            )
-                                        )}
-                                    </div>
-                                </Grid>
-
-                                {/* Event Description */}
-                                <Grid className={css.mt48} item>
-                                    <Typography
-                                        style={{ fontWeight: 'bold' }}
-                                        variant="h6"
-                                    >
-                                        Description
-                                    </Typography>
-                                    {/* <Typography variant="body2">
-                                    {state.event?.description}
-                                </Typography> */}
-                                    <Editor
-                                        editorState={editorState}
-                                        readOnly={true}
-                                    />
-                                </Grid>
+                            {/* Event Header */}
+                            <Grid item>
+                                <Typography
+                                    className={css.eventDetailTitle}
+                                    variant="h3"
+                                >
+                                    Event Detail
+                            </Typography>
                             </Grid>
 
-                            {/* Right-side Detail */}
+                            {/* Event Image */}
                             <Grid
-                                className={css.detailRightWrapper}
-                                xs={12}
-                                sm={12}
-                                md={4}
                                 container
-                                alignItems="flex-start"
                                 justify="center"
-                                direction="column"
+                                alignItems="center"
                                 item
+                                md={12}
+                                lg={12}
+                                xl={12}
+                                sm={12}
+                                xs={12}
+                                className={css.imageWrapper}
                             >
-                                {/* Date and time */}
-                                <Grid item>
-                                    <Typography
-                                        style={{ fontWeight: 'bold' }}
-                                        variant="h6"
-                                    >
-                                        Date and time
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {moment(state.event?.startDate).format(
-                                            'DD MMM'
-                                        ) ===
-                                        moment(state.event?.endDate).format(
-                                            'DD MMM'
-                                        )
-                                            ? `${moment(
-                                                  state.event?.startDate
-                                              ).format('DD MMM, YYYY')}`
-                                            : `${moment(
-                                                  state.event?.startDate
-                                              ).format('DD MMM')} - ${moment(
-                                                  state.event?.endDate
-                                              ).format('DD MMM')}`}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {`${moment(
-                                            state.event?.startDate
-                                        ).format('LT')} - ${moment(
-                                            state.event?.endDate
-                                        ).format('LT')}`}
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        color="primary"
-                                    >
-                                        <Link
-                                            to="/dashboard/creator/calendar"
-                                            style={{ textDecoration: 'none' }}
-                                        >
-                                            View Calendar
-                                        </Link>
-                                    </Typography>
-                                </Grid>
+                                <div
+                                    style={{
+                                        width: '100%',
+                                        height: '345px',
+                                        backgroundImage: `url(${!state.event?.image
+                                            ? blankPhoto
+                                            : state.event?.image
+                                            })`,
+                                        backgroundRepeat: 'no-repeat',
+                                        backgroundPosition: 'center',
+                                        backgroundSize: 'contain',
+                                    }}
+                                ></div>
+                            </Grid>
 
-                                {/* Registration Close Date */}
-                                <Grid className={css.mt36} item>
-                                    <Typography
-                                        style={{ fontWeight: 'bold' }}
-                                        variant="h6"
-                                    >
-                                        Registration deadline
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {`${moment(
-                                            state.event?.registrationCloseDate
-                                        ).format('DD MMM, YYYY')}`}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {`${moment(
-                                            state.event?.registrationCloseDate
-                                        ).format('LT')}`}
-                                    </Typography>
-                                </Grid>
-
-                                {/* Location */}
-                                <Grid className={css.mt36} item>
-                                    <Typography
-                                        style={{ fontWeight: 'bold' }}
-                                        variant="h6"
-                                    >
-                                        Location
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {state.event?.location}
-                                    </Typography>
-                                </Grid>
-
-                                {/* Tags */}
-                                <Grid className={css.mt36} item>
-                                    <Typography
-                                        style={{ fontWeight: 'bold' }}
-                                        variant="h6"
-                                    >
-                                        Tags
-                                    </Typography>
-                                    <div className={css.chipContainer}>
-                                        {state.event?.tags?.map(
-                                            (tag, index) => (
+                            {/* Event Detail */}
+                            <Grid
+                                container
+                                justify="center"
+                                alignItems="flex-start"
+                                direction="row"
+                            >
+                                {/* Left-side Detail */}
+                                <Grid
+                                    className={css.detailWrapper}
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    container
+                                    alignItems="flex-start"
+                                    justify="center"
+                                    direction="column"
+                                    item
+                                >
+                                    {/* Event Title, Budget and MaxParticipants */}
+                                    <Grid container direction="column" item>
+                                        <Typography variant="h5">
+                                            {state.event?.eventName}
+                                            {state.event?.isApproved === null ? (
                                                 <Chip
-                                                    key={index}
-                                                    label={tag}
+                                                    className={css.chipStatus}
+                                                    style={{
+                                                        backgroundColor: `#9e9e9e`,
+                                                    }}
                                                     size="small"
-                                                    className={css.chip}
+                                                    label="Pending"
                                                 />
-                                            )
-                                        )}
-                                    </div>
+                                            ) : state.event?.isFinished ? (
+                                                <Chip
+                                                    className={css.chipStatus}
+                                                    size="small"
+                                                    label="Completed"
+                                                    style={{
+                                                        backgroundColor: `#4caf50`,
+                                                    }}
+                                                />
+                                            ) : state.event?.isApproved ? (
+                                                <Chip
+                                                    clickable
+                                                    onClick={
+                                                        handleUpdateEventStatus
+                                                    }
+                                                    className={css.chipStatus}
+                                                    style={{
+                                                        backgroundColor: `#5c6bc0`,
+                                                    }}
+                                                    size="small"
+                                                    label="Approved"
+                                                />
+                                            ) : (
+                                                            <Chip
+                                                                className={css.chipStatus}
+                                                                style={{
+                                                                    backgroundColor: `#e53935`,
+                                                                }}
+                                                                size="small"
+                                                                label="Rejected"
+                                                            />
+                                                        )}
+                                        </Typography>
+                                        <Typography
+                                            variant="caption"
+                                            color="textSecondary"
+                                        >
+                                            {`${state.event?.budget} vnd | ${state.event?.maxParticipants} participants`}
+                                        </Typography>
+                                        <div>
+                                            <Button
+                                                disabled={
+                                                    isDetailLoading || isLoading
+                                                }
+                                                onClick={handleOnClickViewTemplate}
+                                                className={css.viewTemplateButton}
+                                                variant="outlined"
+                                                size="small"
+                                            >
+                                                View template
+                                        </Button>
+                                        </div>
+                                    </Grid>
+
+                                    {/* Event Language, Type, Mode, Accomodation */}
+                                    <Grid className={css.mt48} container item>
+                                        <Grid
+                                            className={css.schedule}
+                                            direction="row"
+                                            alignItems="flex-start"
+                                            justify="center"
+                                            container
+                                            item
+                                        >
+                                            <Grid
+                                                xs={1}
+                                                container
+                                                alignItems="center"
+                                                justify="center"
+                                                item
+                                            >
+                                                <AssignmentIndOutlinedIcon />
+                                            </Grid>
+                                            <Grid
+                                                xs={5}
+                                                container
+                                                direction="column"
+                                                item
+                                            >
+                                                <Typography
+                                                    variant="caption"
+                                                    color="textSecondary"
+                                                >
+                                                    Category (type)
+                                            </Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    style={{ fontWeight: 'bold' }}
+                                                >
+                                                    {state.event?.eventTypeId?.name}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid
+                                                xs={1}
+                                                container
+                                                alignItems="center"
+                                                justify="center"
+                                                item
+                                            >
+                                                <LanguageIcon />
+                                            </Grid>
+                                            <Grid
+                                                xs={5}
+                                                container
+                                                direction="column"
+                                                item
+                                            >
+                                                <Typography
+                                                    variant="caption"
+                                                    color="textSecondary"
+                                                >
+                                                    Language
+                                            </Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    style={{ fontWeight: 'bold' }}
+                                                >
+                                                    {state.event?.language}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid
+                                            style={{ marginTop: 24 }}
+                                            direction="row"
+                                            alignItems="flex-start"
+                                            justify="center"
+                                            container
+                                            item
+                                        >
+                                            <Grid
+                                                xs={1}
+                                                container
+                                                alignItems="center"
+                                                justify="center"
+                                                item
+                                            >
+                                                <ErrorOutlineOutlinedIcon />
+                                            </Grid>
+                                            <Grid
+                                                xs={5}
+                                                container
+                                                direction="column"
+                                                item
+                                            >
+                                                <Typography
+                                                    variant="caption"
+                                                    color="textSecondary"
+                                                >
+                                                    Mode
+                                            </Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    style={{ fontWeight: 'bold' }}
+                                                >
+                                                    {state.event?.mode}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid
+                                                xs={1}
+                                                container
+                                                alignItems="center"
+                                                justify="center"
+                                                item
+                                            >
+                                                <TimelapseOutlinedIcon />
+                                            </Grid>
+                                            <Grid
+                                                xs={5}
+                                                container
+                                                direction="column"
+                                                item
+                                            >
+                                                <Typography
+                                                    variant="caption"
+                                                    color="textSecondary"
+                                                >
+                                                    Accomodation
+                                            </Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    style={{ fontWeight: 'bold' }}
+                                                >
+                                                    {state.event?.accommodation}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+
+                                    {/* Event Task List */}
+                                    <Grid className={css.mt48} container item>
+                                        <Typography
+                                            style={{ fontWeight: 'bold' }}
+                                            variant="h6"
+                                        >
+                                            Tasks
+                                    </Typography>
+                                        <div className={css.expandRoot}>
+                                            {isDetailLoading ? (
+                                                <>
+                                                    <Skeleton />
+                                                    <Skeleton />
+                                                </>
+                                            ) : (
+                                                    tasks?.map((task, index) => {
+                                                        return (
+                                                            <Accordion
+                                                                key={index}
+                                                                expanded={
+                                                                    expanded ===
+                                                                    `task-panel${index}`
+                                                                }
+                                                                onChange={handleExpand(
+                                                                    `task-panel${index}`
+                                                                )}
+                                                            >
+                                                                <AccordionSummary
+                                                                    expandIcon={
+                                                                        <ExpandMoreIcon />
+                                                                    }
+                                                                    aria-controls={`task-panel${index}bh-content`}
+                                                                    id={`task-panel${index}bh-header`}
+                                                                >
+                                                                    <Typography
+                                                                        className={
+                                                                            css.heading
+                                                                        }
+                                                                    >
+                                                                        {task.name}
+                                                                    </Typography>
+                                                                    <Typography
+                                                                        className={
+                                                                            css.secondaryHeading
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            task.userId
+                                                                                ?.email
+                                                                        }
+                                                                    </Typography>
+                                                                </AccordionSummary>
+                                                                <AccordionDetails
+                                                                    className={
+                                                                        css.expandRoot
+                                                                    }
+                                                                >
+                                                                    <Grid
+                                                                        className={
+                                                                            css.schedule
+                                                                        }
+                                                                        container
+                                                                    >
+                                                                        <Grid
+                                                                            xs
+                                                                            container
+                                                                            direction="column"
+                                                                            justify="center"
+                                                                            item
+                                                                        >
+                                                                            <Typography
+                                                                                variant="caption"
+                                                                                color="textSecondary"
+                                                                                style={{
+                                                                                    fontWeight:
+                                                                                        'bold',
+                                                                                }}
+                                                                            >
+                                                                                Type
+                                                                            </Typography>
+                                                                            <Typography variant="body2">
+                                                                                {
+                                                                                    task.type
+                                                                                }
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                        <Grid
+                                                                            xs
+                                                                            container
+                                                                            direction="column"
+                                                                            item
+                                                                        >
+                                                                            <Typography
+                                                                                variant="caption"
+                                                                                color="textSecondary"
+                                                                                style={{
+                                                                                    fontWeight:
+                                                                                        'bold',
+                                                                                }}
+                                                                            >
+                                                                                From
+                                                                            </Typography>
+                                                                            <Typography variant="body2">
+                                                                                {`${moment(
+                                                                                    task.startDate
+                                                                                ).format(
+                                                                                    'LT'
+                                                                                )}`}
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                        <Grid
+                                                                            xs
+                                                                            container
+                                                                            direction="column"
+                                                                            item
+                                                                        >
+                                                                            <Typography
+                                                                                variant="caption"
+                                                                                color="textSecondary"
+                                                                                style={{
+                                                                                    fontWeight:
+                                                                                        'bold',
+                                                                                }}
+                                                                            >
+                                                                                To
+                                                                            </Typography>
+                                                                            <Typography variant="body2">
+                                                                                {`${moment(
+                                                                                    task.endDate
+                                                                                ).format(
+                                                                                    'LT'
+                                                                                )}`}
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                </AccordionDetails>
+                                                            </Accordion>
+                                                        );
+                                                    })
+                                                )}
+                                        </div>
+                                    </Grid>
+
+                                    {/* Event Facility List */}
+                                    <Grid className={css.mt48} container item>
+                                        <Typography
+                                            style={{ fontWeight: 'bold' }}
+                                            variant="h6"
+                                        >
+                                            Facilities
+                                    </Typography>
+                                        <div className={css.expandRoot}>
+                                            {isDetailLoading ? (
+                                                <>
+                                                    <Skeleton />
+                                                    <Skeleton />
+                                                </>
+                                            ) : (
+                                                    facilities?.map(
+                                                        (facility, index) => {
+                                                            return (
+                                                                <Accordion
+                                                                    key={index}
+                                                                    expanded={
+                                                                        expanded ===
+                                                                        `facility-panel${index}`
+                                                                    }
+                                                                    onChange={handleExpand(
+                                                                        `facility-panel${index}`
+                                                                    )}
+                                                                >
+                                                                    <AccordionSummary
+                                                                        expandIcon={
+                                                                            <ExpandMoreIcon />
+                                                                        }
+                                                                        aria-controls={`facility-panel${index}bh-content`}
+                                                                        id={`facility-panel${index}bh-header`}
+                                                                    >
+                                                                        <Typography>
+                                                                            {
+                                                                                facility
+                                                                                    .facilityId
+                                                                                    ?.name
+                                                                            }
+                                                                        </Typography>
+                                                                    </AccordionSummary>
+                                                                    <AccordionDetails
+                                                                        className={
+                                                                            css.expandRoot
+                                                                        }
+                                                                    >
+                                                                        <Grid
+                                                                            className={
+                                                                                css.schedule
+                                                                            }
+                                                                            container
+                                                                        >
+                                                                            <Grid
+                                                                                xs
+                                                                                container
+                                                                                direction="column"
+                                                                                item
+                                                                            >
+                                                                                <Typography
+                                                                                    variant="caption"
+                                                                                    color="textSecondary"
+                                                                                    style={{
+                                                                                        fontWeight:
+                                                                                            'bold',
+                                                                                    }}
+                                                                                >
+                                                                                    Borrow
+                                                                                    date
+                                                                                </Typography>
+                                                                                <Typography variant="body2">
+                                                                                    {`${moment(
+                                                                                        facility.borrowDate
+                                                                                    ).format(
+                                                                                        'DD MMM, YYYY'
+                                                                                    )}`}
+                                                                                </Typography>
+                                                                                <Typography variant="body2">
+                                                                                    {`${moment(
+                                                                                        facility.borrowDate
+                                                                                    ).format(
+                                                                                        'LT'
+                                                                                    )}`}
+                                                                                </Typography>
+                                                                            </Grid>
+                                                                            <Grid
+                                                                                xs
+                                                                                container
+                                                                                direction="column"
+                                                                                item
+                                                                            >
+                                                                                <Typography
+                                                                                    variant="caption"
+                                                                                    color="textSecondary"
+                                                                                    style={{
+                                                                                        fontWeight:
+                                                                                            'bold',
+                                                                                    }}
+                                                                                >
+                                                                                    Return
+                                                                                    date
+                                                                                </Typography>
+                                                                                <Typography variant="body2">
+                                                                                    {`${moment(
+                                                                                        facility.returnDate
+                                                                                    ).format(
+                                                                                        'DD MMM, YYYY'
+                                                                                    )}`}
+                                                                                </Typography>
+                                                                                <Typography variant="body2">
+                                                                                    {`${moment(
+                                                                                        facility.returnDate
+                                                                                    ).format(
+                                                                                        'LT'
+                                                                                    )}`}
+                                                                                </Typography>
+                                                                            </Grid>
+                                                                        </Grid>
+                                                                    </AccordionDetails>
+                                                                </Accordion>
+                                                            );
+                                                        }
+                                                    )
+                                                )}
+                                        </div>
+                                    </Grid>
+
+                                    {/* Event Description */}
+                                    <Grid className={css.mt48} item>
+                                        <Typography
+                                            style={{ fontWeight: 'bold' }}
+                                            variant="h6"
+                                        >
+                                            Description
+                                    </Typography>
+                                        {/* <Typography variant="body2">
+                                    {state.event?.description}
+                                </Typography> */}
+                                        <Editor
+                                            editorState={editorState}
+                                            readOnly={true}
+                                        />
+                                    </Grid>
+                                </Grid>
+
+                                {/* Right-side Detail */}
+                                <Grid
+                                    className={css.detailRightWrapper}
+                                    xs={12}
+                                    sm={12}
+                                    md={4}
+                                    container
+                                    alignItems="flex-start"
+                                    justify="center"
+                                    direction="column"
+                                    item
+                                >
+                                    {/* Date and time */}
+                                    <Grid item>
+                                        <Typography
+                                            style={{ fontWeight: 'bold' }}
+                                            variant="h6"
+                                        >
+                                            Date and time
+                                    </Typography>
+                                        <Typography variant="body2">
+                                            {moment(state.event?.startDate).format(
+                                                'DD MMM'
+                                            ) ===
+                                                moment(state.event?.endDate).format(
+                                                    'DD MMM'
+                                                )
+                                                ? `${moment(
+                                                    state.event?.startDate
+                                                ).format('DD MMM, YYYY')}`
+                                                : `${moment(
+                                                    state.event?.startDate
+                                                ).format('DD MMM')} - ${moment(
+                                                    state.event?.endDate
+                                                ).format('DD MMM')}`}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            {`${moment(
+                                                state.event?.startDate
+                                            ).format('LT')} - ${moment(
+                                                state.event?.endDate
+                                            ).format('LT')}`}
+                                        </Typography>
+                                        <Typography
+                                            variant="caption"
+                                            color="primary"
+                                        >
+                                            <Link
+                                                to="/dashboard/creator/calendar"
+                                                style={{ textDecoration: 'none' }}
+                                            >
+                                                View Calendar
+                                        </Link>
+                                        </Typography>
+                                    </Grid>
+
+                                    {/* Registration Close Date */}
+                                    <Grid className={css.mt36} item>
+                                        <Typography
+                                            style={{ fontWeight: 'bold' }}
+                                            variant="h6"
+                                        >
+                                            Registration deadline
+                                    </Typography>
+                                        <Typography variant="body2">
+                                            {`${moment(
+                                                state.event?.registrationCloseDate
+                                            ).format('DD MMM, YYYY')}`}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            {`${moment(
+                                                state.event?.registrationCloseDate
+                                            ).format('LT')}`}
+                                        </Typography>
+                                    </Grid>
+
+                                    {/* Location */}
+                                    <Grid className={css.mt36} item>
+                                        <Typography
+                                            style={{ fontWeight: 'bold' }}
+                                            variant="h6"
+                                        >
+                                            Location
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            {state.event?.location}
+                                        </Typography>
+                                    </Grid>
+
+                                    {/* Tags */}
+                                    <Grid className={css.mt36} item>
+                                        <Typography
+                                            style={{ fontWeight: 'bold' }}
+                                            variant="h6"
+                                        >
+                                            Tags
+                                    </Typography>
+                                        <div className={css.chipContainer}>
+                                            {state.event?.tags?.map(
+                                                (tag, index) => (
+                                                    <Chip
+                                                        key={index}
+                                                        label={tag}
+                                                        size="small"
+                                                        className={css.chip}
+                                                    />
+                                                )
+                                            )}
+                                        </div>
+                                    </Grid>
+
+                                    {/* Reviewer */}
+                                    {state.event?.reviewerId?.email &&
+                                        <Grid className={css.mt36} item>
+                                            <Typography
+                                                style={{ fontWeight: 'bold' }}
+                                                variant="h6"
+                                            >
+                                                Reviewer
+                                            </Typography>
+                                            <Typography variant="body2">
+                                                {state.event?.reviewerId?.email}
+                                            </Typography>
+                                        </Grid>
+                                    }
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
-                </TabPanel>
+                    </TabPanel>
 
-                {/* Participant Tabs */}
-                <TabPanel value={tabs} index={1}>
-                    <VerifyTable eventId={state.event?._id} tabs={tabs} />
-                </TabPanel>
+                    {/* Participant Tabs */}
+                    <TabPanel value={tabs} index={1}>
+                        <VerifyTable eventId={state.event?._id} tabs={tabs} />
+                    </TabPanel>
 
-                {/* Participant Tabs */}
-                <TabPanel value={tabs} index={2}>
-                    <CheckInTable eventId={state.event?._id} tabs={tabs} />
-                </TabPanel>
+                    {/* Participant Tabs */}
+                    <TabPanel value={tabs} index={2}>
+                        <CheckInTable eventId={state.event?._id} tabs={tabs} />
+                    </TabPanel>
 
-                {/* Send notification Tabs */}
-                <TabPanel value={tabs} index={3}>
-                    <NotificationHistory
-                        eventCode={state.event?.urlCode}
-                        eventId={state.event?._id}
-                        eventName={state.event?.eventName}
-                        tabs={tabs}
-                    />
-                </TabPanel>
-            </Paper>
+                    {/* Send notification Tabs */}
+                    <TabPanel value={tabs} index={3}>
+                        <NotificationHistory
+                            eventCode={state.event?.urlCode}
+                            eventId={state.event?._id}
+                            eventName={state.event?.eventName}
+                            tabs={tabs}
+                        />
+                    </TabPanel>
+                </Paper>
 
-            {/* Event Delete Dialog */}
-            <EventDeleteDialog
-                openDeleteDialog={state.openDeleteDialog}
-                handleToggleDialogDelete={handleToggleDialogDelete}
-                handleDeleteEvent={handleDeleteEvent}
-                isRecoveryMode={history.location.state.isRecycleMode}
-            />
-
-            {/* Event Checking Completed Dialog */}
-            <EventCheckingCompletedDialog
-                openCheckingCompletedDialog={state.openCheckingCompletedDialog}
-                handleToggleDialogCheckingCompleted={
-                    handleToggleDialogCheckingCompleted
-                }
-                handleUpdateEventStatus={handleUpdateEventStatus}
-            />
-
-            {/* Event Update Dialog */}
-            <Dialog
-                fullWidth
-                maxWidth="lg"
-                open={state.openUpdateDialog}
-                onClose={handleToggleDialogUpdate}
-                aria-labelledby="max-width-dialog-title"
-            >
-                <CreateEvent
-                    isUpdateMode={state.openUpdateDialog}
-                    updateEventDetail={state.event}
-                    updateFacilities={facilities}
-                    updateTasks={tasks}
-                    handleCloseUpdateDialog={handleToggleDialogUpdate}
+                {/* Event Delete Dialog */}
+                <EventDeleteDialog
+                    openDeleteDialog={state.openDeleteDialog}
+                    handleToggleDialogDelete={handleToggleDialogDelete}
+                    handleDeleteEvent={handleDeleteEvent}
+                    isRecoveryMode={history.location.state.isRecycleMode}
                 />
-            </Dialog>
 
-            {/* Event checking completed dialog */}
+                {/* Event Checking Completed Dialog */}
+                <EventCheckingCompletedDialog
+                    openCheckingCompletedDialog={state.openCheckingCompletedDialog}
+                    handleToggleDialogCheckingCompleted={
+                        handleToggleDialogCheckingCompleted
+                    }
+                    handleUpdateEventStatus={handleUpdateEventStatus}
+                />
 
-            {/* Notification */}
-            <SystemNotification openUpdateSnackBar={state.openUpdateSnackBar} />
-        </>
+                {/* Event Update Dialog */}
+                <Dialog
+                    fullWidth
+                    maxWidth="lg"
+                    open={state.openUpdateDialog}
+                    onClose={handleToggleDialogUpdate}
+                    aria-labelledby="max-width-dialog-title"
+                >
+                    <CreateEvent
+                        isUpdateMode={state.openUpdateDialog}
+                        updateEventDetail={state.event}
+                        updateFacilities={facilities}
+                        updateTasks={tasks}
+                        handleCloseUpdateDialog={handleToggleDialogUpdate}
+                    />
+                </Dialog>
+
+                {/* Event checking completed dialog */}
+
+                {/* Notification */}
+                <SystemNotification openUpdateSnackBar={state.openUpdateSnackBar} />
+            </>
     );
 };
 

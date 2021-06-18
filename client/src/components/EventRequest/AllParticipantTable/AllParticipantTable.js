@@ -167,6 +167,7 @@ const AllParticipantTable = ({ eventId, tabs }) => {
                 </Toolbar>
 
                 <ParticipantTable
+                    reviewerMode={true}
                     take={state.take}
                     selected={selected}
                     setSelected={setSelected} />

@@ -62,19 +62,13 @@ const CalendarApp = ({ targetRole }) => {
         history.push({
             pathname:
                 targetRole === 3
-                    ? '/dashboard/creator/event-detail'
-                    : '/dashboard/reviewer/event-review',
+                    ? `/dashboard/creator/event-detail/${event.resource.urlCode}`
+                    : `/dashboard/reviewer/event-review/${event.resource.urlCode}`,
             state: {
                 from:
                     targetRole === 3
-                        ? '/dashboard/creator/calendar'
-                        : '/dashboard/reviewer/calendar',
-                event: {
-                    ...event.resource,
-                    eventName: event.title,
-                    endDate: event.end,
-                    startDate: event.start,
-                },
+                        ? `/dashboard/creator/calendar`
+                        : `/dashboard/reviewer/calendar`,
             },
         });
     };

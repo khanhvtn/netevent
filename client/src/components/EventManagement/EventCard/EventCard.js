@@ -76,7 +76,6 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                     </Typography>
                                     <Typography variant="body2" style={{ fontWeight: 'bold' }}>
                                         {isLoading ? <Skeleton variant="text" width="50%" /> : moment(event.startDate).format('DD MMM, YYYY')}
-
                                     </Typography>
                                 </Grid>
                                 <Grid xs={5} container direction="column" item>
@@ -139,23 +138,34 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                 </Grid>
                             </Grid>
                         </CardContent>
-                        <CardActions className={css.controls}>
-                            {/* Event Status Display */}
-                            {isLoading ? <Skeleton variant="text" width="15%" />
-                                :
-
-                                event.isApproved === null ?
-                                    <Chip className={css.getButton} style={{ backgroundColor: `#9e9e9e` }} label="Pending" />
+                        <CardActions>
+                            <div className={css.reviewBy}>
+                                {isLoading ? null
                                     :
-                                    event.isFinished ?
-                                        <Chip className={css.getButton} style={{ backgroundColor: `#4caf50` }} label="Completed" />
+                                    event.reviewerId?.email &&
+                                    <Typography display="block" variant="caption" color="textSecondary">
+                                        Reviewed by <b>{event.reviewerId.email}</b>
+                                    </Typography>
+                                }
+                            </div>
+                            {/* Event Status Display */}
+                            <div className={css.controls}>
+                                {isLoading ? <Skeleton variant="text" width="15%" />
+                                    :
+
+                                    event.isApproved === null ?
+                                        <Chip className={css.getButton} style={{ backgroundColor: `#9e9e9e` }} label="Pending" />
                                         :
-                                        event.isApproved ?
-                                            <Chip className={css.getButton} style={{ backgroundColor: `#5c6bc0` }} label="Approved" /> //5c6bc0
+                                        event.isFinished ?
+                                            <Chip className={css.getButton} style={{ backgroundColor: `#4caf50` }} label="Completed" />
                                             :
-                                            <Chip className={css.getButton} style={{ backgroundColor: `#e53935` }} label="Rejected" />
-                            
-                            }
+                                            event.isApproved ?
+                                                <Chip className={css.getButton} style={{ backgroundColor: `#5c6bc0` }} label="Approved" /> //5c6bc0
+                                                :
+                                                <Chip className={css.getButton} style={{ backgroundColor: `#e53935` }} label="Rejected" />
+
+                                }
+                            </div>
                         </CardActions>
                     </Card>
                 </CardActionArea>
