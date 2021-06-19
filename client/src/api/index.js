@@ -236,8 +236,8 @@ export const getNotificationHistoryByEventCodeAPI = (code) =>
     AXIOS.get(`/notificationHistory/all?code=${code ? code : ''}`);
 
 // Task API
-export const getAllTasksAPI = (userId) =>
-    AXIOS.get(`/task/all?userId=${userId ? userId : ''}`);
+export const getTasksByEventAPI = (userId) =>
+    AXIOS.get(`/task/getTasksByEvent?userId=${userId ? userId : ''}`);
 export const getTasksAPI = (userQueries) => {
     const {
         search,

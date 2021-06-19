@@ -267,7 +267,7 @@ const updateTask = async (req, res, next) => {
  *
  * @version 1.0
  */
-const getAllTask = async (req, res, next) => {
+const getTasksByEvent = async (req, res, next) => {
     try {
         const tasks = await Task.find({
             userId: req.query.userId
@@ -317,5 +317,5 @@ module.exports = {
     filter,
     deleteTask,
     updateTask,
-    getAllTask
+    getTasksByEvent
 };

@@ -1,5 +1,5 @@
 import { TASK_LOADING, TASK_GET_ALL_FILTER, TASK_GET_ALL } from '../constants';
-import { getTasksAPI, getAllTasksAPI } from '../api';
+import { getTasksAPI, getTasksByEventAPI } from '../api';
 
 //setIsLoading func is to set loading status
 const setTaskIsLoading = (status, dispatch) => {
@@ -9,10 +9,10 @@ const setTaskIsLoading = (status, dispatch) => {
     });
 };
 
-export const getAllTasks = (userId) => async (dispatch) => {
+export const getTasksByEvent = (userId) => async (dispatch) => {
     setTaskIsLoading(true, dispatch);
     try {
-        const data = await getAllTasksAPI(userId);
+        const data = await getTasksByEventAPI(userId);
         dispatch({
             type: TASK_GET_ALL,
             payload: data
