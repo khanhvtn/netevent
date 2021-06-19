@@ -79,6 +79,17 @@ const filter = async (req, res, next) => {
             endMinDate: listRangeDate[3][0].endDate
         };
 
+        /* Create Default Query Options */
+        let queryOptions = {};
+
+        //add useId filter
+        if (req.query.userId) {
+            queryOptions = {
+                ...queryOptions,
+                userId: req.query.userId
+            };
+        }
+
         //adding search
         if (req.query.search) {
             options = {
@@ -140,6 +151,20 @@ const filter = async (req, res, next) => {
             };
         }
 
+        //add filter options
+        queryOptions = {
+            ...queryOptions,
+            $or: [{ name: new RegExp(options.search, 'i') }],
+            startDate: {
+                $gte: options.startMinDate,
+                $lte: options.startMaxDate
+            },
+            endDate: {
+                $gte: options.endMinDate,
+                $lte: options.endMaxDate
+            }
+        };
+
         /* 
         Variable page default is 1
          */
@@ -148,34 +173,17 @@ const filter = async (req, res, next) => {
         /* 
         Variable total task based on search and filter
          */
-        const totalTask = await Task.find({
-            $or: [{ name: new RegExp(options.search, 'i') }],
-            startDate: {
-                $gte: options.startMinDate,
-                $lte: options.startMaxDate
-            },
-            endDate: {
-                $gte: options.endMinDate,
-                $lte: options.endMaxDate
-            }
-        }).countDocuments();
+        const totalTask = await Task.find(queryOptions).countDocuments();
 
         let totalPages = (totalTask / options.take).toString().includes('.')
             ? Math.ceil(totalTask / options.take)
             : totalTask / options.take;
 
         //return data to client
-        const tasks = await Task.find({
-            $or: [{ name: new RegExp(options.search, 'i') }],
-            startDate: {
-                $gte: options.startMinDate,
-                $lte: options.startMaxDate
-            },
-            endDate: {
-                $gte: options.endMinDate,
-                $lte: options.endMaxDate
-            }
-        })
+        const tasks = await Task.find(queryOptions)
+            .populate({
+                path: 'userId eventId'
+            })
             .sort({ updatedAt: -1 })
             .skip((page - 1) * options.take)
             .limit(options.take);
@@ -259,7 +267,7 @@ const updateTask = async (req, res, next) => {
  *
  * @version 1.0
  */
-const getAllTask = async (req, res, next) => {
+const getTasksByEvent = async (req, res, next) => {
     try {
         const tasks = await Task.find({
             userId: req.query.userId
@@ -309,5 +317,5 @@ module.exports = {
     filter,
     deleteTask,
     updateTask,
-    getAllTask
+    getTasksByEvent
 };

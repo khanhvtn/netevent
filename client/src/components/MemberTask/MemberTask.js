@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTasks } from '../../actions/taskActions';
+import { getTasksByEvent } from '../../actions/taskActions';
 import {
     CircularProgress,
     Typography,
@@ -36,7 +36,7 @@ const MemberTask = () => {
     }));
 
     useEffect(() => {
-        dispatch(getTasks(userId));
+        dispatch(getTasksByEvent(userId));
     }, [dispatch, userId]);
 
     return isLoading ? (
