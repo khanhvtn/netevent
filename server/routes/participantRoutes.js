@@ -6,8 +6,8 @@ router.get('/filter', participantControllers.filterParticipants);
 router.post('/registerEvent', participantControllers.registerEvent);
 router.delete('/:id', participantControllers.deleteParticipant);
 router.patch(
-  '/update/valid',
-  participantControllers.setInvalidAndVerifyParticipant
+    '/update/valid',
+    participantControllers.setInvalidAndVerifyParticipant
 );
 router.patch('/update/attend', participantControllers.setAttendedParticipant);
 

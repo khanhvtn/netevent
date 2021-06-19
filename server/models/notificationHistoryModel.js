@@ -7,26 +7,26 @@ const mongoose = require('mongoose');
  */
 
 const notificationHistorySchema = mongoose.Schema(
-  {
-    eventId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Event',
-      required: true
+    {
+        eventId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Event',
+            required: true
+        },
+        title: {
+            type: String,
+            require: [true, 'Title cannot be blanked']
+        },
+        description: {
+            type: String,
+            require: [true, 'Description cannot be blanked']
+        }
     },
-    title: {
-      type: String,
-      require: [true, 'Title cannot be blanked']
-    },
-    description: {
-      type: String,
-      require: [true, 'Description cannot be blanked']
-    }
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 const NotificationHistoryModel = mongoose.model(
-  'NotificationHistory',
-  notificationHistorySchema
+    'NotificationHistory',
+    notificationHistorySchema
 );
 module.exports = NotificationHistoryModel;

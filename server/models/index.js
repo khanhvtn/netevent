@@ -8,13 +8,13 @@ const FacilityHistory = require('./facilityHistoryModel');
 const Participant = require('./participantModel');
 const NotificationHistory = require('./notificationHistoryModel');
 module.exports = {
-  //add models here
-  User,
-  Facility,
-  EventType,
-  Event,
-  Task,
-  Participant,
-  FacilityHistory,
-  NotificationHistory
+    //add models here
+    User,
+    Facility,
+    EventType,
+    Event,
+    Task,
+    Participant,
+    FacilityHistory,
+    NotificationHistory
 };
