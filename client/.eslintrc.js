@@ -13,7 +13,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module'
   },
-  plugins: ['react'],
+  plugins: ['react', 'react-hooks'],
   rules: {
     'react/prop-types': 0,
     'no-undef': 0,
@@ -21,6 +21,7 @@ module.exports = {
     'no-useless-escape': 0,
     'no-case-declarations': 0,
     'react/display-name': 0,
-    'react/no-unescaped-entities': 0
+    'react/no-unescaped-entities': 0,
+    'react-hooks/exhaustive-deps': 2
   }
 };

@@ -55,7 +55,7 @@ const Confirmation = () => {
         history.push('/404');
       }
     }
-  }, [id]);
+  }, [id, history, link.complete, link.links, validLink]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -83,32 +83,19 @@ const EventManagement = () => {
 
   // Request to get the events data
   useEffect(() => {
-    const {
-      search,
-      take,
-      page,
-      type,
-      budgetRange,
-      participantRange,
-      startFrom,
-      startTo,
-      endFrom,
-      endTo,
-      isRecycleMode
-    } = state;
     if (!history.location.state || history.location.state?.isUpdated) {
       dispatch(
         getEvents({
-          search,
-          take,
-          page,
-          type,
-          budgetRange,
-          participantRange,
-          startFrom,
-          startTo,
-          endFrom,
-          endTo,
+          search: state.search,
+          take: state.take,
+          page: state.page,
+          type: state.type,
+          budgetRange: state.budgetRange,
+          participantRange: state.participantRange,
+          startFrom: state.startFrom,
+          startTo: state.startTo,
+          endFrom: state.endFrom,
+          endTo: state.endTo,
           ownerId: userId,
           isDeleted: isRecycleMode
         })
@@ -137,7 +124,7 @@ const EventManagement = () => {
     if (!eventTypes) {
       dispatch(getAllEventTypes());
     }
-  }, []);
+  }, [dispatch, eventTypes]);
 
   // UseEffect for delete event success
   useEffect(() => {
