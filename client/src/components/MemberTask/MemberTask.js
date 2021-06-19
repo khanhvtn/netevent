@@ -2,42 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTasks } from '../../actions/taskActions';
 import {
-  CircularProgress,
-  Typography,
-  Paper,
-  Grid,
-  TableCell,
-  TableRow,
-  TableBody,
-  TableHead,
-  TableContainer,
-  Table,
-  Toolbar,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails
+    CircularProgress,
+    Typography,
+    Paper,
+    Grid,
+    TableCell,
+    TableRow,
+    TableBody,
+    TableHead,
+    TableContainer,
+    Table,
+    Toolbar,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails
 } from '@material-ui/core';
 import moment from 'moment';
 import useStyles from './styles';
 
 const MemberTask = () => {
-  const css = useStyles();
-  const dispatch = useDispatch();
-  const [expanded, setExpanded] = useState(false);
+    const css = useStyles();
+    const dispatch = useDispatch();
+    const [expanded, setExpanded] = useState(false);
 
-  const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
-  };
+    const handleChange = (panel) => (event, newExpanded) => {
+        setExpanded(newExpanded ? panel : false);
+    };
 
-  const { userId, tasks, isLoading } = useSelector((state) => ({
-    userId: state.user.user.id,
-    tasks: state.task.tasks,
-    isLoading: state.task.isLoading
-  }));
+    const { userId, tasks, isLoading } = useSelector((state) => ({
+        userId: state.user.user.id,
+        tasks: state.task.tasks,
+        isLoading: state.task.isLoading
+    }));
 
-  useEffect(() => {
-    dispatch(getTasks(userId));
-  }, [dispatch, userId]);
+    useEffect(() => {
+        dispatch(getTasks(userId));
+    }, [dispatch, userId]);
 
   return isLoading ? (
     <div className={css.circularProgress} align="center">

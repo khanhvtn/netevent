@@ -10,47 +10,49 @@ import logo from '../../../images/logo.png';
 import { useDispatch } from 'react-redux';
 
 const DashboardNavbar = ({ onMobileNavOpen, onPickRole, ...rest }) => {
-  const css = useStyles();
-  const dispatch = useDispatch();
-  const history = useHistory();
+    const css = useStyles();
+    const dispatch = useDispatch();
+    const history = useHistory();
 
-  const handleLogout = () => {
-    dispatch(userLogout(history));
-  };
+    const handleLogout = () => {
+        dispatch(userLogout(history));
+    };
 
-  return (
-    <div>
-      <AppBar
-        className={css.navbarColor}
-        color="default"
-        elevation={1}
-        {...rest}>
-        <Toolbar>
-          <div className={css.imageSize} align="center">
-            <Link to="/">
-              <img className={css.image} alt="Logo" src={logo} />
-            </Link>
-          </div>
-          <Box className={css.leftSide} />
-          {onPickRole ? (
-            <IconButton onClick={handleLogout} color="inherit">
-              <InputIcon />
-            </IconButton>
-          ) : (
-            <Hidden lgUp>
-              <IconButton color="inherit" onClick={onMobileNavOpen}>
-                <MenuIcon />
-              </IconButton>
-            </Hidden>
-          )}
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+    return (
+        <div>
+            <AppBar
+                className={css.navbarColor}
+                color="default"
+                elevation={1}
+                {...rest}>
+                <Toolbar>
+                    <div className={css.imageSize} align="center">
+                        <Link to="/">
+                            <img className={css.image} alt="Logo" src={logo} />
+                        </Link>
+                    </div>
+                    <Box className={css.leftSide} />
+                    {onPickRole ? (
+                        <IconButton onClick={handleLogout} color="inherit">
+                            <InputIcon />
+                        </IconButton>
+                    ) : (
+                        <Hidden lgUp>
+                            <IconButton
+                                color="inherit"
+                                onClick={onMobileNavOpen}>
+                                <MenuIcon />
+                            </IconButton>
+                        </Hidden>
+                    )}
+                </Toolbar>
+            </AppBar>
+        </div>
+    );
 };
 
 DashboardNavbar.propTypes = {
-  onMobileNavOpen: PropTypes.func
+    onMobileNavOpen: PropTypes.func
 };
 
 export default DashboardNavbar;
