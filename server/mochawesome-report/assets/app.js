@@ -207,7 +207,7 @@
       return new Date(e);
     };
   },
-  function (e, t, n) {
+  function (e, t) {
     var r;
     !(function () {
       'use strict';
@@ -552,7 +552,7 @@
       }
       function z(t) {
         d(t);
-        var n = D(!0, function (e, n, r, o, i) {
+        var n = D(!0, function (e, n, r) {
             var a = r
               ? r.initializer
                 ? r.initializer.call(e)
@@ -587,7 +587,7 @@
             : f(!1);
         }),
         H = z(R),
-        V = z(function (e, t, n) {
+        V = z(function (e, t) {
           return zt(e, t) ? t : e;
         });
       function W(e) {
@@ -673,7 +673,7 @@
         return (n.isMobxAction = !0), n;
       }
       function X(e, t, n, r) {
-        var o = (function (e, t, n, r) {
+        var o = (function () {
             var o = !1,
               i = 0;
             var a = he();
@@ -1391,7 +1391,7 @@
         };
       }
       function Le(e) {
-        return function (t, n, r) {
+        return function (t, n,) {
           Object.defineProperty(t, n, {
             configurable: !0,
             enumerable: !1,
@@ -1797,7 +1797,7 @@
             ? (mt.set.call(e, t, n), !0)
             : !isNaN(t) && (mt.set.call(e, parseInt(t), n), !0);
         },
-        preventExtensions: function (e) {
+        preventExtensions: function () {
           return f('Observable arrays cannot be frozen'), !1;
         }
       };
