@@ -139,12 +139,12 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         );
     });
 
-  useEffect(() => {
-    if (openMobile && onMobileClose) {
-      onMobileClose();
-    }
-    /* eslint-disable-next-line */
-  }, [location.pathname]);
+    useEffect(() => {
+        if (openMobile && onMobileClose) {
+            onMobileClose();
+        }
+        /* eslint-disable-next-line */
+    }, [location.pathname]);
 
     const content = (
         <Box className={css.sidebarWrapper}>

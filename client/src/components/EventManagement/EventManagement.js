@@ -81,43 +81,43 @@ const EventManagement = () => {
     });
     const [filters, setFilters] = useState(filterState);
 
-  // Request to get the events data
-  useEffect(() => {
-    if (!history.location.state || history.location.state?.isUpdated) {
-      dispatch(
-        getEvents({
-          search: state.search,
-          take: state.take,
-          page: state.page,
-          type: state.type,
-          budgetRange: state.budgetRange,
-          participantRange: state.participantRange,
-          startFrom: state.startFrom,
-          startTo: state.startTo,
-          endFrom: state.endFrom,
-          endTo: state.endTo,
-          ownerId: userId,
-          isDeleted: state.isRecycleMode
-        })
-      );
-    }
-    history.replace();
-  }, [
-    dispatch,
-    history,
-    state.search,
-    state.take,
-    state.page,
-    state.type,
-    state.budgetRange,
-    state.participantRange,
-    state.startFrom,
-    state.startTo,
-    state.endFrom,
-    state.endTo,
-    state.isRecycleMode,
-    userId
-  ]);
+    // Request to get the events data
+    useEffect(() => {
+        if (!history.location.state || history.location.state?.isUpdated) {
+            dispatch(
+                getEvents({
+                    search: state.search,
+                    take: state.take,
+                    page: state.page,
+                    type: state.type,
+                    budgetRange: state.budgetRange,
+                    participantRange: state.participantRange,
+                    startFrom: state.startFrom,
+                    startTo: state.startTo,
+                    endFrom: state.endFrom,
+                    endTo: state.endTo,
+                    ownerId: userId,
+                    isDeleted: state.isRecycleMode
+                })
+            );
+        }
+        history.replace();
+    }, [
+        dispatch,
+        history,
+        state.search,
+        state.take,
+        state.page,
+        state.type,
+        state.budgetRange,
+        state.participantRange,
+        state.startFrom,
+        state.startTo,
+        state.endFrom,
+        state.endTo,
+        state.isRecycleMode,
+        userId
+    ]);
 
     // Request all event type in the first access
     useEffect(() => {

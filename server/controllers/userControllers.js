@@ -26,14 +26,17 @@ const login = async (req, res, next) => {
 
         //check user email exists or not.
         const existedUser = await User.findOne({ email: userReq.email });
+        const defaultErrorMessage = new CustomError(400, {
+            errLogin: 'Email or Password is invalid'
+        });
 
         if (!existedUser) {
-            return next(new CustomError(400, { email: 'Email is invalid' }));
+            return next(defaultErrorMessage);
         }
 
         //check user email already is verified or not.
         if (!existedUser.isConfirmed) {
-            return next(new CustomError(400, { email: 'Email is invalid' }));
+            return next(defaultErrorMessage);
         }
 
         //check password
@@ -42,9 +45,7 @@ const login = async (req, res, next) => {
             existedUser.password
         );
         if (!result) {
-            return next(
-                new CustomError(400, { password: 'Password is invalid' })
-            );
+            return next(defaultErrorMessage);
         }
 
         //gen token

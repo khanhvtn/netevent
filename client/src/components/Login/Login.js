@@ -5,8 +5,10 @@ import {
     TextField,
     Button,
     CardMedia,
-    CircularProgress
+    CircularProgress,
+    Collapse
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import logo from '../../images/logo.png';
@@ -61,13 +63,19 @@ const Login = () => {
                             image={logo}
                             title="Logo"
                         />
+                        <Collapse
+                            className={css.errorDrop}
+                            in={errors?.errLogin ? true : false}>
+                            <Alert className={css.alert} severity="error">
+                                {errors?.errLogin ? errors.errLogin : ''}
+                            </Alert>
+                        </Collapse>
                         <form
                             className={css.form}
                             onSubmit={handleSubmit}
                             noValidate>
                             <TextField
-                                helperText={errors?.email ? errors?.email : ''}
-                                error={errors?.email ? true : false}
+                                disabled={user.isLoading}
                                 variant="outlined"
                                 className={css.emailField}
                                 type="email"
@@ -78,10 +86,7 @@ const Login = () => {
                                 onChange={handleChange}
                             />
                             <TextField
-                                helperText={
-                                    errors?.password ? errors?.password : ''
-                                }
-                                error={errors?.password ? true : false}
+                                disabled={user.isLoading}
                                 variant="outlined"
                                 className={css.passwordField}
                                 type="password"
@@ -92,6 +97,7 @@ const Login = () => {
                                 onChange={handleChange}
                             />
                             <Button
+                                disabled={user.isLoading}
                                 size="large"
                                 variant="contained"
                                 className={css.btnSubmit}
