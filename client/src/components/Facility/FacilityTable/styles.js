@@ -1,13 +1,13 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles((theme) => ({
+export default makeStyles(() => ({
     paper1: {
         width: '100%',
         borderStartStartRadius: 16,
         borderTopRightRadius: 16
     },
     table: {
-        minWidth: 750,
+        minWidth: 750
     },
     fixedWidthChip: {
         minWidth: 60,
@@ -22,6 +22,6 @@ export default makeStyles((theme) => ({
         padding: 0,
         position: 'absolute',
         top: 20,
-        width: 1,
-    },
+        width: 1
+    }
 }));

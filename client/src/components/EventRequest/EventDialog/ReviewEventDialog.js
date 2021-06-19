@@ -7,7 +7,7 @@ import {
     DialogContent,
     DialogActions,
     DialogContentText,
-    Slide,
+    Slide
 } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 //import useStyles in the last
@@ -20,7 +20,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ReviewEventDialog = ({
     openReviewEventDialog,
     handleToggleDialogReviewEvent,
-    handleUpdateEventStatus,
+    handleUpdateEventStatus
 }) => {
     const css = useStyles();
 
@@ -34,7 +34,7 @@ const ReviewEventDialog = ({
         if (updateEventSuccess) {
             handleToggleDialogReviewEvent();
         }
-    }, [updateEventSuccess]);
+    }, [updateEventSuccess, handleToggleDialogReviewEvent]);
 
     return (
         <>
@@ -46,9 +46,10 @@ const ReviewEventDialog = ({
                 aria-labelledby="review-event-dialog"
                 fullWidth
                 className={css.dialogDeleteFac}
-                aria-describedby="review-event-dialog-description"
-            >
-                <DialogTitle id="review-event-dialog">{'Confirm completed event!'}</DialogTitle>
+                aria-describedby="review-event-dialog-description">
+                <DialogTitle id="review-event-dialog">
+                    {'Confirm completed event!'}
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="review-event-dialog-description">
                         Process the event status.
@@ -60,18 +61,26 @@ const ReviewEventDialog = ({
                         disabled={isLoading ? true : false}
                         onClick={() => handleUpdateEventStatus(true, 'approve')}
                         variant="contained"
-                        color="primary"
-                    >
-                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Approve'}
+                        color="primary">
+                        {isLoading ? (
+                            <CircularProgress size={25} color="inherit" />
+                        ) : (
+                            'Approve'
+                        )}
                     </Button>
                     <Button
                         fullWidth
                         disabled={isLoading ? true : false}
-                        onClick={() => handleUpdateEventStatus(false, 'approve')}
+                        onClick={() =>
+                            handleUpdateEventStatus(false, 'approve')
+                        }
                         variant="contained"
-                        color="secondary"
-                    >
-                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Reject'}
+                        color="secondary">
+                        {isLoading ? (
+                            <CircularProgress size={25} color="inherit" />
+                        ) : (
+                            'Reject'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>

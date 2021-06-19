@@ -7,15 +7,15 @@ export default makeStyles((theme) => ({
     image: {
         width: 232,
         height: 64,
-        objectFit: 'cover',
+        objectFit: 'cover'
     },
     imageSize: {
         width: 232,
         height: 64,
-        marginRight: 24,
+        marginRight: 24
     },
     navbarColor: {
         backgroundColor: theme.palette.background.default,
-        paddingLeft: 0,
+        paddingLeft: 0
     }
 }));

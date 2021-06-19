@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import moment from 'moment'
+import moment from 'moment';
 import {
     Toolbar,
     Paper,
@@ -16,7 +16,7 @@ import {
     Typography,
     Tooltip,
     Button,
-    Chip,
+    Chip
 } from '@material-ui/core';
 import { Delete, Create, Edit } from '@material-ui/icons';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -58,32 +58,32 @@ const headCells = [
         id: 'email',
         numeric: false,
         disablePadding: false,
-        label: 'Email',
+        label: 'Email'
     },
     {
         id: 'role',
         numeric: false,
         disablePadding: false,
-        label: 'Role',
+        label: 'Role'
     },
     {
         id: 'status',
         numeric: false,
         disablePadding: false,
-        label: 'Status',
+        label: 'Status'
     },
     {
         id: 'createdAt',
         numeric: false,
         disablePadding: false,
-        label: 'Created At',
+        label: 'Created At'
     },
     {
         id: 'updatedAt',
         numeric: false,
         disablePadding: false,
-        label: 'Updated At',
-    },
+        label: 'Updated At'
+    }
 ];
 
 function EnhancedTableHead(props) {
@@ -94,7 +94,7 @@ function EnhancedTableHead(props) {
         orderBy,
         numSelected,
         rowCount,
-        onRequestSort,
+        onRequestSort
     } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
@@ -118,14 +118,12 @@ function EnhancedTableHead(props) {
                         key={headCell.id}
                         align={headCell.numeric ? 'right' : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'default'}
-                        sortDirection={orderBy === headCell.id ? order : false}
-                    >
+                        sortDirection={orderBy === headCell.id ? order : false}>
                         <TableSortLabel
                             style={{ fontWeight: 'bold' }}
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
-                        >
+                            onClick={createSortHandler(headCell.id)}>
                             {headCell.label}
                             {orderBy === headCell.id ? (
                                 <span className={classes.visuallyHidden}>
@@ -149,28 +147,28 @@ EnhancedTableHead.propTypes = {
     onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired
 };
 
 const useToolbarStyles = makeStyles((theme) => ({
     root: {
         paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2),
+        paddingRight: theme.spacing(2)
     },
     highlight:
         theme.palette.type === 'light'
             ? {
-                color: theme.palette.secondary.main,
-                backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-            }
+                  color: theme.palette.secondary.main,
+                  backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+              }
             : {
-                color: theme.palette.text.primary,
-                backgroundColor: theme.palette.secondary.dark,
-            },
+                  color: theme.palette.text.primary,
+                  backgroundColor: theme.palette.secondary.dark
+              },
     title: {
         flex: '1 1 100%',
         fontWeight: 'bold'
-    },
+    }
 }));
 
 const EnhancedTableToolbar = (props) => {
@@ -178,34 +176,31 @@ const EnhancedTableToolbar = (props) => {
     const {
         numSelected,
         handleToggleDialogCreateAndUpdate,
-        handleToggleDialogDelete,
+        handleToggleDialogDelete
     } = props;
 
     return (
         <Toolbar
             className={clsx(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
-        >
+                [classes.highlight]: numSelected > 0
+            })}>
             {numSelected > 0 ? (
                 <Typography
                     className={classes.title}
                     color="inherit"
                     variant="subtitle1"
-                    component="div"
-                >
+                    component="div">
                     {numSelected} selected
                 </Typography>
             ) : (
-                    <Typography
-                        className={classes.title}
-                        variant="h6"
-                        id="tableTitle"
-                        component="div"
-                    >
-                        List of Users
-                    </Typography>
-                )}
+                <Typography
+                    className={classes.title}
+                    variant="h6"
+                    id="tableTitle"
+                    component="div">
+                    List of Users
+                </Typography>
+            )}
 
             {numSelected === 0 ? (
                 <Tooltip title="Create User">
@@ -213,8 +208,7 @@ const EnhancedTableToolbar = (props) => {
                         onClick={handleToggleDialogCreateAndUpdate}
                         endIcon={<Create />}
                         variant="contained"
-                        color="primary"
-                    >
+                        color="primary">
                         Create
                     </Button>
                 </Tooltip>
@@ -224,8 +218,7 @@ const EnhancedTableToolbar = (props) => {
                         onClick={handleToggleDialogDelete}
                         endIcon={<Delete />}
                         variant="contained"
-                        color="secondary"
-                    >
+                        color="secondary">
                         Delete
                     </Button>
                     <Button
@@ -235,27 +228,25 @@ const EnhancedTableToolbar = (props) => {
                         style={{ marginLeft: '8px' }}
                         endIcon={<Edit />}
                         variant="contained"
-                        color="primary"
-                    >
+                        color="primary">
                         Edit
                     </Button>
                 </>
             ) : (
-                        <Button
-                            onClick={handleToggleDialogDelete}
-                            endIcon={<Delete />}
-                            variant="contained"
-                            color="secondary"
-                        >
-                            Delete
-                        </Button>
-                    )}
+                <Button
+                    onClick={handleToggleDialogDelete}
+                    endIcon={<Delete />}
+                    variant="contained"
+                    color="secondary">
+                    Delete
+                </Button>
+            )}
         </Toolbar>
     );
 };
 
 EnhancedTableToolbar.propTypes = {
-    numSelected: PropTypes.number.isRequired,
+    numSelected: PropTypes.number.isRequired
 };
 
 const UserTable = ({
@@ -263,22 +254,18 @@ const UserTable = ({
     handleToggleDialogDelete,
     take,
     selected,
-    setSelected,
+    setSelected
 }) => {
     const css = useStyles();
-    const {
-        users,
-        isLoading,
-        isCreated,
-        isDeleted,
-        isUpdated,
-    } = useSelector((state) => ({
-        users: state.user.users,
-        isLoading: state.user.isLoading,
-        isCreated: state.user.isCreated,
-        isDeleted: state.user.isDeleted,
-        isUpdated: state.user.isUpdated,
-    }));
+    const { users, isLoading, isCreated, isDeleted, isUpdated } = useSelector(
+        (state) => ({
+            users: state.user.users,
+            isLoading: state.user.isLoading,
+            isCreated: state.user.isCreated,
+            isDeleted: state.user.isDeleted,
+            isUpdated: state.user.isUpdated
+        })
+    );
 
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
@@ -335,8 +322,7 @@ const UserTable = ({
                     className={css.table}
                     aria-labelledby="tableTitle"
                     size={'medium'}
-                    aria-label="enhanced table"
-                >
+                    aria-label="enhanced table">
                     <EnhancedTableHead
                         classes={css}
                         numSelected={selected.length}
@@ -347,116 +333,134 @@ const UserTable = ({
                         rowCount={users.length}
                     />
                     <TableBody>
-                        {isLoading ||
-                            isCreated ||
-                            isUpdated ||
-                            isDeleted ?
+                        {isLoading || isCreated || isUpdated || isDeleted ? (
                             <>
-                                {Array.apply(null, { length: take + 1 }).map(() => {
-                                    return (
-                                        <>
-                                            <TableRow>
-                                                <TableCell>
-                                                    <Skeleton />
-                                                </TableCell>
-                                                {headCells.map(() => {
-                                                    return (
-                                                        <TableCell>
-                                                            <Skeleton />
-                                                        </TableCell>
-                                                    )
-                                                })}
-                                            </TableRow>
-                                        </>
-                                    )
-                                })}
+                                {Array.apply(null, { length: take + 1 }).map(
+                                    () => {
+                                        return (
+                                            <>
+                                                <TableRow>
+                                                    <TableCell>
+                                                        <Skeleton />
+                                                    </TableCell>
+                                                    {headCells.map(
+                                                        (cell, index) => {
+                                                            return (
+                                                                <TableCell
+                                                                    key={index}>
+                                                                    <Skeleton />
+                                                                </TableCell>
+                                                            );
+                                                        }
+                                                    )}
+                                                </TableRow>
+                                            </>
+                                        );
+                                    }
+                                )}
                             </>
-                            : users.length === 0 ?
-                                <>
+                        ) : users.length === 0 ? (
+                            <>
+                                <TableRow
+                                    style={{
+                                        height: 50 * take
+                                    }}>
+                                    <TableCell colSpan={7} align="center">
+                                        <Typography>No Data Matched</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            </>
+                        ) : (
+                            <>
+                                {stableSort(
+                                    users,
+                                    getComparator(order, orderBy)
+                                ).map((row, index) => {
+                                    const isItemSelected = isSelected(
+                                        row.email
+                                    );
+                                    const labelId = `enhanced-table-checkbox-${index}`;
+
+                                    return (
+                                        <TableRow
+                                            hover
+                                            onClick={(event) =>
+                                                handleClick(event, row.email)
+                                            }
+                                            role="checkbox"
+                                            aria-checked={isItemSelected}
+                                            tabIndex={-1}
+                                            key={row._id}
+                                            selected={isItemSelected}>
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    checked={isItemSelected}
+                                                    inputProps={{
+                                                        'aria-labelledby':
+                                                            labelId
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            <TableCell
+                                                component="th"
+                                                scope="row">
+                                                {row.email}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.role.map((eachRole) =>
+                                                    eachRole === '1'
+                                                        ? 'Admin '
+                                                        : eachRole === '2'
+                                                        ? 'Reviewer '
+                                                        : eachRole === '3'
+                                                        ? 'Creator '
+                                                        : 'Team Member'
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.isConfirmed ? (
+                                                    <Chip
+                                                        className={
+                                                            css.fixedWidthChip
+                                                        }
+                                                        size="small"
+                                                        label="Active"
+                                                        color="primary"
+                                                    />
+                                                ) : (
+                                                    <Chip
+                                                        className={
+                                                            css.fixedWidthChip
+                                                        }
+                                                        size="small"
+                                                        label="Pending"
+                                                        color="default"
+                                                    />
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {moment(row.createdAt).format(
+                                                    'LL'
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {moment(row.updatedAt).format(
+                                                    'LL'
+                                                )}
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                                {emptyRows > 0 && (
                                     <TableRow
                                         style={{
-                                            height: 50 * take,
-                                        }}
-                                    >
-                                        <TableCell colSpan={7} align="center">
-                                            <Typography>No Data Matched</Typography>
-                                        </TableCell>
+                                            height: 50 * emptyRows
+                                        }}>
+                                        <TableCell colSpan={6} />
                                     </TableRow>
-                                </>
-                                :
-                                <>
-                                    {stableSort(
-                                        users,
-                                        getComparator(order, orderBy)
-                                    ).map((row, index) => {
-                                        const isItemSelected = isSelected(row.email);
-                                        const labelId = `enhanced-table-checkbox-${index}`;
-
-                                        return (
-                                            <TableRow
-                                                hover
-                                                onClick={(event) =>
-                                                    handleClick(event, row.email)
-                                                }
-                                                role="checkbox"
-                                                aria-checked={isItemSelected}
-                                                tabIndex={-1}
-                                                key={row._id}
-                                                selected={isItemSelected}
-                                            >
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox
-                                                        checked={isItemSelected}
-                                                        inputProps={{
-                                                            'aria-labelledby': labelId,
-                                                        }}
-                                                    />
-                                                </TableCell>
-                                                <TableCell component="th" scope="row">
-                                                    {row.email}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {row.role.map((eachRole) => (
-                                                        eachRole === '1' ? "Admin " : eachRole === '2' ? "Reviewer " : eachRole === '3' ? "Creator " : "Team Member"
-                                                    ))}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {row.isConfirmed ?
-                                                        <Chip
-                                                            className={css.fixedWidthChip}
-                                                            size="small"
-                                                            label="Active"
-                                                            color="primary"
-                                                        />
-                                                        :
-                                                        <Chip
-                                                            className={css.fixedWidthChip}
-                                                            size="small"
-                                                            label="Pending"
-                                                            color="default"
-                                                        />
-                                                    }
-                                                </TableCell>
-                                                <TableCell>
-                                                    {moment(row.createdAt).format('LL')}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {moment(row.updatedAt).format('LL')}
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                    {emptyRows > 0 && (
-                                        <TableRow
-                                            style={{
-                                                height: 50 * emptyRows,
-                                            }}
-                                        >
-                                            <TableCell colSpan={6} />
-                                        </TableRow>
-                                    )}
-                                </>
-                        }
+                                )}
+                            </>
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>

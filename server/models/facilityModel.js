@@ -12,32 +12,32 @@ const facilitySchema = mongoose.Schema(
         name: {
             type: String,
             required: [true, 'Name cannot be blanked'],
-            unique: true,
+            unique: true
         },
         code: {
             type: String,
             required: [true, 'Code cannot be blanked'],
-            unique: true,
+            unique: true
         },
         type: {
             type: String,
-            required: [true, 'Type cannot be blanked'],
+            required: [true, 'Type cannot be blanked']
         },
         status: {
             type: Boolean,
-            default: true,
+            default: true
         },
         isDeleted: {
             type: Boolean,
-            default: false,
-        },
+            default: false
+        }
     },
     { timestamps: true }
 );
 
 // Apply the uniqueValidator plugin to facilitySchema
 facilitySchema.plugin(uniqueValidator, {
-    message: `{VALUE} is already existed`,
+    message: `{VALUE} is already existed`
 });
 
 const FacilityModel = mongoose.model('Facility', facilitySchema);

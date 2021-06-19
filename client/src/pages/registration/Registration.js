@@ -7,7 +7,7 @@ import {
     Container,
     Button,
     CircularProgress,
-    Divider,
+    Divider
 } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -23,7 +23,7 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
-    KeyboardDatePicker,
+    KeyboardDatePicker
 } from '@material-ui/pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFacilityAndTaskByEventCode } from '../../actions/eventActions';
@@ -34,7 +34,7 @@ import SystemNotification from '../../components/Notification/Notification';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { ERROR, ERROR_CLEAR } from '../../constants';
+import { ERROR_CLEAR } from '../../constants';
 
 const participantInitialState = {
     event: null,
@@ -45,13 +45,13 @@ const participantInitialState = {
     major: '',
     phone: '',
     DOB: new Date(Date.now()),
-    expectedGraduateDate: new Date(Date.now()),
+    expectedGraduateDate: new Date(Date.now())
 };
 
 const eventInitialState = {
     event: null,
     isLoaded: false,
-    isReviewed: false,
+    isReviewed: false
 };
 
 const initialDescription =
@@ -77,7 +77,7 @@ const Registration = () => {
             eventDetail: state.event.eventDetail,
             error: state.error,
             isRegistered: state.participant.isLoading,
-            registerSuccess: state.participant.complete,
+            registerSuccess: state.participant.complete
         }));
 
     // UseEffect to scroll to top at the first mount
@@ -101,6 +101,7 @@ const Registration = () => {
         state.isLoaded,
         isLoading,
         isReviewed,
+        history
     ]);
 
     // Call API to get current event by urlCode
@@ -108,7 +109,7 @@ const Registration = () => {
         if (!state.event?.urlCode && !isReviewed && !state.isLoaded) {
             dispatch(getFacilityAndTaskByEventCode(code));
         }
-    }, [dispatch, state.event?.urlCode, state.isLoaded, isReviewed]);
+    }, [dispatch, state.event?.urlCode, state.isLoaded, isReviewed, code]);
 
     // UseEffect to check review status and load the event detail from history
     useEffect(() => {
@@ -117,10 +118,10 @@ const Registration = () => {
                 ...prevState,
                 event: eventDetail,
                 isLoaded: !prevState.isLoaded,
-                isReviewed: isReviewed,
+                isReviewed: isReviewed
             }));
         }
-    }, [isReviewed]);
+    }, [isReviewed, eventDetail]);
 
     // UseEffect to set state of the event
     useEffect(() => {
@@ -128,7 +129,7 @@ const Registration = () => {
             setState((prevState) => ({
                 ...prevState,
                 event: eventDetail,
-                isLoaded: !prevState.isLoaded,
+                isLoaded: !prevState.isLoaded
             }));
         }
     }, [eventDetail, state.isLoaded]);
@@ -138,7 +139,7 @@ const Registration = () => {
         if (state.event?._id) {
             setParticipant((prevState) => ({
                 ...prevState,
-                event: state.event?._id,
+                event: state.event?._id
             }));
         }
     }, [state.event?._id]);
@@ -161,7 +162,7 @@ const Registration = () => {
             if (action) {
                 dispatch({
                     type: ERROR_CLEAR,
-                    payload: null,
+                    payload: null
                 });
             }
         },
@@ -172,7 +173,7 @@ const Registration = () => {
         const { name, value } = e.target;
         setParticipant((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
 
@@ -198,7 +199,7 @@ const Registration = () => {
                         state: {
                             from: `/dashboard/creator/event-management`,
                             isReviewed: true
-                        },
+                        }
                     });
                 case '/dashboard/reviewer/event-review':
                     return history.push({
@@ -206,7 +207,7 @@ const Registration = () => {
                         state: {
                             from: `/dashboard/reviewer/event-request`,
                             isReviewed: true
-                        },
+                        }
                     });
             }
         }
@@ -238,7 +239,7 @@ const Registration = () => {
                                         width: '100%',
                                         height: 345,
                                         maxHeight: 345,
-                                        backgroundImage: `url(${state.event?.image})`,
+                                        backgroundImage: `url(${state.event?.image})`
                                     }}
                                 />
                             </Grid>
@@ -249,8 +250,7 @@ const Registration = () => {
                                 xs={12}
                                 sm={12}
                                 md={4}
-                                lg={4}
-                            >
+                                lg={4}>
                                 <Grid
                                     className={css.registerBottom}
                                     container
@@ -259,8 +259,7 @@ const Registration = () => {
                                     sm={12}
                                     md={12}
                                     lg={12}
-                                    item
-                                >
+                                    item>
                                     <Typography style={{ fontWeight: 'bold' }}>
                                         {moment(state.event?.startDate).format(
                                             'MMM'
@@ -269,9 +268,8 @@ const Registration = () => {
                                     <Typography
                                         style={{
                                             fontWeight: 'bold',
-                                            fontSize: '1.5em',
-                                        }}
-                                    >
+                                            fontSize: '1.5em'
+                                        }}>
                                         {moment(state.event?.startDate).format(
                                             'DD'
                                         )}
@@ -286,8 +284,7 @@ const Registration = () => {
                                     lg={12}
                                     container
                                     direction="column"
-                                    item
-                                >
+                                    item>
                                     <Typography variant="h6">
                                         {state.event?.eventName}
                                     </Typography>
@@ -307,21 +304,18 @@ const Registration = () => {
                                     container
                                     justify="flex-start"
                                     alignItems="flex-end"
-                                    item
-                                >
+                                    item>
                                     <Button
                                         className={css.registerButtonTop}
                                         color="primary"
                                         variant="contained"
-                                        onClick={executeScroll}
-                                    >
+                                        onClick={executeScroll}>
                                         Register Now
                                     </Button>
                                     {isReviewed && (
                                         <Button
                                             variant="outlined"
-                                            onClick={handleOnBackToDetailPage}
-                                        >
+                                            onClick={handleOnBackToDetailPage}>
                                             Back to detail
                                         </Button>
                                     )}
@@ -341,8 +335,7 @@ const Registration = () => {
                                 md={12}
                                 lg={12}
                                 alignItems="stretch"
-                                direction="row-reverse"
-                            >
+                                direction="row-reverse">
                                 {/* Right-side */}
                                 <Grid
                                     className={css.detailWrapper}
@@ -353,14 +346,12 @@ const Registration = () => {
                                     container
                                     alignItems="flex-start"
                                     direction="column"
-                                    item
-                                >
+                                    item>
                                     {/* Date and time */}
                                     <Grid item>
                                         <Typography
                                             style={{ fontWeight: 'bold' }}
-                                            variant="h6"
-                                        >
+                                            variant="h6">
                                             Date and time
                                         </Typography>
                                         <Typography variant="body2">
@@ -394,8 +385,7 @@ const Registration = () => {
                                     <Grid className={css.mt36} item>
                                         <Typography
                                             style={{ fontWeight: 'bold' }}
-                                            variant="h6"
-                                        >
+                                            variant="h6">
                                             Registration deadline
                                         </Typography>
                                         <Typography variant="body2">
@@ -416,8 +406,7 @@ const Registration = () => {
                                     <Grid className={css.mt36} item>
                                         <Typography
                                             style={{ fontWeight: 'bold' }}
-                                            variant="h6"
-                                        >
+                                            variant="h6">
                                             Location
                                         </Typography>
                                         <Typography variant="body2">
@@ -429,8 +418,7 @@ const Registration = () => {
                                     <Grid className={css.mt36} item>
                                         <Typography
                                             style={{ fontWeight: 'bold' }}
-                                            variant="h6"
-                                        >
+                                            variant="h6">
                                             Tags
                                         </Typography>
                                         <div className={css.chipContainer}>
@@ -458,13 +446,11 @@ const Registration = () => {
                                     xs={12}
                                     sm={12}
                                     md={8}
-                                    lg={8}
-                                >
+                                    lg={8}>
                                     <Grid item>
                                         <Typography
                                             style={{ fontWeight: 'bold' }}
-                                            variant="h6"
-                                        >
+                                            variant="h6">
                                             About this event
                                         </Typography>
 
@@ -486,43 +472,37 @@ const Registration = () => {
                                 <Grid container className={css.mtb36} item>
                                     <Container
                                         fixed
-                                        className={css.bodyActivity}
-                                    >
+                                        className={css.bodyActivity}>
                                         <Typography
                                             style={{ fontWeight: 'bold' }}
                                             align="center"
-                                            variant="h4"
-                                        >
+                                            variant="h4">
                                             Activities
                                         </Typography>
                                         <TableContainer>
                                             <Table
                                                 className={css.table}
-                                                aria-label="simple table"
-                                            >
+                                                aria-label="simple table">
                                                 <TableHead>
                                                     <TableRow>
                                                         <TableCell
                                                             className={
                                                                 css.tableText
-                                                            }
-                                                        >
+                                                            }>
                                                             Tasks
                                                         </TableCell>
                                                         <TableCell
                                                             className={
                                                                 css.tableText
                                                             }
-                                                            align="left"
-                                                        >
+                                                            align="left">
                                                             Start Time
                                                         </TableCell>
                                                         <TableCell
                                                             className={
                                                                 css.tableText
                                                             }
-                                                            align="left"
-                                                        >
+                                                            align="left">
                                                             End Time
                                                         </TableCell>
                                                     </TableRow>
@@ -531,23 +511,20 @@ const Registration = () => {
                                                     {state.event?.taskListId?.map(
                                                         (task) => (
                                                             <TableRow
-                                                                key={task._id}
-                                                            >
+                                                                key={task._id}>
                                                                 <TableCell
                                                                     className={
                                                                         css.tableText
                                                                     }
                                                                     component="th"
-                                                                    scope="row"
-                                                                >
+                                                                    scope="row">
                                                                     {task.name}
                                                                 </TableCell>
                                                                 <TableCell
                                                                     className={
                                                                         css.tableText
                                                                     }
-                                                                    align="left"
-                                                                >
+                                                                    align="left">
                                                                     {moment(
                                                                         task.startDate
                                                                     ).format(
@@ -558,8 +535,7 @@ const Registration = () => {
                                                                     className={
                                                                         css.tableText
                                                                     }
-                                                                    align="left"
-                                                                >
+                                                                    align="left">
                                                                     {moment(
                                                                         task.endDate
                                                                     ).format(
@@ -586,18 +562,15 @@ const Registration = () => {
                                     container
                                     className={css.mtb36}
                                     item
-                                    ref={myRef}
-                                >
+                                    ref={myRef}>
                                     <Container
                                         fixed
-                                        className={css.bodyRegistrationForm}
-                                    >
+                                        className={css.bodyRegistrationForm}>
                                         <Typography
                                             style={{ fontWeight: 'bold' }}
                                             align="center"
                                             variant="h4"
-                                            id="registrationForm"
-                                        >
+                                            id="registrationForm">
                                             Registration Form
                                         </Typography>
 
@@ -617,15 +590,15 @@ const Registration = () => {
                                                 onChange={handleOnChange}
                                                 required
                                                 fullWidth
-                                                className={css.textField}
-                                            ></TextField>
+                                                className={
+                                                    css.textField
+                                                }></TextField>
                                             {error.errors !== null ? (
                                                 error.errors.name && (
                                                     <Typography
                                                         className={
                                                             css.errorStyle
-                                                        }
-                                                    >
+                                                        }>
                                                         {error.errors.name}
                                                     </Typography>
                                                 )
@@ -649,15 +622,15 @@ const Registration = () => {
                                                 onChange={handleOnChange}
                                                 required
                                                 fullWidth
-                                                className={css.textField}
-                                            ></TextField>
+                                                className={
+                                                    css.textField
+                                                }></TextField>
                                             {error.errors !== null ? (
                                                 error.errors.email && (
                                                     <Typography
                                                         className={
                                                             css.errorStyle
-                                                        }
-                                                    >
+                                                        }>
                                                         {error.errors.email}
                                                     </Typography>
                                                 )
@@ -680,15 +653,15 @@ const Registration = () => {
                                                 onChange={handleOnChange}
                                                 required
                                                 fullWidth
-                                                className={css.textField}
-                                            ></TextField>
+                                                className={
+                                                    css.textField
+                                                }></TextField>
                                             {error.errors !== null ? (
                                                 error.errors.school && (
                                                     <Typography
                                                         className={
                                                             css.errorStyle
-                                                        }
-                                                    >
+                                                        }>
                                                         {error.errors.school}
                                                     </Typography>
                                                 )
@@ -699,8 +672,7 @@ const Registration = () => {
                                             <FormControl
                                                 disabled={isReviewed}
                                                 margin="none"
-                                                className={css.textField}
-                                            >
+                                                className={css.textField}>
                                                 <InputLabel
                                                     id="demo-simple-select-outlined-label1"
                                                     error={
@@ -710,8 +682,7 @@ const Registration = () => {
                                                     }
                                                     className={
                                                         css.academicField
-                                                    }
-                                                >
+                                                    }>
                                                     Academic *
                                                 </InputLabel>
                                                 <Select
@@ -726,12 +697,8 @@ const Registration = () => {
                                                     }
                                                     variant="outlined"
                                                     value={participant.academic}
-                                                    onChange={
-                                                        participant.academic
-                                                    }
                                                     onChange={handleOnChange}
-                                                    label="Academic"
-                                                >
+                                                    label="Academic">
                                                     <MenuItem value="Bachelor">
                                                         <em>Bachelor</em>
                                                     </MenuItem>
@@ -747,8 +714,7 @@ const Registration = () => {
                                                         <Typography
                                                             className={
                                                                 css.errorStyle
-                                                            }
-                                                        >
+                                                            }>
                                                             {
                                                                 error.errors
                                                                     .academic
@@ -775,15 +741,15 @@ const Registration = () => {
                                                 onChange={handleOnChange}
                                                 required
                                                 fullWidth
-                                                className={css.textField}
-                                            ></TextField>
+                                                className={
+                                                    css.textField
+                                                }></TextField>
                                             {error.errors !== null ? (
                                                 error.errors.major && (
                                                     <Typography
                                                         className={
                                                             css.errorStyle
-                                                        }
-                                                    >
+                                                        }>
                                                         {error.errors.major}
                                                     </Typography>
                                                 )
@@ -807,15 +773,15 @@ const Registration = () => {
                                                 onChange={handleOnChange}
                                                 required
                                                 fullWidth
-                                                className={css.textField}
-                                            ></TextField>
+                                                className={
+                                                    css.textField
+                                                }></TextField>
                                             {error.errors !== null ? (
                                                 error.errors.phone && (
                                                     <Typography
                                                         className={
                                                             css.errorStyle
-                                                        }
-                                                    >
+                                                        }>
                                                         {error.errors.phone}
                                                     </Typography>
                                                 )
@@ -824,8 +790,7 @@ const Registration = () => {
                                             )}
 
                                             <MuiPickersUtilsProvider
-                                                utils={DateFnsUtils}
-                                            >
+                                                utils={DateFnsUtils}>
                                                 <KeyboardDatePicker
                                                     disabled={isReviewed}
                                                     inputVariant="outlined"
@@ -845,13 +810,13 @@ const Registration = () => {
                                                                 ...prevState,
                                                                 DOB: date
                                                                     ? date
-                                                                    : null,
+                                                                    : null
                                                             })
                                                         );
                                                     }}
                                                     KeyboardButtonProps={{
                                                         'aria-label':
-                                                            'change date',
+                                                            'change date'
                                                     }}
                                                 />
                                                 {error.errors !== null ? (
@@ -859,8 +824,7 @@ const Registration = () => {
                                                         <Typography
                                                             className={
                                                                 css.errorStyle
-                                                            }
-                                                        >
+                                                            }>
                                                             {error.errors.DOB}
                                                         </Typography>
                                                     )
@@ -891,13 +855,13 @@ const Registration = () => {
                                                                 expectedGraduateDate:
                                                                     date
                                                                         ? date
-                                                                        : null,
+                                                                        : null
                                                             })
                                                         );
                                                     }}
                                                     KeyboardButtonProps={{
                                                         'aria-label':
-                                                            'change date',
+                                                            'change date'
                                                     }}
                                                 />
                                                 {error.errors !== null ? (
@@ -906,8 +870,7 @@ const Registration = () => {
                                                         <Typography
                                                             className={
                                                                 css.errorStyle
-                                                            }
-                                                        >
+                                                            }>
                                                             {
                                                                 error.errors
                                                                     .expectedGraduateDate
@@ -925,8 +888,7 @@ const Registration = () => {
                                                 className={css.registerButton}
                                                 color="primary"
                                                 variant="contained"
-                                                onClick={handleOnRegister}
-                                            >
+                                                onClick={handleOnRegister}>
                                                 {isRegistered ? (
                                                     <CircularProgress
                                                         size={26}
@@ -950,32 +912,28 @@ const Registration = () => {
                                 <Grid container className={css.mtb36} item>
                                     <Container
                                         fixed
-                                        className={css.bodyActivity}
-                                    >
+                                        className={css.bodyActivity}>
                                         <Typography
                                             style={{
                                                 fontWeight: 'bold',
-                                                marginBottom: 8,
+                                                marginBottom: 8
                                             }}
                                             align="center"
-                                            variant="subtitle2"
-                                        >
+                                            variant="subtitle2">
                                             {state.event?.eventName}
                                         </Typography>
                                         <Typography
                                             align="center"
-                                            variant="body2"
-                                        >
+                                            variant="body2">
                                             at
                                         </Typography>
                                         <Typography
                                             style={{
                                                 fontWeight: 'bold',
-                                                marginTop: 8,
+                                                marginTop: 8
                                             }}
                                             align="center"
-                                            variant="subtitle2"
-                                        >
+                                            variant="subtitle2">
                                             {state.event?.location}
                                         </Typography>
                                     </Container>

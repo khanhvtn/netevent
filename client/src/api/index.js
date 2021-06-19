@@ -6,7 +6,7 @@ const baseURL =
 
 const AXIOS = axios.create({
     baseURL,
-    withCredentials: true,
+    withCredentials: true
 });
 
 // User API
@@ -50,7 +50,7 @@ export const getFacilitiesAPI = (userQueries) => {
         createdFrom,
         createdTo,
         updatedFrom,
-        updatedTo,
+        updatedTo
     } = userQueries;
     return AXIOS.get(
         `/facility/filter?search=${search ? search : ''}&take=${
@@ -70,6 +70,8 @@ export const updateFacilityAPI = (userReq) =>
     AXIOS.patch(`/facility/update`, userReq);
 export const deleteFacilitiesAPI = (userReq) =>
     AXIOS.delete(`/facility/delete`, { data: userReq });
+export const deletePermanentFacilitiesAPI = (userReq) =>
+    AXIOS.delete(`/facility/deleteP`, { data: userReq });
 export const getAllFacilitiesAPI = () => AXIOS.get(`/facility/all`);
 export const recoverFacilitiesAPI = (userReq) =>
     AXIOS.patch(`/facility/recovery`, userReq);
@@ -84,7 +86,7 @@ export const getEventTypesAPI = (userQueries) => {
         createdFrom,
         createdTo,
         updatedFrom,
-        updatedTo,
+        updatedTo
     } = userQueries;
     return AXIOS.get(
         `/eventType/filter?search=${search ? search : ''}&take=${
@@ -104,6 +106,8 @@ export const updateEventTypeAPI = (userReq) =>
     AXIOS.patch(`/eventType/update`, userReq);
 export const deleteEventTypesAPI = (userReq) =>
     AXIOS.delete(`/eventType/delete`, { data: userReq });
+export const deletePermanentEventTypesAPI = (userReq) =>
+    AXIOS.delete(`/eventType/deleteP`, { data: userReq });
 export const getAllEventTypesAPI = () => AXIOS.get(`/eventType/all`);
 export const recoverEventTypesAPI = (userReq) =>
     AXIOS.patch(`/eventType/recovery`, userReq);
@@ -122,10 +126,12 @@ export const getEventsAPI = (userQueries) => {
         endFrom,
         endTo,
         ownerId,
+        isDeleted,
         status
     } = userQueries;
     const searchQuery = `search=${search ? search : ''}`;
     const ownerIdQuery = `ownerId=${ownerId ? ownerId : ''}`;
+    const isDeletedQuery = `isDeleted=${isDeleted ? isDeleted : ''}`;
     const takeQuery = `take=${take ? take : ''}`;
     const pageQuery = `page=${page ? page : ''}`;
     const typeQuery = `type=${type ? type : ''}`;
@@ -140,7 +146,7 @@ export const getEventsAPI = (userQueries) => {
     const statusQuery = `status=${status ? status : ''}`;
 
     return AXIOS.get(
-        `/event/filter?${searchQuery}&${takeQuery}&${pageQuery}&${typeQuery}&${budgetQuery}&${participantQuery}&${ownerIdQuery}&${startFromQuery}&${startToQuery}&${endFromQuery}&${endToQuery}&${statusQuery}`
+        `/event/filter?${searchQuery}&${takeQuery}&${pageQuery}&${typeQuery}&${budgetQuery}&${participantQuery}&${ownerIdQuery}&${isDeletedQuery}&${startFromQuery}&${startToQuery}&${endFromQuery}&${endToQuery}&${statusQuery}`
     );
 };
 export const getFacilityAndTaskByEventCodeAPI = (code) =>
@@ -150,12 +156,14 @@ export const sendNotificationAPI = (notificationReq) =>
     AXIOS.post('/event/sendNotification', notificationReq);
 export const updateEventAPI = (userReq) =>
     AXIOS.patch(`/event/update`, userReq);
-export const updateEventStatusAPI = (userReq) => 
+export const updateEventStatusAPI = (userReq) =>
     AXIOS.patch('/event/update/status', userReq);
 export const deleteEventAPI = (userReq) =>
     AXIOS.delete(`/event/delete`, { data: userReq });
-export const deleteEventManagementAPI = (userReq) =>
-    AXIOS.delete(`/event/deleteManagement`, { data: userReq });
+export const deleteEventPermanentAPI = (userReq) =>
+    AXIOS.delete(`/event/deleteP`, { data: userReq });
+export const recoveryEventAPI = (userReq) =>
+    AXIOS.patch(`/event/recovery`, userReq);
 // Same route
 export const fetchEventsAPI = () => AXIOS.get('/event/all');
 export const getAllEventAPI = () => AXIOS.get(`/event/all`);
@@ -210,9 +218,12 @@ export const getParticipantsAPI = (
     status
 ) =>
     AXIOS.get(
-        `/participant/filter?search=${search ? search : ''}&take=${take ? take : ''
-        }&page=${page ? page : ''}&academic=${academic ? academic : ''
-        }&isValid=${isValid === '' ? '' : isValid}&isAttended=${isAttended === '' ? '' : isAttended
+        `/participant/filter?search=${search ? search : ''}&take=${
+            take ? take : ''
+        }&page=${page ? page : ''}&academic=${
+            academic ? academic : ''
+        }&isValid=${isValid === '' ? '' : isValid}&isAttended=${
+            isAttended === '' ? '' : isAttended
         }&eventId=${eventId ? eventId : ''}&status=${status ? status : ''}`
     );
 export const setInvalidAndVerifyParticipantAPI = (userReq) =>

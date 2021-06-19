@@ -8,7 +8,7 @@ import eventReducers from './eventReducers';
 import facilityHistoryReducers from './facilityHistoryReducers';
 import participantReducers from './participantReducers';
 import notificationHistoryReducers from './notificationHistoryReducers';
-import taskReducers from './taskReducers'
+import taskReducers from './taskReducers';
 
 const rootReducers = combineReducers({
     user: userReducers,

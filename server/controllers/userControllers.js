@@ -26,14 +26,17 @@ const login = async (req, res, next) => {
 
         //check user email exists or not.
         const existedUser = await User.findOne({ email: userReq.email });
+        const defaultErrorMessage = new CustomError(400, {
+            errLogin: 'Email or Password is invalid'
+        });
 
         if (!existedUser) {
-            return next(new CustomError(400, { email: 'Email is invalid' }));
+            return next(defaultErrorMessage);
         }
 
         //check user email already is verified or not.
         if (!existedUser.isConfirmed) {
-            return next(new CustomError(400, { email: 'Email is invalid' }));
+            return next(defaultErrorMessage);
         }
 
         //check password
@@ -42,9 +45,7 @@ const login = async (req, res, next) => {
             existedUser.password
         );
         if (!result) {
-            return next(
-                new CustomError(400, { password: 'Password is invalid' })
-            );
+            return next(defaultErrorMessage);
         }
 
         //gen token
@@ -52,7 +53,7 @@ const login = async (req, res, next) => {
             {
                 id: existedUser._id,
                 email: existedUser.email,
-                role: existedUser.role,
+                role: existedUser.role
             },
             'netevent',
             { expiresIn: '1h' }
@@ -60,7 +61,7 @@ const login = async (req, res, next) => {
 
         res.cookie('token', token, {
             expires: new Date(Date.now() + 1 * 60 * 60 * 1000), //expire in 1h
-            httpOnly: true,
+            httpOnly: true
         });
 
         //response token to client
@@ -70,7 +71,7 @@ const login = async (req, res, next) => {
             {
                 id: existedUser._id,
                 email: existedUser.email,
-                role: existedUser.role,
+                role: existedUser.role
             },
             null
         );
@@ -153,10 +154,10 @@ const createUser = async (req, res, next) => {
         //create new user
         const newUser = await User.create(userReq);
         const newLink = {
-            user: newUser._id,
+            user: newUser._id
         };
 
-        //create new link 
+        //create new link
         const idLink = await Link.create(newLink);
 
         //send email
@@ -207,7 +208,7 @@ const filterUser = async (req, res, next) => {
             createdMaxDate,
             createdMinDate,
             updatedMaxDate,
-            updatedMinDate,
+            updatedMinDate
         ]);
 
         //return empty result to client if database has no data.
@@ -224,19 +225,19 @@ const filterUser = async (req, res, next) => {
             search: '',
             take: 10,
             role: {
-                $in: ['1', '2', '3', '4'],
+                $in: ['1', '2', '3', '4']
             },
             createdMaxDate: listRangeDate[0][0].createdAt,
             createdMinDate: listRangeDate[1][0].createdAt,
             updatedMaxDate: listRangeDate[2][0].updatedAt,
-            updatedMinDate: listRangeDate[3][0].updatedAt,
+            updatedMinDate: listRangeDate[3][0].updatedAt
         };
 
         //adding search
         if (req.query.search) {
             options = {
                 ...options,
-                search: req.query.search.toString(),
+                search: req.query.search.toString()
             };
         }
 
@@ -247,7 +248,7 @@ const filterUser = async (req, res, next) => {
         if (req.query.take) {
             options = {
                 ...options,
-                take: parseInt(req.query.take.toString()),
+                take: parseInt(req.query.take.toString())
             };
         }
 
@@ -258,7 +259,7 @@ const filterUser = async (req, res, next) => {
         if (req.query.role) {
             options = {
                 ...options,
-                role: { $in: [req.query.role] },
+                role: { $in: [req.query.role] }
             };
         }
 
@@ -269,7 +270,7 @@ const filterUser = async (req, res, next) => {
         if (req.query.createdFrom) {
             options = {
                 ...options,
-                createdMinDate: req.query.createdFrom,
+                createdMinDate: req.query.createdFrom
                 // createdMinDate: new Date(req.query.createdFrom),
             };
         }
@@ -280,7 +281,7 @@ const filterUser = async (req, res, next) => {
         if (req.query.createdTo) {
             options = {
                 ...options,
-                createdMaxDate: req.query.createdTo,
+                createdMaxDate: req.query.createdTo
                 // createdMaxDate: new Date(req.query.createdTo),
             };
         }
@@ -291,7 +292,7 @@ const filterUser = async (req, res, next) => {
         if (req.query.updatedFrom) {
             options = {
                 ...options,
-                updatedMinDate: req.query.updatedFrom,
+                updatedMinDate: req.query.updatedFrom
                 // updatedMinDate: new Date(req.query.updatedFrom),
             };
         }
@@ -302,7 +303,7 @@ const filterUser = async (req, res, next) => {
         if (req.query.updatedTo) {
             options = {
                 ...options,
-                updatedMaxDate: req.query.updatedTo,
+                updatedMaxDate: req.query.updatedTo
                 // updatedMaxDate: new Date(req.query.updatedTo),
             };
         }
@@ -320,12 +321,12 @@ const filterUser = async (req, res, next) => {
             role: options.role,
             createdAt: {
                 $gte: options.createdMinDate,
-                $lte: options.createdMaxDate,
+                $lte: options.createdMaxDate
             },
             updatedAt: {
                 $gte: options.updatedMinDate,
-                $lte: options.updatedMaxDate,
-            },
+                $lte: options.updatedMaxDate
+            }
         }).countDocuments();
 
         let totalPages = (totalUsers / options.take).toString().includes('.')
@@ -338,12 +339,12 @@ const filterUser = async (req, res, next) => {
             role: options.role,
             createdAt: {
                 $gte: options.createdMinDate,
-                $lte: options.createdMaxDate,
+                $lte: options.createdMaxDate
             },
             updatedAt: {
                 $gte: options.updatedMinDate,
-                $lte: options.updatedMaxDate,
-            },
+                $lte: options.updatedMaxDate
+            }
         })
             .sort({ updatedAt: -1 })
             .skip((page - 1) * options.take)
@@ -396,14 +397,14 @@ const deleteUser = async (req, res, next) => {
         const { deleteList } = req.body;
         if (deleteList.length === 1) {
             const deletedUser = await User.findOneAndDelete({
-                email: deleteList[0],
+                email: deleteList[0]
             });
             return cusResponse(res, 200, deletedUser, null);
         } else {
             const deletedUsers = await Promise.all(
                 deleteList.map(async (email) => {
                     return await User.findOneAndDelete({
-                        email,
+                        email
                     });
                 })
             );
@@ -439,5 +440,5 @@ module.exports = {
     updateUser,
     deleteUser,
     getAllUser,
-    fetchCurrentUser,
+    fetchCurrentUser
 };

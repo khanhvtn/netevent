@@ -5,19 +5,20 @@ import {
     Toolbar,
     IconButton,
     Tooltip,
-    InputBase,
+    InputBase
 } from '@material-ui/core';
 import ParticipantPagination from '../../ParticipantPagination/ParticipantPagination';
 import ParticipantTable from '../../ParticipantTable/ParticipantTable';
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
 import useStyles from './styles';
-import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getParticipants, setInvalidAndVerifyParticipant } from '../../../../actions/participantActions';
+import {
+    getParticipants,
+    setInvalidAndVerifyParticipant
+} from '../../../../actions/participantActions';
 import ParticipantFilter from '../../ParticipantFilter/ParticipantFilter';
 import SystemNotification from '../../../Notification/Notification';
-
 
 const initialState = {
     search: '',
@@ -34,20 +35,17 @@ const initialState = {
 
 const filterState = {
     academic: '',
-    isValid: '',
-}
+    isValid: ''
+};
 
 const VerifyTable = ({ eventId, tabs }) => {
     const css = useStyles();
-    const history = useHistory();
     const dispatch = useDispatch();
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
     const [selected, setSelected] = useState([]);
 
-    const {
-        isParticipantUpdated,
-    } = useSelector((state) => ({
+    const { isParticipantUpdated } = useSelector((state) => ({
         isParticipantUpdated: state.participant.isUpdated
     }));
 
@@ -66,13 +64,14 @@ const VerifyTable = ({ eventId, tabs }) => {
                     state.isAttended,
                     eventId
                 )
-            )
+            );
         }
         setState((prevState) => ({
             ...prevState,
-            openUpdateSnackBar: isParticipantUpdated,
+            openUpdateSnackBar: isParticipantUpdated
         }));
-    }, [dispatch,
+    }, [
+        dispatch,
         state.search,
         state.take,
         state.page,
@@ -80,8 +79,8 @@ const VerifyTable = ({ eventId, tabs }) => {
         state.isValid,
         state.isAttended,
         eventId,
-        isParticipantUpdated]
-    );
+        isParticipantUpdated
+    ]);
 
     // Use Effect call participants API after state is set
     useEffect(() => {
@@ -96,9 +95,10 @@ const VerifyTable = ({ eventId, tabs }) => {
                     state.isAttended,
                     eventId
                 )
-            )
+            );
         }
-    }, [dispatch,
+    }, [
+        dispatch,
         state.search,
         state.take,
         state.page,
@@ -106,16 +106,26 @@ const VerifyTable = ({ eventId, tabs }) => {
         state.isValid,
         state.isAttended,
         eventId,
-        tabs]
-    );
+        tabs
+    ]);
 
     const handleSetInvalid = () => {
-        dispatch(setInvalidAndVerifyParticipant({ invalidList: selected, action: false }))
-    }
+        dispatch(
+            setInvalidAndVerifyParticipant({
+                invalidList: selected,
+                action: false
+            })
+        );
+    };
 
     const handleSetVerified = () => {
-        dispatch(setInvalidAndVerifyParticipant({ verifiedList: selected, action: true }))
-    }
+        dispatch(
+            setInvalidAndVerifyParticipant({
+                verifiedList: selected,
+                action: true
+            })
+        );
+    };
 
     const handleChangePage = (event, newPage) => {
         setState((prevState) => ({ ...prevState, page: newPage }));
@@ -125,7 +135,7 @@ const VerifyTable = ({ eventId, tabs }) => {
         setState((prevState) => ({
             ...prevState,
             take: parseInt(event.target.value),
-            page: 1,
+            page: 1
         }));
     };
 
@@ -135,13 +145,13 @@ const VerifyTable = ({ eventId, tabs }) => {
             ...prevState,
             [name]: value
         }));
-    }
+    };
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
 
@@ -149,7 +159,7 @@ const VerifyTable = ({ eventId, tabs }) => {
     const handleToggleFilter = () => {
         setState((prevState) => ({
             ...prevState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -159,23 +169,23 @@ const VerifyTable = ({ eventId, tabs }) => {
             ...prevState,
             ...filters,
             page: 1,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
-        setSelected([])
+        setSelected([]);
     };
 
     //handle Clear Filter
     const handleClearFilter = () => {
         setFilters((prevState) => ({
             ...prevState,
-            ...filterState,
+            ...filterState
         }));
         setState((prevState) => ({
             ...prevState,
             ...filterState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
-        setSelected([])
+        setSelected([]);
     };
 
     return (
@@ -193,7 +203,7 @@ const VerifyTable = ({ eventId, tabs }) => {
                             name="search"
                             value={state.search}
                             inputProps={{
-                                'aria-label': 'search',
+                                'aria-label': 'search'
                             }}
                         />
                     </div>
@@ -201,8 +211,7 @@ const VerifyTable = ({ eventId, tabs }) => {
                     <Tooltip title="Filter">
                         <IconButton
                             color="inherit"
-                            onClick={handleToggleFilter}
-                        >
+                            onClick={handleToggleFilter}>
                             <FilterList />
                         </IconButton>
                     </Tooltip>
@@ -214,13 +223,15 @@ const VerifyTable = ({ eventId, tabs }) => {
                     handleSetVerified={handleSetVerified}
                     checkInMode={state.checkInMode}
                     selected={selected}
-                    setSelected={setSelected} />
+                    setSelected={setSelected}
+                />
 
                 <ParticipantPagination
                     page={state.page}
                     take={state.take}
                     handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    handleChangePage={handleChangePage} />
+                    handleChangePage={handleChangePage}
+                />
 
                 {/* Participant Filter */}
                 <ParticipantFilter
@@ -231,13 +242,16 @@ const VerifyTable = ({ eventId, tabs }) => {
                     handleToggleFilter={handleToggleFilter}
                     handleFilterChange={handleFilterChange}
                     handleApplyFilter={handleApplyFilter}
-                    handleClearFilter={handleClearFilter} />
+                    handleClearFilter={handleClearFilter}
+                />
 
                 {/* Notification */}
-                <SystemNotification openUpdateSnackBar={state.openUpdateSnackBar} />
+                <SystemNotification
+                    openUpdateSnackBar={state.openUpdateSnackBar}
+                />
             </Grid>
         </AppBar>
-    )
-}
+    );
+};
 
 export default VerifyTable;

@@ -8,12 +8,13 @@ import {
     InputBase,
     Tooltip,
     IconButton,
+    Button
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useStyles from './styles';
-import { FilterList } from '@material-ui/icons';
+import { FilterList, Delete, Close } from '@material-ui/icons';
 import EventPagination from './EventPagination/EventPagination';
 import EventCard from './EventCard/EventCard';
 import EventFilter from './EventFilter/EventFilter';
@@ -36,6 +37,7 @@ const initialState = {
     endFrom: null,
     endTo: null,
     openDeleteSnackBar: false,
+    isRecycleMode: false
 };
 
 const filterState = {
@@ -46,7 +48,7 @@ const filterState = {
     startFrom: null,
     startTo: null,
     endFrom: null,
-    endTo: null,
+    endTo: null
 };
 
 const EventManagement = () => {
@@ -54,46 +56,48 @@ const EventManagement = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const { events, isLoading, totalPages, deleteEventSuccess, userId } =
-        useSelector((state) => ({
-            events: state.event.events,
-            isLoading: state.event.isLoading,
-            totalPages: state.event.totalPages,
-            deleteEventSuccess: state.event.deleteSuccess,
-            userId: state.user.user.id,
-        }));
+    const {
+        events,
+        isLoading,
+        totalPages,
+        deleteEventSuccess,
+        userId,
+        eventTypes
+    } = useSelector((state) => ({
+        events: state.event.events,
+        isLoading: state.event.isLoading,
+        totalPages: state.event.totalPages,
+        deleteEventSuccess: state.event.deleteSuccess,
+        userId: state.user.user.id,
+        eventTypes: state.eventType?.eventTypes
+    }));
 
-    const [state, setState] = useState(initialState);
+    /* Change isRecycleMode if use turn back from event detail */
+    const [state, setState] = useState({
+        ...initialState,
+        isRecycleMode: history.location.state?.isRecycleMode
+            ? history.location.state?.isRecycleMode
+            : false
+    });
     const [filters, setFilters] = useState(filterState);
 
     // Request to get the events data
     useEffect(() => {
-        const {
-            search,
-            take,
-            page,
-            type,
-            budgetRange,
-            participantRange,
-            startFrom,
-            startTo,
-            endFrom,
-            endTo,
-        } = state;
         if (!history.location.state || history.location.state?.isUpdated) {
             dispatch(
                 getEvents({
-                    search,
-                    take,
-                    page,
-                    type,
-                    budgetRange,
-                    participantRange,
-                    startFrom,
-                    startTo,
-                    endFrom,
-                    endTo,
+                    search: state.search,
+                    take: state.take,
+                    page: state.page,
+                    type: state.type,
+                    budgetRange: state.budgetRange,
+                    participantRange: state.participantRange,
+                    startFrom: state.startFrom,
+                    startTo: state.startTo,
+                    endFrom: state.endFrom,
+                    endTo: state.endTo,
                     ownerId: userId,
+                    isDeleted: state.isRecycleMode
                 })
             );
         }
@@ -111,25 +115,22 @@ const EventManagement = () => {
         state.startTo,
         state.endFrom,
         state.endTo,
-        userId,
+        state.isRecycleMode,
+        userId
     ]);
-
-    const { eventTypes } = useSelector(() => ({
-        eventTypes: state.eventType?.eventTypes,
-    }));
 
     // Request all event type in the first access
     useEffect(() => {
         if (!eventTypes) {
             dispatch(getAllEventTypes());
         }
-    }, []);
+    }, [dispatch, eventTypes]);
 
     // UseEffect for delete event success
     useEffect(() => {
         setState((prevState) => ({
             ...prevState,
-            openDeleteSnackBar: deleteEventSuccess,
+            openDeleteSnackBar: deleteEventSuccess
         }));
     }, [deleteEventSuccess]);
 
@@ -141,7 +142,7 @@ const EventManagement = () => {
         setState((prevState) => ({
             ...prevState,
             take: parseInt(event.target.value),
-            page: 1,
+            page: 1
         }));
     };
 
@@ -151,12 +152,12 @@ const EventManagement = () => {
             return setState((prevState) => ({
                 ...prevState,
                 [name]: value,
-                page: 1,
+                page: 1
             }));
         }
         setState((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
 
@@ -165,7 +166,7 @@ const EventManagement = () => {
         const { name, value } = e.target;
         setFilters((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
 
@@ -173,7 +174,7 @@ const EventManagement = () => {
     const handleToggleFilter = () => {
         setState((prevState) => ({
             ...prevState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -183,7 +184,7 @@ const EventManagement = () => {
             ...prevState,
             ...filters,
             page: 1,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -191,12 +192,12 @@ const EventManagement = () => {
     const handleClearFilter = () => {
         setFilters((prevState) => ({
             ...prevState,
-            ...filterState,
+            ...filterState
         }));
         setState((prevState) => ({
             ...prevState,
             ...filterState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -206,8 +207,23 @@ const EventManagement = () => {
             pathname: `/dashboard/creator/event-detail/${event.urlCode}`,
             state: {
                 from: '/dashboard/creator/event-management',
-            },
+                isRecycleMode: state.isRecycleMode
+            }
         });
+        localStorage.setItem(
+            'stateHistory',
+            JSON.stringify({
+                isRecycleMode: state.isRecycleMode
+            })
+        );
+    };
+
+    //toggle recycle mode
+    const handleToggleRecycleMode = () => {
+        setState((prevState) => ({
+            ...prevState,
+            isRecycleMode: !prevState.isRecycleMode
+        }));
     };
 
     return (
@@ -229,18 +245,37 @@ const EventManagement = () => {
                                         name="search"
                                         value={state.search}
                                         inputProps={{
-                                            'aria-label': 'search',
+                                            'aria-label': 'search'
                                         }}
                                     />
                                 </div>
                                 <div className={css.grow} />
-                                <Tooltip title="Filter">
+                                <Button
+                                    disabled={isLoading}
+                                    onClick={handleToggleRecycleMode}
+                                    variant="contained"
+                                    color={
+                                        state.isRecycleMode
+                                            ? 'default'
+                                            : 'secondary'
+                                    }
+                                    endIcon={
+                                        state.isRecycleMode ? (
+                                            <Close />
+                                        ) : (
+                                            <Delete />
+                                        )
+                                    }>
+                                    {state.isRecycleMode ? 'Close' : 'Bin'}
+                                </Button>
+                                <Tooltip
+                                    title="Filter"
+                                    className={css.filterButton}>
                                     <div>
                                         <IconButton
                                             disabled={isLoading}
                                             color="inherit"
-                                            onClick={handleToggleFilter}
-                                        >
+                                            onClick={handleToggleFilter}>
                                             <FilterList />
                                         </IconButton>
                                     </div>
@@ -257,16 +292,14 @@ const EventManagement = () => {
                         className={css.title}
                         variant="h6"
                         id="tableTitle"
-                        component="div"
-                    >
+                        component="div">
                         List of events
                     </Typography>
                     <Grid
                         className={css.gridLayout}
                         container
                         justify="flex-start"
-                        spacing={2}
-                    >
+                        spacing={2}>
                         {isLoading ? (
                             Array.apply(null, { length: state.take }).map(
                                 (skeleton, index) => {
@@ -285,22 +318,21 @@ const EventManagement = () => {
                                 direction="column"
                                 alignItems="center"
                                 justify="center"
-                                style={{ minHeight: '50vh' }}
-                            >
+                                style={{ minHeight: '50vh' }}>
                                 <Typography>No data matched</Typography>
                             </Grid>
                         ) : (
-                                    events.map((event) => {
-                                        return (
-                                            <EventCard
-                                                event={event}
-                                                key={event._id}
-                                                isLoading={isLoading}
-                                                onClickEvent={handleOnClickEvent}
-                                            />
-                                        );
-                                    })
-                                )}
+                            events.map((event) => {
+                                return (
+                                    <EventCard
+                                        event={event}
+                                        key={event._id}
+                                        isLoading={isLoading}
+                                        onClickEvent={handleOnClickEvent}
+                                    />
+                                );
+                            })
+                        )}
                     </Grid>
                 </Paper>
 

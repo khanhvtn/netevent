@@ -1,16 +1,11 @@
-import {
-    TASK_LOADING,
-    TASK_GET_ALL_FILTER,
-} from '../constants';
-import {
-    getTasksAPI,
-} from '../api';
+import { TASK_LOADING, TASK_GET_ALL_FILTER } from '../constants';
+import { getTasksAPI } from '../api';
 
 //setIsLoading func is to set loading status
 const setTaskIsLoading = (status, dispatch) => {
     dispatch({
         type: TASK_LOADING,
-        payload: status,
+        payload: status
     });
 };
 
@@ -21,9 +16,9 @@ export const getTasks = (userId) => async (dispatch) => {
         dispatch({
             type: TASK_GET_ALL_FILTER,
             payload: data
-        })
+        });
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
     }
     setTaskIsLoading(false, dispatch);
-}
+};

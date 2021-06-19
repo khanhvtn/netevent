@@ -4,8 +4,6 @@ const CustomError = require('../class/CustomeError');
 const mongoose = require('mongoose');
 const { sendInvitation } = require('./misc/mailerInvitation');
 
-
-
 /**
  *  =====================================
  *         PARTICIPANT CONTROLLER
@@ -47,16 +45,16 @@ const filterParticipants = async (req, res, next) => {
                 $in: [true, false]
             },
             academic: {
-                $in: ['Bachelor', 'Master', 'PhD'],
+                $in: ['Bachelor', 'Master', 'PhD']
             },
-            eventId: null,
+            eventId: null
         };
 
         //adding search
         if (req.query.search) {
             options = {
                 ...options,
-                search: req.query.search.toString(),
+                search: req.query.search.toString()
             };
         }
 
@@ -67,7 +65,7 @@ const filterParticipants = async (req, res, next) => {
         if (req.query.take) {
             options = {
                 ...options,
-                take: parseInt(req.query.take.toString()),
+                take: parseInt(req.query.take.toString())
             };
         }
 
@@ -77,7 +75,7 @@ const filterParticipants = async (req, res, next) => {
         if (req.query.eventId) {
             options = {
                 ...options,
-                eventId: req.query.eventId.toString(),
+                eventId: req.query.eventId.toString()
             };
         }
 
@@ -87,7 +85,7 @@ const filterParticipants = async (req, res, next) => {
         if (req.query.academic) {
             options = {
                 ...options,
-                academic: req.query.academic.toString(),
+                academic: req.query.academic.toString()
             };
         }
 
@@ -97,7 +95,10 @@ const filterParticipants = async (req, res, next) => {
         if (req.query.isValid) {
             options = {
                 ...options,
-                isValid: req.query.isValid.toString() === "null" ? null : req.query.isValid.toString() === "true",
+                isValid:
+                    req.query.isValid.toString() === 'null'
+                        ? null
+                        : req.query.isValid.toString() === 'true'
             };
         }
 
@@ -107,7 +108,7 @@ const filterParticipants = async (req, res, next) => {
         if (req.query.isAttended) {
             options = {
                 ...options,
-                isAttended: req.query.isAttended.toString() === "true",
+                isAttended: req.query.isAttended.toString() === 'true'
             };
         }
 
@@ -121,28 +122,28 @@ const filterParticipants = async (req, res, next) => {
                         ...options,
                         isValid: true,
                         isAttended: false
-                    }
+                    };
                     break;
                 case 'Invalid':
                     options = {
                         ...options,
                         isValid: false,
                         isAttended: false
-                    }
+                    };
                     break;
                 case 'Pending':
                     options = {
                         ...options,
                         isValid: null,
                         isAttended: false
-                    }
+                    };
                     break;
                 case 'Checked':
                     options = {
                         ...options,
                         isValid: true,
                         isAttended: true
-                    }
+                    };
                     break;
             }
         }
@@ -168,7 +169,9 @@ const filterParticipants = async (req, res, next) => {
             academic: options.academic
         }).countDocuments();
 
-        let totalPages = (totalParticipants / options.take).toString().includes('.')
+        let totalPages = (totalParticipants / options.take)
+            .toString()
+            .includes('.')
             ? Math.ceil(totalParticipants / options.take)
             : totalParticipants / options.take;
 
@@ -193,7 +196,7 @@ const filterParticipants = async (req, res, next) => {
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
-}
+};
 
 /**
  * @decsription Register Event to save participant model
@@ -203,14 +206,12 @@ const filterParticipants = async (req, res, next) => {
  * @version 1.0
  */
 const registerEvent = async (req, res, next) => {
-
     try {
-        const data = new Participant(req.body)
-        await data.validate()
+        const data = new Participant(req.body);
+        await data.validate();
 
         const savedData = await data.save();
         return cusResponse(res, 200, savedData, null);
-
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
@@ -221,7 +222,7 @@ const registerEvent = async (req, res, next) => {
         }
         return next(new CustomError(500, error.message));
     }
-}
+};
 
 /**
  * @decsription Delete Participant
@@ -242,7 +243,7 @@ const deleteParticipant = async (req, res, next) => {
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
-}
+};
 
 function formatDateTime(date) {
     const year = date.getUTCFullYear();
@@ -285,12 +286,12 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
 
                 // Send Invitation
                 const participants = await Participant.find({
-                    _id: verifiedList,
+                    _id: verifiedList
                 });
 
                 const event = await Event.findOne({
                     _id: participants[0].event
-                })
+                });
 
                 const dateStart = new Date(event.startDate);
                 const dateEnd = new Date(event.endDate);
@@ -301,34 +302,47 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
                 }
                 const stringUsersMail = emailParticipantsList.join(', ');
 
-                const description = JSON.parse(event.description)
+                const description = JSON.parse(event.description);
 
                 //Calendar Content
-                
 
-                let content = 'BEGIN:VCALENDAR\n' +
+                let content =
+                    'BEGIN:VCALENDAR\n' +
                     'VERSION:2.0\n' +
                     'BEGIN:VEVENT\n' +
-                    'DTSTART:' + formatDateTime(dateStart) + '\r\n' +
-                    'DTEND:' + formatDateTime(dateEnd) + '\r\n' +
-                    'SUMMARY:' + event.eventName + '\r\n' +
-                    'DESCRIPTION:' + description.blocks[0].text + ' \r\n' +
-                    'LOCATION:' + event.location + '\r\n' +
-                    'ORGANIZER;CN=' + "NetCompanyy" + ':mailto:' + "netevent@gmail.com" + '\r\n' +
+                    'DTSTART:' +
+                    formatDateTime(dateStart) +
+                    '\r\n' +
+                    'DTEND:' +
+                    formatDateTime(dateEnd) +
+                    '\r\n' +
+                    'SUMMARY:' +
+                    event.eventName +
+                    '\r\n' +
+                    'DESCRIPTION:' +
+                    description.blocks[0].text +
+                    ' \r\n' +
+                    'LOCATION:' +
+                    event.location +
+                    '\r\n' +
+                    'ORGANIZER;CN=' +
+                    'NetCompanyy' +
+                    ':mailto:' +
+                    'netevent@gmail.com' +
+                    '\r\n' +
                     'STATUS:CONFIRMED\n' +
                     'SEQUENCE:0\n' +
                     'ACTION:DISPLAY\n' +
                     'END:VEVENT\n' +
                     'END:VCALENDAR';
 
-
                 await sendInvitation({
                     from: 'noreply@netevent.com',
                     to: stringUsersMail,
                     subject: `NetEvent - ${event.eventName} - Invitation`,
-                    text: "Your event registration has been verified. You can now come to an event!",
+                    text: 'Your event registration has been verified. You can now come to an event!',
                     icalEvent: {
-                        filename: "invitation.ics",
+                        filename: 'invitation.ics',
                         method: 'request',
                         content: content
                     }
@@ -339,7 +353,7 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
-}
+};
 
 /**
  * @decsription Set Attend participants
@@ -360,17 +374,23 @@ const setAttendedParticipant = async (req, res, next) => {
                 );
                 return cusResponse(res, 200, updateAttendedParticipant, null);
             case true:
-                const updateNotAttendedParticipant = await Participant.updateMany(
-                    { _id: attendedList },
-                    { $set: { isAttended: action } },
-                    { new: true }
+                const updateNotAttendedParticipant =
+                    await Participant.updateMany(
+                        { _id: attendedList },
+                        { $set: { isAttended: action } },
+                        { new: true }
+                    );
+                return cusResponse(
+                    res,
+                    200,
+                    updateNotAttendedParticipant,
+                    null
                 );
-                return cusResponse(res, 200, updateNotAttendedParticipant, null);
         }
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
-}
+};
 
 module.exports = {
     getParticipants,
@@ -379,4 +399,4 @@ module.exports = {
     filterParticipants,
     setInvalidAndVerifyParticipant,
     setAttendedParticipant
-}
+};

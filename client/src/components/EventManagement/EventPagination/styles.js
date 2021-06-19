@@ -18,7 +18,7 @@ export default makeStyles((theme) => ({
             paddingRight: 2,
             justifyContent: 'center',
             flexDirection: 'column'
-        },
+        }
     },
     selectRowNumWrapper: {
         display: 'flex',
@@ -28,16 +28,16 @@ export default makeStyles((theme) => ({
         [theme.breakpoints.down('sm')]: {
             marginRight: 0,
             marginBottom: 8
-        },
+        }
     },
     selectRowNum: {
         marginLeft: 8,
-        outline: 'none',
+        outline: 'none'
     },
-    pagination: { 
+    pagination: {
         marginRight: 8,
         [theme.breakpoints.down('sm')]: {
-            marginRight: 0,
-        },
-    },
+            marginRight: 0
+        }
+    }
 }));

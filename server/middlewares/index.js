@@ -4,5 +4,5 @@ const authentication = require('./authentication');
 
 module.exports = {
     errorHandler,
-    authentication,
+    authentication
 };

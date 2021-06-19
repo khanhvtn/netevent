@@ -1,6 +1,6 @@
 import {
     NOTIFICATION_HISTORY_LOADING,
-    NOTIFICATION_HISTORY_GET_ALL,
+    NOTIFICATION_HISTORY_GET_ALL
 } from '../constants';
 
 const initialState = {
@@ -8,12 +8,15 @@ const initialState = {
     notificationHistories: []
 };
 
-export default function notificationHistoryReducers(state = initialState, action) {
+export default function notificationHistoryReducers(
+    state = initialState,
+    action
+) {
     switch (action.type) {
         case NOTIFICATION_HISTORY_GET_ALL:
             return {
                 ...state,
-                notificationHistories: action.payload.data?.data,
+                notificationHistories: action.payload.data?.data
             };
         case NOTIFICATION_HISTORY_LOADING:
             return { ...state, isLoading: action.payload };

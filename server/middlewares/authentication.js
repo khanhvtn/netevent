@@ -7,7 +7,7 @@ const auth = async (req, res, next) => {
         const token = req.cookies.token;
         if (!token) {
             return cusResponse(res, 401, null, {
-                authentication: 'Access Denied',
+                authentication: 'Access Denied'
             });
         }
 
@@ -17,13 +17,13 @@ const auth = async (req, res, next) => {
         req.user = {
             id: decodedData.id,
             email: decodedData.email,
-            role: decodedData.role,
+            role: decodedData.role
         };
         next();
     } catch (error) {
         if (error.name === 'TokenExpiredError') {
             return cusResponse(res, 401, null, {
-                authentication: 'User session is expired',
+                authentication: 'User session is expired'
             });
         }
     }

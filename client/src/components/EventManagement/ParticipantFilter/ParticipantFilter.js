@@ -6,7 +6,7 @@ import {
     MenuItem,
     Drawer,
     InputLabel,
-    FormControl,
+    FormControl
 } from '@material-ui/core';
 //import useStyles in the last
 import useStyles from './styles';
@@ -28,12 +28,23 @@ const ParticipantFilter = ({
     return (
         <Drawer anchor="right" open={openFilter} onClose={handleToggleFilter}>
             <div className={css.filterTitle}>
-                <Typography style={{ fontWeight: 'bold' }} align="center" variant="h6">Filter User</Typography>
+                <Typography
+                    style={{ fontWeight: 'bold' }}
+                    align="center"
+                    variant="h6">
+                    Filter User
+                </Typography>
             </div>
             <div className={css.filterWrapper}>
                 <div className={css.filterInputs}>
-                    <FormControl size="small" margin="normal" fullWidth variant="outlined">
-                        <InputLabel id="academicFilterLabel">Academic</InputLabel>
+                    <FormControl
+                        size="small"
+                        margin="normal"
+                        fullWidth
+                        variant="outlined">
+                        <InputLabel id="academicFilterLabel">
+                            Academic
+                        </InputLabel>
                         <Select
                             id="academicFiler"
                             label="Academic"
@@ -41,9 +52,8 @@ const ParticipantFilter = ({
                             value={academic}
                             onChange={handleFilterChange}
                             inputProps={{
-                                name: 'academic',
-                            }}
-                        >
+                                name: 'academic'
+                            }}>
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
@@ -52,10 +62,16 @@ const ParticipantFilter = ({
                             <MenuItem value={'PhD'}>PhD</MenuItem>
                         </Select>
                     </FormControl>
-                    <FormControl size="small" margin="normal" fullWidth variant="outlined">
-                        {isReviewer ?
+                    <FormControl
+                        size="small"
+                        margin="normal"
+                        fullWidth
+                        variant="outlined">
+                        {isReviewer ? (
                             <>
-                                <InputLabel id="statusFilterLabel">Status</InputLabel>
+                                <InputLabel id="statusFilterLabel">
+                                    Status
+                                </InputLabel>
                                 <Select
                                     id="statusFiler"
                                     label="Status"
@@ -63,60 +79,69 @@ const ParticipantFilter = ({
                                     value={status}
                                     onChange={handleFilterChange}
                                     inputProps={{
-                                        name: 'status',
-                                    }}
-                                >
+                                        name: 'status'
+                                    }}>
                                     <MenuItem value="">
                                         <em>None</em>
                                     </MenuItem>
-                                    <MenuItem value={'Checked'}>Checked</MenuItem>
-                                    <MenuItem value={'Verified'}>Verified</MenuItem>
-                                    <MenuItem value={'Invalid'}>Invalid</MenuItem>
-                                    <MenuItem value={'Pending'}>Pending</MenuItem>
+                                    <MenuItem value={'Checked'}>
+                                        Checked
+                                    </MenuItem>
+                                    <MenuItem value={'Verified'}>
+                                        Verified
+                                    </MenuItem>
+                                    <MenuItem value={'Invalid'}>
+                                        Invalid
+                                    </MenuItem>
+                                    <MenuItem value={'Pending'}>
+                                        Pending
+                                    </MenuItem>
                                 </Select>
                             </>
-                            : checkInMode ?
-                                <>
-                                    <InputLabel id="isAttendedFilterLabel">Status</InputLabel>
-                                    <Select
-                                        id="isAttendedFiler"
-                                        label="Status"
-                                        labelId="isAttendedFilterLabel"
-                                        value={isAttended}
-                                        onChange={handleFilterChange}
-                                        inputProps={{
-                                            name: 'isAttended',
-                                        }}
-                                    >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
-                                        <MenuItem value={true}>Checked</MenuItem>
-                                        <MenuItem value={false}>Verified</MenuItem>
-                                    </Select>
-                                </>
-                                :
-                                <>
-                                    <InputLabel id="isValidFilterLabel">Status</InputLabel>
-                                    <Select
-                                        id="isValidFiler"
-                                        label="Status"
-                                        labelId="isValidFilterLabel"
-                                        value={isValid}
-                                        onChange={handleFilterChange}
-                                        inputProps={{
-                                            name: 'isValid',
-                                        }}
-                                    >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
-                                        <MenuItem value={true}>Verified</MenuItem>
-                                        <MenuItem value={false}>Invalid</MenuItem>
-                                        <MenuItem value={"null"}>Pending</MenuItem>
-                                    </Select>
-                                </>
-                        }
+                        ) : checkInMode ? (
+                            <>
+                                <InputLabel id="isAttendedFilterLabel">
+                                    Status
+                                </InputLabel>
+                                <Select
+                                    id="isAttendedFiler"
+                                    label="Status"
+                                    labelId="isAttendedFilterLabel"
+                                    value={isAttended}
+                                    onChange={handleFilterChange}
+                                    inputProps={{
+                                        name: 'isAttended'
+                                    }}>
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    <MenuItem value={true}>Checked</MenuItem>
+                                    <MenuItem value={false}>Verified</MenuItem>
+                                </Select>
+                            </>
+                        ) : (
+                            <>
+                                <InputLabel id="isValidFilterLabel">
+                                    Status
+                                </InputLabel>
+                                <Select
+                                    id="isValidFiler"
+                                    label="Status"
+                                    labelId="isValidFilterLabel"
+                                    value={isValid}
+                                    onChange={handleFilterChange}
+                                    inputProps={{
+                                        name: 'isValid'
+                                    }}>
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    <MenuItem value={true}>Verified</MenuItem>
+                                    <MenuItem value={false}>Invalid</MenuItem>
+                                    <MenuItem value={'null'}>Pending</MenuItem>
+                                </Select>
+                            </>
+                        )}
                     </FormControl>
                 </div>
                 <div className={css.filterActions}>
@@ -124,15 +149,13 @@ const ParticipantFilter = ({
                         className={css.handleClearButton}
                         onClick={handleClearFilter}
                         style={{ backgroundColor: 'transparent' }}
-                        color="default"
-                    >
+                        color="default">
                         Clear all
                     </Button>
                     <Button
                         onClick={handleApplyFilter}
                         variant="contained"
-                        color="primary"
-                    >
+                        color="primary">
                         Apply
                     </Button>
                 </div>

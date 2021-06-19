@@ -5,8 +5,8 @@ const eventTypeControllers = require('./eventTypeControllers');
 const eventControllers = require('./eventControllers');
 const taskControllers = require('./taskControllers');
 const facilityHistoryControllers = require('./facilityHistoryControllers');
-const linkControllers = require('./linkControllers')
-const participantControllers = require('./participantControllers')
+const linkControllers = require('./linkControllers');
+const participantControllers = require('./participantControllers');
 const notificationControllers = require('./notificationHistoryControllers');
 
 /**

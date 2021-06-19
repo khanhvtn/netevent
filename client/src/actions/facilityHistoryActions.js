@@ -3,14 +3,14 @@ import { getAllFacilityHistoriesAPI, getFacilityHistoriesAPI } from '../api';
 import {
     FACILITY_HISTORY_GET_ALL,
     FACILITY_HISTORY_LOADING,
-    FACILITY_HISTORY_GET_ALL_FILTER,
+    FACILITY_HISTORY_GET_ALL_FILTER
 } from '../constants';
 
 //setIsLoading func is to set loading status
 const setFacilityHistoryIsLoading = (status, dispatch) => {
     dispatch({
         type: FACILITY_HISTORY_LOADING,
-        payload: status,
+        payload: status
     });
 };
 export const getAllFacilityHistories = () => async (dispatch) => {
@@ -19,7 +19,7 @@ export const getAllFacilityHistories = () => async (dispatch) => {
         const data = await getAllFacilityHistoriesAPI();
         dispatch({
             type: FACILITY_HISTORY_GET_ALL,
-            payload: data,
+            payload: data
         });
     } catch (error) {
         console.log(error);
@@ -32,7 +32,7 @@ export const getFacilityHistories = (userQueries) => async (dispatch) => {
         const data = await getFacilityHistoriesAPI(userQueries);
         dispatch({
             type: FACILITY_HISTORY_GET_ALL_FILTER,
-            payload: data,
+            payload: data
         });
     } catch (error) {
         console.log(error);

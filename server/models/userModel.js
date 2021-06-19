@@ -10,10 +10,10 @@ const userSchema = mongoose.Schema(
     {
         email: {
             type: String,
-            required: true,
+            required: true
         },
         password: {
-            type: String,
+            type: String
         },
         role: {
             type: [String],
@@ -21,8 +21,7 @@ const userSchema = mongoose.Schema(
         },
         isConfirmed: {
             type: Boolean,
-            default: false,
-        
+            default: false
         }
     },
     { timestamps: true }

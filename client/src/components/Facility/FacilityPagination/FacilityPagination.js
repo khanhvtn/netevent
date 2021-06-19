@@ -9,11 +9,11 @@ const FacilityPagination = ({
     page,
     take,
     handleChangeRowsPerPage,
-    handleChangePage,
+    handleChangePage
 }) => {
     const css = useStyles();
     const { totalPages } = useSelector((state) => ({
-        totalPages: state.facility.totalPages,
+        totalPages: state.facility.totalPages
     }));
     return (
         <Toolbar className={css.paginationWrapper}>
@@ -27,12 +27,10 @@ const FacilityPagination = ({
                     variant="standard"
                     value={take}
                     name="take"
-                    onChange={handleChangeRowsPerPage}
-                >
+                    onChange={handleChangeRowsPerPage}>
                     <MenuItem value={10}>10</MenuItem>
                     <MenuItem value={20}>20</MenuItem>
                     <MenuItem value={30}>30</MenuItem>
-
                 </Select>
             </div>
             <div>

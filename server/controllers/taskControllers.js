@@ -8,14 +8,13 @@ const CustomError = require('../class/CustomeError');
  *  =====================================
  */
 
-
 /**
-* @decsription Create new task with following request
-* @method POST 
-* @route /api/task/create
-* 
-* @version 1.0
-*/
+ * @decsription Create new task with following request
+ * @method POST
+ * @route /api/task/create
+ *
+ * @version 1.0
+ */
 const createTask = async (req, res, next) => {
     try {
         const task = new Task(req.body);
@@ -37,20 +36,17 @@ const createTask = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Get, search and filter tasks (included paging)
-* @method GET 
-* @route /api/task/filter
-* 
-* @version 1.0
-*/
+ * @decsription Get, search and filter tasks (included paging)
+ * @method GET
+ * @route /api/task/filter
+ *
+ * @version 1.0
+ */
 const filter = async (req, res, next) => {
     try {
         //get max date and min date of updatedAt and createdAt
-        const startMaxDate = await Task.find()
-            .sort({ startDate: -1 })
-            .limit(1);
+        const startMaxDate = await Task.find().sort({ startDate: -1 }).limit(1);
         const startMinDate = await Task.find().sort({ startDate: 1 }).limit(1);
         const endMaxDate = await Task.find().sort({ endDate: -1 }).limit(1);
         const endMinDate = await Task.find().sort({ endDate: 1 }).limit(1);
@@ -58,7 +54,7 @@ const filter = async (req, res, next) => {
             startMaxDate,
             startMinDate,
             endMaxDate,
-            endMinDate,
+            endMinDate
         ]);
 
         //return empty result to client if database has no data.
@@ -80,14 +76,14 @@ const filter = async (req, res, next) => {
             startMaxDate: listRangeDate[0][0].startDate,
             startMinDate: listRangeDate[1][0].startDate,
             endMaxDate: listRangeDate[2][0].endDate,
-            endMinDate: listRangeDate[3][0].endDate,
+            endMinDate: listRangeDate[3][0].endDate
         };
 
         //adding search
         if (req.query.search) {
             options = {
                 ...options,
-                search: req.query.search.toString(),
+                search: req.query.search.toString()
             };
         }
 
@@ -98,7 +94,7 @@ const filter = async (req, res, next) => {
         if (req.query.take) {
             options = {
                 ...options,
-                take: parseInt(req.query.take.toString()),
+                take: parseInt(req.query.take.toString())
             };
         }
 
@@ -108,7 +104,7 @@ const filter = async (req, res, next) => {
         if (req.query.startFrom) {
             options = {
                 ...options,
-                startMinDate: new Date(req.query.startFrom),
+                startMinDate: new Date(req.query.startFrom)
             };
         }
 
@@ -119,7 +115,7 @@ const filter = async (req, res, next) => {
         if (req.query.startTo) {
             options = {
                 ...options,
-                startMaxDate: new Date(req.query.startTo),
+                startMaxDate: new Date(req.query.startTo)
             };
         }
 
@@ -129,7 +125,7 @@ const filter = async (req, res, next) => {
         if (req.query.endFrom) {
             options = {
                 ...options,
-                endMinDate: new Date(req.query.endFrom),
+                endMinDate: new Date(req.query.endFrom)
             };
         }
 
@@ -140,7 +136,7 @@ const filter = async (req, res, next) => {
         if (req.query.endTo) {
             options = {
                 ...options,
-                endMaxDate: new Date(req.query.endTo),
+                endMaxDate: new Date(req.query.endTo)
             };
         }
 
@@ -156,12 +152,12 @@ const filter = async (req, res, next) => {
             $or: [{ name: new RegExp(options.search, 'i') }],
             startDate: {
                 $gte: options.startMinDate,
-                $lte: options.startMaxDate,
+                $lte: options.startMaxDate
             },
             endDate: {
                 $gte: options.endMinDate,
-                $lte: options.endMaxDate,
-            },
+                $lte: options.endMaxDate
+            }
         }).countDocuments();
 
         let totalPages = (totalTask / options.take).toString().includes('.')
@@ -173,12 +169,12 @@ const filter = async (req, res, next) => {
             $or: [{ name: new RegExp(options.search, 'i') }],
             startDate: {
                 $gte: options.startMinDate,
-                $lte: options.startMaxDate,
+                $lte: options.startMaxDate
             },
             endDate: {
                 $gte: options.endMinDate,
-                $lte: options.endMaxDate,
-            },
+                $lte: options.endMaxDate
+            }
         })
             .sort({ updatedAt: -1 })
             .skip((page - 1) * options.take)
@@ -190,27 +186,26 @@ const filter = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Delete events from the request list of task's id
-* @method DELETE 
-* @route /api/task/delete
-* 
-* @version 1.0
-*/
+ * @decsription Delete events from the request list of task's id
+ * @method DELETE
+ * @route /api/task/delete
+ *
+ * @version 1.0
+ */
 const deleteTask = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
         if (deleteList.length === 1) {
             const deletedTask = await Task.findOneAndDelete({
-                _id: deleteList[0],
+                _id: deleteList[0]
             });
             return cusResponse(res, 200, deletedTask, null);
         } else {
             const deletedTask = await Promise.all(
                 deleteList.map(async (_id) => {
                     return await Task.findOneAndDelete({
-                        _id,
+                        _id
                     });
                 })
             );
@@ -228,14 +223,13 @@ const deleteTask = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Update task by new request update
-* @method PATCH 
-* @route /api/task/update
-* 
-* @version 1.0
-*/
+ * @decsription Update task by new request update
+ * @method PATCH
+ * @route /api/task/update
+ *
+ * @version 1.0
+ */
 const updateTask = async (req, res, next) => {
     try {
         const userReq = req.body;
@@ -258,45 +252,46 @@ const updateTask = async (req, res, next) => {
     }
 };
 
-
 /**
-* @decsription Get all tasks
-* @method GET 
-* @route /api/task/all
-* 
-* @version 1.0
-*/
+ * @decsription Get all tasks
+ * @method GET
+ * @route /api/task/all
+ *
+ * @version 1.0
+ */
 const getAllTask = async (req, res, next) => {
     try {
         const tasks = await Task.find({
             userId: req.query.userId
-        }).populate({
-            path: 'userId eventId'
-        }).sort({ startDate: -1 });
+        })
+            .populate({
+                path: 'userId eventId'
+            })
+            .sort({ startDate: -1 });
 
         // Remove all task not have eventId
-        let checkCode = []
-        let result = []
-        const filterTasks = tasks.filter(task => task.eventId)
+        let checkCode = [];
+        let result = [];
+        const filterTasks = tasks.filter((task) => task.eventId);
         for (task of filterTasks) {
             let tmpObj = {
                 code: null,
                 eventName: null,
                 startDate: null,
                 tasks: []
-            }
+            };
             if (!checkCode.includes(task.eventId?.urlCode)) {
                 tmpObj.code = task.eventId?.urlCode;
                 tmpObj.eventName = task.eventId?.eventName;
                 tmpObj.startDate = task.eventId?.startDate;
-                tmpObj.tasks.push(task)
+                tmpObj.tasks.push(task);
 
                 result.push(tmpObj);
                 checkCode.push(task.eventId?.urlCode);
             } else {
                 for (currentTask of result) {
                     if (currentTask.code === task.eventId?.urlCode) {
-                        currentTask.tasks.push(task)
+                        currentTask.tasks.push(task);
                         break;
                     }
                 }
@@ -309,11 +304,10 @@ const getAllTask = async (req, res, next) => {
     }
 };
 
-
 module.exports = {
     createTask,
     filter,
     deleteTask,
     updateTask,
-    getAllTask,
+    getAllTask
 };

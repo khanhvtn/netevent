@@ -2,6 +2,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(() => ({
     wrapper: {
-        flexGrow: 1,
-    },
+        flexGrow: 1
+    }
 }));

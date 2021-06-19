@@ -24,8 +24,7 @@ const DashboardNavbar = ({ onMobileNavOpen, onPickRole, ...rest }) => {
                 className={css.navbarColor}
                 color="default"
                 elevation={1}
-                {...rest}
-            >
+                {...rest}>
                 <Toolbar>
                     <div className={css.imageSize} align="center">
                         <Link to="/">
@@ -38,15 +37,14 @@ const DashboardNavbar = ({ onMobileNavOpen, onPickRole, ...rest }) => {
                             <InputIcon />
                         </IconButton>
                     ) : (
-                            <Hidden lgUp>
-                                <IconButton
-                                    color="inherit"
-                                    onClick={onMobileNavOpen}
-                                >
-                                    <MenuIcon />
-                                </IconButton>
-                            </Hidden>
-                        )}
+                        <Hidden lgUp>
+                            <IconButton
+                                color="inherit"
+                                onClick={onMobileNavOpen}>
+                                <MenuIcon />
+                            </IconButton>
+                        </Hidden>
+                    )}
                 </Toolbar>
             </AppBar>
         </div>
@@ -54,7 +52,7 @@ const DashboardNavbar = ({ onMobileNavOpen, onPickRole, ...rest }) => {
 };
 
 DashboardNavbar.propTypes = {
-    onMobileNavOpen: PropTypes.func,
+    onMobileNavOpen: PropTypes.func
 };
 
 export default DashboardNavbar;

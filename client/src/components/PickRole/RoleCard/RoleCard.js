@@ -5,7 +5,7 @@ import {
     CardMedia,
     Typography,
     ButtonBase,
-    Grow,
+    Grow
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -22,7 +22,7 @@ const RoleCard = ({ roleNum, roleName, defaultPath, icon, delay }) => {
         //set picked role
         dispatch({
             type: USER_PICK_ROLE,
-            payload: roleNum,
+            payload: roleNum
         });
         //set roleNum to localStorage
         localStorage.setItem('roleNum', roleNum);

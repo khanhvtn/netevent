@@ -5,19 +5,20 @@ import {
     Toolbar,
     IconButton,
     Tooltip,
-    InputBase,
+    InputBase
 } from '@material-ui/core';
 import ParticipantPagination from '../../ParticipantPagination/ParticipantPagination';
 import ParticipantTable from '../../ParticipantTable/ParticipantTable';
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
 import useStyles from './styles';
-import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getParticipants, setAttendedParticipant } from '../../../../actions/participantActions';
+import {
+    getParticipants,
+    setAttendedParticipant
+} from '../../../../actions/participantActions';
 import ParticipantFilter from '../../ParticipantFilter/ParticipantFilter';
 import SystemNotification from '../../../Notification/Notification';
-
 
 const initialState = {
     search: '',
@@ -33,20 +34,17 @@ const initialState = {
 
 const filterState = {
     academic: '',
-    isAttended: '',
-}
+    isAttended: ''
+};
 
 const CheckInTable = ({ eventId, tabs }) => {
     const css = useStyles();
-    const history = useHistory();
     const dispatch = useDispatch();
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
     const [selected, setSelected] = useState([]);
 
-    const {
-        isParticipantUpdated,
-    } = useSelector((state) => ({
+    const { isParticipantUpdated } = useSelector((state) => ({
         isParticipantUpdated: state.participant.isUpdated
     }));
 
@@ -65,13 +63,14 @@ const CheckInTable = ({ eventId, tabs }) => {
                     state.isAttended,
                     eventId
                 )
-            )
+            );
         }
         setState((prevState) => ({
             ...prevState,
-            openUpdateSnackBar: isParticipantUpdated,
+            openUpdateSnackBar: isParticipantUpdated
         }));
-    }, [dispatch,
+    }, [
+        dispatch,
         state.search,
         state.take,
         state.page,
@@ -79,8 +78,8 @@ const CheckInTable = ({ eventId, tabs }) => {
         state.isValid,
         state.isAttended,
         eventId,
-        isParticipantUpdated]
-    );
+        isParticipantUpdated
+    ]);
 
     // Use Effect call participants API after state is set
     useEffect(() => {
@@ -95,9 +94,10 @@ const CheckInTable = ({ eventId, tabs }) => {
                     state.isAttended,
                     eventId
                 )
-            )
+            );
         }
-    }, [dispatch,
+    }, [
+        dispatch,
         state.search,
         state.take,
         state.page,
@@ -105,12 +105,14 @@ const CheckInTable = ({ eventId, tabs }) => {
         state.isValid,
         state.isAttended,
         eventId,
-        tabs]
-    );
+        tabs
+    ]);
 
     const handleSetAttended = (action) => {
-        dispatch(setAttendedParticipant({ attendedList: selected, action: action }))
-    }
+        dispatch(
+            setAttendedParticipant({ attendedList: selected, action: action })
+        );
+    };
 
     const handleChangePage = (event, newPage) => {
         setState((prevState) => ({ ...prevState, page: newPage }));
@@ -120,7 +122,7 @@ const CheckInTable = ({ eventId, tabs }) => {
         setState((prevState) => ({
             ...prevState,
             take: parseInt(event.target.value),
-            page: 1,
+            page: 1
         }));
     };
 
@@ -130,13 +132,13 @@ const CheckInTable = ({ eventId, tabs }) => {
             ...prevState,
             [name]: value
         }));
-    }
+    };
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
 
@@ -144,7 +146,7 @@ const CheckInTable = ({ eventId, tabs }) => {
     const handleToggleFilter = () => {
         setState((prevState) => ({
             ...prevState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -154,23 +156,23 @@ const CheckInTable = ({ eventId, tabs }) => {
             ...prevState,
             ...filters,
             page: 1,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
-        setSelected([])
+        setSelected([]);
     };
 
     //handle Clear Filter
     const handleClearFilter = () => {
         setFilters((prevState) => ({
             ...prevState,
-            ...filterState,
+            ...filterState
         }));
         setState((prevState) => ({
             ...prevState,
             ...filterState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
-        setSelected([])
+        setSelected([]);
     };
 
     return (
@@ -188,7 +190,7 @@ const CheckInTable = ({ eventId, tabs }) => {
                             name="search"
                             value={state.search}
                             inputProps={{
-                                'aria-label': 'search',
+                                'aria-label': 'search'
                             }}
                         />
                     </div>
@@ -196,8 +198,7 @@ const CheckInTable = ({ eventId, tabs }) => {
                     <Tooltip title="Filter">
                         <IconButton
                             color="inherit"
-                            onClick={handleToggleFilter}
-                        >
+                            onClick={handleToggleFilter}>
                             <FilterList />
                         </IconButton>
                     </Tooltip>
@@ -208,13 +209,15 @@ const CheckInTable = ({ eventId, tabs }) => {
                     checkInMode={state.checkInMode}
                     handleSetAttended={handleSetAttended}
                     selected={selected}
-                    setSelected={setSelected} />
+                    setSelected={setSelected}
+                />
 
                 <ParticipantPagination
                     page={state.page}
                     take={state.take}
                     handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    handleChangePage={handleChangePage} />
+                    handleChangePage={handleChangePage}
+                />
 
                 {/* Participant Filter */}
                 <ParticipantFilter
@@ -225,12 +228,13 @@ const CheckInTable = ({ eventId, tabs }) => {
                     isAttended={filters.isAttended}
                     handleFilterChange={handleFilterChange}
                     handleApplyFilter={handleApplyFilter}
-                    handleClearFilter={handleClearFilter} />
+                    handleClearFilter={handleClearFilter}
+                />
             </Grid>
             {/* Notification */}
             <SystemNotification openUpdateSnackBar={state.openUpdateSnackBar} />
         </AppBar>
-    )
-}
+    );
+};
 
 export default CheckInTable;

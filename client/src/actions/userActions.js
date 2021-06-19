@@ -15,7 +15,7 @@ import {
     USER_CREATE_SUCCESS,
     USER_UPDATE_SUCCESS,
     USER_DELETE_SUCCESS,
-    GET_ALL_USERS,
+    GET_ALL_USERS
 } from '../constants';
 
 import * as api from '../api';
@@ -24,7 +24,7 @@ import * as api from '../api';
 const setUserIsLoading = (status, dispatch) => {
     dispatch({
         type: USER_LOADING,
-        payload: status,
+        payload: status
     });
 };
 
@@ -32,7 +32,7 @@ const setUserIsLoading = (status, dispatch) => {
 const setUserIsChecking = (status, dispatch) => {
     dispatch({
         type: USER_CHECKING,
-        payload: status,
+        payload: status
     });
 };
 
@@ -43,7 +43,7 @@ export const userLogin = (userReq, history) => async (dispatch) => {
         const { data } = await api.userLoginAPI(userReq);
         dispatch({
             type: USER_LOGIN,
-            payload: data.data,
+            payload: data.data
         });
 
         //redirect to pickrole page
@@ -52,7 +52,7 @@ export const userLogin = (userReq, history) => async (dispatch) => {
         if (error.response.data?.errors) {
             dispatch({
                 type: ERROR,
-                payload: error.response.data?.errors,
+                payload: error.response.data?.errors
             });
         }
         console.log(error);
@@ -67,7 +67,7 @@ export const userLogout = (history) => async (dispatch) => {
         const { data } = await api.userLogoutAPI();
         dispatch({
             type: USER_LOGOUT,
-            payload: data.data,
+            payload: data.data
         });
 
         //clear roleNum in localStorage
@@ -87,7 +87,7 @@ export const fetchCurrentUser = (currentUser, history) => async (dispatch) => {
         console.log(data);
         dispatch({
             type: FETCH_CURRENT_USER,
-            payload: data.data,
+            payload: data.data
         });
         history.push('/pickrole');
     } catch (error) {
@@ -112,9 +112,21 @@ export const userCheck = (history) => async (dispatch) => {
         const { data } = await api.userCheckingAPI();
         dispatch({
             type: USER_CHECK,
-            payload: data.data,
+            payload: data.data
         });
 
+        //default state
+        let defaultHistoryOptions = {
+            pathname: prevPath
+        };
+        //set isRecoveryMode from local storage
+        const stateHistory = JSON.parse(localStorage.getItem('stateHistory'));
+        if (stateHistory) {
+            defaultHistoryOptions = {
+                ...defaultHistoryOptions,
+                state: { isRecycleMode: stateHistory.isRecycleMode }
+            };
+        }
         //check valid Role and set numRole
         const userRole = data.data.role;
         const currentRoleBasedOnPath = prevPath.includes('dashboard/admin')
@@ -128,7 +140,7 @@ export const userCheck = (history) => async (dispatch) => {
             : null;
         dispatch({
             type: USER_PICK_ROLE,
-            payload: currentRoleBasedOnPath,
+            payload: currentRoleBasedOnPath
         });
         /* 
         Prevent user already login but access to login by inputting link.
@@ -137,11 +149,11 @@ export const userCheck = (history) => async (dispatch) => {
         prevPath === '/login' ||
         !userRole.includes(currentRoleBasedOnPath)
             ? history.push('/pickrole')
-            : history.push(prevPath);
+            : history.push(defaultHistoryOptions);
     } catch (error) {
         dispatch({
             type: USER_CHECK,
-            payload: null,
+            payload: null
         });
         history.push(prevPath);
     }
@@ -217,19 +229,19 @@ export const createUser = (userData) => async (dispatch) => {
         dispatch({ type: USER_CREATE_SUCCESS, payload: true });
         dispatch({
             type: ERROR_CLEAR,
-            payload: null,
+            payload: null
         });
         setTimeout(() => {
             dispatch({
                 type: USER_CREATE_SUCCESS,
-                payload: false,
+                payload: false
             });
         }, 3000);
     } catch (error) {
         if (error.response.data?.errors) {
             dispatch({
                 type: ERROR,
-                payload: error.response.data?.errors,
+                payload: error.response.data?.errors
             });
         }
         console.log(error);
@@ -245,7 +257,7 @@ export const updateUser =
             dispatch({ type: USER_UPDATE_SUCCESS, payload: true });
             dispatch({
                 type: ERROR_CLEAR,
-                payload: null,
+                payload: null
             });
             setTimeout(() => {
                 dispatch({ type: USER_UPDATE_SUCCESS, payload: false });
@@ -258,7 +270,7 @@ export const updateUser =
             if (error.response.data?.errors) {
                 dispatch({
                     type: ERROR,
-                    payload: error.response.data?.errors,
+                    payload: error.response.data?.errors
                 });
             }
             console.log(error);
@@ -273,18 +285,18 @@ export const deleteUsers =
             await api.deleteUsersAPI(userReq);
             dispatch({
                 type: USER_DELETE_SUCCESS,
-                payload: true,
+                payload: true
             });
 
             dispatch({
                 type: ERROR_CLEAR,
-                payload: null,
+                payload: null
             });
 
             setTimeout(() => {
                 dispatch({
                     type: USER_DELETE_SUCCESS,
-                    payload: false,
+                    payload: false
                 });
             }, 3000);
 

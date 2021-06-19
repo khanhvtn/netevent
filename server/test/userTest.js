@@ -3,7 +3,6 @@ const User = require('../models/userModel');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../index');
-const should = chai.should();
 
 /**
  *  =====================================
@@ -20,14 +19,14 @@ chai.use(chaiHttp);
 describe('Users', () => {
     //Before each test we empty the database
     beforeEach((done) => {
-        User.remove({}, (err) => {
+        User.remove({}, () => {
             done();
         });
     });
 
     /*
-      * Test the /GET user
-      */
+     * Test the /GET user
+     */
     describe('/GET/user/filter user', () => {
         it('it should GET all the users', (done) => {
             chai.request(server)
@@ -44,8 +43,8 @@ describe('Users', () => {
     });
 
     /*
-      * Test the /POST user
-      */
+     * Test the /POST user
+     */
     // describe('/POST/user/create user', () => {
     //     it('it should POST a user', (done) => {
     //         let user = {
@@ -74,11 +73,11 @@ describe('Users', () => {
     // });
 
     /*
-      * Test the /PATCH user
-      */
+     * Test the /PATCH user
+     */
     describe('/PUT/user/update user', () => {
         it('it should UPDATE a user', (done) => {
-            let user = new User({ email: "test@gmail.com", role: ['1'] });
+            let user = new User({ email: 'test@gmail.com', role: ['1'] });
             let updateUser = {
                 filter: user.email,
                 update: {
@@ -86,7 +85,7 @@ describe('Users', () => {
                     role: ['1', '2', '3', '4']
                 }
             };
-            user.save((err, user) => {
+            user.save(() => {
                 chai.request(server)
                     .patch('/api/user/update')
                     .send(updateUser)
@@ -96,10 +95,16 @@ describe('Users', () => {
                         res.body.should.have.property('code').eql(200);
                         res.body.should.have.property('message').eql('success');
                         res.body.should.have.property('data');
-                        res.body.data.should.have.property('role').eql(updateUser.update.role);
-                        res.body.data.should.have.property('isConfirmed').eql(false);
+                        res.body.data.should.have
+                            .property('role')
+                            .eql(updateUser.update.role);
+                        res.body.data.should.have
+                            .property('isConfirmed')
+                            .eql(false);
                         res.body.data.should.have.property('_id');
-                        res.body.data.should.have.property('email').eql(updateUser.update.email);
+                        res.body.data.should.have
+                            .property('email')
+                            .eql(updateUser.update.email);
                         res.body.data.should.have.property('createdAt');
                         res.body.data.should.have.property('updatedAt');
                         done();
@@ -113,9 +118,9 @@ describe('Users', () => {
      */
     describe('/DELETE/user/delete user', () => {
         it('it should DELETE a user', (done) => {
-            let user = new User({ email: "test@gmail.com", role: ['1'] });
+            let user = new User({ email: 'test@gmail.com', role: ['1'] });
             let deleteUser = {
-                deleteList: ["test@gmail.com"]
+                deleteList: ['test@gmail.com']
             };
             user.save((err, user) => {
                 chai.request(server)
@@ -127,10 +132,16 @@ describe('Users', () => {
                         res.body.should.have.property('code').eql(200);
                         res.body.should.have.property('message').eql('success');
                         res.body.should.have.property('data');
-                        res.body.data.should.have.property('role').eql(user.role);
-                        res.body.data.should.have.property('isConfirmed').eql(false);
+                        res.body.data.should.have
+                            .property('role')
+                            .eql(user.role);
+                        res.body.data.should.have
+                            .property('isConfirmed')
+                            .eql(false);
                         res.body.data.should.have.property('_id');
-                        res.body.data.should.have.property('email').eql(user.email);
+                        res.body.data.should.have
+                            .property('email')
+                            .eql(user.email);
                         res.body.data.should.have.property('createdAt');
                         res.body.data.should.have.property('updatedAt');
                         done();
@@ -144,10 +155,9 @@ describe('Users', () => {
         const errorBody = currentResponse && currentResponse.body;
 
         if (this.currentTest.state === 'failed' && errorBody) {
-            console.log("This is a response: ", errorBody);
+            console.log('This is a response: ', errorBody);
         }
 
         currentResponse = null;
     });
-
 });

@@ -6,7 +6,7 @@ const Event = require('./eventModel');
 const Task = require('./taskModel');
 const FacilityHistory = require('./facilityHistoryModel');
 const Participant = require('./participantModel');
-const NotificationHistory = require('./notificationHistoryModel')
+const NotificationHistory = require('./notificationHistoryModel');
 module.exports = {
     //add models here
     User,

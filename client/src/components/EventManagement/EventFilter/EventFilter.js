@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     MuiPickersUtilsProvider,
-    KeyboardDatePicker,
+    KeyboardDatePicker
 } from '@material-ui/pickers';
 import {
     Grid,
@@ -14,7 +14,7 @@ import {
     Select
 } from '@material-ui/core';
 import MomentUtils from '@date-io/moment';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 
 //import useStyles in the last
@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux';
 const PrettoSlider = withStyles({
     root: {
         color: '#3F51B5',
-        height: 8,
+        height: 8
     },
     thumb: {
         height: 24,
@@ -34,23 +34,22 @@ const PrettoSlider = withStyles({
         marginTop: -8,
         marginLeft: -12,
         '&:focus, &:hover, &$active': {
-            boxShadow: 'inherit',
-        },
+            boxShadow: 'inherit'
+        }
     },
     active: {},
     valueLabel: {
-        left: 'calc(-50% + 4px)',
+        left: 'calc(-50% + 4px)'
     },
     track: {
         height: 8,
-        borderRadius: 4,
+        borderRadius: 4
     },
     rail: {
         height: 8,
-        borderRadius: 4,
-    },
+        borderRadius: 4
+    }
 })(Slider);
-
 
 const EventFilter = ({
     openFilter,
@@ -74,7 +73,7 @@ const EventFilter = ({
     const { eventTypes, isLoading } = useSelector((state) => ({
         eventTypes: state.eventType.eventTypes,
         isLoading: state.eventType.isLoading
-    }))
+    }));
 
     // Set budget state
     const handleOnChangeBudget = (e, budget) => {
@@ -82,7 +81,7 @@ const EventFilter = ({
             ...prevState,
             budgetRange: budget
         }));
-    }
+    };
 
     // Set maxParticipants state
     const handleOnChangeParticipant = (e, participant) => {
@@ -90,16 +89,25 @@ const EventFilter = ({
             ...prevState,
             participantRange: participant
         }));
-    }
+    };
 
     return (
         <Drawer anchor="right" open={openFilter} onClose={handleToggleFilter}>
             <div className={css.filterTitle}>
-                <Typography style={{ fontWeight: 'bold' }} align="center" variant="h6">Filter User</Typography>
+                <Typography
+                    style={{ fontWeight: 'bold' }}
+                    align="center"
+                    variant="h6">
+                    Filter User
+                </Typography>
             </div>
             <div className={css.filterWrapper}>
                 <div className={css.filterInputs}>
-                    <FormControl size="small" margin="normal" fullWidth variant="outlined">
+                    <FormControl
+                        size="small"
+                        margin="normal"
+                        fullWidth
+                        variant="outlined">
                         <InputLabel id="typeFilterLabel">Type</InputLabel>
                         <Select
                             disabled={isLoading}
@@ -109,23 +117,32 @@ const EventFilter = ({
                             value={type}
                             onChange={handleFilterChange}
                             inputProps={{
-                                name: 'type',
-                            }}
-                        >
+                                name: 'type'
+                            }}>
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
                             {eventTypes.map((eventType, index) => {
                                 return (
-                                    <MenuItem key={index} value={eventType.name}>{eventType.name}</MenuItem>
-                                )
+                                    <MenuItem
+                                        key={index}
+                                        value={eventType.name}>
+                                        {eventType.name}
+                                    </MenuItem>
+                                );
                             })}
                         </Select>
                     </FormControl>
-                    {isReviewer &&
+                    {isReviewer && (
                         <>
-                            <FormControl size="small" margin="normal" fullWidth variant="outlined">
-                                <InputLabel id="statusFilterLabel">Status</InputLabel>
+                            <FormControl
+                                size="small"
+                                margin="normal"
+                                fullWidth
+                                variant="outlined">
+                                <InputLabel id="statusFilterLabel">
+                                    Status
+                                </InputLabel>
                                 <Select
                                     disabled={isLoading}
                                     id="statusFilter"
@@ -134,9 +151,8 @@ const EventFilter = ({
                                     value={status}
                                     onChange={handleFilterChange}
                                     inputProps={{
-                                        name: 'status',
-                                    }}
-                                >
+                                        name: 'status'
+                                    }}>
                                     <MenuItem value="">
                                         <em>None</em>
                                     </MenuItem>
@@ -149,15 +165,15 @@ const EventFilter = ({
                                     <MenuItem value="Completed">
                                         Completed
                                     </MenuItem>
-                                    <MenuItem value="Pending">
-                                        Pending
-                                    </MenuItem>
+                                    <MenuItem value="Pending">Pending</MenuItem>
                                 </Select>
                             </FormControl>
                         </>
-                    }
+                    )}
                     <FormControl size="small" margin="normal" fullWidth>
-                        <Typography variant="caption">Bugdet Range: {budgetRange} vnd</Typography>
+                        <Typography variant="caption">
+                            Bugdet Range: {budgetRange} vnd
+                        </Typography>
                         <PrettoSlider
                             name="budgetRange"
                             valueLabelDisplay="off"
@@ -170,7 +186,9 @@ const EventFilter = ({
                         />
                     </FormControl>
                     <FormControl size="small" margin="normal" fullWidth>
-                        <Typography variant="caption">Participant Range</Typography>
+                        <Typography variant="caption">
+                            Participant Range
+                        </Typography>
                         <PrettoSlider
                             name="participantRange"
                             valueLabelDisplay="auto"
@@ -181,7 +199,6 @@ const EventFilter = ({
                             step={5}
                             min={10}
                             max={100}
-
                         />
                     </FormControl>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -198,11 +215,11 @@ const EventFilter = ({
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        startFrom: date.toDate(),
+                                        startFrom: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change date',
+                                    'aria-label': 'change date'
                                 }}
                             />
                             <KeyboardDatePicker
@@ -217,11 +234,11 @@ const EventFilter = ({
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        startTo: date.toDate(),
+                                        startTo: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change date',
+                                    'aria-label': 'change date'
                                 }}
                             />
                             <KeyboardDatePicker
@@ -236,11 +253,11 @@ const EventFilter = ({
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        endFrom: date.toDate(),
+                                        endFrom: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change date',
+                                    'aria-label': 'change date'
                                 }}
                             />
                             <KeyboardDatePicker
@@ -255,11 +272,11 @@ const EventFilter = ({
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        endTo: date.toDate(),
+                                        endTo: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change date',
+                                    'aria-label': 'change date'
                                 }}
                             />
                         </Grid>
@@ -270,15 +287,13 @@ const EventFilter = ({
                         className={css.handleClearButton}
                         onClick={handleClearFilter}
                         style={{ backgroundColor: 'transparent' }}
-                        color="default"
-                    >
+                        color="default">
                         Clear all
                     </Button>
                     <Button
                         onClick={handleApplyFilter}
                         variant="contained"
-                        color="primary"
-                    >
+                        color="primary">
                         Apply
                     </Button>
                 </div>

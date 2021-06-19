@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
     grow: {
@@ -12,7 +12,7 @@ export default makeStyles((theme) => ({
         minHeight: '78vh',
         [theme.breakpoints.down('xs')]: {
             padding: theme.spacing(4),
-            minHeight: 0,
+            minHeight: 0
         }
     },
     formControl: {
@@ -23,13 +23,13 @@ export default makeStyles((theme) => ({
         }
     },
     selectEmpty: {
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacing(2)
     },
     notificationDescription: {
         paddingTop: 20
     },
     dialogAction: {
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacing(2)
     },
     contentWrapper: {
         marginTop: '20%'
@@ -42,7 +42,7 @@ export default makeStyles((theme) => ({
         textTransform: 'none'
     },
     errorStyle: {
-        color: "red",
+        color: 'red',
         fontSize: 14
     },
     buttonCancel: {
@@ -53,15 +53,15 @@ export default makeStyles((theme) => ({
         fontWeight: 'bold',
         [theme.breakpoints.down('xs')]: {
             fontSize: '2.5em'
-        },
+        }
     },
     eventNameButton: {
         textTransform: 'none',
         backgroundColor: '#eceef7',
         color: '#3f51b5',
         marginRight: 8,
-        "&:hover": {
-            backgroundColor: "#eceef7"
+        '&:hover': {
+            backgroundColor: '#eceef7'
         }
     }
-}))
+}));

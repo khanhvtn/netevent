@@ -25,7 +25,7 @@ const App = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const { user } = useSelector((state) => ({
-        user: state.user,
+        user: state.user
     }));
 
     useEffect(() => {
@@ -38,7 +38,7 @@ const App = () => {
                 <Grid container justify="center" alignItems="center">
                     <CircularProgress
                         style={{
-                            height: '100%',
+                            height: '100%'
                         }}
                     />
                 </Grid>

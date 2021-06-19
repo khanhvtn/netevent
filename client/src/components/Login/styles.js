@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles(() => ({
     main: {
         minHeight: '100vh',
-        display: 'flex',
+        display: 'flex'
     },
     wrapper: {
         width: '350px',
@@ -15,23 +15,23 @@ export default makeStyles(() => ({
         flexDirection: 'column',
         alignItems: 'center',
         width: '90%',
-        margin: 'auto',
+        margin: 'auto'
     },
     emailField: {
         margin: '40px 0 0 0',
         '& .MuiOutlinedInput-root': {
             '& fieldset': {
-                borderRadius: 8,
-            },
-        },
+                borderRadius: 8
+            }
+        }
     },
     passwordField: {
         margin: '20px 0',
         '& .MuiOutlinedInput-root': {
             '& fieldset': {
-                borderRadius: 8,
-            },
-        },
+                borderRadius: 8
+            }
+        }
     },
     btnSubmit: {
         margin: '20px 0',
@@ -40,10 +40,10 @@ export default makeStyles(() => ({
         minHeight: 48
     },
     media: {
-        height: 100,
+        height: 100
     },
     errorDrop: { width: '90%', margin: '0 auto' },
     loginWrapper: {
-        borderRadius: 16,
+        borderRadius: 16
     }
 }));

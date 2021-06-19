@@ -8,13 +8,10 @@ import CreateEvent from '../CreateEvent/CreateEvent';
 import { useDispatch, useSelector } from 'react-redux';
 import { getEvents } from '../../actions/eventActions';
 import { Skeleton } from '@material-ui/lab';
-//import useStyles in the last
-import useStyles from './styles';
 import CalendarEvent from './CalendarEvent/CalendarEvent';
 import { useHistory } from 'react-router-dom';
 
 const CalendarApp = ({ targetRole }) => {
-    const css = useStyles();
     const [state, setState] = useState({ open: false, start: null, end: null });
     const dispatch = useDispatch();
     const history = useHistory();
@@ -23,7 +20,7 @@ const CalendarApp = ({ targetRole }) => {
             events: state.event.events,
             eventIsLoading: state.event.isLoading,
             createEventSuccess: state.event.createSuccess,
-            userId: state.user.user.id,
+            userId: state.user.user.id
         })
     );
     const localizer = momentLocalizer(moment);
@@ -54,7 +51,7 @@ const CalendarApp = ({ targetRole }) => {
             start: new Date(startDate),
             end: new Date(endDate),
             resource: rest,
-            allDay: false,
+            allDay: false
         };
     });
 
@@ -68,8 +65,8 @@ const CalendarApp = ({ targetRole }) => {
                 from:
                     targetRole === 3
                         ? `/dashboard/creator/calendar`
-                        : `/dashboard/reviewer/calendar`,
-            },
+                        : `/dashboard/reviewer/calendar`
+            }
         });
     };
 
@@ -86,7 +83,7 @@ const CalendarApp = ({ targetRole }) => {
                 ...prevState,
                 start,
                 end,
-                open: !prevState.open,
+                open: !prevState.open
             }));
         }
     };
@@ -101,9 +98,8 @@ const CalendarApp = ({ targetRole }) => {
             elevation={3}
             style={{
                 margin: '20px',
-                padding: '20px',
-            }}
-        >
+                padding: '20px'
+            }}>
             {eventIsLoading ? (
                 <>
                     <Skeleton height="100px" />
@@ -124,7 +120,7 @@ const CalendarApp = ({ targetRole }) => {
                         ) =>
                             localizer.format(start, 'DD/MM/YYYY', culture) +
                             ' — ' +
-                            localizer.format(end, 'DD/MM/YYYY', culture),
+                            localizer.format(end, 'DD/MM/YYYY', culture)
                     }}
                     style={{ height: '100vh' }}
                     localizer={localizer}
@@ -135,14 +131,14 @@ const CalendarApp = ({ targetRole }) => {
                     onSelectEvent={handleSelectEvent}
                     onSelectSlot={handlePickEventTime}
                     components={{
-                        event: CalendarEvent,
+                        event: CalendarEvent
                     }}
                     eventPropGetter={(date) => {
                         let styleTemplate = {
                             style: {
                                 color: 'white',
-                                outline: 'none',
-                            },
+                                outline: 'none'
+                            }
                         };
                         const { isApproved, isFinished } = date.resource;
                         /* Approve Status
@@ -155,32 +151,32 @@ const CalendarApp = ({ targetRole }) => {
                                 ...styleTemplate,
                                 style: {
                                     ...styleTemplate.style,
-                                    backgroundColor: `#9e9e9e`,
-                                },
+                                    backgroundColor: `#9e9e9e`
+                                }
                             };
-                        } else if (isFinished === true){
+                        } else if (isFinished === true) {
                             styleTemplate = {
                                 ...styleTemplate,
                                 style: {
                                     ...styleTemplate.style,
-                                    backgroundColor: `#4caf50`,
-                                },
+                                    backgroundColor: `#4caf50`
+                                }
                             };
                         } else if (isApproved === true) {
                             styleTemplate = {
                                 ...styleTemplate,
                                 style: {
                                     ...styleTemplate.style,
-                                    backgroundColor: `#5c6bc0`,
-                                },
+                                    backgroundColor: `#5c6bc0`
+                                }
                             };
                         } else {
                             styleTemplate = {
                                 ...styleTemplate,
                                 style: {
                                     ...styleTemplate.style,
-                                    backgroundColor: `#e53935`,
-                                },
+                                    backgroundColor: `#e53935`
+                                }
                             };
                         }
                         return styleTemplate;
@@ -193,8 +189,7 @@ const CalendarApp = ({ targetRole }) => {
                 maxWidth="lg"
                 open={state.open}
                 onClose={handleClose}
-                aria-labelledby="max-width-dialog-title"
-            >
+                aria-labelledby="max-width-dialog-title">
                 <CreateEvent
                     startDate={state.start}
                     endDate={state.end}

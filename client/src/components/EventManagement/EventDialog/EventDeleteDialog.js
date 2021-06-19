@@ -7,7 +7,7 @@ import {
     DialogContent,
     DialogActions,
     DialogContentText,
-    Slide,
+    Slide
 } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 //import useStyles in the last
@@ -21,12 +21,13 @@ const EventDeleteDialog = ({
     openDeleteDialog,
     handleToggleDialogDelete,
     handleDeleteEvent,
+    isRecoveryMode
 }) => {
     const css = useStyles();
 
     const { isLoading } = useSelector((state) => ({
         isLoading: state.event.isLoading
-    }))
+    }));
 
     return (
         <>
@@ -38,29 +39,32 @@ const EventDeleteDialog = ({
                 aria-labelledby="delete-dialog"
                 fullWidth
                 className={css.dialogDeleteFac}
-                aria-describedby="delete-dialog-description"
-            >
+                aria-describedby="delete-dialog-description">
                 <DialogTitle id="delete-dialog">{'Warning!!!'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="delete-dialog-description">
-                        Are you sure with your action ?
+                        {isRecoveryMode
+                            ? 'This action will delete the event permanently. Are you sure with your action ?'
+                            : 'Are you sure with your action ?'}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
                     <Button
                         disabled={isLoading ? true : false}
                         onClick={handleToggleDialogDelete}
-                        color="default"
-                    >
+                        color="default">
                         Cancel
                     </Button>
                     <Button
                         disabled={isLoading ? true : false}
                         variant="contained"
                         onClick={handleDeleteEvent}
-                        color="secondary"
-                    >
-                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Delete'}
+                        color="secondary">
+                        {isLoading ? (
+                            <CircularProgress size={25} color="inherit" />
+                        ) : (
+                            'Delete'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>

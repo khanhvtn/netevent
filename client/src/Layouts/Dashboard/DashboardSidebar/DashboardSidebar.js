@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -7,7 +7,7 @@ import {
     Drawer,
     Hidden,
     List,
-    Typography,
+    Typography
 } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { LogOut as LogOutIcon } from 'react-feather';
@@ -24,7 +24,7 @@ const roleName = {
     1: 'Admin',
     2: 'Reviewer',
     3: 'Creator',
-    4: 'Team Member',
+    4: 'Team Member'
 };
 
 const roleActions = {
@@ -32,83 +32,83 @@ const roleActions = {
         {
             title: 'User',
             icon: People,
-            href: ['/dashboard/admin/user'],
+            href: ['/dashboard/admin/user']
         },
         {
             title: 'Facility',
             icon: DevicesOther,
-            href: ['/dashboard/admin/facility'],
-        },
+            href: ['/dashboard/admin/facility']
+        }
     ],
     2: [
         {
             title: 'Event Request',
             icon: EventAvailableIcon,
-            href: ['/dashboard/reviewer/event-request'],
+            href: ['/dashboard/reviewer/event-request']
         },
         {
             title: 'Calendar',
             icon: CalendarToday,
-            href: ['/dashboard/reviewer/calendar'],
+            href: ['/dashboard/reviewer/calendar']
         },
         {
             title: 'Event Analysis',
             icon: EventIcon,
-            href: ['/dashboard/reviewer/event-analysis'],
+            href: ['/dashboard/reviewer/event-analysis']
         },
         {
             title: 'Facility Usage',
             icon: EventAvailableIcon,
-            href: ['/dashboard/reviewer/facility-usage'],
-        },
+            href: ['/dashboard/reviewer/facility-usage']
+        }
     ],
     3: [
         {
             title: 'Event Management',
             icon: EventAvailableIcon,
-            href: ['/dashboard/creator/event-management'],
+            href: ['/dashboard/creator/event-management']
         },
         {
             title: 'Create Event',
             icon: EventIcon,
-            href: ['/dashboard/creator/create-event'],
+            href: ['/dashboard/creator/create-event']
         },
         {
             title: 'Event Type',
             icon: EventNoteIcon,
-            href: ['/dashboard/creator/event-type'],
+            href: ['/dashboard/creator/event-type']
         },
         {
             title: 'Calendar',
             icon: CalendarToday,
-            href: ['/dashboard/creator/calendar'],
-        },
+            href: ['/dashboard/creator/calendar']
+        }
     ],
     4: [
         {
             title: 'Task',
             icon: EventAvailableIcon,
-            href: ['/dashboard/member/task'],
+            href: ['/dashboard/member/task']
         },
         {
             title: 'Calendar',
             icon: CalendarToday,
-            href: ['/dashboard/member/calendar'],
-        },
-    ],
+            href: ['/dashboard/member/calendar']
+        }
+    ]
 };
 
 const defaultActions = [
     {
         title: 'Switch Role',
         icon: ReplayIcon,
-        href: 'pickrole',
+        href: 'pickrole'
     },
     {
         title: 'Logout',
         icon: LogOutIcon,
-        href: 'logout',
-    },
+        href: 'logout'
+    }
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
@@ -116,7 +116,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     const css = useStyles();
     const { user, roleNum } = useSelector((state) => ({
         user: state.user.user,
-        roleNum: state.user.pickedRoleNum,
+        roleNum: state.user.pickedRoleNum
     }));
     const renderListActions = roleActions[roleNum].map((action, index) => {
         return (
@@ -143,6 +143,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         if (openMobile && onMobileClose) {
             onMobileClose();
         }
+        /* eslint-disable-next-line */
     }, [location.pathname]);
 
     const content = (
@@ -172,8 +173,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                     onClose={onMobileClose}
                     open={openMobile}
                     variant="temporary"
-                    PaperProps={{ style: { width: 256 } }}
-                >
+                    PaperProps={{ style: { width: 256 } }}>
                     {content}
                 </Drawer>
             </Hidden>
@@ -186,10 +186,9 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                         style: {
                             width: 256,
                             top: 66,
-                            height: 'calc(100% - 64px)',
-                        },
-                    }}
-                >
+                            height: 'calc(100% - 64px)'
+                        }
+                    }}>
                     {content}
                 </Drawer>
             </Hidden>
@@ -199,12 +198,12 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
 
 DashboardSidebar.propTypes = {
     onMobileClose: PropTypes.func,
-    openMobile: PropTypes.bool,
+    openMobile: PropTypes.bool
 };
 
 DashboardSidebar.defaultProps = {
     onMobileClose: () => {},
-    openMobile: false,
+    openMobile: false
 };
 
 export default DashboardSidebar;

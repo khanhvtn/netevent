@@ -4,7 +4,7 @@ const {
     FacilityHistory,
     Facility,
     Participant,
-    NotificationHistory,
+    NotificationHistory
 } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
@@ -63,7 +63,7 @@ const createEvent = async (req, res, next) => {
         if (Object.keys(borrowFacilities).length === 0) {
             errors = {
                 ...errors,
-                facilityHistoryListId: 'Borrow Facility cannot be blanked',
+                facilityHistoryListId: 'Borrow Facility cannot be blanked'
             };
         }
 
@@ -77,22 +77,14 @@ const createEvent = async (req, res, next) => {
         //create tasks to get task list ids
         const taskResult = await Promise.all(
             tasks.map(async (task) => {
-                try {
-                    return await Task.create(task);
-                } catch (error) {
-                    throw error;
-                }
+                return await Task.create(task);
             })
         );
 
         //create facility histories to get their ids
         const facilityHistoryResult = await Promise.all(
             borrowFacilities.map(async (facilityHistory) => {
-                try {
-                    return await FacilityHistory.create(facilityHistory);
-                } catch (error) {
-                    throw error;
-                }
+                return await FacilityHistory.create(facilityHistory);
             })
         );
 
@@ -102,7 +94,7 @@ const createEvent = async (req, res, next) => {
             taskListId: taskResult.map((task) => task._id),
             facilityHistoryListId: facilityHistoryResult.map(
                 (facilityHistory) => facilityHistory._id
-            ),
+            )
         };
 
         //upload image onto firebase
@@ -110,9 +102,9 @@ const createEvent = async (req, res, next) => {
         const file = bucketInstance.file(`${_id}.jpg`);
         await file.save(Buffer.from(base64EncodedString, 'base64'), {
             metadata: {
-                contentType: 'image/jpeg',
+                contentType: 'image/jpeg'
             },
-            predefinedAcl: 'publicRead',
+            predefinedAcl: 'publicRead'
         });
 
         //get public image url
@@ -121,7 +113,7 @@ const createEvent = async (req, res, next) => {
         //update req.body
         req.body = {
             ...req.body,
-            image: url,
+            image: url
         };
         //renew event instance
         event = new Event({ ...req.body, _id });
@@ -132,47 +124,35 @@ const createEvent = async (req, res, next) => {
         //update id event back to above tasks.
         await Promise.all(
             taskResult.map(async (task) => {
-                try {
-                    return await Task.findByIdAndUpdate(task._id, {
-                        ...task._doc,
-                        eventId: newEvent._id,
-                    });
-                } catch (error) {
-                    throw error;
-                }
+                return await Task.findByIdAndUpdate(task._id, {
+                    ...task._doc,
+                    eventId: newEvent._id
+                });
             })
         );
 
         //update id event back to above facility histories.
         await Promise.all(
             facilityHistoryResult.map(async (facilityHistory) => {
-                try {
-                    return await FacilityHistory.findByIdAndUpdate(
-                        facilityHistory._id,
-                        {
-                            ...facilityHistory._doc,
-                            eventId: newEvent._id,
-                        }
-                    );
-                } catch (error) {
-                    throw error;
-                }
+                return await FacilityHistory.findByIdAndUpdate(
+                    facilityHistory._id,
+                    {
+                        ...facilityHistory._doc,
+                        eventId: newEvent._id
+                    }
+                );
             })
         );
 
         //update facility status
         await Promise.all(
             facilityHistoryResult.map(async (facilityHistory) => {
-                try {
-                    return await Facility.findByIdAndUpdate(
-                        facilityHistory.facilityId,
-                        {
-                            $set: { status: false },
-                        }
-                    );
-                } catch (error) {
-                    throw error;
-                }
+                return await Facility.findByIdAndUpdate(
+                    facilityHistory.facilityId,
+                    {
+                        $set: { status: false }
+                    }
+                );
             })
         );
         return cusResponse(res, 200, newEvent, null);
@@ -207,7 +187,7 @@ const filterEventManagement = async (req, res, next) => {
             startMaxDate,
             startMinDate,
             endMaxDate,
-            endMinDate,
+            endMinDate
         ]);
 
         //return empty result to client if database has no data.
@@ -225,25 +205,28 @@ const filterEventManagement = async (req, res, next) => {
             take: 5,
             type: '',
             budgetRange: '',
+            isDeleted: false,
             participantRange: '',
             startMaxDate: listRangeDate[0][0].startDate,
             startMinDate: listRangeDate[1][0].startDate,
             endMaxDate: listRangeDate[2][0].endDate,
-            endMinDate: listRangeDate[3][0].endDate,
+            endMinDate: listRangeDate[3][0].endDate
         };
 
-        /* Create Query Options */
-        let queryOptions = {};
+        /* Create Default Query Options */
+        let queryOptions = {
+            isDeleted: options.isDeleted
+        };
 
         //adding search
         if (req.query.search) {
             options = {
                 ...options,
-                search: req.query.search.toString(),
+                search: req.query.search.toString()
             };
             queryOptions = {
                 ...queryOptions,
-                $or: [{ eventName: new RegExp(options.search, 'i') }],
+                $or: [{ eventName: new RegExp(options.search, 'i') }]
             };
         }
 
@@ -254,14 +237,25 @@ const filterEventManagement = async (req, res, next) => {
         if (req.query.ownerId) {
             options = {
                 ...options,
-                ownerId: req.query.ownerId.toString(),
+                ownerId: req.query.ownerId.toString()
             };
             queryOptions = {
                 ...queryOptions,
-                ownerId: options.ownerId,
+                ownerId: options.ownerId
             };
         }
 
+        /* Add filter by  */
+        if (req.query.isDeleted) {
+            options = {
+                ...options,
+                isDeleted: req.query.isDeleted.toLowerCase() === 'true'
+            };
+            queryOptions = {
+                ...queryOptions,
+                isDeleted: options.isDeleted
+            };
+        }
         /* 
         Add take row filter
         Default take is 5
@@ -269,7 +263,7 @@ const filterEventManagement = async (req, res, next) => {
         if (req.query.take) {
             options = {
                 ...options,
-                take: parseInt(req.query.take.toString()),
+                take: parseInt(req.query.take.toString())
             };
         }
 
@@ -279,7 +273,7 @@ const filterEventManagement = async (req, res, next) => {
         if (req.query.type) {
             options = {
                 ...options,
-                type: req.query.type.toString(),
+                type: req.query.type.toString()
             };
         }
 
@@ -290,7 +284,7 @@ const filterEventManagement = async (req, res, next) => {
         if (req.query.budgetRange) {
             options = {
                 ...options,
-                budgetRange: req.query.budgetRange.toString(),
+                budgetRange: req.query.budgetRange.toString()
             };
         }
 
@@ -301,7 +295,7 @@ const filterEventManagement = async (req, res, next) => {
         if (req.query.participantRange) {
             options = {
                 ...options,
-                participantRange: req.query.participantRange.toString(),
+                participantRange: req.query.participantRange.toString()
             };
         }
 
@@ -311,7 +305,7 @@ const filterEventManagement = async (req, res, next) => {
         if (req.query.startFrom) {
             options = {
                 ...options,
-                startMinDate: new Date(req.query.startFrom),
+                startMinDate: new Date(req.query.startFrom)
             };
         }
 
@@ -322,7 +316,7 @@ const filterEventManagement = async (req, res, next) => {
         if (req.query.startTo) {
             options = {
                 ...options,
-                startMaxDate: new Date(req.query.startTo),
+                startMaxDate: new Date(req.query.startTo)
             };
         }
 
@@ -332,7 +326,7 @@ const filterEventManagement = async (req, res, next) => {
         if (req.query.endFrom) {
             options = {
                 ...options,
-                endMinDate: new Date(req.query.endFrom),
+                endMinDate: new Date(req.query.endFrom)
             };
         }
 
@@ -343,7 +337,7 @@ const filterEventManagement = async (req, res, next) => {
         if (req.query.endTo) {
             options = {
                 ...options,
-                endMaxDate: new Date(req.query.endTo),
+                endMaxDate: new Date(req.query.endTo)
             };
         }
 
@@ -353,28 +347,28 @@ const filterEventManagement = async (req, res, next) => {
                     queryOptions = {
                         ...queryOptions,
                         isApproved: true,
-                        isFinished: false,
+                        isFinished: false
                     };
                     break;
                 case 'Rejected':
                     queryOptions = {
                         ...queryOptions,
                         isApproved: false,
-                        isFinished: false,
+                        isFinished: false
                     };
                     break;
                 case 'Pending':
                     queryOptions = {
                         ...queryOptions,
                         isApproved: null,
-                        isFinished: false,
+                        isFinished: false
                     };
                     break;
                 case 'Completed':
                     queryOptions = {
                         ...queryOptions,
                         isApproved: true,
-                        isFinished: true,
+                        isFinished: true
                     };
                     break;
             }
@@ -385,14 +379,13 @@ const filterEventManagement = async (req, res, next) => {
             ...queryOptions,
             startDate: {
                 $gte: options.startMinDate,
-                $lte: options.startMaxDate,
+                $lte: options.startMaxDate
             },
             endDate: {
                 $gte: options.endMinDate,
-                $lte: options.endMaxDate,
-            },
+                $lte: options.endMaxDate
+            }
         };
-
         /* 
         Variable page default is 1
          */
@@ -406,7 +399,7 @@ const filterEventManagement = async (req, res, next) => {
                 .select('-taskListId -facilityHistoryListId')
                 .populate({
                     path: 'eventTypeId reviewerId',
-                    match: { name: new RegExp(options.type, 'i') },
+                    match: { name: new RegExp(options.type, 'i') }
                 })
                 .sort({ updatedAt: -1 });
 
@@ -431,7 +424,7 @@ const filterEventManagement = async (req, res, next) => {
         const queryEvent = await Event.find(queryOptions)
             .select('-taskListId -facilityHistoryListId')
             .populate({
-                path: 'eventTypeId reviewerId',
+                path: 'eventTypeId reviewerId'
             })
             .sort({ updatedAt: -1 });
 
@@ -489,9 +482,9 @@ const deleteEventManagement = async (req, res, next) => {
  */
 const deleteEvent = async (req, res, next) => {
     try {
-        const { deleteList } = req.body;
-        const deletedEvent = await Event.updateMany(
-            { name: { $in: deleteList } },
+        const { eventId: _id } = req.body;
+        const deletedEvent = await Event.updateOne(
+            { _id },
             { $set: { isDeleted: true } }
         );
         return cusResponse(res, 200, deletedEvent, null);
@@ -516,11 +509,21 @@ const deleteEvent = async (req, res, next) => {
  */
 const deleteEventPermanent = async (req, res, next) => {
     try {
-        const { deleteList } = req.body;
-        const deletedEvent = await Event.deleteMany({
-            name: { $in: deleteList },
-        });
-        return cusResponse(res, 200, deletedEvent, null);
+        const { eventId, taskListId, historyFacilityListId } = req.body;
+
+        // Delete all reference Task
+        await Task.deleteMany({ _id: taskListId });
+
+        // Delete all reference Facility History
+        await FacilityHistory.deleteMany({ _id: historyFacilityListId });
+
+        // Delete Event
+        const deleteEvent = await Event.deleteOne({ _id: eventId });
+
+        //delete image from firebase
+        await bucketInstance.file(`${eventId}.jpg`).delete();
+
+        return cusResponse(res, 200, deleteEvent, null);
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
@@ -542,9 +545,9 @@ const deleteEventPermanent = async (req, res, next) => {
  */
 const recoveryEvent = async (req, res, next) => {
     try {
-        const { recoveryList } = req.body;
-        const recoveryEvent = await Event.updateMany(
-            { name: { $in: recoveryList } },
+        const { eventId: _id } = req.body;
+        const recoveryEvent = await Event.updateOne(
+            { _id },
             { $set: { isDeleted: false } }
         );
         return cusResponse(res, 200, recoveryEvent, null);
@@ -567,7 +570,7 @@ const updateEvent = async (req, res, next) => {
 
         // Get current task and facility id
         const currentEvent = await Event.findOne({
-            _id: _id,
+            _id: _id
         });
 
         eventDetailChecking = {
@@ -575,7 +578,7 @@ const updateEvent = async (req, res, next) => {
             eventName:
                 currentEvent.eventName === eventDetail.eventName
                     ? 'tempName'
-                    : eventDetail.eventName,
+                    : eventDetail.eventName
         };
 
         let event = new Event(eventDetailChecking);
@@ -588,7 +591,7 @@ const updateEvent = async (req, res, next) => {
         if (Object.keys(borrowFacilities).length === 0) {
             errors = {
                 ...errors,
-                facilityHistoryListId: 'Borrow Facility cannot be blanked',
+                facilityHistoryListId: 'Borrow Facility cannot be blanked'
             };
         }
 
@@ -608,36 +611,28 @@ const updateEvent = async (req, res, next) => {
         //create new tasks to get task list ids
         const newTaskListResult = await Promise.all(
             newTaskList.map(async (task) => {
-                try {
-                    return await Task.create(task);
-                } catch (error) {
-                    throw error;
-                }
+                return await Task.create(task);
             })
         );
 
         //create new facility histories to get their ids
         const newHistoryFacilityListResult = await Promise.all(
             newHistoryFacilityList.map(async (facilityHistory) => {
-                try {
-                    return await FacilityHistory.create(facilityHistory);
-                } catch (error) {
-                    throw error;
-                }
+                return await FacilityHistory.create(facilityHistory);
             })
         );
 
         // Combine and filter all new facility history and task
         const newTaskListIds = [
             ...tasks.filter((task) => task._id).map((task) => task._id),
-            ...newTaskListResult.map((task) => task._id),
+            ...newTaskListResult.map((task) => task._id)
         ];
 
         const newHistoryFacilityListIds = [
             ...borrowFacilities
                 .filter((task) => task._id)
                 .map((task) => task._id),
-            ...newHistoryFacilityListResult.map((task) => task._id),
+            ...newHistoryFacilityListResult.map((task) => task._id)
         ];
 
         // Get current task and history facility
@@ -659,13 +654,13 @@ const updateEvent = async (req, res, next) => {
             );
 
         // Handle delete tasks
-        const handleDeleteTasks = await Task.deleteMany({
-            _id: deleteTaskListIds,
+        await Task.deleteMany({
+            _id: deleteTaskListIds
         });
 
         // Handle delete facilities
-        const handleDeleteFacilities = await FacilityHistory.deleteMany({
-            _id: deleteHistoryFacilityListIds,
+        await FacilityHistory.deleteMany({
+            _id: deleteHistoryFacilityListIds
         });
 
         //upload image onto firebase
@@ -680,9 +675,9 @@ const updateEvent = async (req, res, next) => {
             const file = bucketInstance.file(`${_id}.jpg`);
             await file.save(Buffer.from(base64EncodedString, 'base64'), {
                 metadata: {
-                    contentType: 'image/jpeg',
+                    contentType: 'image/jpeg'
                 },
-                predefinedAcl: 'publicRead',
+                predefinedAcl: 'publicRead'
             });
 
             //get public image url
@@ -694,7 +689,7 @@ const updateEvent = async (req, res, next) => {
                 ...eventDetail,
                 taskListId: newTaskListIds,
                 facilityHistoryListId: newHistoryFacilityListIds,
-                image: url,
+                image: url
             };
 
             // Update new event
@@ -707,47 +702,39 @@ const updateEvent = async (req, res, next) => {
                 populate: [
                     {
                         path: 'facilityId',
-                        model: 'Facility',
+                        model: 'Facility'
                     },
                     {
                         path: 'userId',
-                        model: 'User',
+                        model: 'User'
                     },
                     {
                         path: 'eventTypeId',
                         model: 'EventType'
                     }
-                ],
+                ]
             });
 
             // update id event back to above tasks.
             await Promise.all(
                 newTaskListResult.map(async (task) => {
-                    try {
-                        return await Task.findByIdAndUpdate(task._id, {
-                            ...task._doc,
-                            eventId: updatedEvent._id,
-                        });
-                    } catch (error) {
-                        throw error;
-                    }
+                    return await Task.findByIdAndUpdate(task._id, {
+                        ...task._doc,
+                        eventId: updatedEvent._id
+                    });
                 })
             );
 
             // update id event back to above facility histories.
             await Promise.all(
                 newHistoryFacilityListResult.map(async (facilityHistory) => {
-                    try {
-                        return await FacilityHistory.findByIdAndUpdate(
-                            facilityHistory._id,
-                            {
-                                ...facilityHistory._doc,
-                                eventId: updatedEvent._id,
-                            }
-                        );
-                    } catch (error) {
-                        throw error;
-                    }
+                    return await FacilityHistory.findByIdAndUpdate(
+                        facilityHistory._id,
+                        {
+                            ...facilityHistory._doc,
+                            eventId: updatedEvent._id
+                        }
+                    );
                 })
             );
 
@@ -757,7 +744,7 @@ const updateEvent = async (req, res, next) => {
             newUpdateState = {
                 ...eventDetail,
                 taskListId: newTaskListIds,
-                facilityHistoryListId: newHistoryFacilityListIds,
+                facilityHistoryListId: newHistoryFacilityListIds
             };
 
             // Update new event
@@ -770,47 +757,39 @@ const updateEvent = async (req, res, next) => {
                 populate: [
                     {
                         path: 'facilityId',
-                        model: 'Facility',
+                        model: 'Facility'
                     },
                     {
                         path: 'userId',
-                        model: 'User',
+                        model: 'User'
                     },
                     {
                         path: 'eventTypeId',
                         model: 'EventType'
                     }
-                ],
+                ]
             });
 
             // update id event back to above tasks.
             await Promise.all(
                 newTaskListResult.map(async (task) => {
-                    try {
-                        return await Task.findByIdAndUpdate(task._id, {
-                            ...task._doc,
-                            eventId: updatedEvent._id,
-                        });
-                    } catch (error) {
-                        throw error;
-                    }
+                    return await Task.findByIdAndUpdate(task._id, {
+                        ...task._doc,
+                        eventId: updatedEvent._id
+                    });
                 })
             );
 
             // update id event back to above facility histories.
             await Promise.all(
                 newHistoryFacilityListResult.map(async (facilityHistory) => {
-                    try {
-                        return await FacilityHistory.findByIdAndUpdate(
-                            facilityHistory._id,
-                            {
-                                ...facilityHistory._doc,
-                                eventId: updatedEvent._id,
-                            }
-                        );
-                    } catch (error) {
-                        throw error;
-                    }
+                    return await FacilityHistory.findByIdAndUpdate(
+                        facilityHistory._id,
+                        {
+                            ...facilityHistory._doc,
+                            eventId: updatedEvent._id
+                        }
+                    );
                 })
             );
             return cusResponse(res, 200, updatedEvent, null);
@@ -838,7 +817,7 @@ const getAllEvent = async (req, res, next) => {
         const events = await Event.find({})
             .select('-taskListId -facilityHistoryListId')
             .populate({
-                path: 'eventTypeId ownerId',
+                path: 'eventTypeId ownerId'
             });
         return cusResponse(res, 200, events, null);
     } catch (error) {
@@ -857,7 +836,7 @@ const sendNotification = async (req, res, next) => {
     const notification = req.body;
     const participants = await Participant.find({
         event: notification.eventId,
-        isValid: true,
+        isValid: true
     });
     const emailParticipantsList = [];
     for (var i = 0; i < participants.length; i++) {
@@ -876,7 +855,7 @@ const sendNotification = async (req, res, next) => {
         // Save notification history when email is sent
         if (isSend) {
             const notificationHistory = new NotificationHistory(notification);
-            const newNotificatioHistory = await notificationHistory.save();
+            await notificationHistory.save();
         }
 
         console.log(isSend);
@@ -904,23 +883,23 @@ const sendNotification = async (req, res, next) => {
 const getFacilityAndTaskByEventCode = async (req, res, next) => {
     try {
         const event = await Event.findOne({
-            urlCode: req.query.code,
+            urlCode: req.query.code
         }).populate({
             path: 'taskListId facilityHistoryListId eventTypeId reviewerId',
             populate: [
                 {
                     path: 'facilityId',
-                    model: 'Facility',
+                    model: 'Facility'
                 },
                 {
                     path: 'userId',
-                    model: 'User',
+                    model: 'User'
                 },
                 {
                     path: 'eventTypeId',
                     model: 'EventType'
                 }
-            ],
+            ]
         });
 
         if (!event) {
@@ -955,17 +934,17 @@ const updateEventStatus = async (req, res, next) => {
                     populate: [
                         {
                             path: 'facilityId',
-                            model: 'Facility',
+                            model: 'Facility'
                         },
                         {
                             path: 'userId',
-                            model: 'User',
+                            model: 'User'
                         },
                         {
                             path: 'eventTypeId',
                             model: 'EventType'
                         }
-                    ],
+                    ]
                 });
                 return cusResponse(res, 200, approveEvent, null);
             case 'finish':
@@ -978,17 +957,17 @@ const updateEventStatus = async (req, res, next) => {
                     populate: [
                         {
                             path: 'facilityId',
-                            model: 'Facility',
+                            model: 'Facility'
                         },
                         {
                             path: 'userId',
-                            model: 'User',
+                            model: 'User'
                         },
                         {
                             path: 'eventTypeId',
                             model: 'EventType'
                         }
-                    ],
+                    ]
                 });
                 return cusResponse(res, 200, finishEvent, null);
         }
@@ -1008,5 +987,5 @@ module.exports = {
     filterEventManagement,
     deleteEventManagement,
     getFacilityAndTaskByEventCode,
-    updateEventStatus,
+    updateEventStatus
 };

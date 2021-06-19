@@ -7,7 +7,6 @@ const Facility = require('../models/facilityModel');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../index');
-const should = chai.should();
 
 /**
  *  =====================================
@@ -22,21 +21,21 @@ chai.use(chaiHttp);
 
 //Testing block for event
 describe('Events', () => {
-    beforeEach((done) => { //Before each test we empty the database
-        Event.remove({}, (err) => {
+    beforeEach((done) => {
+        //Before each test we empty the database
+        Event.remove({}, () => {
             done();
         });
     });
 
     /*
-      * Test the /GET event
-      */
+     * Test the /GET event
+     */
     describe('/GET/event/filter event', () => {
         it('it should GET all the events', (done) => {
             chai.request(server)
                 .get('/api/event/filter')
                 .end((err, res) => {
-
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
@@ -48,13 +47,17 @@ describe('Events', () => {
     });
 
     /*
-      * Test the /POST event
-      */
+     * Test the /POST event
+     */
     describe('/POST/event/create event', () => {
         it('it should POST a event', (done) => {
             let eventType = new EventType({ name: 'testEventTypeName' });
-            let user = new User({ email: "test@gmail.com", role: ['1'] });
-            let facility = new Facility({ name: "testFacility", code: "testCode", type: "testType" });
+            let user = new User({ email: 'test@gmail.com', role: ['1'] });
+            let facility = new Facility({
+                name: 'testFacility',
+                code: 'testCode',
+                type: 'testType'
+            });
 
             let event = {
                 eventName: 'testEventName',
@@ -71,18 +74,22 @@ describe('Events', () => {
                 budget: '10000',
                 ownerId: user._id,
                 eventTypeId: eventType._id,
-                tasks: [{
-                    name: 'testTaskName',
-                    type: 'testTaskType',
-                    startDate: Date.now(),
-                    endDate: Date.now(),
-                    userId: user._id
-                }],
-                borrowFacilities: [{
-                    facilityId: facility._id,
-                    borrowDate: Date.now(),
-                    returnDate: Date.now(),
-                }]
+                tasks: [
+                    {
+                        name: 'testTaskName',
+                        type: 'testTaskType',
+                        startDate: Date.now(),
+                        endDate: Date.now(),
+                        userId: user._id
+                    }
+                ],
+                borrowFacilities: [
+                    {
+                        facilityId: facility._id,
+                        borrowDate: Date.now(),
+                        returnDate: Date.now()
+                    }
+                ]
             };
 
             chai.request(server)
@@ -96,8 +103,12 @@ describe('Events', () => {
                     res.body.should.have.property('code').eql(200);
                     res.body.should.have.property('message').eql('success');
                     res.body.should.have.property('data');
-                    res.body.data.should.have.property('eventName').eql(event.eventName);
-                    res.body.data.should.have.property('language').eql(event.language);
+                    res.body.data.should.have
+                        .property('eventName')
+                        .eql(event.eventName);
+                    res.body.data.should.have
+                        .property('language')
+                        .eql(event.language);
                     res.body.data.should.have.property('mode').eql(event.mode);
                     res.body.data.should.have.property('_id');
                     res.body.data.should.have.property('createdAt');
@@ -108,8 +119,8 @@ describe('Events', () => {
     });
 
     /*
-      * Test the /PATCH event
-      */
+     * Test the /PATCH event
+     */
     // describe('/PUT/event/update event', () => {
     //     it('it should UPDATE a event', (done) => {
     //         let eventType = new EventType({ name: 'testEventTypeName' });
@@ -231,7 +242,7 @@ describe('Events', () => {
         const errorBody = currentResponse && currentResponse.body;
 
         if (this.currentTest.state === 'failed' && errorBody) {
-            console.log("This is a response: ", errorBody);
+            console.log('This is a response: ', errorBody);
         }
 
         currentResponse = null;

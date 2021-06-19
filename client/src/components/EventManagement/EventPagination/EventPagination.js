@@ -9,7 +9,7 @@ const EventPagination = ({
     page,
     take,
     handleChangeRowsPerPage,
-    handleChangePage,
+    handleChangePage
 }) => {
     const css = useStyles();
 
@@ -25,12 +25,10 @@ const EventPagination = ({
                     variant="standard"
                     value={take}
                     name="take"
-                    onChange={handleChangeRowsPerPage}
-                >
+                    onChange={handleChangeRowsPerPage}>
                     <MenuItem value={3}>3</MenuItem>
                     <MenuItem value={6}>6</MenuItem>
                     <MenuItem value={9}>9</MenuItem>
-
                 </Select>
             </div>
             <div>

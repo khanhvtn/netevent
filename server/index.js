@@ -11,7 +11,7 @@ const {
     taskRoutes,
     facilityHistoryRoutes,
     participantRoutes,
-    notificationHistoryRoutes,
+    notificationHistoryRoutes
 } = require('./routes');
 const cors = require('cors');
 const { errorHandler } = require('./middlewares');
@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true, limit: '30mb' }));
 app.use(
     cors({
         credentials: true,
-        origin: process.env.DEFAULT_HOST || 'http://localhost:3000',
+        origin: process.env.DEFAULT_HOST || 'http://localhost:3000'
     })
 );
 app.use(cookieParser());
@@ -76,7 +76,7 @@ mongoose.connect(
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
-        useCreateIndex: true,
+        useCreateIndex: true
     },
     (err) => {
         if (err) {
