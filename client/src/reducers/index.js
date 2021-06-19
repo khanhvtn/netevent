@@ -11,16 +11,16 @@ import notificationHistoryReducers from './notificationHistoryReducers';
 import taskReducers from './taskReducers';
 
 const rootReducers = combineReducers({
-    user: userReducers,
-    error: errorReducers,
-    link: linkReducers,
-    facility: facilityReducers,
-    eventType: eventTypeReducers,
-    event: eventReducers,
-    facilityHistory: facilityHistoryReducers,
-    participant: participantReducers,
-    notificationHistory: notificationHistoryReducers,
-    task: taskReducers
+  user: userReducers,
+  error: errorReducers,
+  link: linkReducers,
+  facility: facilityReducers,
+  eventType: eventTypeReducers,
+  event: eventReducers,
+  facilityHistory: facilityHistoryReducers,
+  participant: participantReducers,
+  notificationHistory: notificationHistoryReducers,
+  task: taskReducers
 });
 
 export default rootReducers;

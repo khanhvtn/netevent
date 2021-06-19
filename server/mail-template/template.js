@@ -1,6 +1,6 @@
 const host = process.env.DEFAULT_HOST || 'http://localhost:3000';
 const html = (email, id) => {
-    return `
+  return `
         <!doctype html>
 <html>
   <head>
@@ -404,5 +404,5 @@ const html = (email, id) => {
 };
 
 module.exports = {
-    html
+  html
 };

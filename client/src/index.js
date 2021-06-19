@@ -10,19 +10,19 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 
 const composeEnhancers =
-    typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-        ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
-        : compose;
+  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+    : compose;
 
 const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 const store = createStore(rootReducer, enhancer);
 
 ReactDOM.render(
-    <Router>
-        <Provider store={store}>
-            <App />
-        </Provider>
-    </Router>,
-    document.getElementById('root')
+  <Router>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </Router>,
+  document.getElementById('root')
 );

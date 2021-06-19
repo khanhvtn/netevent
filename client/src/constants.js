@@ -29,7 +29,7 @@ export const ERROR_CLEAR = 'ERROR_CLEAR';
 export const EMAIL_ERROR = 'Email must not be empty and in right format';
 export const ROLE_ERROR = 'Role must not be empty';
 export const PASSWORD_MATCHED =
-    'Passwords must be matched and should not be empty';
+  'Passwords must be matched and should not be empty';
 
 //link action types
 export const GET_LINKS = 'GET_LIKKS';
@@ -82,7 +82,7 @@ export const EVENT_GET_FACILITY_AND_TASK = 'EVENT_GET_FACILITY_AND_TASK';
 export const FACILITY_HISTORY_GET_ALL = 'FACILITY_HISTORY_GET_ALL';
 export const FACILITY_HISTORY_LOADING = 'FACILITY_HISTORY_LOADING';
 export const FACILITY_HISTORY_GET_ALL_FILTER =
-    'FACILITY_HISTORY_GET_ALL_FILTER';
+  'FACILITY_HISTORY_GET_ALL_FILTER';
 
 //Participant action types
 export const PARTICIPANT_GET_ALL_FILTER = 'PARTICIPANT_GET_ALL_FILTER';
