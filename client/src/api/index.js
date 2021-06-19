@@ -236,5 +236,29 @@ export const getNotificationHistoryByEventCodeAPI = (code) =>
     AXIOS.get(`/notificationHistory/all?code=${code ? code : ''}`);
 
 // Task API
-export const getTasksAPI = (userId) =>
+export const getAllTasksAPI = (userId) =>
     AXIOS.get(`/task/all?userId=${userId ? userId : ''}`);
+export const getTasksAPI = (userQueries) => {
+    const {
+        search,
+        take,
+        page,
+        isDeleted,
+        createdFrom,
+        createdTo,
+        updatedFrom,
+        updatedTo,
+        userId
+    } = userQueries;
+    return AXIOS.get(
+        `/task/filter?search=${search ? search : ''}&take=${
+            take ? take : ''
+        }&page=${page ? page : ''}&isDeleted=${
+            isDeleted ? isDeleted : ''
+        }&userId=${userId ? userId : ''}&createdFrom=${
+            createdFrom ? createdFrom : ''
+        }&createdTo=${createdTo ? createdTo : ''}&updatedFrom=${
+            updatedFrom ? updatedFrom : ''
+        }&updatedTo=${updatedTo ? updatedTo : ''}`
+    );
+};

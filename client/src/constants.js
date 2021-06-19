@@ -96,4 +96,5 @@ export const NOTIFICATION_HISTORY_GET_ALL = 'NOTIFICATION_HISTORY_GET_ALL';
 
 //Task action types
 export const TASK_LOADING = 'TASK_LOADING';
+export const TASK_GET_ALL = 'TASK_GET_ALL';
 export const TASK_GET_ALL_FILTER = 'TASK_GET_ALL_FILTER';

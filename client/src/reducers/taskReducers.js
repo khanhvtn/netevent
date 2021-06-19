@@ -1,4 +1,4 @@
-import { TASK_LOADING, TASK_GET_ALL_FILTER } from '../constants';
+import { TASK_LOADING, TASK_GET_ALL_FILTER, TASK_GET_ALL } from '../constants';
 
 const initialState = {
     tasks: [],
@@ -11,6 +11,11 @@ export default function taskReducers(state = initialState, action) {
         case TASK_LOADING:
             return { ...state, isLoading: action.payload };
         case TASK_GET_ALL_FILTER:
+            return {
+                ...state,
+                tasks: action.payload.data?.data
+            };
+        case TASK_GET_ALL:
             return {
                 ...state,
                 tasks: action.payload.data?.data

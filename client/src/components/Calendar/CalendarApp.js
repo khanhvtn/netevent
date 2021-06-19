@@ -10,27 +10,31 @@ import { getEvents } from '../../actions/eventActions';
 import { Skeleton } from '@material-ui/lab';
 import CalendarEvent from './CalendarEvent/CalendarEvent';
 import { useHistory } from 'react-router-dom';
+import { getTasks } from '../../actions/taskActions';
 
 const CalendarApp = ({ targetRole }) => {
     const [state, setState] = useState({ open: false, start: null, end: null });
     const dispatch = useDispatch();
     const history = useHistory();
-    const { events, eventIsLoading, createEventSuccess, userId } = useSelector(
-        (state) => ({
+    const { events, eventIsLoading, createEventSuccess, userId, tasks } =
+        useSelector((state) => ({
             events: state.event.events,
             eventIsLoading: state.event.isLoading,
             createEventSuccess: state.event.createSuccess,
-            userId: state.user.user.id
-        })
-    );
+            userId: state.user.user.id,
+            tasks: state.task.tasks
+        }));
     const localizer = momentLocalizer(moment);
     useEffect(() => {
         if (!history.location.state || history.location.state?.isUpdated) {
+            if (targetRole === 4) {
+                dispatch(getTasks({ userId }));
+            }
             if (targetRole === 3) {
-                dispatch(getEvents({ ownerId: userId }));
+                dispatch(getEvents({ ownerId: userId, isDeleted: false }));
             }
             if (targetRole === 2) {
-                dispatch(getEvents({}));
+                dispatch(getEvents({ isDeleted: false }));
             }
         }
         history.replace();
@@ -44,10 +48,17 @@ const CalendarApp = ({ targetRole }) => {
         }
     }, [dispatch, createEventSuccess, userId]);
 
-    const genEvents = events.map((event) => {
-        const { eventName, startDate, endDate, ...rest } = event;
+    //create target display
+    const targetDisplay = targetRole === 3 || targetRole === 2 ? events : tasks;
+
+    const genTargetDisplay = targetDisplay.map((target) => {
+        const { startDate, endDate, ...rest } = target;
+        const title =
+            targetRole === 3 || targetRole === 2
+                ? target.eventName
+                : `${target.eventId?.eventName} - ${target.name}`;
         return {
-            title: eventName,
+            title,
             start: new Date(startDate),
             end: new Date(endDate),
             resource: rest,
@@ -55,24 +66,27 @@ const CalendarApp = ({ targetRole }) => {
         };
     });
 
-    const handleSelectEvent = (event) => {
-        history.push({
-            pathname:
-                targetRole === 3
-                    ? `/dashboard/creator/event-detail/${event.resource.urlCode}`
-                    : `/dashboard/reviewer/event-review/${event.resource.urlCode}`,
-            state: {
-                from:
+    const handleSelectEvent = (targetDisplay) => {
+        if (targetRole === 3 || targetRole === 2) {
+            history.push({
+                pathname:
                     targetRole === 3
-                        ? `/dashboard/creator/calendar`
-                        : `/dashboard/reviewer/calendar`
-            }
-        });
+                        ? `/dashboard/creator/event-detail/${targetDisplay.resource.urlCode}`
+                        : `/dashboard/reviewer/event-review/${targetDisplay.resource.urlCode}`,
+                state: {
+                    from:
+                        targetRole === 3
+                            ? `/dashboard/creator/calendar`
+                            : `/dashboard/reviewer/calendar`
+                }
+            });
+        } else {
+            alert(`Task Id ${targetDisplay.resource._id}`);
+        }
     };
 
     const handlePickEventTime = ({ start, end }) => {
         if (targetRole === 3) {
-            console.log('here');
             const currentDate = new Date();
             currentDate.setHours(0, 0, 0, 0);
             if (moment(start).isBefore(currentDate)) {
@@ -124,7 +138,7 @@ const CalendarApp = ({ targetRole }) => {
                     }}
                     style={{ height: '100vh' }}
                     localizer={localizer}
-                    events={genEvents}
+                    events={genTargetDisplay}
                     defaultView={Views.MONTH}
                     scrollToTime={new Date()}
                     defaultDate={new Date()}
