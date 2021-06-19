@@ -16,14 +16,14 @@ const notificationControllers = require('./notificationHistoryControllers');
  */
 
 module.exports = {
-  //add controllers here
-  userControllers,
-  facilityControllers,
-  eventTypeControllers,
-  eventControllers,
-  taskControllers,
-  facilityHistoryControllers,
-  linkControllers,
-  participantControllers,
-  notificationControllers
+    //add controllers here
+    userControllers,
+    facilityControllers,
+    eventTypeControllers,
+    eventControllers,
+    taskControllers,
+    facilityHistoryControllers,
+    linkControllers,
+    participantControllers,
+    notificationControllers
 };

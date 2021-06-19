@@ -17,16 +17,16 @@ const bcrypt = require('bcrypt');
  * @version 1.0
  */
 const getLinks = async (req, res) => {
-  try {
-    const linkData = await Link.find();
-    if (linkData) {
-      return res.status(200).json(linkData);
-    } else {
-      return res.status(500).json('No Link Exists');
+    try {
+        const linkData = await Link.find();
+        if (linkData) {
+            return res.status(200).json(linkData);
+        } else {
+            return res.status(500).json('No Link Exists');
+        }
+    } catch (error) {
+        return res.status(404).json(error);
     }
-  } catch (error) {
-    return res.status(404).json(error);
-  }
 };
 
 /**
@@ -37,23 +37,23 @@ const getLinks = async (req, res) => {
  * @version 1.0
  */
 const getLink = async (req, res, next) => {
-  const { id: _id } = req.params;
-  try {
-    const link = await Link.findById(_id);
+    const { id: _id } = req.params;
+    try {
+        const link = await Link.findById(_id);
 
-    if (link) {
-      await User.findByIdAndUpdate(
-        link.user,
-        { $set: { isConfirmed: true } },
+        if (link) {
+            await User.findByIdAndUpdate(
+                link.user,
+                { $set: { isConfirmed: true } },
 
-        { new: true }
-      );
-      await Link.findByIdAndRemove(_id);
-      return res.status(200).json('Successful');
+                { new: true }
+            );
+            await Link.findByIdAndRemove(_id);
+            return res.status(200).json('Successful');
+        }
+    } catch (error) {
+        return next(new CustomError(500, error.message));
     }
-  } catch (error) {
-    return next(new CustomError(500, error.message));
-  }
 };
 
 /**
@@ -64,26 +64,26 @@ const getLink = async (req, res, next) => {
  * @version 1.0
  */
 const confirmPassword = async (req, res, next) => {
-  const { password } = req.body;
-  try {
-    hashPassword = await bcrypt.hash(password, 10);
+    const { password } = req.body;
+    try {
+        hashPassword = await bcrypt.hash(password, 10);
 
-    const { id: _id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(_id)) {
-      return res.status(404).send('No link with that id');
-    } else {
-      const data = await Link.findByIdAndRemove(_id);
-      const userID = data.user;
-      const update = await User.findByIdAndUpdate(
-        userID,
-        { $set: { isConfirmed: true, password: hashPassword } },
-        { new: true }
-      );
-      res.json(update);
+        const { id: _id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(_id)) {
+            return res.status(404).send('No link with that id');
+        } else {
+            const data = await Link.findByIdAndRemove(_id);
+            const userID = data.user;
+            const update = await User.findByIdAndUpdate(
+                userID,
+                { $set: { isConfirmed: true, password: hashPassword } },
+                { new: true }
+            );
+            res.json(update);
+        }
+    } catch (error) {
+        return next(new CustomError(500, error.message));
     }
-  } catch (error) {
-    return next(new CustomError(500, error.message));
-  }
 };
 
 /**
@@ -94,22 +94,22 @@ const confirmPassword = async (req, res, next) => {
  * @version 1.0
  */
 const deleteLink = async (req, res) => {
-  try {
-    const { id: _id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(_id)) {
-      return res.status(404).send('No link with that id');
-    } else {
-      const data = await Link.findByIdAndRemove(_id);
-      res.json(data);
+    try {
+        const { id: _id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(_id)) {
+            return res.status(404).send('No link with that id');
+        } else {
+            const data = await Link.findByIdAndRemove(_id);
+            res.json(data);
+        }
+    } catch (error) {
+        return next(new CustomError(500, error.message));
     }
-  } catch (error) {
-    return next(new CustomError(500, error.message));
-  }
 };
 
 module.exports = {
-  getLinks,
-  getLink,
-  confirmPassword,
-  deleteLink
+    getLinks,
+    getLink,
+    confirmPassword,
+    deleteLink
 };
