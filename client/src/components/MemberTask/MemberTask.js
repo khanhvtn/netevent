@@ -65,7 +65,7 @@ const MemberTask = () => {
       <Grid>
         {tasks.map((task, index) => {
           return (
-            <>
+            <React.Fragment key={index}>
               <Typography
                 className={css.title}
                 variant="h6"
@@ -136,7 +136,7 @@ const MemberTask = () => {
                   </TableContainer>
                 </AccordionDetails>
               </Accordion>
-            </>
+            </React.Fragment>
           );
         })}
       </Grid>

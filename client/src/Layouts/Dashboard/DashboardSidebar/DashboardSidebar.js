@@ -143,7 +143,8 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     if (openMobile && onMobileClose) {
       onMobileClose();
     }
-  }, [location.pathname, openMobile, onMobileClose]);
+    /* eslint-disable-next-line */
+  }, [location.pathname]);
 
   const content = (
     <Box className={css.sidebarWrapper}>
@@ -201,7 +202,7 @@ DashboardSidebar.propTypes = {
 };
 
 DashboardSidebar.defaultProps = {
-  onMobileClose: () => {},
+  onMobileClose: () => { },
   openMobile: false
 };
 

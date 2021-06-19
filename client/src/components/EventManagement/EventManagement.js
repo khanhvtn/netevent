@@ -97,7 +97,7 @@ const EventManagement = () => {
           endFrom: state.endFrom,
           endTo: state.endTo,
           ownerId: userId,
-          isDeleted: isRecycleMode
+          isDeleted: state.isRecycleMode
         })
       );
     }
