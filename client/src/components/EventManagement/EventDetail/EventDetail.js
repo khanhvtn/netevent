@@ -20,7 +20,6 @@ import {
     CircularProgress
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import blankPhoto from '../../../images/blankPhoto.png';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import AssignmentIndOutlinedIcon from '@material-ui/icons/AssignmentIndOutlined';
 import LanguageIcon from '@material-ui/icons/Language';
@@ -29,6 +28,7 @@ import TimelapseOutlinedIcon from '@material-ui/icons/TimelapseOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EventDeleteDialog from '../EventDialog/EventDeleteDialog';
 import moment from 'moment';
+import blankPhoto from '../../../images/blankPhoto.png';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     deleteEvent,
@@ -41,11 +41,12 @@ import { Skeleton } from '@material-ui/lab';
 import CreateEvent from '../../CreateEvent/CreateEvent';
 import SystemNotification from '../../Notification/Notification';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
-import useStyles from './styles';
 import CheckInTable from './CheckInTable/CheckInTable';
 import VerifyTable from './VerifyTable/VerifyTable';
 import EventCheckingCompletedDialog from '../EventDialog/EventCheckingCompletedDialog';
 import NotificationHistory from './NotificationHistory/NotificationHistory';
+import Image from 'material-ui-image'
+import useStyles from './styles';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -483,47 +484,19 @@ const EventDetail = () => {
 
                 {/* Event detail tabs */}
                 <TabPanel value={tabs} index={0}>
+                    <div className={css.imageCover}>
+                        <Image
+                            className={css.cover}
+                            src={state.event?.image ? state.event?.image : blankPhoto}
+                            disableTransition={true}
+                            aspectRatio={25 / 9} />
+                    </div>
                     {/* Event Detail */}
                     <Grid
                         container
                         justify="center"
                         alignItems="center"
-                        direction="column">
-                        {/* Event Header */}
-                        <Grid item>
-                            <Typography
-                                className={css.eventDetailTitle}
-                                variant="h3">
-                                Event Detail
-                            </Typography>
-                        </Grid>
-
-                        {/* Event Image */}
-                        <Grid
-                            container
-                            justify="center"
-                            alignItems="center"
-                            item
-                            md={12}
-                            lg={12}
-                            xl={12}
-                            sm={12}
-                            xs={12}
-                            className={css.imageWrapper}>
-                            <div
-                                style={{
-                                    width: '100%',
-                                    height: '345px',
-                                    backgroundImage: `url(${
-                                        !state.event?.image
-                                            ? blankPhoto
-                                            : state.event?.image
-                                    })`,
-                                    backgroundRepeat: 'no-repeat',
-                                    backgroundPosition: 'center',
-                                    backgroundSize: 'contain'
-                                }}></div>
-                        </Grid>
+                        direction="column">            
 
                         {/* Event Detail */}
                         <Grid
@@ -1015,13 +988,13 @@ const EventDetail = () => {
                                             'DD MMM'
                                         )
                                             ? `${moment(
-                                                  state.event?.startDate
-                                              ).format('DD MMM, YYYY')}`
+                                                state.event?.startDate
+                                            ).format('DD MMM, YYYY')}`
                                             : `${moment(
-                                                  state.event?.startDate
-                                              ).format('DD MMM')} - ${moment(
-                                                  state.event?.endDate
-                                              ).format('DD MMM')}`}
+                                                state.event?.startDate
+                                            ).format('DD MMM')} - ${moment(
+                                                state.event?.endDate
+                                            ).format('DD MMM')}`}
                                     </Typography>
                                     <Typography variant="body2">
                                         {`${moment(

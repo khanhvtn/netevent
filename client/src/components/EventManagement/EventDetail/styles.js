@@ -113,5 +113,22 @@ export default makeStyles((theme) => ({
         position: 'absolute',
         top: '50%',
         left: '55%'
+    },
+    cover: {
+        width: '100%',
+        // borderRadius: 16,
+        marginTop: 16,
+    },
+    imageCover:{
+        padding: '12px 96px 40px 96px',
+        [theme.breakpoints.down('md')]: {
+            padding: '12px 48px 48px 48px'
+        },
+        [theme.breakpoints.down('sm')]: {
+            padding: '12px 24px 24px 24px'
+        },
+        [theme.breakpoints.down('xs')]: {
+            padding: 8
+        }
     }
 }));

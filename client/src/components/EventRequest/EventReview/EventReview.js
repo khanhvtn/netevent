@@ -36,9 +36,10 @@ import { Skeleton } from '@material-ui/lab';
 import SystemNotification from '../../Notification/Notification';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import ReviewEventDialog from '../EventDialog/ReviewEventDialog';
-import useStyles from './styles';
 import NotificationHistory from '../../EventManagement/EventDetail/NotificationHistory/NotificationHistory';
 import AllParticipantTable from '../AllParticipantTable/AllParticipantTable';
+import useStyles from './styles';
+import Image from 'material-ui-image';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -318,47 +319,21 @@ const EventReview = () => {
 
                 {/* Event detail tabs */}
                 <TabPanel value={tabs} index={0}>
+                    <div className={css.imageCover}>
+                        <Image
+                            className={css.cover}
+                            src={state.event?.image ? state.event?.image : blankPhoto}
+                            disableTransition={true}
+                            aspectRatio={25 / 9} />
+                    </div>
+
                     {/* Event Detail */}
                     <Grid
+                        className={css.eventDetail}
                         container
                         justify="center"
                         alignItems="center"
                         direction="column">
-                        {/* Event Header */}
-                        <Grid item>
-                            <Typography
-                                className={css.eventDetailTitle}
-                                variant="h3">
-                                Event Detail
-                            </Typography>
-                        </Grid>
-
-                        {/* Event Image */}
-                        <Grid
-                            container
-                            justify="center"
-                            alignItems="center"
-                            item
-                            md={12}
-                            lg={12}
-                            xl={12}
-                            sm={12}
-                            xs={12}
-                            className={css.imageWrapper}>
-                            <div
-                                style={{
-                                    width: '100%',
-                                    height: '345px',
-                                    backgroundImage: `url(${
-                                        !state.event?.image
-                                            ? blankPhoto
-                                            : state.event?.image
-                                    })`,
-                                    backgroundRepeat: 'no-repeat',
-                                    backgroundPosition: 'center',
-                                    backgroundSize: 'contain'
-                                }}></div>
-                        </Grid>
 
                         {/* Event Detail */}
                         <Grid
