@@ -2,6 +2,7 @@ import { TASK_LOADING, TASK_GET_ALL_FILTER, TASK_GET_ALL } from '../constants';
 
 const initialState = {
     tasks: [],
+    tasksByEvent: [],
     isLoading: false,
     totalPages: null
 };
@@ -18,7 +19,7 @@ export default function taskReducers(state = initialState, action) {
         case TASK_GET_ALL:
             return {
                 ...state,
-                tasks: action.payload.data?.data
+                tasksByEvent: action.payload.data?.data
             };
         default:
             return state;

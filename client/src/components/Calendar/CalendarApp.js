@@ -16,10 +16,11 @@ const CalendarApp = ({ targetRole }) => {
     const [state, setState] = useState({ open: false, start: null, end: null });
     const dispatch = useDispatch();
     const history = useHistory();
-    const { events, eventIsLoading, createEventSuccess, userId, tasks } =
+    const { events, eventIsLoading, createEventSuccess, userId, tasks, tasksIsLoading } =
         useSelector((state) => ({
             events: state.event.events,
             eventIsLoading: state.event.isLoading,
+            tasksIsLoading: state.task.isLoading,
             createEventSuccess: state.event.createSuccess,
             userId: state.user.user.id,
             tasks: state.task.tasks
@@ -114,7 +115,7 @@ const CalendarApp = ({ targetRole }) => {
                 margin: '20px',
                 padding: '20px'
             }}>
-            {eventIsLoading ? (
+            {eventIsLoading || tasksIsLoading ? (
                 <>
                     <Skeleton height="100px" />
                     <Skeleton height="100px" />

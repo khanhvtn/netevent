@@ -31,7 +31,7 @@ const MemberTask = () => {
 
     const { userId, tasks, isLoading } = useSelector((state) => ({
         userId: state.user.user.id,
-        tasks: state.task.tasks,
+        tasks: state.task.tasksByEvent,
         isLoading: state.task.isLoading
     }));
 
@@ -63,7 +63,7 @@ const MemberTask = () => {
                 </Toolbar>
             </Grid>
             <Grid>
-                {tasks.map((task, index) => {
+                {tasks?.map((task, index) => {
                     return (
                         <React.Fragment key={index}>
                             <Typography
@@ -125,7 +125,7 @@ const MemberTask = () => {
                                                     </TableCell>
                                                 </TableRow>
                                             </TableHead>
-                                            {task.tasks.map((block) => {
+                                            {task.tasks?.map((block) => {
                                                 return (
                                                     <TableBody key={block._id}>
                                                         <TableRow>
