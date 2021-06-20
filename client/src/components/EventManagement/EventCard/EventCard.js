@@ -4,7 +4,7 @@ import {
     Grid,
     Card,
     CardContent,
-    CardMedia,
+    // CardMedia,
     Divider,
     Chip,
     CardActionArea,
@@ -17,6 +17,7 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import moment from 'moment';
 import useStyles from './styles';
 import { Skeleton } from '@material-ui/lab';
+import Image from 'material-ui-image';
 
 const EventCard = ({ onClickEvent, isLoading, event }) => {
     const css = useStyles();
@@ -43,10 +44,13 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                 style={{ borderRadius: 16 }}
                             />
                         ) : (
-                            <CardMedia
+                            <Image
                                 className={css.cover}
-                                image={event.image}
-                                title="Event Image"
+                                src={event.image}
+                                cover={true}
+                                disableTransition={true}
+                                aspectRatio={16/9}
+                                // title="Event Image"
                             />
                         )}
 

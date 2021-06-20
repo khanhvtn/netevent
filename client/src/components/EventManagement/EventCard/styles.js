@@ -20,8 +20,6 @@ export default makeStyles((theme) => ({
     },
     cover: {
         width: '100%',
-        height: '0',
-        paddingTop: '56.25%', // 16:9,
         borderRadius: 16
     },
     controls: {
