@@ -4,7 +4,10 @@ export default makeStyles((theme) => ({
     circularProgress: {
         position: 'absolute',
         top: '50%',
-        left: '55%'
+        left: '55%',
+        [theme.breakpoints.down('md')]:{
+            left: '50%',
+        }
     },
     noTask: {
         position: 'absolute',
