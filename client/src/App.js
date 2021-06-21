@@ -19,14 +19,15 @@ import EventManagement from './components/EventManagement/EventManagement';
 import EventDetail from './components/EventManagement/EventDetail/EventDetail';
 import EventRequest from './components/EventRequest/EventRequest';
 import EventReview from './components/EventRequest/EventReview/EventReview';
-import FacilityHistoryAll from './components/FacilityUsageHistory/Facility/Facility'
+import MemberTask from './components/MemberTask/MemberTask';
 import FacilityHistory from './components/FacilityUsageHistory/FacilityUsageHistory'
+import FacilityHistoryAll from './components/FacilityUsageHistory/Facility/Facility'
 
 const App = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const { user } = useSelector((state) => ({
-        user: state.user,
+        user: state.user
     }));
 
     useEffect(() => {
@@ -39,7 +40,7 @@ const App = () => {
                 <Grid container justify="center" alignItems="center">
                     <CircularProgress
                         style={{
-                            height: '100%',
+                            height: '100%'
                         }}
                     />
                 </Grid>
@@ -64,7 +65,7 @@ const App = () => {
                     <Route>
                         <Switch>
                             <Route
-                                path="/dashboard/user"
+                                path="/dashboard/admin/user"
                                 render={() => (
                                     <DashboardLayout>
                                         <User />
@@ -72,7 +73,7 @@ const App = () => {
                                 )}
                             />
                             <Route
-                                path="/dashboard/facility"
+                                path="/dashboard/admin/facility"
                                 render={() => (
                                     <DashboardLayout>
                                         <Facility />
@@ -82,7 +83,7 @@ const App = () => {
 
                             {/* Creator Role */}
                             <Route
-                                path="/dashboard/event-management"
+                                path="/dashboard/creator/event-management"
                                 render={() => (
                                     <DashboardLayout>
                                         <EventManagement />
@@ -90,7 +91,7 @@ const App = () => {
                                 )}
                             />
                             <Route
-                                path="/dashboard/event-detail"
+                                path="/dashboard/creator/event-detail/:code"
                                 render={() => (
                                     <DashboardLayout>
                                         <EventDetail />
@@ -98,7 +99,7 @@ const App = () => {
                                 )}
                             />
                             <Route
-                                path="/dashboard/event-type"
+                                path="/dashboard/creator/event-type"
                                 render={() => (
                                     <DashboardLayout>
                                         <EventType />
@@ -106,7 +107,7 @@ const App = () => {
                                 )}
                             />
                             <Route
-                                path="/dashboard/create-event"
+                                path="/dashboard/creator/create-event"
                                 render={() => (
                                     <DashboardLayout>
                                         <CreateEvent />
@@ -114,7 +115,7 @@ const App = () => {
                                 )}
                             />
                             <Route
-                                path="/dashboard/creator-calendar"
+                                path="/dashboard/creator/calendar"
                                 render={() => (
                                     <DashboardLayout>
                                         <CalendarApp targetRole={3} />
@@ -124,7 +125,7 @@ const App = () => {
 
                             {/* Reviewer role */}
                             <Route
-                                path="/dashboard/event-request"
+                                path="/dashboard/reviewer/event-request"
                                 render={() => (
                                     <DashboardLayout>
                                         <EventRequest />
@@ -132,7 +133,7 @@ const App = () => {
                                 )}
                             />
                             <Route
-                                path="/dashboard/event-review"
+                                path="/dashboard/reviewer/event-review/:code"
                                 render={() => (
                                     <DashboardLayout>
                                         <EventReview />
@@ -140,7 +141,7 @@ const App = () => {
                                 )}
                             />
                             <Route
-                                path="/dashboard/reviewer-calendar"
+                                path="/dashboard/reviewer/calendar"
                                 render={() => (
                                     <DashboardLayout>
                                         <CalendarApp targetRole={2} />
@@ -148,15 +149,24 @@ const App = () => {
                                 )}
                             />
                             <Route
-                                path="/dashboard/event-analysis"
+                                path="/dashboard/reviewer/event-analysis"
                                 render={() => (
                                     <DashboardLayout>
                                         Event Analysis
                                     </DashboardLayout>
                                 )}
                             />
+
                             <Route
-                                path="/dashboard/facility-usage"
+                                path="/dashboard/reviewer/facility-usage/:id"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <FacilityHistory />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/reviewer/facility-usage"
                                 render={() => (
                                     <DashboardLayout>
                                         <FacilityHistoryAll />
@@ -164,11 +174,22 @@ const App = () => {
                                 )}
                             />
 
+
+
+                            {/* Team member role */}
                             <Route
-                                path="/dashboard/usage/:id"
+                                path="/dashboard/member/task"
                                 render={() => (
                                     <DashboardLayout>
-                                        <FacilityHistory />
+                                        <MemberTask />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/member/calendar"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <CalendarApp targetRole={4} />
                                     </DashboardLayout>
                                 )}
                             />

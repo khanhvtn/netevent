@@ -7,7 +7,7 @@ import {
     Toolbar,
     InputBase,
     Tooltip,
-    IconButton,
+    IconButton
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +22,6 @@ import EventCard from '../EventManagement/EventCard/EventCard';
 import EventFilter from '../EventManagement/EventFilter/EventFilter';
 import EventPagination from '../EventManagement/EventPagination/EventPagination';
 
-
 const initialState = {
     search: '',
     take: 3,
@@ -36,7 +35,7 @@ const initialState = {
     startTo: null,
     endFrom: null,
     endTo: null,
-    openDeleteSnackBar: false,
+    openDeleteSnackBar: false
 };
 
 const filterState = {
@@ -47,7 +46,7 @@ const filterState = {
     startFrom: null,
     startTo: null,
     endFrom: null,
-    endTo: null,
+    endTo: null
 };
 
 const EventRequest = () => {
@@ -58,48 +57,35 @@ const EventRequest = () => {
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
 
-    const { events, isLoading, totalPages, userId } = useSelector((state) => ({
+    const { events, isLoading, totalPages } = useSelector((state) => ({
         events: state.event.events,
         isLoading: state.event.isLoading,
-        totalPages: state.event.totalPages,
-        userId: state.user.user.id,
+        totalPages: state.event.totalPages
     }));
 
     // Request to get the events data
     useEffect(() => {
-        const {
-            search,
-            take,
-            page,
-            type,
-            budgetRange,
-            participantRange,
-            startFrom,
-            startTo,
-            endFrom,
-            endTo,
-            status
-        } = state;
         if (!history.location.state || history.location.state?.isUpdated) {
             dispatch(
                 getEvents({
-                    search,
-                    take,
-                    page,
-                    type,
-                    budgetRange,
-                    participantRange,
-                    startFrom,
-                    startTo,
-                    endFrom,
-                    endTo,
-                    ownerId: null,
-                    status
+                    search: state.search,
+                    take: state.take,
+                    page: state.page,
+                    type: state.type,
+                    budgetRange: state.budgetRange,
+                    participantRange: state.participantRange,
+                    startFrom: state.startFrom,
+                    startTo: state.startTo,
+                    endFrom: state.endFrom,
+                    endTo: state.endTo,
+                    status: state.status,
+                    ownerId: null
                 })
             );
         }
         history.replace();
-    }, [dispatch,
+    }, [
+        dispatch,
         history,
         state.search,
         state.take,
@@ -111,10 +97,11 @@ const EventRequest = () => {
         state.startTo,
         state.endFrom,
         state.endTo,
-        state.status]);
+        state.status
+    ]);
 
     const { eventTypes } = useSelector(() => ({
-        eventTypes: state.eventType?.eventTypes,
+        eventTypes: state.eventType?.eventTypes
     }));
 
     // Request all event type in the first access
@@ -122,7 +109,7 @@ const EventRequest = () => {
         if (!eventTypes) {
             dispatch(getAllEventTypes());
         }
-    }, []);
+    }, [dispatch, eventTypes]);
 
     const handleChangePage = (event, newPage) => {
         setState((prevState) => ({ ...prevState, page: newPage }));
@@ -132,7 +119,7 @@ const EventRequest = () => {
         setState((prevState) => ({
             ...prevState,
             take: parseInt(event.target.value),
-            page: 1,
+            page: 1
         }));
     };
 
@@ -142,12 +129,12 @@ const EventRequest = () => {
             return setState((prevState) => ({
                 ...prevState,
                 [name]: value,
-                page: 1,
+                page: 1
             }));
         }
         setState((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
 
@@ -156,7 +143,7 @@ const EventRequest = () => {
         const { name, value } = e.target;
         setFilters((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
 
@@ -164,7 +151,7 @@ const EventRequest = () => {
     const handleToggleFilter = () => {
         setState((prevState) => ({
             ...prevState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -174,7 +161,7 @@ const EventRequest = () => {
             ...prevState,
             ...filters,
             page: 1,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -182,24 +169,24 @@ const EventRequest = () => {
     const handleClearFilter = () => {
         setFilters((prevState) => ({
             ...prevState,
-            ...filterState,
+            ...filterState
         }));
         setState((prevState) => ({
             ...prevState,
             ...filterState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
     // Push to the event-detail page with event props
     const handleOnClickEvent = (event) => {
         history.push({
-            pathname: '/dashboard/event-review',
+            pathname: `/dashboard/reviewer/event-review/${event.urlCode}`,
             state: {
-                from: '/dashboard/event-request',
+                from: '/dashboard/reviewer/event-request',
                 event: event,
                 reviewer: true
-            },
+            }
         });
     };
 
@@ -222,7 +209,7 @@ const EventRequest = () => {
                                         name="search"
                                         value={state.search}
                                         inputProps={{
-                                            'aria-label': 'search',
+                                            'aria-label': 'search'
                                         }}
                                     />
                                 </div>
@@ -232,8 +219,7 @@ const EventRequest = () => {
                                         <IconButton
                                             disabled={isLoading}
                                             color="inherit"
-                                            onClick={handleToggleFilter}
-                                        >
+                                            onClick={handleToggleFilter}>
                                             <FilterList />
                                         </IconButton>
                                     </div>
@@ -243,8 +229,6 @@ const EventRequest = () => {
                     </AppBar>
                 </div>
 
-
-
                 {/* Grid view of Event */}
                 <Paper className={css.paper1} elevation={0}>
                     {/* Event Header */}
@@ -252,16 +236,14 @@ const EventRequest = () => {
                         className={css.title}
                         variant="h6"
                         id="tableTitle"
-                        component="div"
-                    >
+                        component="div">
                         List of events
                     </Typography>
                     <Grid
                         className={css.gridLayout}
                         container
                         justify="flex-start"
-                        spacing={2}
-                    >
+                        spacing={2}>
                         {isLoading ? (
                             Array.apply(null, { length: state.take }).map(
                                 (skeleton, index) => {
@@ -280,22 +262,21 @@ const EventRequest = () => {
                                 direction="column"
                                 alignItems="center"
                                 justify="center"
-                                style={{ minHeight: '50vh' }}
-                            >
+                                style={{ minHeight: '50vh' }}>
                                 <Typography>No data matched</Typography>
                             </Grid>
                         ) : (
-                                    events.map((event) => {
-                                        return (
-                                            <EventCard
-                                                event={event}
-                                                key={event._id}
-                                                isLoading={isLoading}
-                                                onClickEvent={handleOnClickEvent}
-                                            />
-                                        );
-                                    })
-                                )}
+                            events.map((event) => {
+                                return (
+                                    <EventCard
+                                        event={event}
+                                        key={event._id}
+                                        isLoading={isLoading}
+                                        onClickEvent={handleOnClickEvent}
+                                    />
+                                );
+                            })
+                        )}
                     </Grid>
                 </Paper>
 

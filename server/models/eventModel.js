@@ -14,42 +14,42 @@ const nanoid = customAlphabet(alphabet, 7);
 const eventSchema = mongoose.Schema(
     {
         _id: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId
         },
         eventName: {
             type: String,
             required: [true, 'Event Name cannot be blanked'],
             trim: true,
-            unique: true,
+            unique: true
         },
         language: {
             type: String,
             required: [true, 'Language cannot be blanked'],
-            trim: true,
+            trim: true
         },
         eventTypeId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'EventType',
-            required: [true, 'Event Type Id cannot be blanked'],
+            required: [true, 'Event Type Id cannot be blanked']
         },
         mode: {
             type: String,
             required: [true, 'Mode cannot be blanked'],
-            trim: true,
+            trim: true
         },
         location: {
             type: String,
             required: [true, 'Location cannot be blanked'],
-            trim: true,
+            trim: true
         },
         accommodation: {
             type: String,
             required: [true, 'Accommodation cannot be blanked'],
-            trim: true,
+            trim: true
         },
         startDate: {
             type: Date,
-            required: [true, 'Start Date cannot be blanked'],
+            required: [true, 'Start Date cannot be blanked']
         },
         registrationCloseDate: {
             type: Date,
@@ -59,8 +59,8 @@ const eventSchema = mongoose.Schema(
                     return new Date(v) > new Date(this.startDate);
                 },
                 message: () =>
-                    `Registration Close Date cannot be smaller than Start Date`,
-            },
+                    `Registration Close Date cannot be smaller than Start Date`
+            }
         },
         endDate: {
             type: Date,
@@ -69,8 +69,8 @@ const eventSchema = mongoose.Schema(
                 validator: function (v) {
                     return new Date(v) > new Date(this.startDate);
                 },
-                message: () => `End Date cannot be smaller than Start Date`,
-            },
+                message: () => `End Date cannot be smaller than Start Date`
+            }
         },
         maxParticipants: {
             type: String,
@@ -79,9 +79,9 @@ const eventSchema = mongoose.Schema(
                 validator: function (v) {
                     return parseInt(v) > 0;
                 },
-                message: () => `Max Participants cannot be equal to 0`,
+                message: () => `Max Participants cannot be equal to 0`
             },
-            trim: true,
+            trim: true
         },
         tags: {
             type: [String],
@@ -89,18 +89,18 @@ const eventSchema = mongoose.Schema(
                 validator: function (v) {
                     return v.length > 0;
                 },
-                message: () => `Tags cannot be blanked`,
-            },
+                message: () => `Tags cannot be blanked`
+            }
         },
         description: {
             type: String,
             required: [true, 'Description cannot be blanked'],
-            trim: true,
+            trim: true
         },
         ownerId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            required: [true, 'Owner Id cannot be blanked'],
+            required: [true, 'Owner Id cannot be blanked']
         },
         budget: {
             type: String,
@@ -109,46 +109,50 @@ const eventSchema = mongoose.Schema(
                 validator: function (v) {
                     return parseInt(v) > 0;
                 },
-                message: () => `Budget cannot be equal to 0`,
+                message: () => `Budget cannot be equal to 0`
             },
-            trim: true,
+            trim: true
         },
         isApproved: {
             type: Boolean,
-            default: null,
+            default: null
         },
         image: {
             type: String,
-            required: [true, 'Please upload image'],
+            required: [true, 'Please upload image']
         },
         reviewerId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Reviewer',
-            default: null,
+            ref: 'User',
+            default: null
         },
         isFinished: {
             type: Boolean,
-            default: false,
+            default: false
         },
         taskListId: {
             type: [mongoose.Schema.Types.ObjectId],
-            ref: 'Task',
+            ref: 'Task'
         },
         facilityHistoryListId: {
             type: [mongoose.Schema.Types.ObjectId],
-            ref: 'FacilityHistory',
+            ref: 'FacilityHistory'
         },
         urlCode: {
             type: String,
-            default: () => nanoid(),
+            default: () => nanoid()
         },
+        isDeleted: {
+            type: Boolean,
+            default: false
+        }
     },
     { timestamps: true }
 );
 
 // Apply the uniqueValidator plugin
 eventSchema.plugin(uniqueValidator, {
-    message: `{VALUE} is already existed`,
+    message: `{VALUE} is already existed`
 });
 
 const eventModel = mongoose.model('Event', eventSchema);

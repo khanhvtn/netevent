@@ -5,21 +5,21 @@ export default makeStyles((theme) => ({
         marginTop: '24px',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     filterInputs: {
-        marginTop: '20px',
+        marginTop: '20px'
     },
     filterWrapper: {
         width: '250px',
-        padding: '20px',
+        padding: '20px'
     },
     handleFilterButton: {
-        textTransform: "none"
+        textTransform: 'none'
     },
     handleClearButton: {
-        textTransform: "none",
-        textDecoration: 'underline',
+        textTransform: 'none',
+        textDecoration: 'underline'
     },
     filterTitle: {
         padding: '16px 0',

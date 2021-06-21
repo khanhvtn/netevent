@@ -5,7 +5,7 @@ export default makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.default
     },
     sidebarAccountWrapper: {
         alignItems: 'center',
@@ -14,7 +14,7 @@ export default makeStyles((theme) => ({
         padding: 18
     },
     p2: {
-        padding: 16,
+        padding: 16
     },
     sidebarListItem: {
         display: 'flex'

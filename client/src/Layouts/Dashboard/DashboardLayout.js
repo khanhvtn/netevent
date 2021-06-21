@@ -10,7 +10,7 @@ const DashboardLayout = ({ children }) => {
     const css = useStyles();
     const [isMobileNavOpen, setMobileNavOpen] = useState(false);
     const { user } = useSelector((state) => ({
-        user: state.user.user,
+        user: state.user.user
     }));
     const history = useHistory();
 
@@ -21,8 +21,8 @@ const DashboardLayout = ({ children }) => {
                 to={{
                     pathname: '/login',
                     state: {
-                        prevPath: history.location.pathname,
-                    },
+                        prevPath: history.location.pathname
+                    }
                 }}
             />
         );

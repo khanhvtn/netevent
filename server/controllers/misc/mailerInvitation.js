@@ -1,5 +1,5 @@
-const nodemailer = require('nodemailer')
-const { keyMailer } = require('../../keys/mailer')
+const nodemailer = require('nodemailer');
+const { keyMailer } = require('../../keys/mailer');
 const transport = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -13,10 +13,10 @@ const sendInvitation = (mailOption) => {
         transport.sendMail(mailOption, (err, info) => {
             if (err) reject(err);
             resolve(info);
-        })
-    })
-}
+        });
+    });
+};
 
 module.exports = {
     sendInvitation
-}
+};

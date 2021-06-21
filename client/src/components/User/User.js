@@ -7,7 +7,7 @@ import {
     InputBase,
     IconButton,
     Grid,
-    Tooltip,
+    Tooltip
 } from '@material-ui/core';
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
@@ -15,7 +15,7 @@ import {
     getUsers,
     createUser,
     deleteUsers,
-    updateUser,
+    updateUser
 } from '../../actions/userActions';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -47,7 +47,7 @@ const initialState = {
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
-    updatedTo: null,
+    updatedTo: null
 };
 
 const filterState = {
@@ -55,29 +55,25 @@ const filterState = {
     createdFrom: null,
     createdTo: null,
     updatedFrom: null,
-    updatedTo: null,
+    updatedTo: null
 };
 
 const User = () => {
     const css = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const {
-        user,
-        users,
-        isCreated,
-        isDeleted,
-        isUpdated,
-    } = useSelector((state) => ({
-        user: state.user.user,
-        users: state.user.users,
-        isLoading: state.user.isLoading,
-        totalPages: state.user.totalPages,
-        errors: state.error.errors,
-        isCreated: state.user.isCreated,
-        isDeleted: state.user.isDeleted,
-        isUpdated: state.user.isUpdated,
-    }));
+    const { user, users, isCreated, isDeleted, isUpdated } = useSelector(
+        (state) => ({
+            user: state.user.user,
+            users: state.user.users,
+            isLoading: state.user.isLoading,
+            totalPages: state.user.totalPages,
+            errors: state.error.errors,
+            isCreated: state.user.isCreated,
+            isDeleted: state.user.isDeleted,
+            isUpdated: state.user.isUpdated
+        })
+    );
 
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
@@ -104,7 +100,7 @@ const User = () => {
                 : '',
             updatedTo: state.updatedTo
                 ? format(Date.parse(state.updatedTo), 'yyyy-MM-dd')
-                : '',
+                : ''
         };
         setState((prevState) => ({
             ...prevState,
@@ -116,7 +112,7 @@ const User = () => {
             openAlert: isCreated,
             openDeleteSnackBar: isDeleted,
             openCreateSnackBar: isCreated,
-            openDeleteDialog: false,
+            openDeleteDialog: false
         }));
         //clear selected item
         setSelected(() => []);
@@ -136,7 +132,7 @@ const User = () => {
         return () => {
             dispatch({
                 type: ERROR_CLEAR,
-                payload: null,
+                payload: null
             });
         };
     }, [
@@ -151,7 +147,7 @@ const User = () => {
         state.updatedTo,
         isUpdated,
         isCreated,
-        isDeleted,
+        isDeleted
     ]);
 
     const handleChange = (e) => {
@@ -160,19 +156,19 @@ const User = () => {
             return setState((prevState) => ({
                 ...prevState,
                 [name]: value,
-                page: 1,
+                page: 1
             }));
         }
         setState((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
 
@@ -184,7 +180,7 @@ const User = () => {
         setState((prevState) => ({
             ...prevState,
             take: parseInt(event.target.value),
-            page: 1,
+            page: 1
         }));
     };
 
@@ -192,8 +188,8 @@ const User = () => {
         const { email, role } = state;
         //Sort role
         role.sort(function (a, b) {
-            return a - b
-        })
+            return a - b;
+        });
         //create
         if (state.isCreateMode) {
             const userReq = {
@@ -206,42 +202,47 @@ const User = () => {
         }
         //edit
         dispatch(
-            updateUser({
-                filter: selected[0],
-                update: { email, role },
-            }, user.email, history)
+            updateUser(
+                {
+                    filter: selected[0],
+                    update: { email, role }
+                },
+                user.email,
+                history
+            )
         );
     };
 
     const handleDelete = () => {
         dispatch(
-            deleteUsers({
-                deleteList: selected,
-            }, user.email, history)
+            deleteUsers(
+                {
+                    deleteList: selected
+                },
+                user.email,
+                history
+            )
         );
-
     };
 
     const handleToggleDialogCreateAndUpdate = (event, mode) => {
         let targetEdit;
         if (mode) {
-            targetEdit = users.find(
-                (user) => user.email === selected[0]
-            );
+            targetEdit = users.find((user) => user.email === selected[0]);
         }
         setState((prevState) => ({
             ...prevState,
             email: mode ? targetEdit.email : '',
             role: mode ? targetEdit.role : [],
             openCreateAndUpdateDialog: !prevState.openCreateAndUpdateDialog,
-            isCreateMode: mode ? false : true,
+            isCreateMode: mode ? false : true
         }));
     };
 
     const handleToggleDialogDelete = () => {
         setState((prevState) => ({
             ...prevState,
-            openDeleteDialog: !prevState.openDeleteDialog,
+            openDeleteDialog: !prevState.openDeleteDialog
         }));
     };
 
@@ -249,7 +250,7 @@ const User = () => {
     const handleToggleFilter = () => {
         setState((prevState) => ({
             ...prevState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -258,7 +259,7 @@ const User = () => {
         setState((prevState) => ({
             ...prevState,
             ...filters,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -266,12 +267,12 @@ const User = () => {
     const handleClearFilter = () => {
         setFilters((prevState) => ({
             ...prevState,
-            ...filterState,
+            ...filterState
         }));
         setState((prevState) => ({
             ...prevState,
             ...filterState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -293,7 +294,7 @@ const User = () => {
                                         name="search"
                                         value={state.search}
                                         inputProps={{
-                                            'aria-label': 'search',
+                                            'aria-label': 'search'
                                         }}
                                     />
                                 </div>
@@ -301,8 +302,7 @@ const User = () => {
                                 <Tooltip title="Filter">
                                     <IconButton
                                         color="inherit"
-                                        onClick={handleToggleFilter}
-                                    >
+                                        onClick={handleToggleFilter}>
                                         <FilterList />
                                     </IconButton>
                                 </Tooltip>

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, ListItem } from '@material-ui/core';
@@ -29,19 +30,19 @@ const NavItem = ({ href, icon: Icon, title, ...rest }) => {
             disableGutters
             className={css.sidebarListItem}
             style={{ paddingTop: 0, paddingBottom: 0 }}
-            {...rest}
-        >
+            {...rest}>
             <Button
                 className={css.sidebarListButton}
                 // color={active ? 'primary' : 'default'}
-                style={active ?
-                    {
-                        backgroundColor: '#eceef7',
-                        color: '#3f51b5',
-                    } : null
+                style={
+                    active
+                        ? {
+                              backgroundColor: '#eceef7',
+                              color: '#3f51b5'
+                          }
+                        : null
                 }
-                onClick={handleAction}
-            >
+                onClick={handleAction}>
                 {Icon && <Icon size="20" />}
                 <span>{title}</span>
             </Button>
@@ -52,7 +53,7 @@ const NavItem = ({ href, icon: Icon, title, ...rest }) => {
 NavItem.propTypes = {
     href: PropTypes.any,
     icon: PropTypes.elementType,
-    title: PropTypes.string,
+    title: PropTypes.string
 };
 
 export default NavItem;

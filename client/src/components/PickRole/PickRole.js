@@ -16,29 +16,29 @@ const roleInfo = {
     1: {
         roleName: 'Admin',
         icon: adminIcon,
-        defaultPath: 'dashboard/user',
+        defaultPath: 'dashboard/admin/user'
     },
     2: {
         roleName: 'Reviewer',
         icon: reviewerIcon,
-        defaultPath: 'dashboard/event-request',
+        defaultPath: 'dashboard/reviewer/event-request'
     },
     3: {
         roleName: 'Creator',
         icon: creatorIcon,
-        defaultPath: 'dashboard/event-management',
+        defaultPath: 'dashboard/creator/event-management'
     },
     4: {
         roleName: 'Team Member',
         icon: memberIcon,
-        defaultPath: 'dashboard/task',
-    },
+        defaultPath: 'dashboard/member/task'
+    }
 };
 
 const PickRole = () => {
     const css = makeStyles();
     const { userInfo } = useSelector((state) => ({
-        userInfo: state.user.user,
+        userInfo: state.user.user
     }));
     const renderRoleCard = userInfo.role.map((roleNum, index) => {
         const { roleName, icon, defaultPath } = roleInfo[roleNum];
@@ -59,8 +59,7 @@ const PickRole = () => {
                 <DashboardNavbar onPickRole={true} />
                 <Typography
                     style={{ textAlign: 'center', marginBottom: '30px' }}
-                    variant="h4"
-                >
+                    variant="h4">
                     Choose your role to continue...
                 </Typography>
 
@@ -69,8 +68,7 @@ const PickRole = () => {
                     container
                     justify="center"
                     alignItems="center"
-                    spacing={3}
-                >
+                    spacing={3}>
                     {renderRoleCard}
                 </Grid>
             </Container>

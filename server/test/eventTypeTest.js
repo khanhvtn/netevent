@@ -3,7 +3,6 @@ const EventType = require('../models/eventTypeModel');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../index');
-const should = chai.should();
 
 /**
  *  =====================================
@@ -18,21 +17,21 @@ chai.use(chaiHttp);
 
 //Testing block for eventType
 describe('EventTypes', () => {
-    beforeEach((done) => { //Before each test we empty the database
-        EventType.remove({}, (err) => {
+    beforeEach((done) => {
+        //Before each test we empty the database
+        EventType.remove({}, () => {
             done();
         });
     });
 
     /*
-      * Test the /GET eventType
-      */
+     * Test the /GET eventType
+     */
     describe('/GET/eventType/filter eventType', () => {
         it('it should GET all the eventTypes', (done) => {
             chai.request(server)
                 .get('/api/eventType/filter')
                 .end((err, res) => {
-
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
@@ -44,12 +43,12 @@ describe('EventTypes', () => {
     });
 
     /*
-      * Test the /POST eventType
-      */
+     * Test the /POST eventType
+     */
     describe('/POST/eventType/create eventType', () => {
         it('it should POST a eventType', (done) => {
             let eventType = {
-                name: 'testEventTypeName',
+                name: 'testEventTypeName'
             };
             chai.request(server)
                 .post('/api/eventType/create')
@@ -60,7 +59,9 @@ describe('EventTypes', () => {
                     res.body.should.have.property('code').eql(200);
                     res.body.should.have.property('message').eql('success');
                     res.body.should.have.property('data');
-                    res.body.data.should.have.property('name').eql(eventType.name);
+                    res.body.data.should.have
+                        .property('name')
+                        .eql(eventType.name);
                     res.body.data.should.have.property('_id');
                     res.body.data.should.have.property('createdAt');
                     res.body.data.should.have.property('updatedAt');
@@ -70,18 +71,18 @@ describe('EventTypes', () => {
     });
 
     /*
-      * Test the /PATCH eventType
-      */
+     * Test the /PATCH eventType
+     */
     describe('/PUT/eventType/update eventType', () => {
         it('it should UPDATE a eventType', (done) => {
             let eventType = new EventType({ name: 'testEventTypeName' });
             let updateEventType = {
                 filter: eventType.name,
                 update: {
-                    name: 'newEventTypeTestName',
+                    name: 'newEventTypeTestName'
                 }
             };
-            eventType.save((err, eventType) => {
+            eventType.save(() => {
                 chai.request(server)
                     .patch('/api/eventType/update')
                     .send(updateEventType)
@@ -91,7 +92,9 @@ describe('EventTypes', () => {
                         res.body.should.have.property('code').eql(200);
                         res.body.should.have.property('message').eql('success');
                         res.body.should.have.property('data');
-                        res.body.data.should.have.property('name').eql(updateEventType.update.name);
+                        res.body.data.should.have
+                            .property('name')
+                            .eql(updateEventType.update.name);
                         res.body.data.should.have.property('_id');
                         res.body.data.should.have.property('createdAt');
                         res.body.data.should.have.property('updatedAt');
@@ -120,7 +123,9 @@ describe('EventTypes', () => {
                         res.body.should.have.property('code').eql(200);
                         res.body.should.have.property('message').eql('success');
                         res.body.should.have.property('data');
-                        res.body.data.should.have.property('name').eql(eventType.name);
+                        res.body.data.should.have
+                            .property('name')
+                            .eql(eventType.name);
                         res.body.data.should.have.property('_id');
                         res.body.data.should.have.property('createdAt');
                         res.body.data.should.have.property('updatedAt');

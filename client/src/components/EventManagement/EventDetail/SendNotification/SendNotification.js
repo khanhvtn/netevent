@@ -15,7 +15,7 @@ import { stateToHTML } from 'draft-js-export-html';
 
 const initialState = {
     title: '',
-    description: '',
+    description: ''
 };
 
 const SendNotification = ({ eventId, eventName, onClose }) => {
@@ -31,7 +31,7 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
             handleClearField();
             onClose();
         }
-    }, [event.sendNotiSuccess]);
+    }, [event.sendNotiSuccess, onClose]);
 
     const handleClearField = () => {
         setState(initialState);
@@ -40,9 +40,9 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
     const handleSend = (e) => {
         e.preventDefault();
         const descriptionText = JSON.parse(state.description);
-        if (state.title.replace(/\s/g,"") === "") {
+        if (state.title.replace(/\s/g, '') === '') {
             setErrorTitle(true);
-        } else if (descriptionText.blocks[0].text.replace(/\s/g,"") === '') {
+        } else if (descriptionText.blocks[0].text.replace(/\s/g, '') === '') {
             setErrorTitle(false);
             setErrorDescription(true);
         } else {
@@ -51,7 +51,7 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
             const notificationBody = {
                 eventId: eventId,
                 title: state.title,
-                description: html,
+                description: html
             };
 
             dispatch(sendNotification(notificationBody));
@@ -66,50 +66,58 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                 <CircularProgress color="primary" />
             </div>
         </Paper>
-    ) :
+    ) : (
         <div className={css.grow}>
             <Paper className={css.paper} color="inherit">
                 <div className={css.grow}>
                     <div className={css.sendNotiTitle}>
-                        <Typography style={{ fontWeight: 'bold' }} align="center" variant="h4">Notification Email</Typography>
+                        <Typography
+                            style={{ fontWeight: 'bold' }}
+                            align="center"
+                            variant="h4">
+                            Notification Email
+                        </Typography>
                     </div>
                     <FormControl
                         className={css.formControl}
                         variant="outlined"
-                        fullWidth
-                    >
+                        fullWidth>
                         <Grid
                             container
                             spacing={2}
                             direction="row"
                             justify="flex-start"
-                            alignItems="flex-start"
-                        >
+                            alignItems="flex-start">
                             <Grid item xs={12} md={12} lg={12}>
                                 <TextField
-                                    style={{ backgroundColor: 'white', marginTop: 16 }}
+                                    style={{
+                                        backgroundColor: 'white',
+                                        marginTop: 16
+                                    }}
                                     variant="outlined"
                                     id="filled-basic-event"
                                     value={eventName}
                                     fullWidth
                                     InputProps={{
-                                        startAdornment:
+                                        startAdornment: (
                                             <Button
                                                 disableFocusRipple
                                                 disableTouchRipple
-                                                disableRipple size="small"
+                                                disableRipple
+                                                size="small"
                                                 className={css.eventNameButton}>
                                                 Event
-                                            </Button>,
+                                            </Button>
+                                        )
                                     }}
                                 />
 
                                 {error.errors !== null && (
                                     <Typography className={css.errorStyle}>
-                                        This event does not have any participants
+                                        This event does not have any
+                                        participants
                                     </Typography>
                                 )}
-
                             </Grid>
 
                             <Grid item xs={12} md={12} lg={12}>
@@ -121,7 +129,7 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                                     value={state.title}
                                     fullWidth
                                     InputProps={{
-                                        startAdornment:
+                                        startAdornment: (
                                             <Button
                                                 disableFocusRipple
                                                 disableTouchRipple
@@ -129,12 +137,13 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                                                 size="small"
                                                 className={css.eventNameButton}>
                                                 Title
-                                            </Button>,
+                                            </Button>
+                                        )
                                     }}
                                     onChange={(e) =>
                                         setState({
                                             ...state,
-                                            title: e.target.value,
+                                            title: e.target.value
                                         })
                                     }
                                 />
@@ -152,8 +161,7 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                             direction="row"
                             justify="flex-start"
                             className={css.notificationDescription}
-                            alignItems="flex-start"
-                        >
+                            alignItems="flex-start">
                             <Grid item xs={12} md={12} lg={12} align="left">
                                 <Typography align="left">
                                     Description
@@ -171,8 +179,20 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={2} direction="row" justify="flex-end" alignItems="flex-end" className={css.buttonSend}>
-                            <Grid className={css.dialogAction} item xs={12} md={12} lg={12} align="right">
+                        <Grid
+                            container
+                            spacing={2}
+                            direction="row"
+                            justify="flex-end"
+                            alignItems="flex-end"
+                            className={css.buttonSend}>
+                            <Grid
+                                className={css.dialogAction}
+                                item
+                                xs={12}
+                                md={12}
+                                lg={12}
+                                align="right">
                                 <Button
                                     disabled={event.isSendingNotification}
                                     className={css.buttonCancel}
@@ -185,21 +205,22 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
                                     color="primary"
                                     className={css.buttonSend}
                                     onClick={handleSend}>
-                                    {event.isSendingNotification ?
+                                    {event.isSendingNotification ? (
                                         <CircularProgress
                                             size={26}
                                             color="inherit"
                                         />
-                                        :
+                                    ) : (
                                         'Send Email'
-                                    }
+                                    )}
                                 </Button>
                             </Grid>
                         </Grid>
                     </FormControl>
                 </div>
             </Paper>
-        </div >
+        </div>
+    );
 };
 
 export default SendNotification;

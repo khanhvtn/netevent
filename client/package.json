@@ -19,6 +19,7 @@
     "draft-js": "^0.11.7",
     "draft-js-export-html": "^1.4.1",
     "html-react-parser": "^1.2.6",
+    "material-ui-image": "^3.3.2",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "mui-rte": "^1.29.0",
@@ -59,5 +60,10 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "devDependencies": {
+    "eslint": "^7.28.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0"
+  }
 }

@@ -11,7 +11,7 @@ import {
     Collapse,
     DialogContentText,
     Slide,
-    Chip,
+    Chip
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useSelector } from 'react-redux';
@@ -22,12 +22,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const rolesDisplay = [
-    '1',
-    '2',
-    '3',
-    '4'
-];
+const rolesDisplay = ['1', '2', '3', '4'];
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -35,9 +30,9 @@ const MenuProps = {
     PaperProps: {
         style: {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
+            width: 250
+        }
+    }
 };
 
 const UserDialog = ({
@@ -51,13 +46,13 @@ const UserDialog = ({
     openDeleteDialog,
     handleCreateAndUpdate,
     handleToggleDialogDelete,
-    handleDelete,
+    handleDelete
 }) => {
     const css = useStyles();
     const { isLoading, errors, isCreated } = useSelector((state) => ({
         isLoading: state.user.isLoading,
         errors: state.error.errors,
-        isCreated: state.user.isCreated,
+        isCreated: state.user.isCreated
     }));
 
     return (
@@ -69,8 +64,7 @@ const UserDialog = ({
                 open={openCreateAndUpdateDialog}
                 className={css.dialogCreateUpdateUser}
                 onClose={(e) => handleToggleDialogCreateAndUpdate(e)}
-                aria-labelledby="form-dialog-title"
-            >
+                aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     {isCreateMode ? 'Create New User' : 'Update a User'}
                 </DialogTitle>
@@ -110,42 +104,55 @@ const UserDialog = ({
                             renderValue: (selected) => (
                                 <div className={css.chips}>
                                     {selected.map((value) => (
-                                        <Chip key={value} label={value === "1" ? "Admin" : value === "2" ? "Reviewer" : value === "3" ? "Creator" : "Team Member"} className={css.chip} />
+                                        <Chip
+                                            key={value}
+                                            label={
+                                                value === '1'
+                                                    ? 'Admin'
+                                                    : value === '2'
+                                                    ? 'Reviewer'
+                                                    : value === '3'
+                                                    ? 'Creator'
+                                                    : 'Team Member'
+                                            }
+                                            className={css.chip}
+                                        />
                                     ))}
                                 </div>
                             )
-                        }}
-                    >
+                        }}>
                         {rolesDisplay.map((role) => (
                             <MenuItem key={role} value={role}>
-                                {role === "1" ? "Admin" : role === "2" ? "Reviewer" : role === "3" ? "Creator" : "Team Member"}
+                                {role === '1'
+                                    ? 'Admin'
+                                    : role === '2'
+                                    ? 'Reviewer'
+                                    : role === '3'
+                                    ? 'Creator'
+                                    : 'Team Member'}
                             </MenuItem>
                         ))}
                     </TextField>
-
-
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
                     <Button
                         disabled={isLoading || isCreated ? true : false}
                         onClick={handleToggleDialogCreateAndUpdate}
-                        color="default"
-                    >
+                        color="default">
                         Cancel
                     </Button>
                     <Button
                         disabled={isLoading || isCreated ? true : false}
                         variant="contained"
                         onClick={handleCreateAndUpdate}
-                        color="primary"
-                    >
+                        color="primary">
                         {isLoading ? (
                             <CircularProgress size={25} color="inherit" />
                         ) : isCreateMode ? (
                             'Create'
                         ) : (
-                                    'Update'
-                                )}
+                            'Update'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -158,8 +165,7 @@ const UserDialog = ({
                 fullWidth
                 onClose={handleToggleDialogDelete}
                 aria-labelledby="delete-dialog"
-                aria-describedby="delete-dialog-description"
-            >
+                aria-describedby="delete-dialog-description">
                 <DialogTitle id="delete-dialog">{'Warning!!!'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="delete-dialog-description">
@@ -170,17 +176,19 @@ const UserDialog = ({
                     <Button
                         disabled={isLoading ? true : false}
                         onClick={handleToggleDialogDelete}
-                        color="default"
-                    >
+                        color="default">
                         Cancel
                     </Button>
                     <Button
                         disabled={isLoading ? true : false}
                         variant="contained"
                         onClick={handleDelete}
-                        color="secondary"
-                    >
-                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Delete'}
+                        color="secondary">
+                        {isLoading ? (
+                            <CircularProgress size={25} color="inherit" />
+                        ) : (
+                            'Delete'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>

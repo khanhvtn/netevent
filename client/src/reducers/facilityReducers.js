@@ -5,7 +5,7 @@ import {
     FACILITY_UPDATE_SUCCESS,
     FACILITY_DELETE_SUCCESS,
     FACILITY_GET_ALL_FILTER,
-    FACILITY_RECOVERY_SUCCESS,
+    FACILITY_RECOVERY_SUCCESS
 } from '../constants';
 
 const initialState = {
@@ -15,7 +15,7 @@ const initialState = {
     createSuccess: false,
     updateSuccess: false,
     deleteSuccess: false,
-    recoverySuccess: false,
+    recoverySuccess: false
 };
 
 export default function facilityReducers(state = initialState, action) {
@@ -23,13 +23,13 @@ export default function facilityReducers(state = initialState, action) {
         case FACILITY_GET_ALL:
             return {
                 ...state,
-                facilities: action.payload.data.data,
+                facilities: action.payload.data.data
             };
         case FACILITY_GET_ALL_FILTER:
             return {
                 ...state,
                 facilities: action.payload.data.data,
-                totalPages: action.payload.data.totalPages,
+                totalPages: action.payload.data.totalPages
             };
         case FACILITY_LOADING:
             return { ...state, isLoading: action.payload };

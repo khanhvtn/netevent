@@ -12,7 +12,7 @@ import {
     USER_CREATE_SUCCESS,
     USER_UPDATE_SUCCESS,
     USER_DELETE_SUCCESS,
-    GET_ALL_USERS,
+    GET_ALL_USERS
 } from '../constants';
 
 const initialState = {
@@ -25,7 +25,7 @@ const initialState = {
     totalPages: null,
     isCreated: false,
     isUpdated: false,
-    isDeleted: false,
+    isDeleted: false
 };
 
 export default function userReducers(state = initialState, action) {
@@ -55,17 +55,18 @@ export default function userReducers(state = initialState, action) {
             return {
                 ...state,
                 users: action.payload.data.data,
-                totalPages: action.payload.data.totalPages,
+                totalPages: action.payload.data.totalPages
             };
         case GET_ALL_USERS:
             return {
                 ...state,
-                users: action.payload.data.data,
+                users: action.payload.data.data
             };
         case FETCH_CURRENT_USER:
             return {
-                ...state, user: action.payload
-            }
+                ...state,
+                user: action.payload
+            };
 
         // SNACKBAR
         case USER_CREATE_SUCCESS:

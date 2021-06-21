@@ -29,7 +29,7 @@ export const ERROR_CLEAR = 'ERROR_CLEAR';
 export const EMAIL_ERROR = 'Email must not be empty and in right format';
 export const ROLE_ERROR = 'Role must not be empty';
 export const PASSWORD_MATCHED =
-  'Passwords must be matched and should not be empty';
+    'Passwords must be matched and should not be empty';
 
 //link action types
 export const GET_LINKS = 'GET_LIKKS';
@@ -68,14 +68,15 @@ export const EVENT_DETAIL_LOADING = 'EVENT_DETAIL_LOADING';
 export const EVENT_CREATE = 'EVENT_CREATE';
 export const EVENT_UPDATE = 'EVENT_UPDATE';
 export const EVENT_CREATE_SUCCESS = 'EVENT_CREATE_SUCCESS';
-export const IS_SENDING_NOTIFICATION = 'IS_SENDING_NOTIFICATION'
-export const FETCH_EVENTS = "FETCH_EVENTS"
-export const SEND_NOTI_SUCCESS = 'SEND_SUCCESS'
-export const GET_EVENTS_COMPLETE = "GET_EVENTS_COMPLETE"
+export const IS_SENDING_NOTIFICATION = 'IS_SENDING_NOTIFICATION';
+export const FETCH_EVENTS = 'FETCH_EVENTS';
+export const SEND_NOTI_SUCCESS = 'SEND_SUCCESS';
+export const GET_EVENTS_COMPLETE = 'GET_EVENTS_COMPLETE';
 export const EVENT_UPDATE_SUCCESS = 'EVENT_UPDATE_SUCCESS';
 export const EVENT_DELETE_SUCCESS = 'EVENT_DELETE_SUCCESS';
+export const EVENT_RECOVERY_SUCCESS = 'EVENT_RECOVERY_SUCCESS';
 export const EVENT_GET_ALL_FILTER = 'EVENT_GET_ALL_FILTER';
-export const EVENT_GET_FACILITY_AND_TASK = 'EVENT_GET_FACILITY_AND_TASK'
+export const EVENT_GET_FACILITY_AND_TASK = 'EVENT_GET_FACILITY_AND_TASK';
 
 //Facility action types
 export const FACILITY_HISTORY_GET_ALL = 'FACILITY_HISTORY_GET_ALL';
@@ -92,3 +93,8 @@ export const PARTICIPANT_UPDATE_SUCCESS = 'PARTICIPANT_UPDATE_SUCCESS';
 //Notification history action types
 export const NOTIFICATION_HISTORY_LOADING = 'NOTIFICATION_HISTORY_LOADING';
 export const NOTIFICATION_HISTORY_GET_ALL = 'NOTIFICATION_HISTORY_GET_ALL';
+
+//Task action types
+export const TASK_LOADING = 'TASK_LOADING';
+export const TASK_GET_ALL = 'TASK_GET_ALL';
+export const TASK_GET_ALL_FILTER = 'TASK_GET_ALL_FILTER';

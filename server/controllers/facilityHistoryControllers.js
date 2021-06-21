@@ -80,7 +80,7 @@ const filter = async (req, res, next) => {
             borrowMaxDate,
             borrowMinDate,
             returnMaxDate,
-            returnMinDate,
+            returnMinDate
         ]);
         //return empty result to client if database has no data.
         if (
@@ -106,7 +106,7 @@ const filter = async (req, res, next) => {
             borrowMaxDate: listRangeDate[4][0].borrowDate,
             borrowMinDate: listRangeDate[5][0].borrowDate,
             returnMaxDate: listRangeDate[6][0].returnDate,
-            returnMinDate: listRangeDate[7][0].returnDate,
+            returnMinDate: listRangeDate[7][0].returnDate
         };
 
         //adding search
@@ -135,7 +135,7 @@ const filter = async (req, res, next) => {
         if (req.query.createdFrom) {
             options = {
                 ...options,
-                createdMinDate: req.query.createdFrom,
+                createdMinDate: req.query.createdFrom
             };
         }
         /* 
@@ -145,7 +145,7 @@ const filter = async (req, res, next) => {
         if (req.query.createdTo) {
             options = {
                 ...options,
-                createdMaxDate: req.query.createdTo,
+                createdMaxDate: req.query.createdTo
             };
         }
         /* 
@@ -155,7 +155,7 @@ const filter = async (req, res, next) => {
         if (req.query.updatedFrom) {
             options = {
                 ...options,
-                updatedMinDate: req.query.updatedFrom,
+                updatedMinDate: req.query.updatedFrom
             };
         }
         /* 
@@ -165,7 +165,7 @@ const filter = async (req, res, next) => {
         if (req.query.updatedTo) {
             options = {
                 ...options,
-                updatedMaxDate: req.query.updatedTo,
+                updatedMaxDate: req.query.updatedTo
             };
         }
 
@@ -176,7 +176,7 @@ const filter = async (req, res, next) => {
         if (req.query.borrowFrom) {
             options = {
                 ...options,
-                borrowMinDate: req.query.borrowFrom,
+                borrowMinDate: req.query.borrowFrom
             };
         }
         /* 
@@ -186,7 +186,7 @@ const filter = async (req, res, next) => {
         if (req.query.borrowTo) {
             options = {
                 ...options,
-                borrowMaxDate: req.query.borrowTo,
+                borrowMaxDate: req.query.borrowTo
             };
         }
         /* 
@@ -196,7 +196,7 @@ const filter = async (req, res, next) => {
         if (req.query.returnFrom) {
             options = {
                 ...options,
-                returnMinDate: req.query.returnFrom,
+                returnMinDate: req.query.returnFrom
             };
         }
         /* 
@@ -206,7 +206,7 @@ const filter = async (req, res, next) => {
         if (req.query.returnTo) {
             options = {
                 ...options,
-                returnMaxDate: req.query.returnTo,
+                returnMaxDate: req.query.returnTo
             };
         }
 
@@ -222,15 +222,15 @@ const filter = async (req, res, next) => {
             facilityId: selectedFacility,
             createdAt: {
                 $gte: options.createdMinDate,
-                $lte: options.createdMaxDate,
+                $lte: options.createdMaxDate
             },
             updatedAt: {
                 $gte: options.updatedMinDate,
-                $lte: options.updatedMaxDate,
+                $lte: options.updatedMaxDate
             },
             borrowDate: {
                 $gte: options.borrowMinDate,
-                $lte: options.borrowMaxDate,
+                $lte: options.borrowMaxDate
             },
             returnDate: {
                 $gte: options.returnMinDate,
@@ -264,20 +264,20 @@ const filter = async (req, res, next) => {
 
             createdAt: {
                 $gte: options.createdMinDate,
-                $lte: options.createdMaxDate,
+                $lte: options.createdMaxDate
             },
             updatedAt: {
                 $gte: options.updatedMinDate,
-                $lte: options.updatedMaxDate,
+                $lte: options.updatedMaxDate
             },
             borrowDate: {
                 $gte: options.borrowMinDate,
-                $lte: options.borrowMaxDate,
+                $lte: options.borrowMaxDate
             },
             returnDate: {
                 $gte: options.returnMinDate,
-                $lte: options.returnMaxDate,
-            },
+                $lte: options.returnMaxDate
+            }
         })
             .populate({
                 path: 'facilityId',
@@ -315,17 +315,16 @@ const deleteFacilityHistory = async (req, res, next) => {
     try {
         const { deleteList } = req.body;
         if (deleteList.length === 1) {
-            const deletedFacilityHistory = await FacilityHistory.findOneAndDelete(
-                {
-                    _id: deleteList[0],
-                }
-            );
+            const deletedFacilityHistory =
+                await FacilityHistory.findOneAndDelete({
+                    _id: deleteList[0]
+                });
             return cusResponse(res, 200, deletedFacilityHistory, null);
         } else {
             const deletedFacilityHistory = await Promise.all(
                 deleteList.map(async (_id) => {
                     return await FacilityHistory.findOneAndDelete({
-                        _id,
+                        _id
                     });
                 })
             );
@@ -397,7 +396,7 @@ const getAllFacilityHistory = async (req, res, next) => {
     try {
         const facilityHistories = await FacilityHistory.find({}).populate({
             path: 'facilityId eventId',
-            populate: [{ path: 'taskListId' }],
+            populate: [{ path: 'taskListId' }]
         });
         return cusResponse(res, 200, facilityHistories, null);
     } catch (error) {

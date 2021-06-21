@@ -7,7 +7,7 @@ import {
     DialogActions,
     Button,
     CircularProgress,
-    Slide,
+    Slide
 } from '@material-ui/core';
 //import useStyles in the last
 import useStyles from './styles';
@@ -21,7 +21,7 @@ const CreateEventTypeDialog = ({
     eventTypeTarget,
     eventTypeIsLoading,
     handleCreateEventType,
-    errors,
+    errors
 }) => {
     const css = useStyles();
     return (
@@ -30,8 +30,7 @@ const CreateEventTypeDialog = ({
             maxWidth="sm"
             open={openDialogCreateEventType}
             onClose={(e) => handleToggleDialogCreateEventType(e)}
-            aria-labelledby="form-dialog-title"
-        >
+            aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">
                 Create New Event Type
             </DialogTitle>
@@ -54,16 +53,18 @@ const CreateEventTypeDialog = ({
                 <Button
                     disabled={eventTypeIsLoading ? true : false}
                     onClick={handleToggleDialogCreateEventType}
-                    color="default"
-                >
+                    color="default">
                     Cancel
                 </Button>
                 <Button
                     variant="contained"
                     onClick={handleCreateEventType}
-                    color="primary"
-                >
-                    {eventTypeIsLoading ? <CircularProgress size={25} color="inherit" /> : 'Create'}
+                    color="primary">
+                    {eventTypeIsLoading ? (
+                        <CircularProgress size={25} color="inherit" />
+                    ) : (
+                        'Create'
+                    )}
                 </Button>
             </DialogActions>
         </Dialog>

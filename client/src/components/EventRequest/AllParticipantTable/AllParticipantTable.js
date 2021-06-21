@@ -5,20 +5,17 @@ import {
     Toolbar,
     IconButton,
     Tooltip,
-    InputBase,
+    InputBase
 } from '@material-ui/core';
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
 import useStyles from './styles';
-import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import ParticipantTable from '../../EventManagement/ParticipantTable/ParticipantTable';
 import ParticipantPagination from '../../EventManagement/ParticipantPagination/ParticipantPagination';
 import ParticipantFilter from '../../EventManagement/ParticipantFilter/ParticipantFilter';
 import SystemNotification from '../../Notification/Notification';
 import { getParticipants } from '../../../actions/participantActions';
-
-
 
 const initialState = {
     search: '',
@@ -37,11 +34,10 @@ const initialState = {
 const filterState = {
     academic: '',
     status: ''
-}
+};
 
 const AllParticipantTable = ({ eventId, tabs }) => {
     const css = useStyles();
-    const history = useHistory();
     const dispatch = useDispatch();
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
@@ -61,9 +57,10 @@ const AllParticipantTable = ({ eventId, tabs }) => {
                     eventId,
                     state.status
                 )
-            )
+            );
         }
-    }, [dispatch,
+    }, [
+        dispatch,
         state.search,
         state.take,
         state.page,
@@ -72,8 +69,8 @@ const AllParticipantTable = ({ eventId, tabs }) => {
         state.isAttended,
         eventId,
         state.status,
-        tabs]
-    );
+        tabs
+    ]);
 
     const handleChangePage = (event, newPage) => {
         setState((prevState) => ({ ...prevState, page: newPage }));
@@ -83,7 +80,7 @@ const AllParticipantTable = ({ eventId, tabs }) => {
         setState((prevState) => ({
             ...prevState,
             take: parseInt(event.target.value),
-            page: 1,
+            page: 1
         }));
     };
 
@@ -93,13 +90,13 @@ const AllParticipantTable = ({ eventId, tabs }) => {
             ...prevState,
             [name]: value
         }));
-    }
+    };
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
 
@@ -107,7 +104,7 @@ const AllParticipantTable = ({ eventId, tabs }) => {
     const handleToggleFilter = () => {
         setState((prevState) => ({
             ...prevState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -117,23 +114,23 @@ const AllParticipantTable = ({ eventId, tabs }) => {
             ...prevState,
             ...filters,
             page: 1,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
-        setSelected([])
+        setSelected([]);
     };
 
     //handle Clear Filter
     const handleClearFilter = () => {
         setFilters((prevState) => ({
             ...prevState,
-            ...filterState,
+            ...filterState
         }));
         setState((prevState) => ({
             ...prevState,
             ...filterState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
-        setSelected([])
+        setSelected([]);
     };
 
     return (
@@ -151,7 +148,7 @@ const AllParticipantTable = ({ eventId, tabs }) => {
                             name="search"
                             value={state.search}
                             inputProps={{
-                                'aria-label': 'search',
+                                'aria-label': 'search'
                             }}
                         />
                     </div>
@@ -159,23 +156,25 @@ const AllParticipantTable = ({ eventId, tabs }) => {
                     <Tooltip title="Filter">
                         <IconButton
                             color="inherit"
-                            onClick={handleToggleFilter}
-                        >
+                            onClick={handleToggleFilter}>
                             <FilterList />
                         </IconButton>
                     </Tooltip>
                 </Toolbar>
 
                 <ParticipantTable
+                    reviewerMode={true}
                     take={state.take}
                     selected={selected}
-                    setSelected={setSelected} />
+                    setSelected={setSelected}
+                />
 
                 <ParticipantPagination
                     page={state.page}
                     take={state.take}
                     handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    handleChangePage={handleChangePage} />
+                    handleChangePage={handleChangePage}
+                />
 
                 {/* Participant Filter */}
                 <ParticipantFilter
@@ -186,13 +185,16 @@ const AllParticipantTable = ({ eventId, tabs }) => {
                     handleToggleFilter={handleToggleFilter}
                     handleFilterChange={handleFilterChange}
                     handleApplyFilter={handleApplyFilter}
-                    handleClearFilter={handleClearFilter} />
+                    handleClearFilter={handleClearFilter}
+                />
 
                 {/* Notification */}
-                <SystemNotification openUpdateSnackBar={state.openUpdateSnackBar} />
+                <SystemNotification
+                    openUpdateSnackBar={state.openUpdateSnackBar}
+                />
             </Grid>
         </AppBar>
-    )
-}
+    );
+};
 
 export default AllParticipantTable;

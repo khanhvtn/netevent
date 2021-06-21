@@ -7,7 +7,7 @@ import {
     DialogContent,
     DialogActions,
     DialogContentText,
-    Slide,
+    Slide
 } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 //import useStyles in the last
@@ -20,13 +20,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const EventCheckingCompletedDialog = ({
     openCheckingCompletedDialog,
     handleToggleDialogCheckingCompleted,
-    handleUpdateEventStatus,
+    handleUpdateEventStatus
 }) => {
     const css = useStyles();
 
     const { isLoading } = useSelector((state) => ({
         isLoading: state.event.isLoading
-    }))
+    }));
 
     return (
         <>
@@ -38,12 +38,14 @@ const EventCheckingCompletedDialog = ({
                 aria-labelledby="delete-dialog"
                 fullWidth
                 className={css.dialogDeleteFac}
-                aria-describedby="delete-dialog-description"
-            >
-                <DialogTitle id="delete-dialog">{'Confirm completed event!'}</DialogTitle>
+                aria-describedby="delete-dialog-description">
+                <DialogTitle id="delete-dialog">
+                    {'Confirm completed event!'}
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="delete-dialog-description">
-                        Your event currently out of date! You should update your event's status.
+                        Your event currently out of date! You should update your
+                        event's status.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions className={css.dialogCheckingActions}>
@@ -52,9 +54,12 @@ const EventCheckingCompletedDialog = ({
                         disabled={isLoading ? true : false}
                         onClick={handleUpdateEventStatus}
                         variant="contained"
-                        color="primary"
-                    >
-                        {isLoading ? <CircularProgress size={25} color="inherit" /> : 'Confirm Completed'}
+                        color="primary">
+                        {isLoading ? (
+                            <CircularProgress size={25} color="inherit" />
+                        ) : (
+                            'Confirm Completed'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>

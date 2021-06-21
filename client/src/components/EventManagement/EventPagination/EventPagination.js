@@ -3,15 +3,20 @@ import { Typography, Select, MenuItem, Toolbar } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 //import useStyles in the last
 import useStyles from './styles';
+import { useSelector } from 'react-redux';
 
 const EventPagination = ({
     totalPages,
     page,
     take,
     handleChangeRowsPerPage,
-    handleChangePage,
+    handleChangePage
 }) => {
     const css = useStyles();
+
+    const { isLoading } = useSelector((state) => ({
+        isLoading: state.event.isLoading
+    }))
 
     return (
         <Toolbar className={css.paginationWrapper}>
@@ -25,16 +30,15 @@ const EventPagination = ({
                     variant="standard"
                     value={take}
                     name="take"
-                    onChange={handleChangeRowsPerPage}
-                >
+                    onChange={handleChangeRowsPerPage}>
                     <MenuItem value={3}>3</MenuItem>
                     <MenuItem value={6}>6</MenuItem>
                     <MenuItem value={9}>9</MenuItem>
-
                 </Select>
             </div>
             <div>
                 <Pagination
+                    disabled={isLoading}
                     page={page}
                     shape="rounded"
                     size="small"

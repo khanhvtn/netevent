@@ -1,8 +1,6 @@
 import React from 'react';
 import { Slide, Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-//import useStyles in the last
-import useStyles from './styles';
 
 const SystemNotification = ({
     openDeleteSnackBar,
@@ -12,7 +10,6 @@ const SystemNotification = ({
     openSendSnackBar,
     openRegisterParticipantSnackBar
 }) => {
-    const css = useStyles();
     return (
         <div>
             {/* Snackbar Delete Success */}
@@ -32,7 +29,9 @@ const SystemNotification = ({
                 <Alert severity="success">Send Notification Successful</Alert>
             </Snackbar>
             {/* Snackbar Register Participant Success */}
-            <Snackbar TransitionComponent={Slide} open={openRegisterParticipantSnackBar}>
+            <Snackbar
+                TransitionComponent={Slide}
+                open={openRegisterParticipantSnackBar}>
                 <Alert severity="success">Register Event Successful</Alert>
             </Snackbar>
             {/* Snackbar Recover Success */}

@@ -7,14 +7,14 @@ import {
     Button,
     FormControl,
     FormHelperText,
-    CircularProgress,
+    CircularProgress
 } from '@material-ui/core';
 import { AddAPhoto, DeleteForever } from '@material-ui/icons';
 import blankPhoto from '../../images/blankPhoto.png';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     getAllEventTypes,
-    createEventType,
+    createEventType
 } from '../../actions/eventTypeActions';
 
 import { getAllFacilities } from '../../actions/facilityActions';
@@ -34,7 +34,6 @@ import TaskDialog from './TaskDialog/TaskDialog';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 import CreateEventInputGroup from './CreateEventInputGroup/CreateEventInputGroup';
 import { CreateEventInterface } from '../Context';
-import { convertToRaw, EditorState } from 'draft-js';
 import moment from 'moment';
 
 let listTag = [];
@@ -46,52 +45,52 @@ const headCellBorrowFacility = [
         id: 'name',
         numeric: false,
         disablePadding: false,
-        label: 'Name',
+        label: 'Name'
     },
     {
         id: 'borrowDate',
         numeric: false,
         disablePadding: false,
-        label: 'Borrow Date',
+        label: 'Borrow Date'
     },
     {
         id: 'returnDate',
         numeric: false,
         disablePadding: false,
-        label: 'Return Date',
-    },
+        label: 'Return Date'
+    }
 ];
 const headCellsTask = [
     {
         id: 'name',
         numeric: false,
         disablePadding: false,
-        label: 'Name',
+        label: 'Name'
     },
     {
         id: 'email',
         numeric: false,
         disablePadding: false,
-        label: 'Email',
+        label: 'Email'
     },
     {
         id: 'type',
         numeric: false,
         disablePadding: false,
-        label: 'Type',
+        label: 'Type'
     },
     {
         id: 'startTime',
         numeric: false,
         disablePadding: false,
-        label: 'Start Time',
+        label: 'Start Time'
     },
     {
         id: 'endTime',
         numeric: false,
         disablePadding: false,
-        label: 'End Time',
-    },
+        label: 'End Time'
+    }
 ];
 const initialState = {
     //create new event
@@ -115,7 +114,7 @@ const initialState = {
     // create event type
     openDialogCreateEventType: false,
     eventTypeTarget: '',
-    openCreateSnackBar: false,
+    openCreateSnackBar: false
 };
 const initialBorrowFacilityState = {
     //borrowFacilityState.
@@ -129,7 +128,7 @@ const initialBorrowFacilityState = {
     borrowDate: null,
     returnDate: null,
     openCreateAndUpdateDialogBorrowFacility: false,
-    openDeleteDialogBorrowFacility: false,
+    openDeleteDialogBorrowFacility: false
 };
 
 const initialTaskState = {
@@ -145,7 +144,7 @@ const initialTaskState = {
     endTime: null,
     openCreateAndUpdateDialogTask: false,
     openDeleteDialogTask: false,
-    isTaskCreateMode: true,
+    isTaskCreateMode: true
 };
 
 //Create Event Provider
@@ -165,7 +164,7 @@ const CreateEvent = ({
     startDate,
     endDate,
     handleCloseCreateDialog,
-    handleCloseUpdateDialog,
+    handleCloseUpdateDialog
 }) => {
     initialState.startDate = startDate ? startDate : null;
     initialState.endDate = endDate ? endDate : null;
@@ -183,7 +182,7 @@ const CreateEvent = ({
         user,
         users,
         eventIsLoading,
-        facilityHistories,
+        facilityHistories
     } = useSelector((state) => ({
         users: state.user.users,
         user: state.user.user,
@@ -195,7 +194,7 @@ const CreateEvent = ({
         createEventSuccess: state.event.createSuccess,
         updateEventSuccess: state.event.updateSuccess,
         facilities: state.facility.facilities,
-        facilityHistories: state.facilityHistory.facilityHistories,
+        facilityHistories: state.facilityHistory.facilityHistories
     }));
 
     const [state, setState] = useState(initialState);
@@ -220,7 +219,7 @@ const CreateEvent = ({
                 return {
                     ...prevState,
                     ...initialState,
-                    isResetListTag: !prevState.isResetListTag,
+                    isResetListTag: !prevState.isResetListTag
                 };
             });
             setBorrowFacilityState(initialBorrowFacilityState);
@@ -235,7 +234,7 @@ const CreateEvent = ({
             if (action) {
                 dispatch({
                     type: ERROR_CLEAR,
-                    payload: null,
+                    payload: null
                 });
             }
         },
@@ -256,7 +255,7 @@ const CreateEvent = ({
         setState((prevState) => ({
             ...prevState,
             openCreateSnackBar: createEventSuccess,
-            isResetListTag: !prevState.isResetListTag,
+            isResetListTag: !prevState.isResetListTag
         }));
     }, [dispatch, createEventSuccess, handleClearFields]);
 
@@ -266,14 +265,14 @@ const CreateEvent = ({
             handleClearFields();
             handleCloseUpdateDialog();
         }
-    }, [updateEventSuccess, handleClearFields]);
+    }, [updateEventSuccess, handleClearFields, handleCloseUpdateDialog]);
 
     //useEffect get status create event type
     useEffect(() => {
         setState((prevState) => ({
             ...prevState,
             openCreateSnackBar: createEventTypeSuccess,
-            openDialogCreateEventType: false,
+            openDialogCreateEventType: false
         }));
         if (createEventTypeSuccess) {
             dispatch(getAllEventTypes());
@@ -311,7 +310,7 @@ const CreateEvent = ({
                     Date.parse(updateEventDetail.registrationCloseDate)
                 ).toDate(),
                 eventTypeTarget: updateEventDetail.eventTypeId.name,
-                description: updateEventDetail?.description,
+                description: updateEventDetail?.description
             }));
 
             // setup initial facilities
@@ -321,8 +320,8 @@ const CreateEvent = ({
                     _id: facility._id,
                     name: facility.facilityId?.name,
                     borrowDate: facility.borrowDate,
-                    returnDate: facility.returnDate,
-                })),
+                    returnDate: facility.returnDate
+                }))
             }));
 
             // setup initial tasks
@@ -334,8 +333,8 @@ const CreateEvent = ({
                     email: task.userId?.email,
                     type: task.type,
                     startTime: task.startDate,
-                    endTime: task.endDate,
-                })),
+                    endTime: task.endDate
+                }))
             }));
         }
     }, [isUpdateMode, updateEventDetail, updateFacilities, updateTasks]);
@@ -343,7 +342,7 @@ const CreateEvent = ({
     const handleChange = (e) => {
         setState((prevState) => ({
             ...prevState,
-            [e.target.name]: e.target.value,
+            [e.target.name]: e.target.value
         }));
     };
 
@@ -354,7 +353,7 @@ const CreateEvent = ({
     const handleToggleDialogCreateEventType = () => {
         setState((prevState) => ({
             ...prevState,
-            openDialogCreateEventType: !prevState.openDialogCreateEventType,
+            openDialogCreateEventType: !prevState.openDialogCreateEventType
         }));
     };
 
@@ -372,7 +371,7 @@ const CreateEvent = ({
             description,
             budget,
             image,
-            eventTypeTarget,
+            eventTypeTarget
         } = state;
 
         //generate valid data to send request to the server
@@ -406,7 +405,7 @@ const CreateEvent = ({
                     email,
                     type,
                     startTime: startDate,
-                    endTime: endDate,
+                    endTime: endDate
                 } = task;
 
                 const { _id: userId } = users.find(
@@ -417,7 +416,7 @@ const CreateEvent = ({
                     userId,
                     type,
                     startDate,
-                    endDate,
+                    endDate
                 };
             }),
             borrowFacilities: borrowFacilityState.borrowFacilities.map(
@@ -429,10 +428,10 @@ const CreateEvent = ({
                     return {
                         facilityId: targetFacility._id,
                         borrowDate,
-                        returnDate,
+                        returnDate
                     };
                 }
-            ),
+            )
         };
         if (!isUpdateMode) {
             dispatch(createEvent(templateRequest));
@@ -452,12 +451,12 @@ const CreateEvent = ({
                             return {
                                 facilityId: targetFacility._id,
                                 borrowDate,
-                                returnDate,
+                                returnDate
                             };
                         }),
                     ...borrowFacilityState.borrowFacilities.filter(
                         (borrowFacility) => borrowFacility._id
-                    ),
+                    )
                 ],
                 tasks: [
                     ...taskState.tasks
@@ -468,15 +467,15 @@ const CreateEvent = ({
                                 email,
                                 type,
                                 startTime: startDate,
-                                endTime: endDate,
+                                endTime: endDate
                             } = task;
                             const { _id: userId } = users.find(
                                 (user) => user.email === email
                             );
                             return { name, userId, type, startDate, endDate };
                         }),
-                    ...taskState.tasks.filter((task) => task._id),
-                ],
+                    ...taskState.tasks.filter((task) => task._id)
+                ]
             };
             dispatch(updateEvent(updateTemplate));
         }
@@ -491,7 +490,7 @@ const CreateEvent = ({
     const handleChangeBorrowFacility = (e) => {
         setBorrowFacilityState((prevState) => ({
             ...prevState,
-            [e.target.name]: e.target.value,
+            [e.target.name]: e.target.value
         }));
     };
 
@@ -509,12 +508,12 @@ const CreateEvent = ({
             returnDate: mode ? targetEdit.returnDate : null,
             openCreateAndUpdateDialogBorrowFacility:
                 !prevState.openCreateAndUpdateDialogBorrowFacility,
-            isBorrowFacilityCreateMode: mode ? false : true,
+            isBorrowFacilityCreateMode: mode ? false : true
         }));
         //clear Error
         dispatch({
             type: ERROR_CLEAR,
-            payload: null,
+            payload: null
         });
     };
 
@@ -522,7 +521,7 @@ const CreateEvent = ({
         setBorrowFacilityState((prevState) => ({
             ...prevState,
             openDeleteDialogBorrowFacility:
-                !prevState.openDeleteDialogBorrowFacility,
+                !prevState.openDeleteDialogBorrowFacility
         }));
     };
 
@@ -532,25 +531,25 @@ const CreateEvent = ({
         if (!name) {
             listErrors = {
                 ...listErrors,
-                name: 'Borrow Facility cannot be blanked.',
+                name: 'Borrow Facility cannot be blanked.'
             };
         }
         if (!borrowDate) {
             listErrors = {
                 ...listErrors,
-                borrowDate: 'Borrow Facility cannot be blanked.',
+                borrowDate: 'Borrow Facility cannot be blanked.'
             };
         }
         if (!returnDate) {
             listErrors = {
                 ...listErrors,
-                returnDate: 'Borrow Facility cannot be blanked.',
+                returnDate: 'Borrow Facility cannot be blanked.'
             };
         }
         if (Object.keys(listErrors).length !== 0) {
             return dispatch({
                 type: ERROR,
-                payload: listErrors,
+                payload: listErrors
             });
         }
 
@@ -572,20 +571,20 @@ const CreateEvent = ({
                     {
                         name: prevState.name.name,
                         borrowDate: prevState.borrowDate,
-                        returnDate: prevState.returnDate,
-                    },
+                        returnDate: prevState.returnDate
+                    }
                 ],
                 name: '',
                 borrowDate: null,
                 returnDate: null,
-                openCreateAndUpdateDialogBorrowFacility: false,
+                openCreateAndUpdateDialogBorrowFacility: false
             };
         });
 
         //clear error
         dispatch({
             type: ERROR_CLEAR,
-            payload: null,
+            payload: null
         });
         setSelectedFacility([]);
     };
@@ -601,7 +600,7 @@ const CreateEvent = ({
                 name: '',
                 borrowDate: null,
                 returnDate: null,
-                openDeleteDialogBorrowFacility: false,
+                openDeleteDialogBorrowFacility: false
             };
         });
         setSelectedFacility([]);
@@ -613,7 +612,7 @@ const CreateEvent = ({
     const handleChangeTask = (e) => {
         setTaskState((prevState) => ({
             ...prevState,
-            [e.target.name]: e.target.value,
+            [e.target.name]: e.target.value
         }));
     };
     const handleToggleDialogCreateAndUpdateTask = (event, mode) => {
@@ -632,19 +631,19 @@ const CreateEvent = ({
             endTime: mode ? targetEdit.endTime : null,
             openCreateAndUpdateDialogTask:
                 !prevState.openCreateAndUpdateDialogTask,
-            isTaskCreateMode: mode ? false : true,
+            isTaskCreateMode: mode ? false : true
         }));
         //clear Error
         dispatch({
             type: ERROR_CLEAR,
-            payload: null,
+            payload: null
         });
     };
 
     const handleToggleDialogDeleteTask = () => {
         setTaskState((prevState) => ({
             ...prevState,
-            openDeleteDialogTask: !prevState.openDeleteDialogTask,
+            openDeleteDialogTask: !prevState.openDeleteDialogTask
         }));
     };
 
@@ -654,37 +653,37 @@ const CreateEvent = ({
         if (!name) {
             listErrors = {
                 ...listErrors,
-                name: 'Name cannot be blanked.',
+                name: 'Name cannot be blanked.'
             };
         }
         if (!email) {
             listErrors = {
                 ...listErrors,
-                email: 'Email cannot be blanked.',
+                email: 'Email cannot be blanked.'
             };
         }
         if (!type) {
             listErrors = {
                 ...listErrors,
-                type: 'Type cannot be blanked.',
+                type: 'Type cannot be blanked.'
             };
         }
         if (!startTime) {
             listErrors = {
                 ...listErrors,
-                startTime: 'Start Time cannot be blanked.',
+                startTime: 'Start Time cannot be blanked.'
             };
         }
         if (!endTime) {
             listErrors = {
                 ...listErrors,
-                endTime: 'End Time cannot be blanked.',
+                endTime: 'End Time cannot be blanked.'
             };
         }
         if (Object.keys(listErrors).length !== 0) {
             return dispatch({
                 type: ERROR,
-                payload: listErrors,
+                payload: listErrors
             });
         }
 
@@ -708,22 +707,22 @@ const CreateEvent = ({
                         email: prevState.email.email,
                         type: prevState.type,
                         startTime: prevState.startTime,
-                        endTime: prevState.endTime,
-                    },
+                        endTime: prevState.endTime
+                    }
                 ],
                 name: '',
                 email: '',
                 type: '',
                 startTime: null,
                 endTime: null,
-                openCreateAndUpdateDialogTask: false,
+                openCreateAndUpdateDialogTask: false
             };
         });
 
         //clear error
         dispatch({
             type: ERROR_CLEAR,
-            payload: null,
+            payload: null
         });
         setSelectedTask([]);
     };
@@ -740,7 +739,7 @@ const CreateEvent = ({
                 type: '',
                 startTime: null,
                 endTime: null,
-                openDeleteDialogTask: false,
+                openDeleteDialogTask: false
             };
         });
         setSelectedTask([]);
@@ -808,20 +807,17 @@ const CreateEvent = ({
                 setState={setState}
                 setSelectedFacility={setSelectedFacility}
                 setSelectedTask={setSelectedTask}
-                setTaskState={setTaskState}
-            >
+                setTaskState={setTaskState}>
                 <Paper className={css.paper} elevation={3}>
                     <Grid
                         container
                         justify="center"
                         alignItems="center"
-                        direction="column"
-                    >
+                        direction="column">
                         <Grid item>
                             <Typography
                                 style={{ fontWeight: 'bold' }}
-                                variant="h3"
-                            >
+                                variant="h3">
                                 Event Form
                             </Typography>
                         </Grid>
@@ -835,8 +831,7 @@ const CreateEvent = ({
                             xl={12}
                             sm={12}
                             xs={12}
-                            style={{ margin: '20px 0' }}
-                        >
+                            style={{ margin: '20px 0' }}>
                             <div
                                 style={{
                                     width: '100%',
@@ -846,9 +841,8 @@ const CreateEvent = ({
                                     })`,
                                     backgroundRepeat: 'no-repeat',
                                     backgroundPosition: 'center',
-                                    backgroundSize: 'contain',
-                                }}
-                            ></div>
+                                    backgroundSize: 'contain'
+                                }}></div>
                             <FormControl error={errors?.image ? true : false}>
                                 <FormHelperText>
                                     {errors?.image ? errors?.image : ''}
@@ -864,8 +858,7 @@ const CreateEvent = ({
                             lg={12}
                             xl={12}
                             sm={12}
-                            xs={12}
-                        >
+                            xs={12}>
                             <input
                                 ref={fileInput}
                                 accept="image/*"
@@ -881,22 +874,20 @@ const CreateEvent = ({
                                     onClick={() => {
                                         setState({
                                             ...state,
-                                            image: null,
+                                            image: null
                                         });
                                         fileInput.current.value = '';
                                     }}
                                     color="secondary"
                                     startIcon={<DeleteForever />}
                                     variant="contained"
-                                    style={{ textTransform: 'none' }}
-                                >
+                                    style={{ textTransform: 'none' }}>
                                     Remove
                                 </Button>
                             )}
                             <label
                                 className={css.btnChangePhoto}
-                                htmlFor="change-image"
-                            >
+                                htmlFor="change-image">
                                 {state.image ? (
                                     <Button
                                         disabled={eventIsLoading}
@@ -904,8 +895,7 @@ const CreateEvent = ({
                                         variant="contained"
                                         style={{ textTransform: 'none' }}
                                         color="primary"
-                                        component="span"
-                                    >
+                                        component="span">
                                         Change Image
                                     </Button>
                                 ) : (
@@ -914,10 +904,9 @@ const CreateEvent = ({
                                         startIcon={<AddAPhoto />}
                                         style={{
                                             backgroundColor: 'transparent',
-                                            textTransform: 'none',
+                                            textTransform: 'none'
                                         }}
-                                        component="span"
-                                    >
+                                        component="span">
                                         Choose Image
                                     </Button>
                                 )}
@@ -933,8 +922,7 @@ const CreateEvent = ({
                             sm={12}
                             xs={12}
                             spacing={3}
-                            style={{ margin: '20px 0' }}
-                        >
+                            style={{ margin: '20px 0' }}>
                             {/* Create Event Input Group */}
                             <CreateEventInputGroup
                                 isResetListTag={state.isResetListTag}
@@ -958,8 +946,7 @@ const CreateEvent = ({
                                 lg={12}
                                 xl={12}
                                 sm={12}
-                                xs={12}
-                            >
+                                xs={12}>
                                 <Paper className={css.paper1} elevation={3}>
                                     <DataTable
                                         constrainRangeDate={
@@ -991,8 +978,7 @@ const CreateEvent = ({
                                     />
                                 </Paper>
                                 <FormControl
-                                    error={errors?.taskListId ? true : false}
-                                >
+                                    error={errors?.taskListId ? true : false}>
                                     <FormHelperText>
                                         {errors?.taskListId
                                             ? errors?.taskListId
@@ -1009,8 +995,7 @@ const CreateEvent = ({
                                 lg={12}
                                 xl={12}
                                 sm={12}
-                                xs={12}
-                            >
+                                xs={12}>
                                 <Paper className={css.paper1} elevation={3}>
                                     <DataTable
                                         disabled={eventIsLoading}
@@ -1048,8 +1033,7 @@ const CreateEvent = ({
                                         errors?.facilityHistoryListId
                                             ? true
                                             : false
-                                    }
-                                >
+                                    }>
                                     <FormHelperText>
                                         {errors?.facilityHistoryListId
                                             ? errors?.facilityHistoryListId
@@ -1065,12 +1049,10 @@ const CreateEvent = ({
                                 lg={12}
                                 xl={12}
                                 sm={12}
-                                xs={12}
-                            >
+                                xs={12}>
                                 <Typography
                                     style={{ fontWeight: 'bold' }}
-                                    variant="h6"
-                                >
+                                    variant="h6">
                                     Event Description
                                 </Typography>
                             </Grid>
@@ -1084,8 +1066,7 @@ const CreateEvent = ({
                                     setState={setState}
                                 />
                                 <FormControl
-                                    error={errors?.description ? true : false}
-                                >
+                                    error={errors?.description ? true : false}>
                                     <FormHelperText>
                                         {errors?.description
                                             ? errors?.description
@@ -1103,8 +1084,7 @@ const CreateEvent = ({
                                 lg={12}
                                 xl={12}
                                 sm={12}
-                                xs={12}
-                            >
+                                xs={12}>
                                 <Grid item>
                                     <Button
                                         className={css.clearAllButton}
@@ -1112,10 +1092,9 @@ const CreateEvent = ({
                                         size="large"
                                         color="default"
                                         style={{
-                                            backgroundColor: 'transparent',
+                                            backgroundColor: 'transparent'
                                         }}
-                                        onClick={() => handleClearFields(true)}
-                                    >
+                                        onClick={() => handleClearFields(true)}>
                                         Clear all
                                     </Button>
                                 </Grid>
@@ -1130,8 +1109,7 @@ const CreateEvent = ({
                                                     handleCloseUpdateDialog
                                                 }
                                                 variant="contained"
-                                                color="default"
-                                            >
+                                                color="default">
                                                 Close
                                             </Button>
                                         ))}
@@ -1140,13 +1118,12 @@ const CreateEvent = ({
                                         style={{
                                             marginLeft: '20px',
                                             textTransform: 'none',
-                                            width: '140px',
+                                            width: '140px'
                                         }}
                                         size="large"
                                         onClick={handleCreateAndUpdateEvent}
                                         variant="contained"
-                                        color="primary"
-                                    >
+                                        color="primary">
                                         {eventIsLoading ? (
                                             <CircularProgress
                                                 size={26}

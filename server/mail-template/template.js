@@ -404,5 +404,5 @@ const html = (email, id) => {
 };
 
 module.exports = {
-    html,
+    html
 };

@@ -9,7 +9,7 @@ import {
     TextField,
     Collapse,
     DialogContentText,
-    Slide,
+    Slide
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useSelector } from 'react-redux';
@@ -31,12 +31,13 @@ const FacilityDialog = ({
     handleCreateAndUpdate,
     handleToggleDialogDelete,
     handleDelete,
+    isRecoveryMode
 }) => {
     const css = useStyles();
     const { isLoading, errors, createSuccess } = useSelector((state) => ({
         isLoading: state.facility.isLoading,
         errors: state.error.errors,
-        createSuccess: state.facility.createSuccess,
+        createSuccess: state.facility.createSuccess
     }));
     return (
         <div>
@@ -48,8 +49,7 @@ const FacilityDialog = ({
                 fullWidth
                 className={css.dialogCreateUpdateFac}
                 onClose={(e) => handleToggleDialogCreateAndUpdate(e)}
-                aria-labelledby="form-dialog-title"
-            >
+                aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     {isCreateMode ? 'Create New Facility' : 'Update a Facility'}
                 </DialogTitle>
@@ -106,16 +106,14 @@ const FacilityDialog = ({
                     <Button
                         disabled={isLoading || createSuccess ? true : false}
                         onClick={handleToggleDialogCreateAndUpdate}
-                        color="default"
-                    >
+                        color="default">
                         Cancel
                     </Button>
                     <Button
                         disabled={isLoading || createSuccess ? true : false}
                         variant="contained"
                         onClick={handleCreateAndUpdate}
-                        color="primary"
-                    >
+                        color="primary">
                         {isLoading ? (
                             <CircularProgress size={25} color="inherit" />
                         ) : isCreateMode ? (
@@ -135,28 +133,27 @@ const FacilityDialog = ({
                 aria-labelledby="delete-dialog"
                 fullWidth
                 className={css.dialogDeleteFac}
-                aria-describedby="delete-dialog-description"
-            >
+                aria-describedby="delete-dialog-description">
                 <DialogTitle id="delete-dialog">{'Warning!!!'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="delete-dialog-description">
-                        Are you sure with your action ?
+                        {isRecoveryMode
+                            ? 'This action will delete the facility permanently. Are you sure with your action ?'
+                            : 'Are you sure with your action ?'}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
                     <Button
                         disabled={isLoading ? true : false}
                         onClick={handleToggleDialogDelete}
-                        color="default"
-                    >
+                        color="default">
                         Cancel
                     </Button>
                     <Button
                         disabled={isLoading ? true : false}
                         variant="contained"
                         onClick={handleDelete}
-                        color="secondary"
-                    >
+                        color="secondary">
                         {isLoading ? (
                             <CircularProgress size={25} color="inherit" />
                         ) : (

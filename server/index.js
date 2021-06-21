@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true, limit: '30mb' }));
 app.use(
     cors({
         credentials: true,
-        origin: process.env.DEFAULT_HOST || 'http://localhost:3000',
+        origin: process.env.DEFAULT_HOST || 'http://localhost:3000'
     })
 );
 app.use(cookieParser());
@@ -48,8 +48,7 @@ app.use('/api/event', eventRoutes);
 app.use('/api/task', taskRoutes);
 app.use('/api/facilityHistory', facilityHistoryRoutes);
 app.use('/api/participant', participantRoutes);
-app.use('/api/notificationHistory', notificationHistoryRoutes)
-
+app.use('/api/notificationHistory', notificationHistoryRoutes);
 
 // Serve static access an production mode
 if (process.env.NODE_ENV === 'production') {
@@ -77,7 +76,7 @@ mongoose.connect(
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
-        useCreateIndex: true,
+        useCreateIndex: true
     },
     (err) => {
         if (err) {
