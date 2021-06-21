@@ -162,6 +162,8 @@ export const getAllEventAPI = () => AXIOS.get(`/event/all`);
 
 // Facility History APIs
 export const getFacilityHistoriesAPI = (userQueries) => {
+    const idQuery= `id=${userQueries.id ? userQueries.id : ''}`;
+    const searchQuery = `search=${userQueries.search ? userQueries.search : ''}`;
     const takeQuery = `take=${userQueries?.take ? userQueries?.take : ''}`;
     const pageQuery = `page=${userQueries?.page ? userQueries?.page : ''}`;
     const createdFromQuery = `createdFrom=${
@@ -189,7 +191,7 @@ export const getFacilityHistoriesAPI = (userQueries) => {
         userQueries?.returnTo ? userQueries?.returnTo : ''
     }`;
     return AXIOS.get(
-        `/facilityHistory/filter?${takeQuery}&${pageQuery}&${createdFromQuery}&${createdToQuery}&${updatedFromQuery}&${updatedToQuery}&${borrowFromQuery}&${borrowToQuery}&${returnFromQuery}&${returnToQuery}`
+        `/facilityHistory/filter?${idQuery}&${searchQuery}&${takeQuery}&${pageQuery}&${createdFromQuery}&${createdToQuery}&${updatedFromQuery}&${updatedToQuery}&${borrowFromQuery}&${borrowToQuery}&${returnFromQuery}&${returnToQuery}`
     );
 };
 

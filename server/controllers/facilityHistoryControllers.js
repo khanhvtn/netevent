@@ -1,6 +1,7 @@
 const { FacilityHistory } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
+const mongoose = require('mongoose');
 
 /**
  *  =====================================
@@ -44,6 +45,7 @@ const createFacilityHistory = async (req, res, next) => {
  * @version 1.0
  */
 const filter = async (req, res, next) => {
+    const selectedFacility = req.query.id
     try {
         //get max date and min date of updatedAt and createdAt
         const createdMaxDate = await FacilityHistory.find()
@@ -80,7 +82,6 @@ const filter = async (req, res, next) => {
             returnMaxDate,
             returnMinDate,
         ]);
-
         //return empty result to client if database has no data.
         if (
             !createdMaxDate.length ||
@@ -96,7 +97,8 @@ const filter = async (req, res, next) => {
         }
 
         let options = {
-            take: 0,
+            search: '',
+            take: 10,
             createdMaxDate: listRangeDate[0][0].createdAt,
             createdMinDate: listRangeDate[1][0].createdAt,
             updatedMaxDate: listRangeDate[2][0].updatedAt,
@@ -107,6 +109,14 @@ const filter = async (req, res, next) => {
             returnMinDate: listRangeDate[7][0].returnDate,
         };
 
+        //adding search
+        if (req.query.search) {
+            options = {
+                ...options,
+                search: req.query.search.toString(),
+            };
+        }
+
         /* 
         Add take row filter
         Default take is 0 means taking all.
@@ -114,7 +124,7 @@ const filter = async (req, res, next) => {
         if (req.query.take) {
             options = {
                 ...options,
-                take: req.query.take,
+                take: parseInt(req.query.take.toString()),
             };
         }
 
@@ -208,33 +218,8 @@ const filter = async (req, res, next) => {
         /* 
         Variable total facilityHistory based on filter
          */
-        const totalFacilityHistory = await FacilityHistory.find({
-            createdAt: {
-                $gte: options.createdMinDate,
-                $lte: options.createdMaxDate,
-            },
-            updatedAt: {
-                $gte: options.updatedMinDate,
-                $lte: options.updatedMaxDate,
-            },
-            borrowDate: {
-                $gte: options.borrowMinDate,
-                $lte: options.borrowMaxDate,
-            },
-            returnDate: {
-                $gte: options.returnMinDate,
-                $lte: options.returnMaxDate,
-            },
-        }).countDocuments();
-
-        let totalPages = !options.take
-            ? 1
-            : (totalFacilityHistory / options.take).toString().includes('.')
-            ? Math.ceil(totalFacilityHistory / options.take)
-            : totalFacilityHistory / options.take;
-
-        //return data to client
-        const facilityHistories = await FacilityHistory.find({
+        const filterFacilityHistory = await FacilityHistory.find({
+            facilityId: selectedFacility,
             createdAt: {
                 $gte: options.createdMinDate,
                 $lte: options.createdMaxDate,
@@ -252,11 +237,68 @@ const filter = async (req, res, next) => {
                 $lte: options.returnMaxDate,
             },
         })
+            .populate({
+                path: 'facilityId',
+            })
+            .populate({
+                path: 'eventId',
+                match: {
+
+                    eventName: new RegExp(options.search, 'i')
+                }
+            })
+
+
+        const totalFacilityHistory = filterFacilityHistory.filter((facilityHistory) => facilityHistory.eventId != null);
+
+        const totalFacilityHistory1=totalFacilityHistory.length
+        let totalPages = !options.take
+            ? 1
+            : (totalFacilityHistory1 / options.take).toString().includes('.')
+                ? Math.ceil(totalFacilityHistory1 / options.take)
+                : totalFacilityHistory1 / options.take;
+
+        //return data to client
+        const facilityHistories = await FacilityHistory.find({
+            facilityId: selectedFacility,
+
+            createdAt: {
+                $gte: options.createdMinDate,
+                $lte: options.createdMaxDate,
+            },
+            updatedAt: {
+                $gte: options.updatedMinDate,
+                $lte: options.updatedMaxDate,
+            },
+            borrowDate: {
+                $gte: options.borrowMinDate,
+                $lte: options.borrowMaxDate,
+            },
+            returnDate: {
+                $gte: options.returnMinDate,
+                $lte: options.returnMaxDate,
+            },
+        })
+            .populate({
+                path: 'facilityId',
+
+            })
+            .populate({
+                path: 'eventId',
+                match: {
+                    eventName: new RegExp(options.search, 'i')
+                }
+            })
             .sort({ updatedAt: -1 })
             .skip((page - 1) * options.take)
             .limit(options.take);
 
-        return cusResponse(res, 200, facilityHistories, null, totalPages);
+            const newFacilityHistory = facilityHistories.filter((facilityHistory) => facilityHistory.eventId != null)
+
+
+
+        return cusResponse(res, 200, newFacilityHistory, null, totalPages);
+
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
@@ -300,6 +342,20 @@ const deleteFacilityHistory = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+
+const deleteEachFacilityHistory = async (req, res, next) => {
+    try {
+        const { id: _id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(_id)) {
+            return res.status(404).send('No facility history with that id');
+        } else {
+            const data = await FacilityHistory.findByIdAndRemove(_id);
+            res.json(data);
+        }
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+}
 
 /**
  * @decsription Update eventType by new request update
@@ -355,4 +411,5 @@ module.exports = {
     deleteFacilityHistory,
     updateFacilityHistory,
     getAllFacilityHistory,
+    deleteEachFacilityHistory
 };

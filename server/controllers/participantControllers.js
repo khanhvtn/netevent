@@ -314,7 +314,7 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
                     'SUMMARY:' + event.eventName + '\r\n' +
                     'DESCRIPTION:' + description.blocks[0].text + ' \r\n' +
                     'LOCATION:' + event.location + '\r\n' +
-                    'ORGANIZER;CN=' + "NetCompanyy" + ':mailto:' + "netevent@gmail.com" + '\r\n' +
+                    'ORGANIZER;CN=' + "NetCompany" + ':mailto:' + "netevent@gmail.com" + '\r\n' +
                     'STATUS:CONFIRMED\n' +
                     'SEQUENCE:0\n' +
                     'ACTION:DISPLAY\n' +

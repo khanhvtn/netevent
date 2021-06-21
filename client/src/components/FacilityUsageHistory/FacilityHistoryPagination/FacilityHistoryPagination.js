@@ -1,17 +1,19 @@
-import React from 'react';
+import React from 'react'
 import { Typography, Select, MenuItem, Toolbar } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import { useSelector } from 'react-redux';
 //import useStyles in the last
 import useStyles from './styles';
 
-const FacilityPagination = ({
+const FacilityHistoryPagination = ({
     page,
     take,
     handleChangeRowsPerPage,
     handleChangePage,
+    totalPages
 }) => {
     const css = useStyles();
+
     return (
         <Toolbar className={css.paginationWrapper}>
             <div className={css.selectRowNumWrapper}>
@@ -34,6 +36,7 @@ const FacilityPagination = ({
             </div>
             <div>
                 <Pagination
+                    disabled={!totalPages}
                     page={page}
                     shape="rounded"
                     variant="text"
@@ -44,7 +47,7 @@ const FacilityPagination = ({
                 />
             </div>
         </Toolbar>
-    );
-};
+    )
+}
 
-export default FacilityPagination;
+export default FacilityHistoryPagination;
