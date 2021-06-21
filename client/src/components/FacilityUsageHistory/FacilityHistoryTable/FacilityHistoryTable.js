@@ -130,9 +130,9 @@ const FacilityHistoryTable = ({take, data, isLoading, headCells, selectedFacilit
                 >
                     List of Facility Usage Histories
                 </Typography>
-                <Chip label={selectedFacility.name} className={css.selectedFacility}/>
-                <Chip label={selectedFacility.code} className={css.selectedFacility}/>
-                <Chip label={selectedFacility.type} className={css.selectedFacility}/>
+                <Chip label={`Name: `+ selectedFacility.name} className={css.selectedFacility}/>
+                <Chip label={`Code: `+ selectedFacility.code} className={css.selectedFacility}/>
+                <Chip label={`Type: `+ selectedFacility.type} className={css.selectedFacility}/>
 
         <TableContainer>
             <Table
