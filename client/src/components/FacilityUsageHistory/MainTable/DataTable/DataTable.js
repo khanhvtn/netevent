@@ -157,7 +157,7 @@ const DataTable = ({
 
   const handleGoToHistory = (id, row) => {
     history.push({
-      pathname: `/dashboard/usage/${id}`,
+      pathname: `/dashboard/reviewer/facility-usage/${id}`,
       state: { data: row }
     })
   }

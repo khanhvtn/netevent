@@ -104,7 +104,7 @@ const FacilityUsageHistory = () => {
         setStateLocationSetting(true)
     }
         else {
-            history.push('/dashboard/facility-usage')
+            history.push('/dashboard/reviewer/facility-usage')
         }
     },[dispatch])
     
@@ -152,7 +152,7 @@ const FacilityUsageHistory = () => {
     useEffect(() => {
         if(stateLocationSetting){
         if (Object.keys(stateSelectedFacility).length === 0) {
-            history.push('/dashboard/facility-usage')
+            history.push('/dashboard/reviewer/facility-usage')
         }
     }
     }, [dispatch])
@@ -225,7 +225,7 @@ const FacilityUsageHistory = () => {
     const handleOnClickReturn = () => {
         setState(initialState);
         return history.push({
-            pathname: `/dashboard/facility-usage`,
+            pathname: `/dashboard/reviewer/facility-usage`,
         });
 
     };
