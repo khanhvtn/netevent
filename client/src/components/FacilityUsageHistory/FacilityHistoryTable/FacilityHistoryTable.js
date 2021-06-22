@@ -1,21 +1,17 @@
 import React,{ useState } from 'react'
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import moment from 'moment';
 import {
-    Toolbar,
     Paper,
     TableContainer,
     Table,
     TableRow,
     TableCell,
     TableBody,
-    Checkbox,
     TableHead,
     TableSortLabel,
     Typography,
-    Tooltip,
-    Button,
+    
 } from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 
@@ -159,16 +155,16 @@ const FacilityHistoryTable = ({take, data, isLoading, headCells, selectedFacilit
                     ? (
                         <>
                             {Array.apply(null, { length: take + 1 }).map(
-                                () => {
+                                (row, index) => {
                                     return (
                                         <>
-                                            <TableRow>
+                                            <TableRow key={index}>
                                                 <TableCell>
                                                     <Skeleton />
                                                 </TableCell>
                                                 {headCells.map(() => {
                                                     return (
-                                                        <TableCell>
+                                                        <TableCell key={index}>
                                                             <Skeleton />
                                                         </TableCell>
                                                     );
@@ -196,13 +192,11 @@ const FacilityHistoryTable = ({take, data, isLoading, headCells, selectedFacilit
                             {stableSort(
                                 data,
                                 getComparator(order, orderBy)
-                            ).map((row, index) => {
-                                const labelId = `enhanced-table-checkbox-${index}`;
-                                
+                            ).map((row) => {                                
                                 return (
+                                    
                                     <TableRow
                                         hover
-                                        
                                         role="checkbox"
                                         tabIndex={-1}
                                         key={row._id}
@@ -226,6 +220,7 @@ const FacilityHistoryTable = ({take, data, isLoading, headCells, selectedFacilit
                                             )}
                                         </TableCell>
                                     </TableRow>
+                                   
                                 );
                             })}
                             {emptyRows > 0 && (

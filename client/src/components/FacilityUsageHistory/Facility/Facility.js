@@ -12,9 +12,6 @@ import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
 import {
   getFacilities,
-  createFacility,
-  deleteFacilities,
-  updateFacility,
   recoveryFacilities,
 } from '../../../actions/facilityActions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -180,27 +177,6 @@ const Facility = () => {
     );
   };
 
-  const handleToggleDialogCreateAndUpdate = (event, mode) => {
-    let targetEdit;
-    if (mode) {
-      targetEdit = facilities.find((facility) => facility.name === selected[0]);
-    }
-    setState((prevState) => ({
-      ...prevState,
-      name: mode ? targetEdit.name : '',
-      code: mode ? targetEdit.code : '',
-      type: mode ? targetEdit.type : '',
-      openCreateAndUpdateDialog: !prevState.openCreateAndUpdateDialog,
-      isCreateMode: mode ? false : true,
-    }));
-  };
-
-  const handleToggleDialogDelete = () => {
-    setState((prevState) => ({
-      ...prevState,
-      openDeleteDialog: !prevState.openDeleteDialog,
-    }));
-  };
 
   //handle ToggleFilter
   const handleToggleFilter = () => {

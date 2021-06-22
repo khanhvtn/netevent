@@ -11,7 +11,6 @@ import useStyles from './styles';
 const FacilityFilter = ({
     openFilter,
     handleToggleFilter,
-    handleFilterChange,
     createdFrom,
     createdTo,
     setFilters,

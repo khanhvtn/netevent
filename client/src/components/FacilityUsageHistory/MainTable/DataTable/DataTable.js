@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import moment from 'moment';
 import {
-  Toolbar,
   Paper,
   TableContainer,
   Table,
   TableRow,
   TableCell,
   TableBody,
-  Checkbox,
   TableHead,
   TableSortLabel,
   Typography,
-  Button,
+  Tooltip
 } from '@material-ui/core';
-import { Delete, DeleteForever, Create, Edit } from '@material-ui/icons';
-import { lighten, makeStyles } from '@material-ui/core/styles';
 
 //import makeStyles in the last
 import useStyles from './styles';
@@ -53,11 +48,8 @@ function stableSort(array, comparator) {
 function EnhancedTableHead(props) {
   const {
     classes,
-    onSelectAllClick,
     order,
     orderBy,
-    numSelected,
-    rowCount,
     onRequestSort,
     headCells,
   } = props;
@@ -106,26 +98,7 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-  },
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-        color: theme.palette.secondary.main,
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-      }
-      : {
-        color: theme.palette.text.primary,
-        backgroundColor: theme.palette.secondary.dark,
-      },
-  title: {
-    flex: '1 1 100%',
-    fontWeight: 'bold',
-  },
-}));
+
 
 
 
@@ -135,13 +108,6 @@ const DataTable = ({
   data,
   isLoading,
   headCells,
-  tableName,
-  disabled,
-  constrainRangeDate,
-  recoveryMode,
-  handleRecovery,
-  isRecoveryMode,
-  setIsRecoveryMode,
 }) => {
   const css = useStyles();
   const [order, setOrder] = useState('asc');
@@ -227,16 +193,17 @@ const DataTable = ({
             ) : (
               <>
                 {stableSort(dataFilter, getComparator(order, orderBy)).map(
-                  (row, index) => {
-                    const labelId = `enhanced-table-checkbox-${index}`;
+                  (row) => {
 
                     return (
+                      <Tooltip title="Click to view usage" key={row._id}>
                       <TableRow
                         hover
                         role="checkbox"
                         tabIndex={-1}
                         key={row._id}
                         onClick={() => handleGoToHistory(row._id, row)}
+                        className={css.tableRow}
                       >
 
                         {headCells.map((cell, index) => {
@@ -257,6 +224,7 @@ const DataTable = ({
                           );
                         })}
                       </TableRow>
+                      </Tooltip>
                     );
                   }
                 )}

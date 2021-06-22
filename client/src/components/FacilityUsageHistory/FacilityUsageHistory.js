@@ -14,7 +14,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import {
-    getAllFacilityHistories,
     getFacilityHistories,
 } from '../../actions/facilityHistoryActions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -90,12 +89,10 @@ const FacilityUsageHistory = () => {
         facilityHistories,
         totalPages,
         isLoading,
-        errors
     } = useSelector((state) => ({
         facilityHistories: state.facilityHistory.facilityHistories,
         isLoading: state.facilityHistory.isLoading,
         totalPages: state.facilityHistory.totalPages,
-        errors: state.error.errors,
     }));
 
     useEffect(()=> {
@@ -106,7 +103,7 @@ const FacilityUsageHistory = () => {
         else {
             history.push('/dashboard/reviewer/facility-usage')
         }
-    },[dispatch])
+    },[dispatch, location.state, history])
     
     //useEffect
     useEffect(() => {
@@ -135,6 +132,7 @@ const FacilityUsageHistory = () => {
             });
         };
     }, [
+        id,
         dispatch,
         state.search,
         state.take,
@@ -155,7 +153,7 @@ const FacilityUsageHistory = () => {
             history.push('/dashboard/reviewer/facility-usage')
         }
     }
-    }, [dispatch])
+    }, [dispatch, stateLocationSetting, stateSelectedFacility, history])
 
     const handleChange = (e) => {
         const { name, value } = e.target;

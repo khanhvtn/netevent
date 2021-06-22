@@ -10,7 +10,6 @@ import useStyles from './styles';
 const FacilityHistoryFilter = ({
     openFilter,
     handleToggleFilter,
-    handleFilterChange,
     borrowFrom,
     returnFrom,
     setFilters,
