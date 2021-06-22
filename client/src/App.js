@@ -20,6 +20,8 @@ import EventDetail from './components/EventManagement/EventDetail/EventDetail';
 import EventRequest from './components/EventRequest/EventRequest';
 import EventReview from './components/EventRequest/EventReview/EventReview';
 import MemberTask from './components/MemberTask/MemberTask';
+import FacilityHistory from './components/FacilityUsageHistory/FacilityUsageHistory'
+import FacilityHistoryAll from './components/FacilityUsageHistory/Facility/Facility'
 
 const App = () => {
     const dispatch = useDispatch();
@@ -154,14 +156,25 @@ const App = () => {
                                     </DashboardLayout>
                                 )}
                             />
+
+                            <Route
+                                path="/dashboard/reviewer/facility-usage/:id"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <FacilityHistory />
+                                    </DashboardLayout>
+                                )}
+                            />
                             <Route
                                 path="/dashboard/reviewer/facility-usage"
                                 render={() => (
                                     <DashboardLayout>
-                                        Facility Usage History
+                                        <FacilityHistoryAll />
                                     </DashboardLayout>
                                 )}
                             />
+
+
 
                             {/* Team member role */}
                             <Route
