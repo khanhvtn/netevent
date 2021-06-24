@@ -249,14 +249,13 @@ const CreateEventInputGroup = ({
                         setState((prevState) => ({
                             ...prevState,
                             maxParticipants: value
-                                ? value
+                                ? String(value)
                                 : event.currentTarget?.value
-                                ? event.currentTarget?.value
+                                ? event.currentTarget?.value.replace(/,/g, '')
                                 : ''
                         }))
                     }
                     currencySymbol="🚹"
-                    outputFormat="string"
                     decimalCharacter="."
                     digitGroupSeparator=","
                     preDefined={{
@@ -280,14 +279,13 @@ const CreateEventInputGroup = ({
                         setState((prevState) => ({
                             ...prevState,
                             budget: value
-                                ? value
+                                ? String(value)
                                 : event.currentTarget?.value
-                                ? event.currentTarget?.value
+                                ? event.currentTarget?.value.replace(/,/g, '')
                                 : ''
                         }));
                     }}
                     currencySymbol="VND"
-                    outputFormat="string"
                     decimalCharacter="."
                     digitGroupSeparator=","
                     preDefined={{
