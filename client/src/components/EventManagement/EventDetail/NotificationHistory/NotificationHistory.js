@@ -49,8 +49,8 @@ const CollapseRow = ({ notification }) => {
                         {open ? (
                             <KeyboardArrowUpIcon />
                         ) : (
-                            <KeyboardArrowDownIcon />
-                        )}
+                                <KeyboardArrowDownIcon />
+                            )}
                     </IconButton>
                 </TableCell>
                 <TableCell className={css.tableText} component="th" scope="row">
@@ -145,42 +145,34 @@ const NotificationHistory = ({
                 <div className={css.contentWrapper} align="center">
                     <CircularProgress color="primary" />
                 </div>
-            ) : notifications.length === 0 ? (
-                <>
-                    <Grid
-                        container
-                        spacing={0}
-                        direction="column"
-                        alignItems="center"
-                        justify="center"
-                        style={{ minHeight: '50vh' }}>
-                        <Typography align="center">
-                            There is no history for email. Would you like to
-                            send new?
-                        </Typography>
-                        <Button
-                            fullWidth
-                            onClick={handleToggleSendNotificationDialog}
-                            disabled={isLoading}
-                            className={css.sendEmailButton}
-                            variant="contained"
-                            color="primary"
-                            size="small">
-                            Send Email
-                        </Button>
-                    </Grid>
-                </>
-            ) : (
-                <>
-                    <Paper elevation={0} className={css.paper}>
-                        <Grid container direction="column">
-                            <Toolbar>
-                                <Typography
-                                    className={css.title}
-                                    style={{ fontWeight: 'bold' }}
-                                    align="left"
-                                    variant="h4">
-                                    Email Notifications
+            ) : notifications.length === 0 ?
+
+                    isReviewer ?
+                        <>
+                            <Grid
+                                container
+                                spacing={0}
+                                direction="column"
+                                alignItems="center"
+                                justify="center"
+                                style={{ minHeight: '50vh' }}>
+                                <Typography align="center">
+                                    No email history matched.
+                                </Typography>
+                            </Grid>
+                        </>
+                        :
+                        <>
+                            <Grid
+                                container
+                                spacing={0}
+                                direction="column"
+                                alignItems="center"
+                                justify="center"
+                                style={{ minHeight: '50vh' }}>
+                                <Typography align="center">
+                                    There is no history for email. Would you like to
+                                    send new?
                                 </Typography>
                                 <Button
                                     fullWidth
@@ -188,46 +180,72 @@ const NotificationHistory = ({
                                     disabled={isLoading}
                                     className={css.sendEmailButton}
                                     variant="contained"
-                                    color="primary">
+                                    color="primary"
+                                    size="small">
                                     Send Email
-                                </Button>
-                            </Toolbar>
+                        </Button>
+                            </Grid>
+                        </>
+                    : (
+                        <>
+                            <Paper elevation={0} className={css.paper}>
+                                <Grid container direction="column">
+                                    <Toolbar>
+                                        <Typography
+                                            className={css.title}
+                                            style={{ fontWeight: 'bold' }}
+                                            align="left"
+                                            variant="h4">
+                                            Email Notifications
+                                        </Typography>
+                                        {!isReviewer &&
+                                            <Button
+                                                fullWidth
+                                                onClick={handleToggleSendNotificationDialog}
+                                                disabled={isLoading}
+                                                className={css.sendEmailButton}
+                                                variant="contained"
+                                                color="primary">
+                                                Send Email
+                                            </Button>
+                                        }
+                                    </Toolbar>
 
-                            <TableContainer>
-                                <Table
-                                    className={css.table}
-                                    aria-label="simple table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell />
-                                            <TableCell
-                                                component="th"
-                                                scope="row"
-                                                className={css.tableText}
-                                                align="left">
-                                                Title
+                                    <TableContainer>
+                                        <Table
+                                            className={css.table}
+                                            aria-label="simple table">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell />
+                                                    <TableCell
+                                                        component="th"
+                                                        scope="row"
+                                                        className={css.tableText}
+                                                        align="left">
+                                                        Title
                                             </TableCell>
-                                            <TableCell
-                                                className={css.tableText}
-                                                align="left">
-                                                Created At
+                                                    <TableCell
+                                                        className={css.tableText}
+                                                        align="left">
+                                                        Created At
                                             </TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {notifications.map((notification) => (
-                                            <CollapseRow
-                                                notification={notification}
-                                                key={notification._id}
-                                            />
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Grid>
-                    </Paper>
-                </>
-            )}
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {notifications.map((notification) => (
+                                                    <CollapseRow
+                                                        notification={notification}
+                                                        key={notification._id}
+                                                    />
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Grid>
+                            </Paper>
+                        </>
+                    )}
             {/* Event Update Dialog */}
             <Dialog
                 fullWidth
