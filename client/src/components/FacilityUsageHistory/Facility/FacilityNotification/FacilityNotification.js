@@ -1,15 +1,12 @@
 import React from 'react';
 import { Slide, Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-//import useStyles in the last
-import useStyles from './styles';
 
 const FacilityNotification = ({
     openDeleteSnackBar,
     openUpdateSnackBar,
-    openCreateSnackBar,
+    openCreateSnackBar
 }) => {
-    const css = useStyles();
     return (
         <div>
             {/* Snackbar Delete Success */}

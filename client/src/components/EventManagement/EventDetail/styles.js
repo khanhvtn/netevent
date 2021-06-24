@@ -117,9 +117,9 @@ export default makeStyles((theme) => ({
     cover: {
         width: '100%',
         // borderRadius: 16,
-        marginTop: 16,
+        marginTop: 16
     },
-    imageCover:{
+    imageCover: {
         padding: '12px 96px 40px 96px',
         [theme.breakpoints.down('md')]: {
             padding: '12px 48px 48px 48px'

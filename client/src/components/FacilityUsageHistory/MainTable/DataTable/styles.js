@@ -7,7 +7,7 @@ export default makeStyles((theme) => ({
         borderTopRightRadius: 16
     },
     table: {
-        minWidth: 750,
+        minWidth: 750
     },
     visuallyHidden: {
         border: 0,
@@ -18,7 +18,7 @@ export default makeStyles((theme) => ({
         padding: 0,
         position: 'absolute',
         top: 20,
-        width: 1,
+        width: 1
     },
     title: {
         flex: '1 1 100%',
@@ -26,9 +26,9 @@ export default makeStyles((theme) => ({
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2),
         paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2),
+        paddingBottom: theme.spacing(2)
     },
     tableRow: {
-        cursor: "pointer"
+        cursor: 'pointer'
     }
 }));
