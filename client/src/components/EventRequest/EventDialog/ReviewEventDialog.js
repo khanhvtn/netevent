@@ -34,7 +34,8 @@ const ReviewEventDialog = ({
         if (updateEventSuccess) {
             handleToggleDialogReviewEvent();
         }
-    }, [updateEventSuccess, handleToggleDialogReviewEvent]);
+        /* eslint-disable-next-line */
+    }, [updateEventSuccess]);
 
     return (
         <>

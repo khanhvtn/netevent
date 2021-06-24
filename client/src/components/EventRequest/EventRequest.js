@@ -65,7 +65,7 @@ const EventRequest = () => {
 
     // Request to get the events data
     useEffect(() => {
-        if (!history.location.state || history.location.state?.isUpdated) {
+        if (!history.location.state?.from || history.location.state?.isUpdated) {
             dispatch(
                 getEvents({
                     search: state.search,
