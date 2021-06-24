@@ -492,8 +492,8 @@ const EventDetail = () => {
                                     ? state.event?.image
                                     : blankPhoto
                             }
-                            disableTransition={true}
                             aspectRatio={25 / 9}
+                            cover
                         />
                     </div>
                     {/* Event Detail */}
