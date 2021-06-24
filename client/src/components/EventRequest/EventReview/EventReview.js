@@ -259,7 +259,7 @@ const EventReview = () => {
                                                 onClick={
                                                     handleToggleDialogReviewEvent
                                                 }>
-                                                Update
+                                                Verify
                                             </Button>
                                         </div>
                                     </Tooltip>
