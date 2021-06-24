@@ -470,7 +470,9 @@ const DataTable = ({
                                                         <TableCell key={index}>
                                                             {moment(
                                                                 row[cell.id]
-                                                            ).format('LL')}
+                                                            ).format(
+                                                                'DD/MM/YYYY, h:mm a'
+                                                            )}
                                                         </TableCell>
                                                     );
                                                 }

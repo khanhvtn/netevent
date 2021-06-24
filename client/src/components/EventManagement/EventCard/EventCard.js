@@ -49,7 +49,7 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                 src={event.image}
                                 cover={true}
                                 disableTransition={true}
-                                aspectRatio={16/9}
+                                aspectRatio={16 / 9}
                                 // title="Event Image"
                             />
                         )}

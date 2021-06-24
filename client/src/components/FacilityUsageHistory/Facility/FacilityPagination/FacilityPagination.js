@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography, Select, MenuItem, Toolbar } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
-import { useSelector } from 'react-redux';
 //import useStyles in the last
 import useStyles from './styles';
 
@@ -9,7 +8,7 @@ const FacilityPagination = ({
     page,
     take,
     handleChangeRowsPerPage,
-    handleChangePage,
+    handleChangePage
 }) => {
     const css = useStyles();
     return (
@@ -24,12 +23,10 @@ const FacilityPagination = ({
                     variant="standard"
                     value={take}
                     name="take"
-                    onChange={handleChangeRowsPerPage}
-                >
+                    onChange={handleChangeRowsPerPage}>
                     <MenuItem value={10}>10</MenuItem>
                     <MenuItem value={20}>20</MenuItem>
                     <MenuItem value={30}>30</MenuItem>
-
                 </Select>
             </div>
             <div>

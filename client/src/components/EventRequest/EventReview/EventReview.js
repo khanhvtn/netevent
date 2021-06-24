@@ -322,9 +322,14 @@ const EventReview = () => {
                     <div className={css.imageCover}>
                         <Image
                             className={css.cover}
-                            src={state.event?.image ? state.event?.image : blankPhoto}
+                            src={
+                                state.event?.image
+                                    ? state.event?.image
+                                    : blankPhoto
+                            }
                             disableTransition={true}
-                            aspectRatio={25 / 9} />
+                            aspectRatio={25 / 9}
+                        />
                     </div>
 
                     {/* Event Detail */}
@@ -334,7 +339,6 @@ const EventReview = () => {
                         justify="center"
                         alignItems="center"
                         direction="column">
-
                         {/* Event Detail */}
                         <Grid
                             container

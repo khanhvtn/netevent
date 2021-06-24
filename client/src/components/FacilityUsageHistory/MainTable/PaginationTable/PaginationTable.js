@@ -9,7 +9,7 @@ const PaginationTable = ({
     take,
     handleChangeRowsPerPage,
     handleChangePage,
-    totalPages,
+    totalPages
 }) => {
     const css = useStyles();
     return (
@@ -24,8 +24,7 @@ const PaginationTable = ({
                     variant="standard"
                     value={take}
                     name="take"
-                    onChange={handleChangeRowsPerPage}
-                >
+                    onChange={handleChangeRowsPerPage}>
                     <MenuItem value={5}>5</MenuItem>
                     <MenuItem value={10}>10</MenuItem>
                     <MenuItem value={25}>25</MenuItem>

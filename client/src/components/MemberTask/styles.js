@@ -5,8 +5,8 @@ export default makeStyles((theme) => ({
         position: 'absolute',
         top: '50%',
         left: '55%',
-        [theme.breakpoints.down('md')]:{
-            left: '50%',
+        [theme.breakpoints.down('md')]: {
+            left: '50%'
         }
     },
     noTask: {

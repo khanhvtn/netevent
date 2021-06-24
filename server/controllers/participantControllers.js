@@ -310,12 +310,26 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
                     'BEGIN:VCALENDAR\n' +
                     'VERSION:2.0\n' +
                     'BEGIN:VEVENT\n' +
-                    'DTSTART:' + formatDateTime(dateStart) + '\r\n' +
-                    'DTEND:' + formatDateTime(dateEnd) + '\r\n' +
-                    'SUMMARY:' + event.eventName + '\r\n' +
-                    'DESCRIPTION:' + description.blocks[0].text + ' \r\n' +
-                    'LOCATION:' + event.location + '\r\n' +
-                    'ORGANIZER;CN=' + "NetCompany" + ':mailto:' + "netevent@gmail.com" + '\r\n' +
+                    'DTSTART:' +
+                    formatDateTime(dateStart) +
+                    '\r\n' +
+                    'DTEND:' +
+                    formatDateTime(dateEnd) +
+                    '\r\n' +
+                    'SUMMARY:' +
+                    event.eventName +
+                    '\r\n' +
+                    'DESCRIPTION:' +
+                    description.blocks[0].text +
+                    ' \r\n' +
+                    'LOCATION:' +
+                    event.location +
+                    '\r\n' +
+                    'ORGANIZER;CN=' +
+                    'NetCompany' +
+                    ':mailto:' +
+                    'netevent@gmail.com' +
+                    '\r\n' +
                     'STATUS:CONFIRMED\n' +
                     'SEQUENCE:0\n' +
                     'ACTION:DISPLAY\n' +

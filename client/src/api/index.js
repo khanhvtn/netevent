@@ -170,8 +170,10 @@ export const getAllEventAPI = () => AXIOS.get(`/event/all`);
 
 // Facility History APIs
 export const getFacilityHistoriesAPI = (userQueries) => {
-    const idQuery= `id=${userQueries.id ? userQueries.id : ''}`;
-    const searchQuery = `search=${userQueries.search ? userQueries.search : ''}`;
+    const idQuery = `id=${userQueries.id ? userQueries.id : ''}`;
+    const searchQuery = `search=${
+        userQueries.search ? userQueries.search : ''
+    }`;
     const takeQuery = `take=${userQueries?.take ? userQueries?.take : ''}`;
     const pageQuery = `page=${userQueries?.page ? userQueries?.page : ''}`;
     const createdFromQuery = `createdFrom=${

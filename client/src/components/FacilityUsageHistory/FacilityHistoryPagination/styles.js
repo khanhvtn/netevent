@@ -16,11 +16,11 @@ export default makeStyles((theme) => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 16,
+        marginRight: 16
     },
     selectRowNum: {
         marginLeft: 8,
-        outline: 'none',
+        outline: 'none'
     },
-    pagination: { marginRight: 8 },
+    pagination: { marginRight: 8 }
 }));

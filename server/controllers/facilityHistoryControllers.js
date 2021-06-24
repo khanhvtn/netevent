@@ -45,7 +45,7 @@ const createFacilityHistory = async (req, res, next) => {
  * @version 1.0
  */
 const filter = async (req, res, next) => {
-    const selectedFacility = req.query.id
+    const selectedFacility = req.query.id;
     try {
         //get max date and min date of updatedAt and createdAt
         const createdMaxDate = await FacilityHistory.find()
@@ -113,7 +113,7 @@ const filter = async (req, res, next) => {
         if (req.query.search) {
             options = {
                 ...options,
-                search: req.query.search.toString(),
+                search: req.query.search.toString()
             };
         }
 
@@ -124,7 +124,7 @@ const filter = async (req, res, next) => {
         if (req.query.take) {
             options = {
                 ...options,
-                take: parseInt(req.query.take.toString()),
+                take: parseInt(req.query.take.toString())
             };
         }
 
@@ -234,29 +234,29 @@ const filter = async (req, res, next) => {
             },
             returnDate: {
                 $gte: options.returnMinDate,
-                $lte: options.returnMaxDate,
-            },
+                $lte: options.returnMaxDate
+            }
         })
             .populate({
-                path: 'facilityId',
+                path: 'facilityId'
             })
             .populate({
                 path: 'eventId',
                 match: {
-
                     eventName: new RegExp(options.search, 'i')
                 }
-            })
+            });
 
+        const totalFacilityHistory = filterFacilityHistory.filter(
+            (facilityHistory) => facilityHistory.eventId != null
+        );
 
-        const totalFacilityHistory = filterFacilityHistory.filter((facilityHistory) => facilityHistory.eventId != null);
-
-        const totalFacilityHistory1=totalFacilityHistory.length
+        const totalFacilityHistory1 = totalFacilityHistory.length;
         let totalPages = !options.take
             ? 1
             : (totalFacilityHistory1 / options.take).toString().includes('.')
-                ? Math.ceil(totalFacilityHistory1 / options.take)
-                : totalFacilityHistory1 / options.take;
+            ? Math.ceil(totalFacilityHistory1 / options.take)
+            : totalFacilityHistory1 / options.take;
 
         //return data to client
         const facilityHistories = await FacilityHistory.find({
@@ -280,8 +280,7 @@ const filter = async (req, res, next) => {
             }
         })
             .populate({
-                path: 'facilityId',
-
+                path: 'facilityId'
             })
             .populate({
                 path: 'eventId',
@@ -293,12 +292,11 @@ const filter = async (req, res, next) => {
             .skip((page - 1) * options.take)
             .limit(options.take);
 
-            const newFacilityHistory = facilityHistories.filter((facilityHistory) => facilityHistory.eventId != null)
-
-
+        const newFacilityHistory = facilityHistories.filter(
+            (facilityHistory) => facilityHistory.eventId != null
+        );
 
         return cusResponse(res, 200, newFacilityHistory, null, totalPages);
-
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
@@ -354,7 +352,7 @@ const deleteEachFacilityHistory = async (req, res, next) => {
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
-}
+};
 
 /**
  * @decsription Update eventType by new request update

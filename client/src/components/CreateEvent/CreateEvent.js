@@ -648,7 +648,7 @@ const CreateEvent = ({
     };
 
     const handleCreateAndUpdateTask = () => {
-        const { name, email, type, startTime, endTime } = taskState;
+        const { name, email, type, startTime, endTime, tasks } = taskState;
         let listErrors = {};
         if (!name) {
             listErrors = {
@@ -674,11 +674,55 @@ const CreateEvent = ({
                 startTime: 'Start Time cannot be blanked.'
             };
         }
+
         if (!endTime) {
             listErrors = {
                 ...listErrors,
                 endTime: 'End Time cannot be blanked.'
             };
+        }
+
+        if (startTime) {
+            for (const task of tasks) {
+                if (
+                    moment(Date.parse(task.startTime)).isBetween(
+                        moment(Date.parse(startTime)),
+                        moment(Date.parse(endTime))
+                    ) ||
+                    moment(Date.parse(startTime)).isBetween(
+                        moment(Date.parse(task.startTime)),
+                        moment(Date.parse(task.endTime))
+                    )
+                ) {
+                    listErrors = {
+                        ...listErrors,
+                        startTime:
+                            'Time conflict to other tasks. Please double check!'
+                    };
+                    break;
+                }
+            }
+        }
+        if (endTime) {
+            for (const task of tasks) {
+                if (
+                    moment(Date.parse(task.endTime)).isBetween(
+                        moment(Date.parse(startTime)),
+                        moment(Date.parse(endTime))
+                    ) ||
+                    moment(Date.parse(endTime)).isBetween(
+                        moment(Date.parse(task.startTime)),
+                        moment(Date.parse(task.endTime))
+                    )
+                ) {
+                    listErrors = {
+                        ...listErrors,
+                        endTime:
+                            'Time conflict to other tasks. Please double check!'
+                    };
+                    break;
+                }
+            }
         }
         if (Object.keys(listErrors).length !== 0) {
             return dispatch({

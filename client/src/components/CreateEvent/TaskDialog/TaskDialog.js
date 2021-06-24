@@ -39,23 +39,15 @@ const TaskDialog = () => {
         handleToggleDialogDeleteTask,
         handleDeleteTask,
         errors,
-        users,
-        user
+        users
     } = useContext(CreateEventInterface);
     /* 
   if isTaskCreateMode is true, 
   then render user emails that are not in task table or a team member, vice versa.
    */
-    const availableUsers = taskState.isTaskCreateMode
-        ? users
-              .filter((targetUser) => targetUser.role.includes('4'))
-              .filter((targetUser) => {
-                  const listUserEmails = taskState.tasks.map(
-                      (task) => task.email
-                  );
-                  return !listUserEmails.includes(targetUser.email);
-              })
-        : users.filter((targetUser) => targetUser.email !== user.email);
+    const availableUsers = users.filter((targetUser) =>
+        targetUser.role.includes('4')
+    );
     return (
         <div>
             {/* Dialog Create and Update */}
@@ -132,6 +124,7 @@ const TaskDialog = () => {
                     </FormControl>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <KeyboardDateTimePicker
+                            disabled={!taskState.email}
                             disablePast
                             error={errors?.startTime ? true : false}
                             helperText={
