@@ -43,8 +43,8 @@ const initialState = {
 const filterState = {
     type: '',
     status: '',
-    budgetRange: 2500000,
-    participantRange: 30,
+    budgetRange: null,
+    participantRange: null,
     startFrom: null,
     startTo: null,
     endFrom: null,
