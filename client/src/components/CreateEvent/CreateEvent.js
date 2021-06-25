@@ -546,6 +546,13 @@ const CreateEvent = ({
                 returnDate: 'Borrow Facility cannot be blanked.'
             };
         }
+        //end time can not smaller than start time
+        if (moment(Date.parse(returnDate)).isBefore(Date.parse(borrowDate))) {
+            listErrors = {
+                ...listErrors,
+                returnDate: 'Return Date cannot be smaller than Borrow Date.'
+            };
+        }
         if (Object.keys(listErrors).length !== 0) {
             return dispatch({
                 type: ERROR,
@@ -682,47 +689,103 @@ const CreateEvent = ({
             };
         }
 
-        if (startTime) {
-            for (const task of tasks) {
-                if (
-                    moment(Date.parse(task.startTime)).isBetween(
-                        moment(Date.parse(startTime)),
-                        moment(Date.parse(endTime))
-                    ) ||
-                    moment(Date.parse(startTime)).isBetween(
-                        moment(Date.parse(task.startTime)),
-                        moment(Date.parse(task.endTime))
-                    )
-                ) {
-                    listErrors = {
-                        ...listErrors,
-                        startTime:
-                            'Time conflict to other tasks. Please double check!'
-                    };
-                    break;
+        //Start Time have to time range that event happen.
+        if (
+            !moment(Date.parse(startTime)).isBetween(
+                Date.parse(state.startDate),
+                Date.parse(state.endDate)
+            )
+        ) {
+            listErrors = {
+                ...listErrors,
+                startTime:
+                    'Start Time must have in a time range that event happen.'
+            };
+        }
+        //End Time have to time range that event happen.
+        if (
+            !moment(Date.parse(endTime)).isBetween(
+                Date.parse(state.startDate),
+                Date.parse(state.endDate)
+            )
+        ) {
+            listErrors = {
+                ...listErrors,
+                endTime: 'End Time must have in a time range that event happen.'
+            };
+        }
+
+        /* Time Conflict Validation trigger when create multiple tasks for same users */
+        if (
+            taskState.tasks.some(
+                (targetTask) => targetTask.email === email.email
+            )
+        ) {
+            const targetFilter = !taskState.isTaskCreateMode
+                ? tasks
+                      .filter((targetTask) => targetTask.email === email.email)
+                      .filter(
+                          (targetTask) =>
+                              !moment(Date.parse(taskState.startTime)).isSame(
+                                  moment(Date.parse(targetTask.startTime))
+                              ) ||
+                              !moment(Date.parse(taskState.endTime)).isSame(
+                                  moment(Date.parse(targetTask.endTime))
+                              )
+                      )
+                : tasks.filter(
+                      (targetTask) => targetTask.email === email.email
+                  );
+            if (startTime) {
+                for (const task of targetFilter) {
+                    if (
+                        moment(Date.parse(task.startTime)).isBetween(
+                            moment(Date.parse(startTime)),
+                            moment(Date.parse(endTime))
+                        ) ||
+                        moment(Date.parse(startTime)).isBetween(
+                            moment(Date.parse(task.startTime)),
+                            moment(Date.parse(task.endTime))
+                        )
+                    ) {
+                        listErrors = {
+                            ...listErrors,
+                            startTime:
+                                'Time conflict to other tasks. Please double check!'
+                        };
+                        break;
+                    }
+                }
+            }
+            if (endTime) {
+                for (const task of targetFilter) {
+                    if (
+                        moment(Date.parse(task.endTime)).isBetween(
+                            moment(Date.parse(startTime)),
+                            moment(Date.parse(endTime))
+                        ) ||
+                        moment(Date.parse(endTime)).isBetween(
+                            moment(Date.parse(task.startTime)),
+                            moment(Date.parse(task.endTime))
+                        )
+                    ) {
+                        listErrors = {
+                            ...listErrors,
+                            endTime:
+                                'Time conflict to other tasks. Please double check!'
+                        };
+                        break;
+                    }
                 }
             }
         }
-        if (endTime) {
-            for (const task of tasks) {
-                if (
-                    moment(Date.parse(task.endTime)).isBetween(
-                        moment(Date.parse(startTime)),
-                        moment(Date.parse(endTime))
-                    ) ||
-                    moment(Date.parse(endTime)).isBetween(
-                        moment(Date.parse(task.startTime)),
-                        moment(Date.parse(task.endTime))
-                    )
-                ) {
-                    listErrors = {
-                        ...listErrors,
-                        endTime:
-                            'Time conflict to other tasks. Please double check!'
-                    };
-                    break;
-                }
-            }
+
+        //end time can not smaller than start time
+        if (moment(Date.parse(endTime)).isBefore(Date.parse(startTime))) {
+            listErrors = {
+                ...listErrors,
+                endTime: 'End Time cannot be smaller than Start Time.'
+            };
         }
         if (Object.keys(listErrors).length !== 0) {
             return dispatch({
