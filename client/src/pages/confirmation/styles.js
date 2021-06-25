@@ -7,20 +7,37 @@ export default makeStyles(() => ({
     },
     wrapper: {
         width: '350px',
-        margin: 'auto'
+        margin: 'auto',
+        padding: 32
     },
     form: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
-    },
-    textField: {
+        alignItems: 'center',
         width: '90%',
-        margin: ' 20px 0'
+        margin: 'auto'
+    },
+    textFieldPass1: {
+        margin: '40px 0 0 0',
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderRadius: 8
+            }
+        }
+    },
+    textFieldPass2: {
+        margin: '20px 0 0 0',
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderRadius: 8
+            }
+        }
     },
     btnSubmit: {
         margin: '20px 0',
-        width: '90%'
+        textTransform: 'none',
+        borderRadius: 8,
+        minHeight: 48
     },
     media: {
         height: 100
@@ -37,6 +54,11 @@ export default makeStyles(() => ({
         textAlign: 'center'
     },
     contentWrapper: {
-        marginTop: '20%'
+        position: 'absolute',
+        top: '50%',
+        left: '50%'
+    },
+    confirmationWrapper: {
+        borderRadius: 16
     }
 }));

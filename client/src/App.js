@@ -122,6 +122,14 @@ const App = () => {
                                     </DashboardLayout>
                                 )}
                             />
+                            <Route
+                                path="/dashboard/creator/task"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <MemberTask />
+                                    </DashboardLayout>
+                                )}
+                            />
 
                             {/* Reviewer role */}
                             <Route
@@ -170,6 +178,14 @@ const App = () => {
                                 render={() => (
                                     <DashboardLayout>
                                         <FacilityHistoryAll />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/reviewer/task"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <MemberTask />
                                     </DashboardLayout>
                                 )}
                             />

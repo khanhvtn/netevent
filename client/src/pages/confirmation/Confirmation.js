@@ -78,7 +78,7 @@ const Confirmation = () => {
         <div className={css.main}>
             <div className={css.wrapper}>
                 <Zoom in>
-                    <Paper>
+                    <Paper className={css.confirmationWrapper}>
                         <CardMedia
                             className={css.media}
                             image={logo}
@@ -107,7 +107,7 @@ const Confirmation = () => {
                                     noValidate>
                                     <TextField
                                         variant="outlined"
-                                        className={css.textField}
+                                        className={css.textFieldPass1}
                                         type="password"
                                         label="Password"
                                         value={password.password1}
@@ -123,7 +123,7 @@ const Confirmation = () => {
 
                                     <TextField
                                         variant="outlined"
-                                        className={css.textField}
+                                        className={css.textFieldPass2}
                                         type="password"
                                         label="Confirmed Password"
                                         value={password.password2}
@@ -138,6 +138,7 @@ const Confirmation = () => {
                                     />
 
                                     <Button
+                                        disabled={user.isLoading}
                                         size="large"
                                         variant="contained"
                                         className={css.btnSubmit}
