@@ -31,7 +31,7 @@
     "lint-staged": {
         "*.{js,jsx}": [
             "npm run prettier-format",
-            "npm run lint",
+            "npm run lint -s",
             "git add ."
         ]
     }
