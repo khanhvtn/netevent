@@ -43,8 +43,8 @@ const initialState = {
 const filterState = {
     type: '',
     status: '',
-    budgetRange: 2500000,
-    participantRange: 30,
+    budgetRange: null,
+    participantRange: null,
     startFrom: null,
     startTo: null,
     endFrom: null,
@@ -83,7 +83,10 @@ const EventManagement = () => {
 
     // Request to get the events data
     useEffect(() => {
-        if (!history.location.state || history.location.state?.isUpdated) {
+        if (
+            !history.location.state?.from ||
+            history.location.state?.isUpdated
+        ) {
             dispatch(
                 getEvents({
                     search: state.search,

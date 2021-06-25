@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import useStyles from './styles';
 import {
     Paper,
@@ -7,49 +7,46 @@ import {
     InputBase,
     IconButton,
     Grid,
-    Tooltip,
+    Tooltip
 } from '@material-ui/core';
 import { FilterList } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import {
-    getFacilityHistories,
-} from '../../actions/facilityHistoryActions';
+import { getFacilityHistories } from '../../actions/facilityHistoryActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { ERROR_CLEAR } from '../../constants';
-import FacilityHistoryFilter from './FacilityHistoryFilter/FacilityHistoryFilter'
-import FacilityHistoryPagination from './FacilityHistoryPagination/FacilityHistoryPagination'
-import FacilityHistoryTable from './FacilityHistoryTable/FacilityHistoryTable'
-import { useLocation, useHistory, useParams } from 'react-router-dom'
+import FacilityHistoryFilter from './FacilityHistoryFilter/FacilityHistoryFilter';
+import FacilityHistoryPagination from './FacilityHistoryPagination/FacilityHistoryPagination';
+import FacilityHistoryTable from './FacilityHistoryTable/FacilityHistoryTable';
+import { useLocation, useHistory, useParams } from 'react-router-dom';
 const headCells = [
     {
         id: 'eventName',
         numeric: false,
         disablePadding: false,
-        label: 'Event Name',
+        label: 'Event Name'
     },
 
     {
         id: 'borrowDate',
         numeric: false,
         disablePadding: false,
-        label: 'Borrowed Date',
+        label: 'Borrowed Date'
     },
     {
         id: 'returnDate',
         numeric: false,
         disablePadding: false,
-        label: 'Returned Date',
-    },
+        label: 'Returned Date'
+    }
 ];
-
 
 const filterState = {
     borrowFrom: null,
     borrowTo: null,
     returnFrom: null,
-    returnTo: null,
+    returnTo: null
 };
 
 const initialState = {
@@ -69,39 +66,33 @@ const initialState = {
     borrowFrom: null,
     borrowTo: null,
     returnFrom: null,
-    returnTo: null,
+    returnTo: null
 };
-
-
-
 
 const FacilityUsageHistory = () => {
     const css = useStyles();
     const [state, setState] = useState(initialState);
     const [stateSelectedFacility, setStateSelectedFacility] = useState({});
-    const [stateLocationSetting, setStateLocationSetting] = useState(false)
+    const [stateLocationSetting, setStateLocationSetting] = useState(false);
     const [filters, setFilters] = useState(filterState);
     const dispatch = useDispatch();
     const location = useLocation();
     const history = useHistory();
-    const {id} = useParams();
-    const {
-        facilityHistories,
-        totalPages,
-        isLoading,
-    } = useSelector((state) => ({
-        facilityHistories: state.facilityHistory.facilityHistories,
-        isLoading: state.facilityHistory.isLoading,
-        totalPages: state.facilityHistory.totalPages,
-    }));
+    const { id } = useParams();
+    const { facilityHistories, totalPages, isLoading } = useSelector(
+        (state) => ({
+            facilityHistories: state.facilityHistory.facilityHistories,
+            isLoading: state.facilityHistory.isLoading,
+            totalPages: state.facilityHistory.totalPages
+        })
+    );
 
-    useEffect(()=> {
-        if(location.state){
-        setStateSelectedFacility(location.state.data)
-        setStateLocationSetting(true)
-    }
-        else {
-            history.push('/dashboard/reviewer/facility-usage')
+    useEffect(() => {
+        if (location.state) {
+            setStateSelectedFacility(location.state.data);
+            setStateLocationSetting(true);
+        } else {
+            history.push('/dashboard/reviewer/facility-usage');
         }
     },[dispatch, location.state, history])
    
@@ -122,15 +113,14 @@ const FacilityUsageHistory = () => {
                 borrowFrom: state.borrowFrom,
                 borrowTo: state.borrowTo,
                 returnFrom: state.returnFrom,
-                returnTo: state.returnTo,
-
+                returnTo: state.returnTo
             })
         );
         //clear selected item
         return () => {
             dispatch({
                 type: ERROR_CLEAR,
-                payload: null,
+                payload: null
             });
         };
     }, [
@@ -150,12 +140,12 @@ const FacilityUsageHistory = () => {
     ]);
 
     useEffect(() => {
-        if(stateLocationSetting){
-        if (Object.keys(stateSelectedFacility).length === 0) {
-            history.push('/dashboard/reviewer/facility-usage')
+        if (stateLocationSetting) {
+            if (Object.keys(stateSelectedFacility).length === 0) {
+                history.push('/dashboard/reviewer/facility-usage');
+            }
         }
-    }
-    }, [dispatch, stateLocationSetting, stateSelectedFacility, history])
+    }, [dispatch, stateLocationSetting, stateSelectedFacility, history]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -163,28 +153,27 @@ const FacilityUsageHistory = () => {
             return setState((prevState) => ({
                 ...prevState,
                 [name]: value,
-                page: 1,
+                page: 1
             }));
         }
         setState((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: value
         }));
     };
-
 
     //handle ToggleFilter
     const handleToggleFilter = () => {
         setState((prevState) => ({
             ...prevState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -193,7 +182,7 @@ const FacilityUsageHistory = () => {
         setState((prevState) => ({
             ...prevState,
             ...filters,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -201,12 +190,12 @@ const FacilityUsageHistory = () => {
     const handleClearFilter = () => {
         setFilters((prevState) => ({
             ...prevState,
-            ...filterState,
+            ...filterState
         }));
         setState((prevState) => ({
             ...prevState,
             ...filterState,
-            openFilter: !prevState.openFilter,
+            openFilter: !prevState.openFilter
         }));
     };
 
@@ -218,16 +207,15 @@ const FacilityUsageHistory = () => {
         setState((prevState) => ({
             ...prevState,
             take: parseInt(event.target.value),
-            page: 1,
+            page: 1
         }));
     };
 
     const handleOnClickReturn = () => {
         setState(initialState);
         return history.push({
-            pathname: `/dashboard/reviewer/facility-usage`,
+            pathname: `/dashboard/reviewer/facility-usage`
         });
-
     };
 
     return (
@@ -251,13 +239,15 @@ const FacilityUsageHistory = () => {
                                         name="search"
                                         value={state.search}
                                         inputProps={{
-                                            'aria-label': 'search',
+                                            'aria-label': 'search'
                                         }}
                                     />
                                 </div>
                                 <div className={css.grow} />
                                 <Tooltip title="Filter">
-                                    <IconButton color="inherit" onClick={handleToggleFilter} >
+                                    <IconButton
+                                        color="inherit"
+                                        onClick={handleToggleFilter}>
                                         <FilterList />
                                     </IconButton>
                                 </Tooltip>
@@ -275,13 +265,14 @@ const FacilityUsageHistory = () => {
                             <FacilityHistoryPagination
                                 page={state.page}
                                 take={state.take}
-                                handleChangeRowsPerPage={handleChangeRowsPerPage}
+                                handleChangeRowsPerPage={
+                                    handleChangeRowsPerPage
+                                }
                                 handleChangePage={handleChangePage}
                                 totalPages={totalPages}
                             />
                         </Grid>
                     </AppBar>
-
                 </div>
             </Paper>
 
@@ -297,9 +288,8 @@ const FacilityUsageHistory = () => {
                 handleApplyFilter={handleApplyFilter}
                 handleClearFilter={handleClearFilter}
             />
-
         </div>
-    )
-}
+    );
+};
 
 export default FacilityUsageHistory;

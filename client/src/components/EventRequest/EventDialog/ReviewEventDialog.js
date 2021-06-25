@@ -34,7 +34,8 @@ const ReviewEventDialog = ({
         if (updateEventSuccess) {
             handleToggleDialogReviewEvent();
         }
-    }, [updateEventSuccess, handleToggleDialogReviewEvent]);
+        /* eslint-disable-next-line */
+    }, [updateEventSuccess]);
 
     return (
         <>
@@ -48,7 +49,7 @@ const ReviewEventDialog = ({
                 className={css.dialogDeleteFac}
                 aria-describedby="review-event-dialog-description">
                 <DialogTitle id="review-event-dialog">
-                    {'Confirm completed event!'}
+                    {'Confirm verify event!'}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="review-event-dialog-description">
@@ -65,7 +66,7 @@ const ReviewEventDialog = ({
                         {isLoading ? (
                             <CircularProgress size={25} color="inherit" />
                         ) : (
-                            'Approve'
+                            'Verify'
                         )}
                     </Button>
                     <Button

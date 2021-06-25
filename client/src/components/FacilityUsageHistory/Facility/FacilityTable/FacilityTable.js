@@ -15,7 +15,7 @@ import {
     TableSortLabel,
     Typography,
     Tooltip,
-    Button,
+    Button
 } from '@material-ui/core';
 import { Delete, Create, Edit } from '@material-ui/icons';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -57,32 +57,32 @@ const headCells = [
         id: 'name',
         numeric: false,
         disablePadding: false,
-        label: 'Name',
+        label: 'Name'
     },
     {
         id: 'code',
         numeric: false,
         disablePadding: false,
-        label: 'Code',
+        label: 'Code'
     },
     {
         id: 'type',
         numeric: false,
         disablePadding: false,
-        label: 'Type',
+        label: 'Type'
     },
     {
         id: 'createdAt',
         numeric: false,
         disablePadding: false,
-        label: 'Created At',
+        label: 'Created At'
     },
     {
         id: 'updatedAt',
         numeric: false,
         disablePadding: false,
-        label: 'Updated At',
-    },
+        label: 'Updated At'
+    }
 ];
 
 function EnhancedTableHead(props) {
@@ -93,7 +93,7 @@ function EnhancedTableHead(props) {
         orderBy,
         numSelected,
         rowCount,
-        onRequestSort,
+        onRequestSort
     } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
@@ -117,14 +117,12 @@ function EnhancedTableHead(props) {
                         key={headCell.id}
                         align={headCell.numeric ? 'right' : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'default'}
-                        sortDirection={orderBy === headCell.id ? order : false}
-                    >
+                        sortDirection={orderBy === headCell.id ? order : false}>
                         <TableSortLabel
                             style={{ fontWeight: 'bold' }}
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
-                        >
+                            onClick={createSortHandler(headCell.id)}>
                             {headCell.label}
                             {orderBy === headCell.id ? (
                                 <span className={classes.visuallyHidden}>
@@ -148,28 +146,28 @@ EnhancedTableHead.propTypes = {
     onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired
 };
 
 const useToolbarStyles = makeStyles((theme) => ({
     root: {
         paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2),
+        paddingRight: theme.spacing(2)
     },
     highlight:
         theme.palette.type === 'light'
             ? {
                   color: theme.palette.secondary.main,
-                  backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+                  backgroundColor: lighten(theme.palette.secondary.light, 0.85)
               }
             : {
                   color: theme.palette.text.primary,
-                  backgroundColor: theme.palette.secondary.dark,
+                  backgroundColor: theme.palette.secondary.dark
               },
     title: {
         flex: '1 1 100%',
-        fontWeight: 'bold',
-    },
+        fontWeight: 'bold'
+    }
 }));
 
 const EnhancedTableToolbar = (props) => {
@@ -177,22 +175,20 @@ const EnhancedTableToolbar = (props) => {
     const {
         numSelected,
         handleToggleDialogCreateAndUpdate,
-        handleToggleDialogDelete,
+        handleToggleDialogDelete
     } = props;
 
     return (
         <Toolbar
             className={clsx(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
-        >
+                [classes.highlight]: numSelected > 0
+            })}>
             {numSelected > 0 ? (
                 <Typography
                     className={classes.title}
                     color="inherit"
                     variant="subtitle1"
-                    component="div"
-                >
+                    component="div">
                     {numSelected} selected
                 </Typography>
             ) : (
@@ -200,8 +196,7 @@ const EnhancedTableToolbar = (props) => {
                     className={classes.title}
                     variant="h6"
                     id="tableTitle"
-                    component="div"
-                >
+                    component="div">
                     List of facilities
                 </Typography>
             )}
@@ -212,8 +207,7 @@ const EnhancedTableToolbar = (props) => {
                         onClick={handleToggleDialogCreateAndUpdate}
                         endIcon={<Create />}
                         variant="contained"
-                        color="primary"
-                    >
+                        color="primary">
                         Create
                     </Button>
                 </Tooltip>
@@ -223,8 +217,7 @@ const EnhancedTableToolbar = (props) => {
                         onClick={handleToggleDialogDelete}
                         endIcon={<Delete />}
                         variant="contained"
-                        color="secondary"
-                    >
+                        color="secondary">
                         Delete
                     </Button>
                     <Button
@@ -234,8 +227,7 @@ const EnhancedTableToolbar = (props) => {
                         style={{ marginLeft: '8px' }}
                         endIcon={<Edit />}
                         variant="contained"
-                        color="primary"
-                    >
+                        color="primary">
                         Edit
                     </Button>
                 </>
@@ -244,8 +236,7 @@ const EnhancedTableToolbar = (props) => {
                     onClick={handleToggleDialogDelete}
                     endIcon={<Delete />}
                     variant="contained"
-                    color="secondary"
-                >
+                    color="secondary">
                     Delete
                 </Button>
             )}
@@ -254,7 +245,7 @@ const EnhancedTableToolbar = (props) => {
 };
 
 EnhancedTableToolbar.propTypes = {
-    numSelected: PropTypes.number.isRequired,
+    numSelected: PropTypes.number.isRequired
 };
 
 const FacilityTable = ({
@@ -262,7 +253,7 @@ const FacilityTable = ({
     handleToggleDialogDelete,
     take,
     selected,
-    setSelected,
+    setSelected
 }) => {
     const css = useStyles();
     const {
@@ -270,13 +261,13 @@ const FacilityTable = ({
         isLoading,
         createSuccess,
         deleteSuccess,
-        updateSuccess,
+        updateSuccess
     } = useSelector((state) => ({
         facilities: state.facility.facilities,
         isLoading: state.facility.isLoading,
         createSuccess: state.facility.createSuccess,
         deleteSuccess: state.facility.deleteSuccess,
-        updateSuccess: state.facility.updateSuccess,
+        updateSuccess: state.facility.updateSuccess
     }));
 
     const [order, setOrder] = useState('asc');
@@ -334,8 +325,7 @@ const FacilityTable = ({
                     className={css.table}
                     aria-labelledby="tableTitle"
                     size={'medium'}
-                    aria-label="enhanced table"
-                >
+                    aria-label="enhanced table">
                     <EnhancedTableHead
                         classes={css}
                         numSelected={selected.length}
@@ -359,13 +349,16 @@ const FacilityTable = ({
                                                     <TableCell>
                                                         <Skeleton />
                                                     </TableCell>
-                                                    {headCells.map(() => {
-                                                        return (
-                                                            <TableCell>
-                                                                <Skeleton />
-                                                            </TableCell>
-                                                        );
-                                                    })}
+                                                    {headCells.map(
+                                                        (cell, index) => {
+                                                            return (
+                                                                <TableCell
+                                                                    key={index}>
+                                                                    <Skeleton />
+                                                                </TableCell>
+                                                            );
+                                                        }
+                                                    )}
                                                 </TableRow>
                                             </>
                                         );
@@ -376,9 +369,8 @@ const FacilityTable = ({
                             <>
                                 <TableRow
                                     style={{
-                                        height: 50 * take,
-                                    }}
-                                >
+                                        height: 50 * take
+                                    }}>
                                     <TableCell colSpan={7} align="center">
                                         <Typography>No Data Matched</Typography>
                                     </TableCell>
@@ -403,20 +395,19 @@ const FacilityTable = ({
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
                                             key={row._id}
-                                            selected={isItemSelected}
-                                        >
+                                            selected={isItemSelected}>
                                             <TableCell padding="checkbox">
                                                 <Checkbox
                                                     checked={isItemSelected}
                                                     inputProps={{
-                                                        'aria-labelledby': labelId,
+                                                        'aria-labelledby':
+                                                            labelId
                                                     }}
                                                 />
                                             </TableCell>
                                             <TableCell
                                                 component="th"
-                                                scope="row"
-                                            >
+                                                scope="row">
                                                 {row.name}
                                             </TableCell>
                                             <TableCell>{row.code}</TableCell>
@@ -437,9 +428,8 @@ const FacilityTable = ({
                                 {emptyRows > 0 && (
                                     <TableRow
                                         style={{
-                                            height: 50 * emptyRows,
-                                        }}
-                                    >
+                                            height: 50 * emptyRows
+                                        }}>
                                         <TableCell colSpan={7} />
                                     </TableRow>
                                 )}

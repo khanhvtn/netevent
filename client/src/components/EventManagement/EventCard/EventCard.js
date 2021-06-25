@@ -47,9 +47,8 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                             <Image
                                 className={css.cover}
                                 src={event.image}
-                                cover={true}
-                                disableTransition={true}
-                                aspectRatio={16/9}
+                                cover
+                                aspectRatio={16 / 9}
                                 // title="Event Image"
                             />
                         )}

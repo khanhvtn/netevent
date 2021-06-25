@@ -11,45 +11,16 @@ import {
     FormControl,
     InputLabel,
     MenuItem,
-    Select
+    Select,
+    RadioGroup,
+    Radio,
+    FormControlLabel
 } from '@material-ui/core';
 import MomentUtils from '@date-io/moment';
-import { withStyles } from '@material-ui/core/styles';
-import Slider from '@material-ui/core/Slider';
 
 //import useStyles in the last
 import useStyles from './styles';
 import { useSelector } from 'react-redux';
-
-const PrettoSlider = withStyles({
-    root: {
-        color: '#3F51B5',
-        height: 8
-    },
-    thumb: {
-        height: 24,
-        width: 24,
-        backgroundColor: '#fff',
-        border: '2px solid currentColor',
-        marginTop: -8,
-        marginLeft: -12,
-        '&:focus, &:hover, &$active': {
-            boxShadow: 'inherit'
-        }
-    },
-    active: {},
-    valueLabel: {
-        left: 'calc(-50% + 4px)'
-    },
-    track: {
-        height: 8,
-        borderRadius: 4
-    },
-    rail: {
-        height: 8,
-        borderRadius: 4
-    }
-})(Slider);
 
 const EventFilter = ({
     openFilter,
@@ -74,22 +45,6 @@ const EventFilter = ({
         eventTypes: state.eventType.eventTypes,
         isLoading: state.eventType.isLoading
     }));
-
-    // Set budget state
-    const handleOnChangeBudget = (e, budget) => {
-        setFilters((prevState) => ({
-            ...prevState,
-            budgetRange: budget
-        }));
-    };
-
-    // Set maxParticipants state
-    const handleOnChangeParticipant = (e, participant) => {
-        setFilters((prevState) => ({
-            ...prevState,
-            participantRange: participant
-        }));
-    };
 
     return (
         <Drawer anchor="right" open={openFilter} onClose={handleToggleFilter}>
@@ -172,34 +127,31 @@ const EventFilter = ({
                     )}
                     <FormControl size="small" margin="normal" fullWidth>
                         <Typography variant="caption">
-                            Bugdet Range: {budgetRange} vnd
+                            Bugdet Range
                         </Typography>
-                        <PrettoSlider
+                        <RadioGroup
+                            aria-label="budgetRange"
                             name="budgetRange"
-                            valueLabelDisplay="off"
-                            aria-label="pretto slider"
                             value={budgetRange}
-                            onChange={handleOnChangeBudget}
-                            step={500000}
-                            min={500000}
-                            max={10000000}
-                        />
+                            onChange={handleFilterChange}>
+                            <FormControlLabel value="20" control={<Radio color="primary" />} label="Less than 20m" />
+                            <FormControlLabel value="20-50" control={<Radio color="primary" />} label="20m - 50m" />
+                            <FormControlLabel value="50" control={<Radio color="primary" />} label="More than 50m" />
+                        </RadioGroup>
                     </FormControl>
                     <FormControl size="small" margin="normal" fullWidth>
                         <Typography variant="caption">
                             Participant Range
                         </Typography>
-                        <PrettoSlider
+                        <RadioGroup
+                            aria-label="participantRange"
                             name="participantRange"
-                            valueLabelDisplay="auto"
-                            aria-label="pretto slider"
-                            defaultValue={30}
                             value={participantRange}
-                            onChange={handleOnChangeParticipant}
-                            step={5}
-                            min={10}
-                            max={100}
-                        />
+                            onChange={handleFilterChange}>
+                            <FormControlLabel value="20" control={<Radio color="primary" />} label="Less than 20" />
+                            <FormControlLabel value="20-50" control={<Radio color="primary" />} label="20-50" />
+                            <FormControlLabel value="50" control={<Radio color="primary" />} label="More than 50" />
+                        </RadioGroup>
                     </FormControl>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <Grid container justify="space-around">

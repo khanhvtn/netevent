@@ -282,10 +282,35 @@ const filterEventManagement = async (req, res, next) => {
          */
 
         if (req.query.budgetRange) {
-            options = {
-                ...options,
-                budgetRange: req.query.budgetRange.toString()
-            };
+            switch (req.query.budgetRange) {
+                case '20':
+                    queryOptions = {
+                        ...queryOptions,
+                        $expr: {
+                            $lte: [{ $toDouble: "$budget" }, 20000000.00]
+                        }
+                    };
+                    break;
+                case '20-50':
+                    queryOptions = {
+                        ...queryOptions,
+                        $expr: {
+                            $lte: [{ $toDouble: "$budget" }, 50000000.00],
+                        },
+                        $expr: {
+                            $gte: [{ $toDouble: "$budget" }, 20000000.00]
+                        }
+                    };
+                    break;
+                case '50':
+                    queryOptions = {
+                        ...queryOptions,
+                        $expr: {
+                            $gte: [{ $toDouble: "$budget" }, 50000000.00],
+                        }
+                    };
+                    break;
+            }
         }
 
         /* 
@@ -293,10 +318,35 @@ const filterEventManagement = async (req, res, next) => {
          */
 
         if (req.query.participantRange) {
-            options = {
-                ...options,
-                participantRange: req.query.participantRange.toString()
-            };
+            switch (req.query.participantRange) {
+                case '20':
+                    queryOptions = {
+                        ...queryOptions,
+                        $expr: {
+                            $lte: [{ $toInt: "$maxParticipants" }, 20]
+                        }
+                    };
+                    break;
+                case '20-50':
+                    queryOptions = {
+                        ...queryOptions,
+                        $expr: {
+                            $lte: [{ $toInt: "$maxParticipants" }, 50],
+                        },
+                        $expr: {
+                            $gte: [{ $toInt: "$maxParticipants" }, 20]
+                        }
+                    };
+                    break;
+                case '50':
+                    queryOptions = {
+                        ...queryOptions,
+                        $expr: {
+                            $gte: [{ $toInt: "$maxParticipants" }, 50],
+                        }
+                    };
+                    break;
+            }
         }
 
         /* 

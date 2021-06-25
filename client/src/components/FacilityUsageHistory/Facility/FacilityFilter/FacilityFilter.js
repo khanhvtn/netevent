@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     MuiPickersUtilsProvider,
-    KeyboardDatePicker,
+    KeyboardDatePicker
 } from '@material-ui/pickers';
 import { Grid, Typography, Button, Drawer } from '@material-ui/core';
 import MomentUtils from '@date-io/moment';
@@ -17,7 +17,7 @@ const FacilityFilter = ({
     updatedFrom,
     updatedTo,
     handleClearFilter,
-    handleApplyFilter,
+    handleApplyFilter
 }) => {
     const css = useStyles();
     return (
@@ -26,8 +26,7 @@ const FacilityFilter = ({
                 <Typography
                     style={{ fontWeight: 'bold' }}
                     align="center"
-                    variant="h6"
-                >
+                    variant="h6">
                     Filter Facility
                 </Typography>
             </div>
@@ -47,11 +46,11 @@ const FacilityFilter = ({
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        createdFrom: date.toDate(),
+                                        createdFrom: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change date',
+                                    'aria-label': 'change date'
                                 }}
                             />
                             <KeyboardDatePicker
@@ -66,11 +65,11 @@ const FacilityFilter = ({
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        createdTo: date.toDate(),
+                                        createdTo: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change date',
+                                    'aria-label': 'change date'
                                 }}
                             />
                             <KeyboardDatePicker
@@ -85,11 +84,11 @@ const FacilityFilter = ({
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        updatedFrom: date.toDate(),
+                                        updatedFrom: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change date',
+                                    'aria-label': 'change date'
                                 }}
                             />
                             <KeyboardDatePicker
@@ -104,11 +103,11 @@ const FacilityFilter = ({
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        updatedTo: date.toDate(),
+                                        updatedTo: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change date',
+                                    'aria-label': 'change date'
                                 }}
                             />
                         </Grid>
@@ -119,16 +118,14 @@ const FacilityFilter = ({
                         className={css.handleClearButton}
                         onClick={handleClearFilter}
                         style={{ backgroundColor: 'transparent' }}
-                        color="default"
-                    >
+                        color="default">
                         Clear all
                     </Button>
                     <Button
                         className={css.handleFilterButton}
                         onClick={handleApplyFilter}
                         variant="contained"
-                        color="primary"
-                    >
+                        color="primary">
                         Apply
                     </Button>
                 </div>

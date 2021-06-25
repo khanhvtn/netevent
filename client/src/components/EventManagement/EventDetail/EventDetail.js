@@ -45,7 +45,7 @@ import CheckInTable from './CheckInTable/CheckInTable';
 import VerifyTable from './VerifyTable/VerifyTable';
 import EventCheckingCompletedDialog from '../EventDialog/EventCheckingCompletedDialog';
 import NotificationHistory from './NotificationHistory/NotificationHistory';
-import Image from 'material-ui-image'
+import Image from 'material-ui-image';
 import useStyles from './styles';
 
 function TabPanel(props) {
@@ -487,17 +487,21 @@ const EventDetail = () => {
                     <div className={css.imageCover}>
                         <Image
                             className={css.cover}
-                            src={state.event?.image ? state.event?.image : blankPhoto}
-                            disableTransition={true}
-                            aspectRatio={25 / 9} />
+                            src={
+                                state.event?.image
+                                    ? state.event?.image
+                                    : blankPhoto
+                            }
+                            aspectRatio={25 / 9}
+                            cover
+                        />
                     </div>
                     {/* Event Detail */}
                     <Grid
                         container
                         justify="center"
                         alignItems="center"
-                        direction="column">            
-
+                        direction="column">
                         {/* Event Detail */}
                         <Grid
                             container
@@ -988,13 +992,13 @@ const EventDetail = () => {
                                             'DD MMM'
                                         )
                                             ? `${moment(
-                                                state.event?.startDate
-                                            ).format('DD MMM, YYYY')}`
+                                                  state.event?.startDate
+                                              ).format('DD MMM, YYYY')}`
                                             : `${moment(
-                                                state.event?.startDate
-                                            ).format('DD MMM')} - ${moment(
-                                                state.event?.endDate
-                                            ).format('DD MMM')}`}
+                                                  state.event?.startDate
+                                              ).format('DD MMM')} - ${moment(
+                                                  state.event?.endDate
+                                              ).format('DD MMM')}`}
                                     </Typography>
                                     <Typography variant="body2">
                                         {`${moment(

@@ -146,30 +146,46 @@ const NotificationHistory = ({
                     <CircularProgress color="primary" />
                 </div>
             ) : notifications.length === 0 ? (
-                <>
-                    <Grid
-                        container
-                        spacing={0}
-                        direction="column"
-                        alignItems="center"
-                        justify="center"
-                        style={{ minHeight: '50vh' }}>
-                        <Typography align="center">
-                            There is no history for email. Would you like to
-                            send new?
-                        </Typography>
-                        <Button
-                            fullWidth
-                            onClick={handleToggleSendNotificationDialog}
-                            disabled={isLoading}
-                            className={css.sendEmailButton}
-                            variant="contained"
-                            color="primary"
-                            size="small">
-                            Send Email
-                        </Button>
-                    </Grid>
-                </>
+                isReviewer ? (
+                    <>
+                        <Grid
+                            container
+                            spacing={0}
+                            direction="column"
+                            alignItems="center"
+                            justify="center"
+                            style={{ minHeight: '50vh' }}>
+                            <Typography align="center">
+                                No email history matched.
+                            </Typography>
+                        </Grid>
+                    </>
+                ) : (
+                    <>
+                        <Grid
+                            container
+                            spacing={0}
+                            direction="column"
+                            alignItems="center"
+                            justify="center"
+                            style={{ minHeight: '50vh' }}>
+                            <Typography align="center">
+                                There is no history for email. Would you like to
+                                send new?
+                            </Typography>
+                            <Button
+                                fullWidth
+                                onClick={handleToggleSendNotificationDialog}
+                                disabled={isLoading}
+                                className={css.sendEmailButton}
+                                variant="contained"
+                                color="primary"
+                                size="small">
+                                Send Email
+                            </Button>
+                        </Grid>
+                    </>
+                )
             ) : (
                 <>
                     <Paper elevation={0} className={css.paper}>
@@ -182,15 +198,19 @@ const NotificationHistory = ({
                                     variant="h4">
                                     Email Notifications
                                 </Typography>
-                                <Button
-                                    fullWidth
-                                    onClick={handleToggleSendNotificationDialog}
-                                    disabled={isLoading}
-                                    className={css.sendEmailButton}
-                                    variant="contained"
-                                    color="primary">
-                                    Send Email
-                                </Button>
+                                {!isReviewer && (
+                                    <Button
+                                        fullWidth
+                                        onClick={
+                                            handleToggleSendNotificationDialog
+                                        }
+                                        disabled={isLoading}
+                                        className={css.sendEmailButton}
+                                        variant="contained"
+                                        color="primary">
+                                        Send Email
+                                    </Button>
+                                )}
                             </Toolbar>
 
                             <TableContainer>
