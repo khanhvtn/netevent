@@ -37,6 +37,12 @@ const createFacilityHistory = async (req, res, next) => {
     }
 };
 
+const calculateTimeZone = (selectedDate) => {
+    const newTimeZone = new Date(selectedDate);
+    const result = newTimeZone.setHours(newTimeZone.getHours()-7)
+    return result;
+}
+
 /**
  * @decsription Get, search and filter facilityHistory (included paging)
  * @method GET
@@ -176,7 +182,7 @@ const filter = async (req, res, next) => {
         if (req.query.borrowFrom) {
             options = {
                 ...options,
-                borrowMinDate: req.query.borrowFrom
+                borrowMinDate: new Date(calculateTimeZone(req.query.borrowFrom))
             };
         }
         /* 
@@ -186,7 +192,7 @@ const filter = async (req, res, next) => {
         if (req.query.borrowTo) {
             options = {
                 ...options,
-                borrowMaxDate: req.query.borrowTo
+                borrowMaxDate: new Date(calculateTimeZone(req.query.borrowTo))
             };
         }
         /* 
@@ -196,7 +202,7 @@ const filter = async (req, res, next) => {
         if (req.query.returnFrom) {
             options = {
                 ...options,
-                returnMinDate: req.query.returnFrom
+                returnMinDate: new Date(calculateTimeZone(req.query.returnFrom))
             };
         }
         /* 
@@ -206,7 +212,7 @@ const filter = async (req, res, next) => {
         if (req.query.returnTo) {
             options = {
                 ...options,
-                returnMaxDate: req.query.returnTo
+                returnMaxDate: new Date(calculateTimeZone(req.query.returnTo))
             };
         }
 
