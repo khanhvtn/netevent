@@ -39,9 +39,9 @@ const createFacilityHistory = async (req, res, next) => {
 
 const calculateTimeZone = (selectedDate) => {
     const newTimeZone = new Date(selectedDate);
-    const result = newTimeZone.setHours(newTimeZone.getHours()-7)
+    const result = newTimeZone.setHours(newTimeZone.getHours() - 7);
     return result;
-}
+};
 
 /**
  * @decsription Get, search and filter facilityHistory (included paging)

@@ -126,17 +126,27 @@ const EventFilter = ({
                         </>
                     )}
                     <FormControl size="small" margin="normal" fullWidth>
-                        <Typography variant="caption">
-                            Bugdet Range
-                        </Typography>
+                        <Typography variant="caption">Bugdet Range</Typography>
                         <RadioGroup
                             aria-label="budgetRange"
                             name="budgetRange"
                             value={budgetRange}
                             onChange={handleFilterChange}>
-                            <FormControlLabel value="20" control={<Radio color="primary" />} label="Less than 20m" />
-                            <FormControlLabel value="20-50" control={<Radio color="primary" />} label="20m - 50m" />
-                            <FormControlLabel value="50" control={<Radio color="primary" />} label="More than 50m" />
+                            <FormControlLabel
+                                value="20"
+                                control={<Radio color="primary" />}
+                                label="Less than 20m"
+                            />
+                            <FormControlLabel
+                                value="20-50"
+                                control={<Radio color="primary" />}
+                                label="20m - 50m"
+                            />
+                            <FormControlLabel
+                                value="50"
+                                control={<Radio color="primary" />}
+                                label="More than 50m"
+                            />
                         </RadioGroup>
                     </FormControl>
                     <FormControl size="small" margin="normal" fullWidth>
@@ -148,9 +158,21 @@ const EventFilter = ({
                             name="participantRange"
                             value={participantRange}
                             onChange={handleFilterChange}>
-                            <FormControlLabel value="20" control={<Radio color="primary" />} label="Less than 20" />
-                            <FormControlLabel value="20-50" control={<Radio color="primary" />} label="20-50" />
-                            <FormControlLabel value="50" control={<Radio color="primary" />} label="More than 50" />
+                            <FormControlLabel
+                                value="20"
+                                control={<Radio color="primary" />}
+                                label="Less than 20"
+                            />
+                            <FormControlLabel
+                                value="20-50"
+                                control={<Radio color="primary" />}
+                                label="20-50"
+                            />
+                            <FormControlLabel
+                                value="50"
+                                control={<Radio color="primary" />}
+                                label="More than 50"
+                            />
                         </RadioGroup>
                     </FormControl>
                     <MuiPickersUtilsProvider utils={MomentUtils}>

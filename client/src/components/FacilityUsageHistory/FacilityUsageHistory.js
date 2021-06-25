@@ -94,12 +94,10 @@ const FacilityUsageHistory = () => {
         } else {
             history.push('/dashboard/reviewer/facility-usage');
         }
-    },[dispatch, location.state, history])
-   
-    
+    }, [dispatch, location.state, history]);
+
     //useEffect
     useEffect(() => {
-        
         dispatch(
             getFacilityHistories({
                 id: id,
