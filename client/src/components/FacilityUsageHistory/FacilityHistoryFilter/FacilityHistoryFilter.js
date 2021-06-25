@@ -1,7 +1,7 @@
 import React from 'react'
 import {
     MuiPickersUtilsProvider,
-    KeyboardDatePicker,
+    KeyboardDateTimePicker,
 } from '@material-ui/pickers';
 import { Grid, Typography, Button, Drawer } from '@material-ui/core';
 import MomentUtils from '@date-io/moment';
@@ -34,14 +34,14 @@ const FacilityHistoryFilter = ({
             <div className={css.filterInputs}>
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                     <Grid container justify="space-around">
-                        <KeyboardDatePicker
+                        <KeyboardDateTimePicker
                             fullWidth
                             id="borrowFrom"
                             label="Borrowed From"
                             value={borrowFrom}
                             size="small"
                             margin="normal"
-                            format="MM/DD/YYYY"
+                            format="DD/MM/YYYY, h:mm a"
                             inputVariant="outlined"
                             onChange={(date) => {
                                 setFilters((prevState) => ({
@@ -53,14 +53,14 @@ const FacilityHistoryFilter = ({
                                 'aria-label': 'change date',
                             }}
                         />
-                        <KeyboardDatePicker
+                        <KeyboardDateTimePicker
                             fullWidth
                             id="borrowTo"
                             label="Borrowed To"
                             value={borrowTo}
                             size="small"
                             margin="normal"
-                            format="MM/DD/YYYY"
+                            format="DD/MM/YYYY, h:mm a"
                             inputVariant="outlined"
                             onChange={(date) => {
                                 setFilters((prevState) => ({
@@ -72,13 +72,13 @@ const FacilityHistoryFilter = ({
                                 'aria-label': 'change date',
                             }}
                         />
-                        <KeyboardDatePicker
+                        <KeyboardDateTimePicker
                             fullWidth
                             id="returnFrom"
                             label="Returned From"
                             size="small"
                             margin="normal"
-                            format="MM/DD/YYYY"
+                            format="DD/MM/YYYY, h:mm a"
                             inputVariant="outlined"
                             value={returnFrom}
                             onChange={(date) => {
@@ -91,13 +91,13 @@ const FacilityHistoryFilter = ({
                                 'aria-label': 'change date',
                             }}
                         />
-                        <KeyboardDatePicker
+                        <KeyboardDateTimePicker
                             fullWidth
                             id="returnTo"
                             label="Returned To"
                             size="small"
                             margin="normal"
-                            format="MM/DD/YYYY"
+                            format="DD/MM/YYYY, h:mm a"
                             inputVariant="outlined"
                             value={returnTo}
                             onChange={(date) => {

@@ -10,7 +10,7 @@ WORKDIR /app/server
 ENV NODE_ENV=production
 ENV CONNECTION_URL_HOST=mongodb+srv://khanhvtn93:khanhvtn93123@cluster0.zjom9.mongodb.net/netEvent?retryWrites=true&w=majority
 ENV PORT=5000
-ENV DEFAULT_HOST=https://net-event.herokuapp.com/
+ENV DEFAULT_HOST=https://net-event.herokuapp.com
 COPY server/package.json .
 RUN npm install
 COPY server .

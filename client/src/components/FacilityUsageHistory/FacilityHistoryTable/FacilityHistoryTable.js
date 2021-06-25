@@ -211,12 +211,12 @@ const FacilityHistoryTable = ({take, data, isLoading, headCells, selectedFacilit
                                         
                                         <TableCell>
                                             {moment(row.borrowDate).format(
-                                                'LL'
+                                                'LLLL'
                                             )}
                                         </TableCell>
                                         <TableCell>
                                             {moment(row.returnDate).format(
-                                                'LL'
+                                                'LLLL'
                                             )}
                                         </TableCell>
                                     </TableRow>
