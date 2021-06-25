@@ -17,6 +17,8 @@ import { CalendarToday } from '@material-ui/icons';
 import { DevicesOther, People } from '@material-ui/icons';
 import ReplayIcon from '@material-ui/icons/Replay';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
+import WorkOutlineOutlinedIcon from '@material-ui/icons/WorkOutlineOutlined';
 import NavItem from './NavItem';
 import useStyles from './styles';
 
@@ -58,8 +60,13 @@ const roleActions = {
         },
         {
             title: 'Facility Usage',
-            icon: EventAvailableIcon,
+            icon: WorkOutlineOutlinedIcon,
             href: ['/dashboard/reviewer/facility-usage']
+        },
+        {
+            title: 'Task',
+            icon: AssignmentOutlinedIcon,
+            href: ['/dashboard/reviewer/task']
         }
     ],
     3: [
@@ -82,12 +89,17 @@ const roleActions = {
             title: 'Calendar',
             icon: CalendarToday,
             href: ['/dashboard/creator/calendar']
+        },
+        {
+            title: 'Task',
+            icon: AssignmentOutlinedIcon,
+            href: ['/dashboard/creator/task']
         }
     ],
     4: [
         {
             title: 'Task',
-            icon: EventAvailableIcon,
+            icon: AssignmentOutlinedIcon,
             href: ['/dashboard/member/task']
         },
         {
@@ -118,16 +130,32 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         user: state.user.user,
         roleNum: state.user.pickedRoleNum
     }));
+
+    console.log(user);
     const renderListActions = roleActions[roleNum].map((action, index) => {
-        return (
-            <NavItem
-                key={index}
-                title={action.title}
-                icon={action.icon}
-                href={action.href}
-            />
-        );
+        if (user?.role.includes('4')) {
+            return (
+                <NavItem
+                    key={index}
+                    title={action.title}
+                    icon={action.icon}
+                    href={action.href}
+                />
+            );
+        } else {
+            if (action.title !== 'Task') {
+                return (
+                    <NavItem
+                        key={index}
+                        title={action.title}
+                        icon={action.icon}
+                        href={action.href}
+                    />
+                );
+            }
+        }
     });
+
     const renderDefaultActions = defaultActions.map((action, index) => {
         return (
             <NavItem

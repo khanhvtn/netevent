@@ -12,7 +12,10 @@ export default makeStyles((theme) => ({
     noTask: {
         position: 'absolute',
         top: '50%',
-        left: '50%'
+        left: '50%',
+        [theme.breakpoints.down('md')]: {
+            left: '40%'
+        }
     },
     grow: {
         flexGrow: 1
