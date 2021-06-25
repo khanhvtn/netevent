@@ -213,20 +213,26 @@ const EventManagement = () => {
                 isRecycleMode: state.isRecycleMode
             }
         });
-        localStorage.setItem(
-            'stateHistory',
-            JSON.stringify({
-                isRecycleMode: state.isRecycleMode
-            })
-        );
     };
 
     //toggle recycle mode
     const handleToggleRecycleMode = () => {
-        setState((prevState) => ({
-            ...prevState,
-            isRecycleMode: !prevState.isRecycleMode
-        }));
+        setState((prevState) => {
+            if (!prevState.isRecycleMode) {
+                localStorage.setItem(
+                    'stateHistory',
+                    JSON.stringify({
+                        isRecycleMode: !state.isRecycleMode
+                    })
+                );
+            } else {
+                localStorage.removeItem('stateHistory');
+            }
+            return {
+                ...prevState,
+                isRecycleMode: !prevState.isRecycleMode
+            };
+        });
     };
 
     return (
