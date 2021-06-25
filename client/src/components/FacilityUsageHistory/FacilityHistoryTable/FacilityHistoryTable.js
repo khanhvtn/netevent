@@ -202,12 +202,12 @@ const FacilityHistoryTable = ({
 
                                             <TableCell>
                                                 {moment(row.borrowDate).format(
-                                                    'LL'
+                                                    'LLLL'
                                                 )}
                                             </TableCell>
                                             <TableCell>
                                                 {moment(row.returnDate).format(
-                                                    'LL'
+                                                    'LLLL'
                                                 )}
                                             </TableCell>
                                         </TableRow>
@@ -215,29 +215,10 @@ const FacilityHistoryTable = ({
                                 })}
                                 {emptyRows > 0 && (
                                     <TableRow
-                                        hover
-                                        role="checkbox"
-                                        tabIndex={-1}
-                                        key={row._id}
-                                    >
-                                        
-                                        <TableCell
-                                            component="th"
-                                            scope="row"
-                                        >
-                                            {row.eventId.eventName}
-                                        </TableCell>
-                                        
-                                        <TableCell>
-                                            {moment(row.borrowDate).format(
-                                                'LLLL'
-                                            )}
-                                        </TableCell>
-                                        <TableCell>
-                                            {moment(row.returnDate).format(
-                                                'LLLL'
-                                            )}
-                                        </TableCell>
+                                        style={{
+                                            height: 50 * emptyRows
+                                        }}>
+                                        <TableCell colSpan={7} />
                                     </TableRow>
                                 )}
                             </>
