@@ -94,7 +94,8 @@ const FacilityHistoryTable = ({
     data,
     isLoading,
     headCells,
-    selectedFacility
+    selectedFacility,
+    facilityLoading
 }) => {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
@@ -115,18 +116,24 @@ const FacilityHistoryTable = ({
                 component="div">
                 List of Facility Usage Histories
             </Typography>
-            <Chip
-                label={`Name: ` + selectedFacility.name}
-                className={css.selectedFacility}
-            />
-            <Chip
-                label={`Code: ` + selectedFacility.code}
-                className={css.selectedFacility}
-            />
-            <Chip
-                label={`Type: ` + selectedFacility.type}
-                className={css.selectedFacility}
-            />
+            {facilityLoading ? (
+                <></>
+            ) : (
+                <>
+                    <Chip
+                        label={`Name: ` + selectedFacility.name}
+                        className={css.selectedFacility}
+                    />
+                    <Chip
+                        label={`Code: ` + selectedFacility.code}
+                        className={css.selectedFacility}
+                    />
+                    <Chip
+                        label={`Type: ` + selectedFacility.type}
+                        className={css.selectedFacility}
+                    />
+                </>
+            )}
 
             <TableContainer>
                 <Table
