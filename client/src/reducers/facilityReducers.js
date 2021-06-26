@@ -5,13 +5,15 @@ import {
     FACILITY_UPDATE_SUCCESS,
     FACILITY_DELETE_SUCCESS,
     FACILITY_GET_ALL_FILTER,
-    FACILITY_RECOVERY_SUCCESS
+    FACILITY_RECOVERY_SUCCESS,
+    FACILITY_GET_EACH
 } from '../constants';
 
 const initialState = {
     isLoading: false,
     facilities: [],
     totalPages: null,
+    facilityEach: {},
     createSuccess: false,
     updateSuccess: false,
     deleteSuccess: false,
@@ -41,6 +43,8 @@ export default function facilityReducers(state = initialState, action) {
             return { ...state, deleteSuccess: action.payload };
         case FACILITY_RECOVERY_SUCCESS:
             return { ...state, recoverySuccess: action.payload };
+        case FACILITY_GET_EACH:
+            return { ...state, facilityEach: action.payload.data.data };
         default:
             return state;
     }

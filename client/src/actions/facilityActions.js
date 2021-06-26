@@ -7,7 +7,8 @@ import {
     ERROR_CLEAR,
     FACILITY_DELETE_SUCCESS,
     FACILITY_GET_ALL_FILTER,
-    FACILITY_RECOVERY_SUCCESS
+    FACILITY_RECOVERY_SUCCESS,
+    FACILITY_GET_EACH
 } from '../constants';
 import {
     getFacilitiesAPI,
@@ -16,7 +17,8 @@ import {
     deleteFacilitiesAPI,
     getAllFacilitiesAPI,
     recoverFacilitiesAPI,
-    deletePermanentFacilitiesAPI
+    deletePermanentFacilitiesAPI,
+    getFacilityAPI
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -47,6 +49,20 @@ export const getFacilities = (userQueries) => async (dispatch) => {
         const data = await getFacilitiesAPI(userQueries);
         dispatch({
             type: FACILITY_GET_ALL_FILTER,
+            payload: data
+        });
+    } catch (error) {
+        console.log(error);
+    }
+    setFacilityIsLoading(false, dispatch);
+};
+
+export const getFacility = (facilityID) => async (dispatch) => {
+    setFacilityIsLoading(true, dispatch);
+    try {
+        const data = await getFacilityAPI(facilityID);
+        dispatch({
+            type: FACILITY_GET_EACH,
             payload: data
         });
     } catch (error) {

@@ -14,12 +14,13 @@ import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import { getFacilityHistories } from '../../actions/facilityHistoryActions';
+import { getFacility } from '../../actions/facilityActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { ERROR_CLEAR } from '../../constants';
 import FacilityHistoryFilter from './FacilityHistoryFilter/FacilityHistoryFilter';
 import FacilityHistoryPagination from './FacilityHistoryPagination/FacilityHistoryPagination';
 import FacilityHistoryTable from './FacilityHistoryTable/FacilityHistoryTable';
-import { useLocation, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 const headCells = [
     {
         id: 'eventName',
@@ -72,29 +73,23 @@ const initialState = {
 const FacilityUsageHistory = () => {
     const css = useStyles();
     const [state, setState] = useState(initialState);
-    const [stateSelectedFacility, setStateSelectedFacility] = useState({});
-    const [stateLocationSetting, setStateLocationSetting] = useState(false);
     const [filters, setFilters] = useState(filterState);
     const dispatch = useDispatch();
-    const location = useLocation();
     const history = useHistory();
     const { id } = useParams();
-    const { facilityHistories, totalPages, isLoading } = useSelector(
-        (state) => ({
-            facilityHistories: state.facilityHistory.facilityHistories,
-            isLoading: state.facilityHistory.isLoading,
-            totalPages: state.facilityHistory.totalPages
-        })
-    );
-
-    useEffect(() => {
-        if (location.state) {
-            setStateSelectedFacility(location.state.data);
-            setStateLocationSetting(true);
-        } else {
-            history.push('/dashboard/reviewer/facility-usage');
-        }
-    }, [dispatch, location.state, history]);
+    const {
+        facilityHistories,
+        totalPages,
+        isLoading,
+        facilityEach,
+        facilityLoading
+    } = useSelector((state) => ({
+        facilityHistories: state.facilityHistory.facilityHistories,
+        isLoading: state.facilityHistory.isLoading,
+        totalPages: state.facilityHistory.totalPages,
+        facilityEach: state.facility.facilityEach,
+        facilityLoading: state.facility.isLoading
+    }));
 
     //useEffect
     useEffect(() => {
@@ -137,13 +132,10 @@ const FacilityUsageHistory = () => {
         state.returnTo
     ]);
 
+    //Get Selected Facility
     useEffect(() => {
-        if (stateLocationSetting) {
-            if (Object.keys(stateSelectedFacility).length === 0) {
-                history.push('/dashboard/reviewer/facility-usage');
-            }
-        }
-    }, [dispatch, stateLocationSetting, stateSelectedFacility, history]);
+        dispatch(getFacility(id));
+    }, [id, dispatch]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -252,8 +244,9 @@ const FacilityUsageHistory = () => {
                             </Toolbar>
                             {/* Facility Table */}
                             <FacilityHistoryTable
-                                selectedFacility={stateSelectedFacility}
+                                selectedFacility={facilityEach}
                                 take={state.take}
+                                facilityLoading={facilityLoading}
                                 data={facilityHistories}
                                 isLoading={isLoading}
                                 tableName="List of Facility Usage History"

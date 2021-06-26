@@ -334,8 +334,26 @@ const getAllFacility = async (req, res, next) => {
     }
 };
 
+/**
+ * @decsription Get specific facility by id param
+ * @method GET
+ * @route /api/facility/:id
+ *
+ * @version 1.0
+ */
+const getFacility = async (req, res, next) => {
+    const { id: _id } = req.params;
+    try {
+        const facility = await Facility.findById(_id);
+        return cusResponse(res, 200, facility, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
     createFacility,
+    getFacility,
     filter,
     deleteFacility,
     updateFacility,

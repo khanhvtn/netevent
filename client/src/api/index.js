@@ -75,7 +75,8 @@ export const deletePermanentFacilitiesAPI = (userReq) =>
 export const getAllFacilitiesAPI = () => AXIOS.get(`/facility/all`);
 export const recoverFacilitiesAPI = (userReq) =>
     AXIOS.patch(`/facility/recovery`, userReq);
-
+export const getFacilityAPI = (facilityID) =>
+    AXIOS.get(`/facility/${facilityID}`);
 //Event Type APIs
 export const getEventTypesAPI = (userQueries) => {
     const {
