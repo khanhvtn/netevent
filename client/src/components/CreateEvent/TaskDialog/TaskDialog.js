@@ -42,12 +42,19 @@ const TaskDialog = () => {
         users
     } = useContext(CreateEventInterface);
     /* 
-  if isTaskCreateMode is true, 
-  then render user emails that are not in task table or a team member, vice versa.
+    Available user will contain all role, except people who have only admin role.
    */
-    const availableUsers = users.filter((targetUser) =>
-        targetUser.role.includes('4')
-    );
+    const availableUsers = users.filter((targetUser) => {
+        if (targetUser.role.length >= 2) {
+            return true;
+        } else {
+            if (targetUser.role.includes('1')) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    });
     return (
         <div>
             {/* Dialog Create and Update */}
