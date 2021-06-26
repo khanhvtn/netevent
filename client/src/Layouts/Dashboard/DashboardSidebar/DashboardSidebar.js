@@ -131,29 +131,15 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         roleNum: state.user.pickedRoleNum
     }));
 
-    console.log(user);
     const renderListActions = roleActions[roleNum].map((action, index) => {
-        if (user?.role.includes('4')) {
-            return (
-                <NavItem
-                    key={index}
-                    title={action.title}
-                    icon={action.icon}
-                    href={action.href}
-                />
-            );
-        } else {
-            if (action.title !== 'Task') {
-                return (
-                    <NavItem
-                        key={index}
-                        title={action.title}
-                        icon={action.icon}
-                        href={action.href}
-                    />
-                );
-            }
-        }
+        return (
+            <NavItem
+                key={index}
+                title={action.title}
+                icon={action.icon}
+                href={action.href}
+            />
+        );
     });
 
     const renderDefaultActions = defaultActions.map((action, index) => {
