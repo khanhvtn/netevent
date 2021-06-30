@@ -4,13 +4,15 @@ import {
     ERROR,
     ERROR_CLEAR,
     PARTICIPANT_GET_ALL_FILTER,
-    PARTICIPANT_UPDATE_SUCCESS
+    PARTICIPANT_UPDATE_SUCCESS,
+    PARTICIPANT_ALL
 } from '../constants';
 import {
     getParticipantsAPI,
     registerParticipantAPI,
     setAttendedParticipantAPI,
-    setInvalidAndVerifyParticipantAPI
+    setInvalidAndVerifyParticipantAPI,
+    getAllParticipantsAPI
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -87,6 +89,16 @@ export const getParticipants =
         }
         setPartiticpantIsLoading(false, dispatch);
     };
+export const getAllParticipants = (eventId) => async (dispatch) => {
+    setPartiticpantIsLoading(true, dispatch);
+    try {
+        const data = await getAllParticipantsAPI(eventId);
+        dispatch({ type: PARTICIPANT_ALL, payload: data });
+    } catch (error) {
+        console.log(error);
+    }
+    setPartiticpantIsLoading(false, dispatch);
+};
 
 export const setInvalidAndVerifyParticipant = (userReq) => async (dispatch) => {
     setPartiticpantIsLoading(true, dispatch);

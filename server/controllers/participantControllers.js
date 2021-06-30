@@ -18,8 +18,11 @@ const { sendInvitation } = require('./misc/mailerInvitation');
  * @version 1.0
  */
 const getParticipants = async (req, res, next) => {
+    const eventId = req.query.eventId.toString();
     try {
-        const participants = await Participant.find();
+        const participants = await Participant.find({
+            event: eventId
+        });
         return cusResponse(res, 200, participants, null);
     } catch (error) {
         return next(new CustomError(500, error.message));

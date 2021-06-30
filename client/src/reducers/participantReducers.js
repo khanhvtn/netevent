@@ -2,7 +2,8 @@ import {
     PARTICIPANT_REGISTER,
     PARTICIPANT_LOADING,
     PARTICIPANT_GET_ALL_FILTER,
-    PARTICIPANT_UPDATE_SUCCESS
+    PARTICIPANT_UPDATE_SUCCESS,
+    PARTICIPANT_ALL
 } from '../constants';
 
 const initialState = {
@@ -10,7 +11,8 @@ const initialState = {
     complete: false,
     isLoading: false,
     totalPages: null,
-    isUpdated: false
+    isUpdated: false,
+    allParticipants: []
 };
 
 export default function participantReducers(state = initialState, action) {
@@ -19,6 +21,9 @@ export default function participantReducers(state = initialState, action) {
             return { ...state, isLoading: action.payload };
         case PARTICIPANT_UPDATE_SUCCESS:
             return { ...state, isUpdated: action.payload };
+        case PARTICIPANT_ALL:
+            return { ...state, allParticipants: action.payload.data.data };
+
         case PARTICIPANT_GET_ALL_FILTER:
             return {
                 ...state,
