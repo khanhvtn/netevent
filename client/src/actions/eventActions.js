@@ -134,7 +134,7 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
             });
         }, 3000);
     } catch (error) {
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors
@@ -192,7 +192,7 @@ export const deleteEventPermanent = (userReq) => async (dispatch) => {
             });
         }, 3000);
     } catch (error) {
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors
@@ -217,7 +217,7 @@ export const deleteEvent = (userReq) => async (dispatch) => {
             });
         }, 3000);
     } catch (error) {
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors
@@ -281,7 +281,7 @@ export const updateEvent = (userReq) => async (dispatch) => {
         }, 3000);
     } catch (error) {
         console.log(error);
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors
