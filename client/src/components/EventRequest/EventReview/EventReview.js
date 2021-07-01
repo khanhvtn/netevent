@@ -405,7 +405,12 @@ const EventReview = () => {
                                     <Typography
                                         variant="caption"
                                         color="textSecondary">
-                                        {`${state.event?.budget} vnd | ${state.event?.maxParticipants} participants`}
+                                        {`${state.event?.budget.replace(
+                                            /(\d)(?=(\d{3})+(?!\d))/g,
+                                            '$1,'
+                                        )} vnd | ${
+                                            state.event?.maxParticipants
+                                        } participants`}
                                     </Typography>
                                     <div>
                                         <Button

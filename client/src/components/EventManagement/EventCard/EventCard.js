@@ -72,7 +72,12 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                 {isLoading ? (
                                     <Skeleton variant="text" width="50%" />
                                 ) : (
-                                    `${event.budget} vnd | ${event.maxParticipants} participants`
+                                    `${event.budget.replace(
+                                        /(\d)(?=(\d{3})+(?!\d))/g,
+                                        '$1,'
+                                    )} vnd | ${
+                                        event.maxParticipants
+                                    } participants`
                                 )}
                             </Typography>
                         </CardContent>
