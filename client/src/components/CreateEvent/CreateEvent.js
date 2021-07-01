@@ -265,7 +265,8 @@ const CreateEvent = ({
             handleClearFields();
             handleCloseUpdateDialog();
         }
-    }, [updateEventSuccess, handleClearFields, handleCloseUpdateDialog]);
+        /* eslint-disable-next-line */
+    }, [updateEventSuccess, handleClearFields]);
 
     //useEffect get status create event type
     useEffect(() => {

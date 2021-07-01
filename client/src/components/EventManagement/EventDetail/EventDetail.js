@@ -741,10 +741,12 @@ const EventDetail = () => {
                                                                 className={
                                                                     css.secondaryHeading
                                                                 }>
-                                                                {
-                                                                    task.userId
-                                                                        ?.email
-                                                                }
+                                                                {task.userId
+                                                                    ?.email
+                                                                    ? task
+                                                                          .userId
+                                                                          .email
+                                                                    : 'N/A'}
                                                             </Typography>
                                                         </AccordionSummary>
                                                         <AccordionDetails
