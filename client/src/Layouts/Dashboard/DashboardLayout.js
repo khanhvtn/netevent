@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import DashboardNavbar from './DashboardNavbar/DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar/DashboardSidebar';
 import { useSelector } from 'react-redux';
@@ -28,14 +28,16 @@ const DashboardLayout = ({ children }) => {
         );
     }
 
+    const handleToggleSideBard = useCallback(() => {
+        setIsMobileNavOpen((prevState) => !prevState);
+    }, []);
+
     return (
         <>
             <div className={css.dashboardLayoutRoot}>
-                <DashboardNavbar
-                    onMobileNavOpen={() => setIsMobileNavOpen(true)}
-                />
+                <DashboardNavbar onMobileNavOpen={handleToggleSideBard} />
                 <DashboardSidebar
-                    onMobileClose={() => setIsMobileNavOpen(false)}
+                    onMobileClose={handleToggleSideBard}
                     openMobile={isMobileNavOpen}
                 />
                 <div className={css.dashboardLayoutWrapper}>
