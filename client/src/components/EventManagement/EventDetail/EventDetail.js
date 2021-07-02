@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
     Paper,
@@ -335,12 +335,12 @@ const EventDetail = () => {
         }));
     };
 
-    const handleToggleDialogUpdate = () => {
+    const handleToggleDialogUpdate = useCallback(() => {
         setState((prevState) => ({
             ...prevState,
             openUpdateDialog: !prevState.openUpdateDialog
         }));
-    };
+    }, []);
 
     const handleToggleDialogCheckingCompleted = () => {
         setState((prevState) => ({
