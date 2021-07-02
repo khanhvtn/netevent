@@ -6,7 +6,7 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import LibraryAddCheckIcon from '@material-ui/icons/LibraryAddCheck';
 import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
 import PieChartIcon from '@material-ui/icons/PieChart';
-import { getAllParticipants } from '../../../actions/participantActions';
+import { getParticipantByEventID } from '../../../actions/participantActions';
 import { useDispatch, useSelector } from 'react-redux';
 
 const options = {
@@ -39,7 +39,7 @@ const Analysis = ({ eventId, tabs }) => {
     }));
     useEffect(() => {
         if (eventId && tabs === 3) {
-            dispatch(getAllParticipants(eventId));
+            dispatch(getParticipantByEventID(eventId));
         }
     }, [dispatch, eventId, tabs]);
 

@@ -23,7 +23,6 @@ export default function participantReducers(state = initialState, action) {
             return { ...state, isUpdated: action.payload };
         case PARTICIPANT_ALL:
             return { ...state, allParticipants: action.payload.data.data };
-
         case PARTICIPANT_GET_ALL_FILTER:
             return {
                 ...state,

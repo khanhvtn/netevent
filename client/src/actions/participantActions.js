@@ -12,7 +12,8 @@ import {
     registerParticipantAPI,
     setAttendedParticipantAPI,
     setInvalidAndVerifyParticipantAPI,
-    getAllParticipantsAPI
+    getParticipantByEventIDAPI,
+    getAllParticipants
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -89,10 +90,21 @@ export const getParticipants =
         }
         setPartiticpantIsLoading(false, dispatch);
     };
-export const getAllParticipants = (eventId) => async (dispatch) => {
+export const getParticipantByEventID = (eventId) => async (dispatch) => {
     setPartiticpantIsLoading(true, dispatch);
     try {
-        const data = await getAllParticipantsAPI(eventId);
+        const data = await getParticipantByEventIDAPI(eventId);
+        dispatch({ type: PARTICIPANT_ALL, payload: data });
+    } catch (error) {
+        console.log(error);
+    }
+    setPartiticpantIsLoading(false, dispatch);
+};
+
+export const getAllParicipant = () => async (dispatch) => {
+    setPartiticpantIsLoading(true, dispatch);
+    try {
+        const data = await getAllParticipants();
         dispatch({ type: PARTICIPANT_ALL, payload: data });
     } catch (error) {
         console.log(error);
