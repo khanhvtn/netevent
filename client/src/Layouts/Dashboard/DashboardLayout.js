@@ -8,7 +8,7 @@ import { Redirect, useHistory } from 'react-router-dom';
 
 const DashboardLayout = ({ children }) => {
     const css = useStyles();
-    const [isMobileNavOpen, setMobileNavOpen] = useState(false);
+    const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
     const { user } = useSelector((state) => ({
         user: state.user.user
     }));
@@ -32,10 +32,10 @@ const DashboardLayout = ({ children }) => {
         <>
             <div className={css.dashboardLayoutRoot}>
                 <DashboardNavbar
-                    onMobileNavOpen={() => setMobileNavOpen(true)}
+                    onMobileNavOpen={() => setIsMobileNavOpen(true)}
                 />
                 <DashboardSidebar
-                    onMobileClose={() => setMobileNavOpen(false)}
+                    onMobileClose={() => setIsMobileNavOpen(false)}
                     openMobile={isMobileNavOpen}
                 />
                 <div className={css.dashboardLayoutWrapper}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -124,6 +124,7 @@ const defaultActions = [
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
+    // eslint-disable-next-line no-unused-vars
     const location = useLocation();
     const css = useStyles();
     const { user, roleNum } = useSelector((state) => ({
@@ -152,14 +153,6 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
             />
         );
     });
-
-    useEffect(() => {
-        if (openMobile && onMobileClose) {
-            onMobileClose();
-        }
-        /* eslint-disable-next-line */
-    }, [location.pathname]);
-
     const content = (
         <Box className={css.sidebarWrapper}>
             <Box className={css.sidebarAccountWrapper}>
