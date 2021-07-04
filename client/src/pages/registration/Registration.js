@@ -26,7 +26,7 @@ import {
     KeyboardDatePicker
 } from '@material-ui/pickers';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFacilityAndTaskByEventCode } from '../../actions/eventActions';
+import { getRegistrationPageDetail } from '../../actions/eventActions';
 import { registerParticipant } from '../../actions/participantActions';
 import { useParams, useHistory } from 'react-router';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
@@ -50,8 +50,7 @@ const participantInitialState = {
 
 const eventInitialState = {
     event: null,
-    isLoaded: false,
-    isReviewed: false
+    isLoaded: false
 };
 
 const initialDescription =
@@ -69,7 +68,7 @@ const Registration = () => {
     // UseParams to get pathname
     const { code } = useParams();
 
-    const isReviewed = history.location?.state?.isReviewed;
+    const isReviewed = history.location?.state?.isReviewed || false;
 
     const { isLoading, eventDetail, error, isRegistered, registerSuccess } =
         useSelector((state) => ({
@@ -85,54 +84,30 @@ const Registration = () => {
         window.scrollTo(0, 0);
     }, []);
 
-    // Check if page is valid by event status
-    useEffect(() => {
-        if (state.isLoaded && !isLoading && !isReviewed) {
-            if (
-                !state.event?.isApproved ||
-                (state.event?.isApproved && state.event?.isFinished)
-            ) {
-                history.push('/404');
-            }
-        }
-    }, [
-        state.event?.isApproved,
-        state.event?.isFinished,
-        state.isLoaded,
-        isLoading,
-        isReviewed,
-        history
-    ]);
-
-    // Call API to get current event by urlCode
-    useEffect(() => {
-        if (!state.event?.urlCode && !isReviewed && !state.isLoaded) {
-            dispatch(getFacilityAndTaskByEventCode(code));
-        }
-    }, [dispatch, state.event?.urlCode, state.isLoaded, isReviewed, code]);
-
     // UseEffect to check review status and load the event detail from history
     useEffect(() => {
-        if (isReviewed) {
-            setState((prevState) => ({
-                ...prevState,
-                event: eventDetail,
-                isLoaded: !prevState.isLoaded,
-                isReviewed: isReviewed
-            }));
-        }
-    }, [isReviewed, eventDetail]);
-
-    // UseEffect to set state of the event
-    useEffect(() => {
-        if (eventDetail && !state.isLoaded) {
+        if (eventDetail) {
             setState((prevState) => ({
                 ...prevState,
                 event: eventDetail,
                 isLoaded: !prevState.isLoaded
             }));
         }
-    }, [eventDetail, state.isLoaded]);
+    }, [eventDetail]);
+
+    // Call API to get current event by urlCode
+    useEffect(() => {
+        if (!isReviewed && !state.event && !isLoading) {
+            dispatch(getRegistrationPageDetail(code));
+        }
+    }, [dispatch, state.event, isLoading, isReviewed, code]);
+
+    // Check if page is valid by event status
+    useEffect(() => {
+        if (!isReviewed && state.isLoaded && !state.event?.urlCode) {
+            history.push('/404');
+        }
+    }, [state.event?.urlCode, isReviewed, state.isLoaded, history]);
 
     // UseEffect to set current event for participant when get the event state
     useEffect(() => {
@@ -225,7 +200,7 @@ const Registration = () => {
         </div>
     ) : (
         <>
-            <div className={css.screen}>
+            <Paper className={css.screen}>
                 <div className={css.background}>
                     <img className={css.responsive} src={state.event?.image} />
                 </div>
@@ -945,7 +920,7 @@ const Registration = () => {
                         openRegisterParticipantSnackBar={registerSuccess}
                     />
                 </div>
-            </div>
+            </Paper>
         </>
     );
 };

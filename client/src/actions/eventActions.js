@@ -22,6 +22,7 @@ import {
     deleteEventPermanentAPI,
     getEventsAPI,
     getFacilityAndTaskByEventCodeAPI,
+    getRegistrationPageDetailAPI,
     updateEventAPI,
     getAllEventAPI,
     sendNotificationAPI,
@@ -167,6 +168,20 @@ export const getFacilityAndTaskByEventCode = (code) => async (dispatch) => {
     setEventDetailIsLoading(true, dispatch);
     try {
         const data = await getFacilityAndTaskByEventCodeAPI(code);
+        dispatch({
+            type: EVENT_GET_FACILITY_AND_TASK,
+            payload: data
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+    setEventDetailIsLoading(false, dispatch);
+};
+
+export const getRegistrationPageDetail = (code) => async (dispatch) => {
+    setEventDetailIsLoading(true, dispatch);
+    try {
+        const data = await getRegistrationPageDetailAPI(code);
         dispatch({
             type: EVENT_GET_FACILITY_AND_TASK,
             payload: data
