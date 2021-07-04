@@ -36,6 +36,14 @@ export default makeStyles((theme) => ({
         display: 'inline-flex'
     },
 
+    titleExportBtn: {
+        color: '#ffffff',
+        fontSize: 18,
+        fontWeight: 'bold',
+        verticalAlign: 'middle',
+        display: 'inline-flex'
+    },
+
     chartTypo1: {
         color: '#0e2045',
         fontSize: 14,
@@ -48,5 +56,10 @@ export default makeStyles((theme) => ({
     contentWrapper: {
         marginTop: '20%',
         minHeight: '40vh'
+    },
+    exportBtn: {
+        text: 'right',
+        float: 'right',
+        backgroundColor: '#0e2045'
     }
 }));

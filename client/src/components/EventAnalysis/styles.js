@@ -52,5 +52,19 @@ export default makeStyles((theme) => ({
     contentWrapper: {
         marginTop: '20%',
         minHeight: '40vh'
+    },
+    titleExportBtn: {
+        color: '#ffffff',
+        fontSize: 18,
+        fontWeight: 'bold',
+        verticalAlign: 'middle',
+        display: 'inline-flex'
+    },
+
+    exportBtn: {
+        margin: theme.spacing(2),
+        text: 'right',
+        float: 'right',
+        backgroundColor: '#0e2045'
     }
 }));

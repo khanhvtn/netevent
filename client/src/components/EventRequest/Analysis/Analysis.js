@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import useStyles from './styles';
-import { Grid, Typography, Paper, CircularProgress } from '@material-ui/core';
+import {
+    Grid,
+    Typography,
+    Paper,
+    CircularProgress,
+    Button
+} from '@material-ui/core';
 import { Pie } from 'react-chartjs-2';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import LibraryAddCheckIcon from '@material-ui/icons/LibraryAddCheck';
@@ -8,7 +14,9 @@ import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import { getParticipantByEventID } from '../../../actions/participantActions';
 import { useDispatch, useSelector } from 'react-redux';
-
+import GetAppIcon from '@material-ui/icons/GetApp';
+import { ExportToCsv } from 'export-to-csv';
+import moment from 'moment';
 const options = {
     maintainAspectRatio: false // Don't maintain w/h ratio
 };
@@ -29,7 +37,7 @@ const data = {
     ]
 };
 
-const Analysis = ({ eventId, tabs }) => {
+const Analysis = ({ eventId, tabs, event }) => {
     const css = useStyles();
     const dispatch = useDispatch();
     const [chartData, setChartData] = useState(data);
@@ -71,6 +79,44 @@ const Analysis = ({ eventId, tabs }) => {
             setChartData(newDataChart);
         }
     }, [isLoading, participants]);
+
+    const handleOnExport = () => {
+        const exportData = [
+            {
+                name: event.eventName,
+                language: event.language,
+                type: event.eventTypeId.name,
+                mode: event.mode,
+                location: event.location,
+                budget: event.budget,
+                accommodation: event.accommodation,
+                registrationCloseDate: moment(
+                    event.registrationCloseDate
+                ).format('LLLL'),
+                startDate: moment(event.startDate).format('LLLL'),
+                endDate: moment(event.endDate).format('LLLL'),
+                maxParticipants: event.maxParticipants,
+                tags: event.tags.join(),
+                'Number of Sign-up Participants': data.datasets[0].data[0],
+                'Number of Showed-up Participants': data.datasets[0].data[1],
+                'Number of Times The Registration Page Has Been Opened': 20
+            }
+        ];
+        const csvOptions = {
+            fieldSeparator: ',',
+            quoteStrings: '"',
+            decimalSeparator: '.',
+            showLabels: true,
+            showTitle: true,
+            title: `${event.eventName} Analysis`,
+            useTextFile: false,
+            useBom: true,
+            useKeysAsHeaders: true,
+            filename: `${event.eventName} Analysis`
+        };
+        const csvExporter = new ExportToCsv(csvOptions);
+        csvExporter.generateCsv(exportData);
+    };
     return (
         <>
             {isLoading ? (
@@ -80,7 +126,7 @@ const Analysis = ({ eventId, tabs }) => {
             ) : (
                 <Paper elevation={0} className={css.paper}>
                     <Grid container spacing={3}>
-                        <Grid item xs={12}>
+                        <Grid item xs={6}>
                             <Typography
                                 className={css.title}
                                 style={{ fontWeight: 'bold' }}
@@ -88,6 +134,17 @@ const Analysis = ({ eventId, tabs }) => {
                                 variant="h4">
                                 Analysis
                             </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Button
+                                variant="contained"
+                                className={css.exportBtn}
+                                onClick={() => handleOnExport()}>
+                                <Typography className={css.titleExportBtn}>
+                                    <GetAppIcon className={css.iconAnalysis} />
+                                    Export
+                                </Typography>
+                            </Button>
                         </Grid>
                         <Grid item xs={6}>
                             <Paper className={css.analysisCard}>

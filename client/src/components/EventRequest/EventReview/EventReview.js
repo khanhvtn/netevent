@@ -951,7 +951,11 @@ const EventReview = () => {
 
                 {/* Participant Tabs */}
                 <TabPanel value={tabs} index={3}>
-                    <Analysis eventId={state.event?._id} tabs={tabs} />
+                    <Analysis
+                        eventId={state.event?._id}
+                        tabs={tabs}
+                        event={state.event}
+                    />
                 </TabPanel>
             </Paper>
 

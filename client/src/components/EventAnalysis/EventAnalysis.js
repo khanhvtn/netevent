@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import useStyles from './styles';
-import { Grid, Paper, Typography } from '@material-ui/core';
+import { Grid, Paper, Typography, Button } from '@material-ui/core';
 import { Pie, Bar } from 'react-chartjs-2';
 import { getAllParicipant } from '../../actions/participantActions';
 import { getAllEvent } from '../../actions/eventActions';
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 import { useDispatch, useSelector } from 'react-redux';
 const options = {
@@ -290,8 +291,8 @@ const EventAnalysis = () => {
 
     return (
         <Paper elevation={0} className={css.paper}>
-            <Grid container spacing={3}>
-                <Grid item xs={12}>
+            <Grid container spacing={4}>
+                <Grid item xs={6}>
                     <Typography
                         className={css.title}
                         style={{ fontWeight: 'bold' }}
@@ -299,6 +300,18 @@ const EventAnalysis = () => {
                         variant="h4">
                         Analysis
                     </Typography>
+                </Grid>
+
+                <Grid item xs={6}>
+                    <Button
+                        variant="contained"
+                        className={css.exportBtn}
+                        onClick={() => handleOnExport()}>
+                        <Typography className={css.titleExportBtn}>
+                            <GetAppIcon className={css.iconAnalysis} />
+                            Export
+                        </Typography>
+                    </Button>
                 </Grid>
                 <Grid item xs={6}>
                     <Typography className={css.chartTypo}>
