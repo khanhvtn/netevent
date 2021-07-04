@@ -16,12 +16,15 @@ const NavItem = ({ href, icon: Icon, title, ...rest }) => {
         : href[0] === history.location.state?.from;
 
     const handleAction = () => {
-        history.push(href[0]);
-        if (href === 'logout') {
-            return dispatch(userLogout(history));
+        if (Array.isArray(href)) {
+            history.push(href[0]);
         }
         if (href === 'pickrole') {
-            return history.push(`/${href}`);
+            history.push(`/${href}`);
+        }
+        if (href === 'logout') {
+            history.push('/');
+            dispatch(userLogout(history));
         }
     };
 
