@@ -28,8 +28,9 @@ const DashboardLayout = ({ children }) => {
         );
     }
 
-    const handleToggleSideBard = useCallback(() => {
-        setIsMobileNavOpen((prevState) => !prevState);
+    const handleToggleSideBard = useCallback((status) => {
+        console.log('here');
+        setIsMobileNavOpen(() => status);
     }, []);
 
     return (

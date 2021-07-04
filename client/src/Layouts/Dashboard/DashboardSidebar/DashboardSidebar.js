@@ -154,7 +154,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     });
 
     useEffect(() => {
-        onMobileClose();
+        onMobileClose(false);
     }, [location.pathname, onMobileClose]);
 
     const content = (
@@ -181,7 +181,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         <>
             <Hidden lgUp>
                 <Drawer
-                    onClose={onMobileClose}
+                    onClose={() => onMobileClose(false)}
                     open={openMobile}
                     variant="temporary"
                     PaperProps={{ style: { width: 256 } }}>
@@ -190,7 +190,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
             </Hidden>
             <Hidden mdDown>
                 <Drawer
-                    onClose={onMobileClose}
+                    onClose={() => onMobileClose(false)}
                     anchor="left"
                     open={!openMobile}
                     variant="persistent"
