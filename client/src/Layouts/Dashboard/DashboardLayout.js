@@ -14,6 +14,10 @@ const DashboardLayout = ({ children }) => {
     }));
     const history = useHistory();
 
+    const handleToggleSideBard = useCallback((status) => {
+        setIsMobileNavOpen(() => status);
+    }, []);
+
     //prevent user refresh the page
     if (!user) {
         return (
@@ -27,10 +31,6 @@ const DashboardLayout = ({ children }) => {
             />
         );
     }
-
-    const handleToggleSideBard = useCallback((status) => {
-        setIsMobileNavOpen(() => status);
-    }, []);
 
     return (
         <>
