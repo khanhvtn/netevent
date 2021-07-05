@@ -154,11 +154,8 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     });
 
     useEffect(() => {
-        if (openMobile && onMobileClose) {
-            onMobileClose();
-        }
-        /* eslint-disable-next-line */
-    }, [location.pathname]);
+        onMobileClose(false);
+    }, [location.pathname, onMobileClose]);
 
     const content = (
         <Box className={css.sidebarWrapper}>
@@ -184,7 +181,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         <>
             <Hidden lgUp>
                 <Drawer
-                    onClose={onMobileClose}
+                    onClose={() => onMobileClose(false)}
                     open={openMobile}
                     variant="temporary"
                     PaperProps={{ style: { width: 256 } }}>
@@ -193,6 +190,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
             </Hidden>
             <Hidden mdDown>
                 <Drawer
+                    onClose={() => onMobileClose(false)}
                     anchor="left"
                     open={!openMobile}
                     variant="persistent"

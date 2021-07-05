@@ -22,6 +22,7 @@ import {
     deleteEventPermanentAPI,
     getEventsAPI,
     getFacilityAndTaskByEventCodeAPI,
+    getRegistrationPageDetailAPI,
     updateEventAPI,
     getAllEventAPI,
     sendNotificationAPI,
@@ -134,7 +135,7 @@ export const sendNotification = (notificationReq) => async (dispatch) => {
             });
         }, 3000);
     } catch (error) {
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors
@@ -177,6 +178,20 @@ export const getFacilityAndTaskByEventCode = (code) => async (dispatch) => {
     setEventDetailIsLoading(false, dispatch);
 };
 
+export const getRegistrationPageDetail = (code) => async (dispatch) => {
+    setEventDetailIsLoading(true, dispatch);
+    try {
+        const data = await getRegistrationPageDetailAPI(code);
+        dispatch({
+            type: EVENT_GET_FACILITY_AND_TASK,
+            payload: data
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+    setEventDetailIsLoading(false, dispatch);
+};
+
 export const deleteEventPermanent = (userReq) => async (dispatch) => {
     setEventIsLoading(true, dispatch);
     try {
@@ -192,7 +207,7 @@ export const deleteEventPermanent = (userReq) => async (dispatch) => {
             });
         }, 3000);
     } catch (error) {
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors
@@ -217,7 +232,7 @@ export const deleteEvent = (userReq) => async (dispatch) => {
             });
         }, 3000);
     } catch (error) {
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors
@@ -281,7 +296,7 @@ export const updateEvent = (userReq) => async (dispatch) => {
         }, 3000);
     } catch (error) {
         console.log(error);
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors

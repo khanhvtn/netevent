@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
     Paper,
@@ -335,12 +335,12 @@ const EventDetail = () => {
         }));
     };
 
-    const handleToggleDialogUpdate = () => {
+    const handleToggleDialogUpdate = useCallback(() => {
         setState((prevState) => ({
             ...prevState,
             openUpdateDialog: !prevState.openUpdateDialog
         }));
-    };
+    }, []);
 
     const handleToggleDialogCheckingCompleted = () => {
         setState((prevState) => ({
@@ -741,10 +741,12 @@ const EventDetail = () => {
                                                                 className={
                                                                     css.secondaryHeading
                                                                 }>
-                                                                {
-                                                                    task.userId
-                                                                        ?.email
-                                                                }
+                                                                {task.userId
+                                                                    ?.email
+                                                                    ? task
+                                                                          .userId
+                                                                          .email
+                                                                    : 'N/A'}
                                                             </Typography>
                                                         </AccordionSummary>
                                                         <AccordionDetails

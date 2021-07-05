@@ -40,7 +40,7 @@ const DashboardNavbar = ({ onMobileNavOpen, onPickRole, ...rest }) => {
                         <Hidden lgUp>
                             <IconButton
                                 color="inherit"
-                                onClick={onMobileNavOpen}>
+                                onClick={() => onMobileNavOpen(true)}>
                                 <MenuIcon />
                             </IconButton>
                         </Hidden>

@@ -52,7 +52,7 @@ export const registerParticipant = (participantData) => async (dispatch) => {
             });
         }, 3000);
     } catch (error) {
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors

@@ -152,6 +152,8 @@ export const getEventsAPI = (userQueries) => {
 };
 export const getFacilityAndTaskByEventCodeAPI = (code) =>
     AXIOS.get(`/event/detail?code=${code ? code : ''}`);
+export const getRegistrationPageDetailAPI = (code) =>
+    AXIOS.get(`/event/registrationPageDetail?code=${code ? code : ''}`);
 export const createEventAPI = (userReq) => AXIOS.post(`/event/create`, userReq);
 export const sendNotificationAPI = (notificationReq) =>
     AXIOS.post('/event/sendNotification', notificationReq);

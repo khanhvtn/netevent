@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import DashboardNavbar from './DashboardNavbar/DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar/DashboardSidebar';
 import { useSelector } from 'react-redux';
@@ -8,7 +8,7 @@ import { Redirect, useHistory } from 'react-router-dom';
 
 const DashboardLayout = ({ children }) => {
     const css = useStyles();
-    const [isMobileNavOpen, setMobileNavOpen] = useState(false);
+    const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
     const { user } = useSelector((state) => ({
         user: state.user.user
     }));
@@ -28,14 +28,16 @@ const DashboardLayout = ({ children }) => {
         );
     }
 
+    const handleToggleSideBard = useCallback((status) => {
+        setIsMobileNavOpen(() => status);
+    }, []);
+
     return (
         <>
             <div className={css.dashboardLayoutRoot}>
-                <DashboardNavbar
-                    onMobileNavOpen={() => setMobileNavOpen(true)}
-                />
+                <DashboardNavbar onMobileNavOpen={handleToggleSideBard} />
                 <DashboardSidebar
-                    onMobileClose={() => setMobileNavOpen(false)}
+                    onMobileClose={handleToggleSideBard}
                     openMobile={isMobileNavOpen}
                 />
                 <div className={css.dashboardLayoutWrapper}>

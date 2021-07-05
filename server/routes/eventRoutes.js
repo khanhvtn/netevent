@@ -19,5 +19,9 @@ router.delete('/deleteManagement', eventControllers.deleteEventManagement);
 router.patch('/recovery', eventControllers.recoveryEvent);
 router.patch('/update/status', eventControllers.updateEventStatus);
 router.post('/sendNotification', eventControllers.sendNotification);
+router.get(
+    '/registrationPageDetail',
+    eventControllers.getRegistrationPageDetail
+);
 
 module.exports = router;
