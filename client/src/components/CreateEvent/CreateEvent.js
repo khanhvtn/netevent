@@ -408,12 +408,10 @@ const CreateEvent = ({
                     endTime: endDate
                 } = task;
 
-                const { _id: userId } = users.find(
-                    (user) => user.email === email
-                );
+                const targetUser = users.find((user) => user.email === email);
                 return {
                     name,
-                    userId,
+                    userId: targetUser ? targetUser._id : null,
                     type,
                     startDate,
                     endDate
@@ -469,10 +467,16 @@ const CreateEvent = ({
                                 startTime: startDate,
                                 endTime: endDate
                             } = task;
-                            const { _id: userId } = users.find(
+                            const targetUser = users.find(
                                 (user) => user.email === email
                             );
-                            return { name, userId, type, startDate, endDate };
+                            return {
+                                name,
+                                userId: targetUser ? targetUser._id : null,
+                                type,
+                                startDate,
+                                endDate
+                            };
                         }),
                     ...taskState.tasks.filter((task) => task._id)
                 ]

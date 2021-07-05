@@ -22,6 +22,7 @@ module.exports = {
         'no-case-declarations': 0,
         'react/display-name': 0,
         'react/no-unescaped-entities': 0,
-        'react-hooks/exhaustive-deps': 2
+        'react-hooks/exhaustive-deps': 2,
+        'react-hooks/rules-of-hooks': 2
     }
 };

@@ -49,7 +49,7 @@ export const userLogin = (userReq, history) => async (dispatch) => {
         //redirect to pickrole page
         history.push('/pickrole');
     } catch (error) {
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors
@@ -238,7 +238,7 @@ export const createUser = (userData) => async (dispatch) => {
             });
         }, 3000);
     } catch (error) {
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
             dispatch({
                 type: ERROR,
                 payload: error.response.data?.errors
@@ -267,7 +267,7 @@ export const updateUser =
                 dispatch(fetchCurrentUser(currentUser, history));
             }
         } catch (error) {
-            if (error.response.data?.errors) {
+            if (error.response?.data?.errors) {
                 dispatch({
                     type: ERROR,
                     payload: error.response.data?.errors

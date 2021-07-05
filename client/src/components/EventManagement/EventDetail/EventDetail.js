@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
     Paper,
@@ -147,6 +147,7 @@ const EventDetail = () => {
                 }));
             }
         }
+        return;
     }, [dispatch, history, state.event, state.previousPath, code]);
 
     // Update new state when getting props from event-management page
@@ -165,7 +166,8 @@ const EventDetail = () => {
             state.event?.endDate &&
             !state.isCheckingCompletedEvent &&
             !state.event?.isFinished &&
-            state.event?.isApproved
+            state.event?.isApproved &&
+            !isDetailLoading
         ) {
             setState((prevState) => ({
                 ...prevState,
@@ -182,7 +184,8 @@ const EventDetail = () => {
         state.event?.endDate,
         state.event?.isFinished,
         state.event?.isApproved,
-        state.isCheckingCompletedEvent
+        state.isCheckingCompletedEvent,
+        isDetailLoading
     ]);
 
     // UseEffect for update event status
@@ -335,12 +338,12 @@ const EventDetail = () => {
         }));
     };
 
-    const handleToggleDialogUpdate = () => {
+    const handleToggleDialogUpdate = useCallback(() => {
         setState((prevState) => ({
             ...prevState,
             openUpdateDialog: !prevState.openUpdateDialog
         }));
-    };
+    }, []);
 
     const handleToggleDialogCheckingCompleted = () => {
         setState((prevState) => ({
@@ -746,10 +749,12 @@ const EventDetail = () => {
                                                                 className={
                                                                     css.secondaryHeading
                                                                 }>
-                                                                {
-                                                                    task.userId
-                                                                        ?.email
-                                                                }
+                                                                {task.userId
+                                                                    ?.email
+                                                                    ? task
+                                                                          .userId
+                                                                          .email
+                                                                    : 'N/A'}
                                                             </Typography>
                                                         </AccordionSummary>
                                                         <AccordionDetails

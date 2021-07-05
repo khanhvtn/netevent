@@ -31,7 +31,8 @@ const SendNotification = ({ eventId, eventName, onClose }) => {
             handleClearField();
             onClose();
         }
-    }, [event.sendNotiSuccess, onClose]);
+        /* eslint-disable-next-line */
+    }, [event.sendNotiSuccess]);
 
     const handleClearField = () => {
         setState(initialState);
