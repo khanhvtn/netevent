@@ -5,6 +5,7 @@ import { Pie, Bar } from 'react-chartjs-2';
 import { getAllParicipant } from '../../actions/participantActions';
 import { getAllEvent } from '../../actions/eventActions';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import { ExportToCsv } from 'export-to-csv';
 
 import { useDispatch, useSelector } from 'react-redux';
 const options = {
@@ -119,7 +120,6 @@ const EventAnalysis = () => {
     const [barChartData, setBarChartData] = useState(dataBarChart);
     const [verticalBarChartData, setVerticalBarChartData] =
         useState(dataVerticalBarChart);
-    // const [completedEventData, setCompletedEventData] = useState(completedEventDataState);
     const { participants, isLoading, events, eventLoading } = useSelector(
         (state) => ({
             participants: state.participant.allParticipants,
@@ -265,29 +265,61 @@ const EventAnalysis = () => {
                     {
                         label: 'Total Participants of Completed Events',
                         data: showedUpParticipants,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
+                        backgroundColor: [],
                         borderWidth: 1
                     }
                 ]
             };
+            for (let z = 0; z < labelNames.length; z++) {
+                //Generate Random RGBA
+                var r = () => (Math.random() * 256) >> 0;
+                var color = `rgb(${r()}, ${r()}, ${r()}, 0.2)`;
+                newVerticalBarChart.datasets[0].backgroundColor.push(color);
+            }
             setVerticalBarChartData(newVerticalBarChart);
         }
     }, [dispatch, eventLoading, isLoading, events, participants]);
+
+    const handleOnExport = () => {
+        const exportEventData = [
+            {
+                'Total of Signed Up People': chartData.datasets[0].data[0],
+                'Total of Showed Up People': chartData.datasets[0].data[1],
+                'Total of Pending Events': barChartData.datasets[0].data[0],
+                'Total of Approved Events': barChartData.datasets[0].data[1],
+                'Total of Rejected Events': barChartData.datasets[0].data[2],
+                'Total of On-going Events': barChartData.datasets[0].data[3],
+                'Total of Completed Events': barChartData.datasets[0].data[4],
+                'Completed Events': verticalBarChartData.labels
+            },
+
+            {
+                'Total of Signed Up People': '',
+                'Total of Showed Up People': '',
+                'Total of Pending Events': '',
+                'Total of Approved Events': '',
+                'Total of Rejected Events': '',
+                'Total of On-going Events': '',
+                'Total of Completed Events': '',
+                'Completed Events & Total Participants':
+                    verticalBarChartData.datasets[0].data
+            }
+        ];
+        const csvOptions = {
+            fieldSeparator: ',',
+            quoteStrings: '"',
+            decimalSeparator: '.',
+            showLabels: true,
+            showTitle: true,
+            title: `Event Analysis`,
+            useTextFile: false,
+            useBom: true,
+            useKeysAsHeaders: true,
+            filename: `Event Analysis`
+        };
+        const csvExporter = new ExportToCsv(csvOptions);
+        csvExporter.generateCsv(exportEventData);
+    };
 
     return (
         <Paper elevation={0} className={css.paper}>

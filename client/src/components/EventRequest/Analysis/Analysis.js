@@ -99,7 +99,8 @@ const Analysis = ({ eventId, tabs, event }) => {
                 tags: event.tags.join(),
                 'Number of Sign-up Participants': data.datasets[0].data[0],
                 'Number of Showed-up Participants': data.datasets[0].data[1],
-                'Number of Times The Registration Page Has Been Opened': 20
+                'Number of Times The Registration Page Has Been Opened':
+                    event.clickAmount
             }
         ];
         const csvOptions = {
@@ -190,7 +191,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                                 </Typography>
 
                                 <Typography className={css.chartTypo1}>
-                                    20
+                                    {event.clickAmount}
                                 </Typography>
                             </Paper>
                         </Grid>
