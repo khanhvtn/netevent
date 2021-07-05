@@ -66,5 +66,8 @@ export default makeStyles((theme) => ({
         text: 'right',
         float: 'right',
         backgroundColor: '#0e2045'
+    },
+    gridChart: {
+        padding: theme.spacing(2)
     }
 }));

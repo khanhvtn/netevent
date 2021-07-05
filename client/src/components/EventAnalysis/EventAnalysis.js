@@ -6,7 +6,7 @@ import { getAllParicipant } from '../../actions/participantActions';
 import { getAllEvent } from '../../actions/eventActions';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ExportToCsv } from 'export-to-csv';
-
+import PieChartIcon from '@material-ui/icons/PieChart';
 import { useDispatch, useSelector } from 'react-redux';
 const options = {
     maintainAspectRatio: false // Don't maintain w/h ratio
@@ -323,7 +323,7 @@ const EventAnalysis = () => {
 
     return (
         <Paper elevation={0} className={css.paper}>
-            <Grid container spacing={4}>
+            <Grid container className={css.gridChart}>
                 <Grid item xs={6}>
                     <Typography
                         className={css.title}
@@ -347,9 +347,7 @@ const EventAnalysis = () => {
                 </Grid>
                 <Grid item xs={6}>
                     <Typography className={css.chartTypo}>
-                        {/* <PieChartIcon
-                                    className={css.iconAnalysis}
-                                /> */}
+                        <PieChartIcon className={css.iconAnalysis} />
                         Percentage of People Showing Up Across All Events
                     </Typography>
                     <article className={css.chartContainer}>
@@ -359,29 +357,26 @@ const EventAnalysis = () => {
 
                 <Grid item xs={6}>
                     <Typography className={css.chartTypo}>
-                        {/* <PieChartIcon
-                                    className={css.iconAnalysis}
-                                /> */}
+                        <PieChartIcon className={css.iconAnalysis} />
                         Number of Events
                     </Typography>
                     <article className={css.chartContainer}>
                         <Bar data={barChartData} options={optionBarChart} />
                     </article>
                 </Grid>
-
-                <Grid item xs={6}>
-                    <Typography className={css.chartTypo}>
-                        {/* <PieChartIcon
-                                    className={css.iconAnalysis}
-                                /> */}
-                        Number of Participants in Completed Events
-                    </Typography>
-                    <article className={css.chartContainer}>
-                        <Bar
-                            data={verticalBarChartData}
-                            options={optionVerticalBarChart}
-                        />
-                    </article>
+                <Grid container spacing={3} style={{ paddingTop: 10 }}>
+                    <Grid item xs={6}>
+                        <Typography className={css.chartTypo}>
+                            <PieChartIcon className={css.iconAnalysis} />
+                            Number of Participants in Completed Events
+                        </Typography>
+                        <article className={css.chartContainer}>
+                            <Bar
+                                data={verticalBarChartData}
+                                options={optionVerticalBarChart}
+                            />
+                        </article>
+                    </Grid>
                 </Grid>
             </Grid>
         </Paper>
