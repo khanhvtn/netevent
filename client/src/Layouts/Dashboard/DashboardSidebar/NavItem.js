@@ -19,12 +19,11 @@ const NavItem = ({ href, icon: Icon, title, ...rest }) => {
         if (Array.isArray(href)) {
             history.push(href[0]);
         }
-        if (href === 'pickrole') {
-            history.push(`/${href}`);
-        }
         if (href === 'logout') {
-            history.push('/');
-            dispatch(userLogout(history));
+            return dispatch(userLogout(history));
+        }
+        if (href === 'pickrole') {
+            return history.push(`/${href}`);
         }
     };
 
