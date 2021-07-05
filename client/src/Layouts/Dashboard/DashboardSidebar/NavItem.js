@@ -17,7 +17,7 @@ const NavItem = ({ href, icon: Icon, title, ...rest }) => {
 
     const handleAction = () => {
         if (Array.isArray(href)) {
-            history.push(href[0]);
+            return history.push(href[0]);
         }
         if (href === 'logout') {
             return dispatch(userLogout(history));
