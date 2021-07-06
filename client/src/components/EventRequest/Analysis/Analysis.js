@@ -26,7 +26,23 @@ const data = {
     datasets: [
         {
             label: 'Signed Up vs Showed Up',
-            data: [12, 19],
+            data: [0, 0],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+            borderWidth: 1
+        }
+    ]
+};
+
+const newChartData = {
+    labels: ['Signed Up', 'Opened Up'],
+    datasets: [
+        {
+            label: 'Signed Up vs Opened Up',
+            data: [0, 0],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)'
@@ -41,6 +57,8 @@ const Analysis = ({ eventId, tabs, event }) => {
     const css = useStyles();
     const dispatch = useDispatch();
     const [chartData, setChartData] = useState(data);
+    const [chartData2, setChartData2] = useState(newChartData);
+
     const { participants, isLoading } = useSelector((state) => ({
         participants: state.participant.allParticipants,
         isLoading: state.participant.isLoading
@@ -59,7 +77,9 @@ const Analysis = ({ eventId, tabs, event }) => {
                     {
                         label: 'Signed Up vs Showed Up',
                         data: [
-                            participants.length,
+                            participants.filter(
+                                (participant) => participant.isValid == true
+                            ).length,
                             participants.filter(
                                 (participant) => participant.isAttended == true
                             ).length
@@ -76,9 +96,33 @@ const Analysis = ({ eventId, tabs, event }) => {
                     }
                 ]
             };
+            const newDataChart2 = {
+                labels: ['Signed Up', 'Opened Up'],
+                datasets: [
+                    {
+                        label: 'Signed Up vs Opened Up',
+                        data: [
+                            participants.filter(
+                                (participant) => participant.isValid == true
+                            ).length,
+                            event.clickAmount
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)'
+                        ],
+                        borderWidth: 1
+                    }
+                ]
+            };
             setChartData(newDataChart);
+            setChartData2(newDataChart2);
         }
-    }, [isLoading, participants]);
+    }, [isLoading, participants, event.clickAmount]);
 
     const handleOnExport = () => {
         const exportData = [
@@ -97,10 +141,9 @@ const Analysis = ({ eventId, tabs, event }) => {
                 endDate: moment(event.endDate).format('LLLL'),
                 maxParticipants: event.maxParticipants,
                 tags: event.tags.join(),
-                'Number of Sign-up Participants': data.datasets[0].data[0],
-                'Number of Showed-up Participants': data.datasets[0].data[1],
-                'Number of Times The Registration Page Has Been Opened':
-                    event.clickAmount
+                'Sign-up Participants': data.datasets[0].data[0],
+                'Showed-up Participants': data.datasets[0].data[1],
+                'Opened Time': event.clickAmount
             }
         ];
         const csvOptions = {
@@ -156,7 +199,12 @@ const Analysis = ({ eventId, tabs, event }) => {
                                     Number of Sign Up Participants
                                 </Typography>
                                 <Typography className={css.chartTypo1}>
-                                    {participants.length}
+                                    {
+                                        participants.filter(
+                                            (participant) =>
+                                                participant.isValid == true
+                                        ).length
+                                    }
                                 </Typography>
                             </Paper>
                         </Grid>
@@ -201,7 +249,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                         spacing={3}
                         style={{ paddingTop: 10 }}
                         justify="center">
-                        <Grid item xs={12}>
+                        <Grid item xs={6}>
                             <Paper className={css.pie}>
                                 <Typography className={css.chartTypo}>
                                     <PieChartIcon
@@ -211,6 +259,19 @@ const Analysis = ({ eventId, tabs, event }) => {
                                 </Typography>
                                 <article className={css.chartContainer}>
                                     <Pie data={chartData} options={options} />
+                                </article>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Paper className={css.pie}>
+                                <Typography className={css.chartTypo}>
+                                    <PieChartIcon
+                                        className={css.iconAnalysis}
+                                    />
+                                    Signed Up vs Opened
+                                </Typography>
+                                <article className={css.chartContainer}>
+                                    <Pie data={chartData2} options={options} />
                                 </article>
                             </Paper>
                         </Grid>

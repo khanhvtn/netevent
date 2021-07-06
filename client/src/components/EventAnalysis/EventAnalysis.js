@@ -138,7 +138,7 @@ const EventAnalysis = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        if (!loadingAnalysis) {
+        if (!loadingAnalysis && analysis.completedEventNames !== undefined) {
             // const totalParticipants = participants.length;
             const newDataChart = {
                 labels: ['Signed Up', 'Showed Up'],
@@ -200,22 +200,18 @@ const EventAnalysis = () => {
                 ]
             };
             const newVerticalBarChart = {
-                labels: analysis.completedEventAnalysis.names,
+                labels: analysis.completedEventNames,
                 datasets: [
                     {
                         label: 'Total Participants of Completed Events',
-                        data: analysis.completedEventAnalysis.participants,
+                        data: analysis.completedEventParticipants,
                         backgroundColor: [],
                         borderColor: [],
                         borderWidth: 1
                     }
                 ]
             };
-            for (
-                let z = 0;
-                z < analysis.completedEventAnalysis.names.length;
-                z++
-            ) {
+            for (let z = 0; z < analysis.completedEventNames.length; z++) {
                 //Generate Random RGBA
                 var r = () => (Math.random() * 256) >> 0;
                 newVerticalBarChart.datasets[0].backgroundColor.push(
@@ -234,26 +230,25 @@ const EventAnalysis = () => {
     const handleOnExport = () => {
         const exportEventData = [
             {
-                'Total of Signed Up People': chartData.datasets[0].data[0],
-                'Total of Showed Up People': chartData.datasets[0].data[1],
-                'Total of Pending Events': barChartData.datasets[0].data[0],
-                'Total of Approved Events': barChartData.datasets[0].data[1],
-                'Total of Rejected Events': barChartData.datasets[0].data[2],
-                'Total of On-going Events': barChartData.datasets[0].data[3],
-                'Total of Completed Events': barChartData.datasets[0].data[4],
-                'Completed Events': verticalBarChartData.labels
+                'Signed Up': chartData.datasets[0].data[0],
+                'Showed Up': chartData.datasets[0].data[1],
+                'Pending Events': barChartData.datasets[0].data[0],
+                'Approved Events': barChartData.datasets[0].data[1],
+                'Rejected Events': barChartData.datasets[0].data[2],
+                'On-going Events': barChartData.datasets[0].data[3],
+                'Completed Events': barChartData.datasets[0].data[4],
+                'Completed Event Name': verticalBarChartData.labels
             },
 
             {
-                'Total of Signed Up People': '',
-                'Total of Showed Up People': '',
-                'Total of Pending Events': '',
-                'Total of Approved Events': '',
-                'Total of Rejected Events': '',
-                'Total of On-going Events': '',
-                'Total of Completed Events': '',
-                'Completed Events & Total Participants':
-                    verticalBarChartData.datasets[0].data
+                'Signed Up': '',
+                'Showed Up': '',
+                'Pending Events': '',
+                'Approved Events': '',
+                'Rejected Events': '',
+                'On-going Events': '',
+                'Completed Events': '',
+                'Completed Event Name': verticalBarChartData.datasets[0].data
             }
         ];
         const csvOptions = {
@@ -270,6 +265,7 @@ const EventAnalysis = () => {
         };
         const csvExporter = new ExportToCsv(csvOptions);
         csvExporter.generateCsv(exportEventData);
+        console.log(exportEventData);
     };
 
     return (

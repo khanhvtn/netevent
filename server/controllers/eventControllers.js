@@ -1203,10 +1203,8 @@ const getAnalysis = async (req, res, next) => {
             onGoing: onGoing,
             rejected: rejected,
             totalEvents: totalEvents,
-            completedEventAnalysis: {
-                names: labelNames,
-                participants: showedUpParticipants
-            }
+            completedEventNames: labelNames,
+            completedEventParticipants: showedUpParticipants
         };
 
         return cusResponse(res, 200, analysisData, null);
