@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import useStyles from './styles';
-import { Grid, Paper, Typography, Button } from '@material-ui/core';
+import {
+    Grid,
+    Paper,
+    Typography,
+    Button,
+    CircularProgress
+} from '@material-ui/core';
 import { Pie, Bar } from 'react-chartjs-2';
-import { getAllParicipant } from '../../actions/participantActions';
-import { getAllEvent } from '../../actions/eventActions';
+import { getEventAnalysis } from '../../actions/eventActions';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ExportToCsv } from 'export-to-csv';
 import PieChartIcon from '@material-ui/icons/PieChart';
@@ -111,6 +116,9 @@ const optionVerticalBarChart = {
                 }
             }
         ]
+    },
+    ticks: {
+        precision: 0
     }
 };
 const EventAnalysis = () => {
@@ -120,42 +128,26 @@ const EventAnalysis = () => {
     const [barChartData, setBarChartData] = useState(dataBarChart);
     const [verticalBarChartData, setVerticalBarChartData] =
         useState(dataVerticalBarChart);
-    const { participants, isLoading, events, eventLoading } = useSelector(
-        (state) => ({
-            participants: state.participant.allParticipants,
-            isLoading: state.participant.isLoading,
-            events: state.event.events,
-            eventLoading: state.event.isLoading
-        })
-    );
+    const { loadingAnalysis, analysis } = useSelector((state) => ({
+        loadingAnalysis: state.event.loadingAnalysis,
+        analysis: state.event.analysis
+    }));
 
     useEffect(() => {
-        dispatch(getAllParicipant());
-        dispatch(getAllEvent());
+        dispatch(getEventAnalysis());
     }, [dispatch]);
 
     useEffect(() => {
-        if (!isLoading) {
+        if (!loadingAnalysis) {
             // const totalParticipants = participants.length;
-            const totalParticipantSignedUp = participants.filter(
-                (participant) => participant.isValid == true
-            ).length;
-            const totalParticipantShowedUp = participants.filter(
-                (participant) => participant.isAttended == true
-            ).length;
-
-            const percentageOfShowedUpParticipant =
-                (totalParticipantShowedUp / totalParticipantSignedUp) * 100;
-            const percentageOfSignUp = 100 - percentageOfShowedUpParticipant;
-
             const newDataChart = {
                 labels: ['Signed Up', 'Showed Up'],
                 datasets: [
                     {
                         label: 'Percentage of People Showing Up Across All Events',
                         data: [
-                            percentageOfSignUp,
-                            percentageOfShowedUpParticipant
+                            analysis.percentageOfSignup,
+                            analysis.percentageOfShowedUpParticipant
                         ],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -169,29 +161,6 @@ const EventAnalysis = () => {
                     }
                 ]
             };
-            setChartData(newDataChart);
-        }
-    }, [dispatch, isLoading, participants]);
-
-    useEffect(() => {
-        if (!eventLoading) {
-            const pendingEvents = events.filter(
-                (event) => event.isApproved == null
-            ).length;
-            const approvedEvents = events.filter(
-                (event) => event.isApproved == true
-            ).length;
-            const completedEvents = events.filter(
-                (event) => event.isFinished == true
-            ).length;
-            const onGoing = events.filter(
-                (event) => event.isFinished == false && event.isApproved == true
-            ).length;
-            const rejected = events.filter(
-                (event) => event.isApproved == false
-            ).length;
-            const totalEvents = events.length;
-
             const newDataBarChart = {
                 labels: [
                     'Pending',
@@ -205,12 +174,12 @@ const EventAnalysis = () => {
                     {
                         label: 'Number of Events',
                         data: [
-                            pendingEvents,
-                            approvedEvents,
-                            rejected,
-                            onGoing,
-                            completedEvents,
-                            totalEvents
+                            analysis.pendingEvents,
+                            analysis.approvedEvents,
+                            analysis.rejected,
+                            analysis.onGoing,
+                            analysis.completedEvents,
+                            analysis.totalEvents
                         ],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -230,55 +199,36 @@ const EventAnalysis = () => {
                     }
                 ]
             };
-
-            setBarChartData(newDataBarChart);
-        }
-    }, [dispatch, eventLoading, events]);
-
-    useEffect(() => {
-        if (!eventLoading && !isLoading) {
-            const completedEvents = events.filter(
-                (event) => event.isFinished == true && event.isApproved == true
-            );
-            const labelNames = completedEvents.map(
-                (completedEvent) => completedEvent.eventName
-            );
-            let showedUpParticipants = [];
-            for (let i = 0; i < labelNames.length; i++) {
-                let count = 0;
-                for (let x = 0; x < participants.length; x++) {
-                    if (participants[x].event != null) {
-                        if (
-                            participants[x].event.eventName === labelNames[i] &&
-                            participants[x].isAttended === true
-                        ) {
-                            count += 1;
-                        }
-                    }
-                }
-                showedUpParticipants.push(count);
-            }
-            console.log(showedUpParticipants);
             const newVerticalBarChart = {
-                labels: labelNames,
+                labels: analysis.completedEventAnalysis.names,
                 datasets: [
                     {
                         label: 'Total Participants of Completed Events',
-                        data: showedUpParticipants,
+                        data: analysis.completedEventAnalysis.participants,
                         backgroundColor: [],
+                        borderColor: [],
                         borderWidth: 1
                     }
                 ]
             };
-            for (let z = 0; z < labelNames.length; z++) {
+            for (
+                let z = 0;
+                z < analysis.completedEventAnalysis.names.length;
+                z++
+            ) {
                 //Generate Random RGBA
                 var r = () => (Math.random() * 256) >> 0;
                 var color = `rgb(${r()}, ${r()}, ${r()}, 0.2)`;
                 newVerticalBarChart.datasets[0].backgroundColor.push(color);
+                newVerticalBarChart.datasets[0].borderColor.push(
+                    'rgb(255,255,255)'
+                );
             }
             setVerticalBarChartData(newVerticalBarChart);
+            setBarChartData(newDataBarChart);
+            setChartData(newDataChart);
         }
-    }, [dispatch, eventLoading, isLoading, events, participants]);
+    }, [dispatch, analysis, loadingAnalysis]);
 
     const handleOnExport = () => {
         const exportEventData = [
@@ -322,64 +272,78 @@ const EventAnalysis = () => {
     };
 
     return (
-        <Paper elevation={0} className={css.paper}>
-            <Grid container className={css.gridChart}>
-                <Grid item xs={6}>
-                    <Typography
-                        className={css.title}
-                        style={{ fontWeight: 'bold' }}
-                        align="left"
-                        variant="h4">
-                        Analysis
-                    </Typography>
-                </Grid>
+        <>
+            {loadingAnalysis ? (
+                <div className={css.contentWrapper} align="center">
+                    <CircularProgress color="primary" />
+                </div>
+            ) : (
+                <Paper elevation={0} className={css.paper}>
+                    <Grid container className={css.gridChart}>
+                        <Grid item xs={6}>
+                            <Typography
+                                className={css.title}
+                                style={{ fontWeight: 'bold' }}
+                                align="left"
+                                variant="h4">
+                                Analysis
+                            </Typography>
+                        </Grid>
 
-                <Grid item xs={6}>
-                    <Button
-                        variant="contained"
-                        className={css.exportBtn}
-                        onClick={() => handleOnExport()}>
-                        <Typography className={css.titleExportBtn}>
-                            <GetAppIcon className={css.iconAnalysis} />
-                            Export
-                        </Typography>
-                    </Button>
-                </Grid>
-                <Grid item xs={6}>
-                    <Typography className={css.chartTypo}>
-                        <PieChartIcon className={css.iconAnalysis} />
-                        Percentage of People Showing Up Across All Events
-                    </Typography>
-                    <article className={css.chartContainer}>
-                        <Pie data={chartData} options={options} />
-                    </article>
-                </Grid>
+                        <Grid item xs={6}>
+                            <Button
+                                variant="contained"
+                                className={css.exportBtn}
+                                onClick={() => handleOnExport()}>
+                                <Typography className={css.titleExportBtn}>
+                                    <GetAppIcon className={css.iconAnalysis} />
+                                    Export
+                                </Typography>
+                            </Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography className={css.chartTypo}>
+                                <PieChartIcon className={css.iconAnalysis} />
+                                Percentage of People Showing Up Across All
+                                Events
+                            </Typography>
+                            <article className={css.chartContainer}>
+                                <Pie data={chartData} options={options} />
+                            </article>
+                        </Grid>
 
-                <Grid item xs={6}>
-                    <Typography className={css.chartTypo}>
-                        <PieChartIcon className={css.iconAnalysis} />
-                        Number of Events
-                    </Typography>
-                    <article className={css.chartContainer}>
-                        <Bar data={barChartData} options={optionBarChart} />
-                    </article>
-                </Grid>
-                <Grid container spacing={3} style={{ paddingTop: 10 }}>
-                    <Grid item xs={6}>
-                        <Typography className={css.chartTypo}>
-                            <PieChartIcon className={css.iconAnalysis} />
-                            Number of Participants in Completed Events
-                        </Typography>
-                        <article className={css.chartContainer}>
-                            <Bar
-                                data={verticalBarChartData}
-                                options={optionVerticalBarChart}
-                            />
-                        </article>
+                        <Grid item xs={6}>
+                            <Typography className={css.chartTypo}>
+                                <PieChartIcon className={css.iconAnalysis} />
+                                Number of Events
+                            </Typography>
+                            <article className={css.chartContainer}>
+                                <Bar
+                                    data={barChartData}
+                                    options={optionBarChart}
+                                />
+                            </article>
+                        </Grid>
+                        <Grid container spacing={3} style={{ paddingTop: 10 }}>
+                            <Grid item xs={6}>
+                                <Typography className={css.chartTypo}>
+                                    <PieChartIcon
+                                        className={css.iconAnalysis}
+                                    />
+                                    Number of Participants in Completed Events
+                                </Typography>
+                                <article className={css.chartContainer}>
+                                    <Bar
+                                        data={verticalBarChartData}
+                                        options={optionVerticalBarChart}
+                                    />
+                                </article>
+                            </Grid>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Grid>
-        </Paper>
+                </Paper>
+            )}
+        </>
     );
 };
 

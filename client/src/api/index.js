@@ -171,6 +171,9 @@ export const recoveryEventAPI = (userReq) =>
 export const fetchEventsAPI = () => AXIOS.get('/event/all');
 export const getAllEventAPI = () => AXIOS.get(`/event/all`);
 
+//Get Event Analysis
+export const getEventsAnalysisAPI = () => AXIOS.get('/event/analysis');
+
 // Facility History APIs
 export const getFacilityHistoriesAPI = (userQueries) => {
     const idQuery = `id=${userQueries.id ? userQueries.id : ''}`;
