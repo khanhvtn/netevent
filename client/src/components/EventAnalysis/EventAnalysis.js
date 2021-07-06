@@ -218,17 +218,18 @@ const EventAnalysis = () => {
             ) {
                 //Generate Random RGBA
                 var r = () => (Math.random() * 256) >> 0;
-                var color = `rgb(${r()}, ${r()}, ${r()}, 0.2)`;
-                newVerticalBarChart.datasets[0].backgroundColor.push(color);
+                newVerticalBarChart.datasets[0].backgroundColor.push(
+                    `rgba(${r()}, ${r()}, ${r()}, 0.2)`
+                );
                 newVerticalBarChart.datasets[0].borderColor.push(
-                    'rgb(255,255,255)'
+                    `rgba(${r()}, ${r()}, ${r()}, 1)`
                 );
             }
             setVerticalBarChartData(newVerticalBarChart);
             setBarChartData(newDataBarChart);
             setChartData(newDataChart);
         }
-    }, [dispatch, analysis, loadingAnalysis]);
+    }, [analysis, loadingAnalysis]);
 
     const handleOnExport = () => {
         const exportEventData = [
