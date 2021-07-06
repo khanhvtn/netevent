@@ -171,8 +171,13 @@ export const recoveryEventAPI = (userReq) =>
 export const fetchEventsAPI = () => AXIOS.get('/event/all');
 export const getAllEventAPI = () => AXIOS.get(`/event/all`);
 
-//Get Event Analysis
-export const getEventsAnalysisAPI = () => AXIOS.get('/event/analysis');
+//Get All Event Analysis
+export const getEventsAnalysisAPI = () => AXIOS.get('/event/analysisAll');
+
+// Get Event Analysis by ID
+
+export const getEventAnalysisByIDAPI = (eventId) =>
+    AXIOS.get(`/event/analysis?eventId=${eventId ? eventId : ''}`);
 
 // Facility History APIs
 export const getFacilityHistoriesAPI = (userQueries) => {
@@ -216,8 +221,7 @@ export const getAllFacilityHistoriesAPI = () =>
 
 // Participant API
 export const getAllParticipants = () => AXIOS.get('/participant');
-export const getParticipantByEventIDAPI = (eventId) =>
-    AXIOS.get(`/participant/all?eventId=${eventId ? eventId : ''}`);
+
 export const registerParticipantAPI = (participantData) =>
     AXIOS.post('/participant/registerEvent', participantData);
 export const getParticipantsAPI = (

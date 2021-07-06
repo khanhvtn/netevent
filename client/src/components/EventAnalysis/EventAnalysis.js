@@ -17,12 +17,7 @@ const options = {
     maintainAspectRatio: false // Don't maintain w/h ratio
 };
 
-// const completedEventDataState = {
-//     eventName: '',
-//     count: 0
-// };
-
-const data = {
+const signUpAndShowUpData = {
     labels: ['Signed Up', 'Showed Up'],
     datasets: [
         {
@@ -38,11 +33,11 @@ const data = {
     ]
 };
 
-const dataBarChart = {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+const eventStatusData = {
+    labels: [],
     datasets: [
         {
-            label: '# of Votes',
+            label: 'Event with Status',
             data: [12, 19, 3, 5, 2, 3],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -63,7 +58,7 @@ const dataBarChart = {
     ]
 };
 
-const dataVerticalBarChart = {
+const participantOfCompletedEventData = {
     labels: [],
     datasets: [
         {
@@ -124,10 +119,13 @@ const optionVerticalBarChart = {
 const EventAnalysis = () => {
     const css = useStyles();
     const dispatch = useDispatch();
-    const [chartData, setChartData] = useState(data);
-    const [barChartData, setBarChartData] = useState(dataBarChart);
-    const [verticalBarChartData, setVerticalBarChartData] =
-        useState(dataVerticalBarChart);
+    const [signUpAndShowUpState, setSignUpAndShowUpState] =
+        useState(signUpAndShowUpData);
+    const [eventStatusState, setEventStatusState] = useState(eventStatusData);
+    const [
+        participantOfCompletedEventState,
+        setParticipantOfCompletedEventState
+    ] = useState(participantOfCompletedEventData);
     const { loadingAnalysis, analysis } = useSelector((state) => ({
         loadingAnalysis: state.event.loadingAnalysis,
         analysis: state.event.analysis
@@ -140,7 +138,7 @@ const EventAnalysis = () => {
     useEffect(() => {
         if (!loadingAnalysis && analysis.completedEventNames !== undefined) {
             // const totalParticipants = participants.length;
-            const newDataChart = {
+            const newSignUpAndShowUpData = {
                 labels: ['Signed Up', 'Showed Up'],
                 datasets: [
                     {
@@ -161,7 +159,7 @@ const EventAnalysis = () => {
                     }
                 ]
             };
-            const newDataBarChart = {
+            const newEventStatusData = {
                 labels: [
                     'Pending',
                     'Approved',
@@ -186,20 +184,22 @@ const EventAnalysis = () => {
                             'rgba(54, 162, 235, 0.2)',
                             'rgba(255, 206, 86, 0.2)',
                             'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)'
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(170,175,180, 0.2)'
                         ],
                         borderColor: [
                             'rgba(255, 99, 132, 1)',
                             'rgba(54, 162, 235, 1)',
                             'rgba(255, 206, 86, 1)',
                             'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)'
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(170,175,180, 1)'
                         ],
                         borderWidth: 1
                     }
                 ]
             };
-            const newVerticalBarChart = {
+            const newParticipantOfCompletedEventData = {
                 labels: analysis.completedEventNames,
                 datasets: [
                     {
@@ -214,30 +214,32 @@ const EventAnalysis = () => {
             for (let z = 0; z < analysis.completedEventNames.length; z++) {
                 //Generate Random RGBA
                 var r = () => (Math.random() * 256) >> 0;
-                newVerticalBarChart.datasets[0].backgroundColor.push(
+                newParticipantOfCompletedEventData.datasets[0].backgroundColor.push(
                     `rgba(${r()}, ${r()}, ${r()}, 0.2)`
                 );
-                newVerticalBarChart.datasets[0].borderColor.push(
+                newParticipantOfCompletedEventData.datasets[0].borderColor.push(
                     `rgba(${r()}, ${r()}, ${r()}, 1)`
                 );
             }
-            setVerticalBarChartData(newVerticalBarChart);
-            setBarChartData(newDataBarChart);
-            setChartData(newDataChart);
+            setParticipantOfCompletedEventState(
+                newParticipantOfCompletedEventData
+            );
+            setEventStatusState(newEventStatusData);
+            setSignUpAndShowUpState(newSignUpAndShowUpData);
         }
     }, [analysis, loadingAnalysis]);
 
     const handleOnExport = () => {
         const exportEventData = [
             {
-                'Signed Up': chartData.datasets[0].data[0],
-                'Showed Up': chartData.datasets[0].data[1],
-                'Pending Events': barChartData.datasets[0].data[0],
-                'Approved Events': barChartData.datasets[0].data[1],
-                'Rejected Events': barChartData.datasets[0].data[2],
-                'On-going Events': barChartData.datasets[0].data[3],
-                'Completed Events': barChartData.datasets[0].data[4],
-                'Completed Event Name': verticalBarChartData.labels
+                'Signed Up': signUpAndShowUpState.datasets[0].data[0],
+                'Showed Up': signUpAndShowUpState.datasets[0].data[1],
+                'Pending Events': eventStatusState.datasets[0].data[0],
+                'Approved Events': eventStatusState.datasets[0].data[1],
+                'Rejected Events': eventStatusState.datasets[0].data[2],
+                'On-going Events': eventStatusState.datasets[0].data[3],
+                'Completed Events': eventStatusState.datasets[0].data[4],
+                'Completed Event Name': participantOfCompletedEventState.labels
             },
 
             {
@@ -248,7 +250,8 @@ const EventAnalysis = () => {
                 'Rejected Events': '',
                 'On-going Events': '',
                 'Completed Events': '',
-                'Completed Event Name': verticalBarChartData.datasets[0].data
+                'Completed Event Name':
+                    participantOfCompletedEventState.datasets[0].data
             }
         ];
         const csvOptions = {
@@ -305,7 +308,10 @@ const EventAnalysis = () => {
                                 Events
                             </Typography>
                             <article className={css.chartContainer}>
-                                <Pie data={chartData} options={options} />
+                                <Pie
+                                    data={signUpAndShowUpState}
+                                    options={options}
+                                />
                             </article>
                         </Grid>
 
@@ -316,7 +322,7 @@ const EventAnalysis = () => {
                             </Typography>
                             <article className={css.chartContainer}>
                                 <Bar
-                                    data={barChartData}
+                                    data={eventStatusState}
                                     options={optionBarChart}
                                 />
                             </article>
@@ -331,7 +337,7 @@ const EventAnalysis = () => {
                                 </Typography>
                                 <article className={css.chartContainer}>
                                     <Bar
-                                        data={verticalBarChartData}
+                                        data={participantOfCompletedEventState}
                                         options={optionVerticalBarChart}
                                     />
                                 </article>

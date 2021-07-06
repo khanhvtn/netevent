@@ -1213,6 +1213,54 @@ const getAnalysis = async (req, res, next) => {
     }
 };
 
+/**
+ * @decsription Get all analysis by event ID
+ * @method GET
+ * @route /api/event/analysis
+ *
+ * @version 1.0
+ */
+const getAnalysisByEventID = async (req, res, next) => {
+    let options = {
+        eventId: null
+    };
+    if (req.query.eventId) {
+        options = {
+            ...options,
+            eventId: req.query.eventId.toString()
+        };
+    }
+    try {
+        const participants = await Participant.find({
+            event: options.eventId
+        });
+
+        const event = await Event.findOne({
+            _id: options.eventId
+        });
+
+        const signUpParticipant = participants.filter(
+            (participant) => participant.isValid == true
+        ).length;
+
+        const showUpParticipant = participants.filter(
+            (participant) => participant.isAttended == true
+        ).length;
+
+        const openTime = event.clickAmount;
+
+        const eventAnalysisData = {
+            signUp: signUpParticipant,
+            showUp: showUpParticipant,
+            openAmount: openTime
+        };
+
+        return cusResponse(res, 200, eventAnalysisData, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
     createEvent,
     deleteEvent,
@@ -1226,5 +1274,6 @@ module.exports = {
     getFacilityAndTaskByEventCode,
     updateEventStatus,
     getRegistrationPageDetail,
-    getAnalysis
+    getAnalysis,
+    getAnalysisByEventID
 };

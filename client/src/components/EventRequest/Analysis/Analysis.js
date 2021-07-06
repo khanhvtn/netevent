@@ -12,16 +12,16 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import LibraryAddCheckIcon from '@material-ui/icons/LibraryAddCheck';
 import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
 import PieChartIcon from '@material-ui/icons/PieChart';
-import { getParticipantByEventID } from '../../../actions/participantActions';
+import { getEventAnalysisByID } from '../../../actions/eventActions';
 import { useDispatch, useSelector } from 'react-redux';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ExportToCsv } from 'export-to-csv';
 import moment from 'moment';
 const options = {
-    maintainAspectRatio: false // Don't maintain w/h ratio
+    maintainAspectRatio: false
 };
 
-const data = {
+const signUpAndShowUpData = {
     labels: ['Signed Up', 'Showed Up'],
     datasets: [
         {
@@ -37,7 +37,7 @@ const data = {
     ]
 };
 
-const newChartData = {
+const signUpAndOpenUpData = {
     labels: ['Signed Up', 'Opened Up'],
     datasets: [
         {
@@ -56,34 +56,29 @@ const newChartData = {
 const Analysis = ({ eventId, tabs, event }) => {
     const css = useStyles();
     const dispatch = useDispatch();
-    const [chartData, setChartData] = useState(data);
-    const [chartData2, setChartData2] = useState(newChartData);
+    const [signUpAndShowUpState, setSignUpAndShowUpState] =
+        useState(signUpAndShowUpData);
+    const [signUpAndOpenUpState, setSignUpAndOpenUpState] =
+        useState(signUpAndOpenUpData);
 
-    const { participants, isLoading } = useSelector((state) => ({
-        participants: state.participant.allParticipants,
-        isLoading: state.participant.isLoading
+    const { analysisData, analysisLoading } = useSelector((state) => ({
+        analysisData: state.event.analysisByID,
+        analysisLoading: state.event.loadingAnalysis
     }));
     useEffect(() => {
         if (eventId && tabs === 3) {
-            dispatch(getParticipantByEventID(eventId));
+            dispatch(getEventAnalysisByID(eventId));
         }
     }, [dispatch, eventId, tabs]);
 
     useEffect(() => {
-        if (!isLoading) {
-            const newDataChart = {
+        if (!analysisLoading) {
+            const newSignUpAndShowUpData = {
                 labels: ['Signed Up', 'Showed Up'],
                 datasets: [
                     {
                         label: 'Signed Up vs Showed Up',
-                        data: [
-                            participants.filter(
-                                (participant) => participant.isValid == true
-                            ).length,
-                            participants.filter(
-                                (participant) => participant.isAttended == true
-                            ).length
-                        ],
+                        data: [analysisData.signUp, analysisData.showUp],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)'
@@ -96,17 +91,12 @@ const Analysis = ({ eventId, tabs, event }) => {
                     }
                 ]
             };
-            const newDataChart2 = {
+            const newSignUpAndOpenUpData = {
                 labels: ['Signed Up', 'Opened Up'],
                 datasets: [
                     {
                         label: 'Signed Up vs Opened Up',
-                        data: [
-                            participants.filter(
-                                (participant) => participant.isValid == true
-                            ).length,
-                            event.clickAmount
-                        ],
+                        data: [analysisData.signUp, analysisData.openAmount],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)'
@@ -119,10 +109,10 @@ const Analysis = ({ eventId, tabs, event }) => {
                     }
                 ]
             };
-            setChartData(newDataChart);
-            setChartData2(newDataChart2);
+            setSignUpAndShowUpState(newSignUpAndShowUpData);
+            setSignUpAndOpenUpState(newSignUpAndOpenUpData);
         }
-    }, [isLoading, participants, event.clickAmount]);
+    }, [analysisLoading, analysisData]);
 
     const handleOnExport = () => {
         const exportData = [
@@ -141,8 +131,10 @@ const Analysis = ({ eventId, tabs, event }) => {
                 endDate: moment(event.endDate).format('LLLL'),
                 maxParticipants: event.maxParticipants,
                 tags: event.tags.join(),
-                'Sign-up Participants': data.datasets[0].data[0],
-                'Showed-up Participants': data.datasets[0].data[1],
+                'Sign-up Participants':
+                    signUpAndShowUpState.datasets[0].data[0],
+                'Showed-up Participants':
+                    signUpAndShowUpState.datasets[0].data[1],
                 'Opened Time': event.clickAmount
             }
         ];
@@ -163,7 +155,7 @@ const Analysis = ({ eventId, tabs, event }) => {
     };
     return (
         <>
-            {isLoading ? (
+            {analysisLoading ? (
                 <div className={css.contentWrapper} align="center">
                     <CircularProgress color="primary" />
                 </div>
@@ -199,12 +191,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                                     Number of Sign Up Participants
                                 </Typography>
                                 <Typography className={css.chartTypo1}>
-                                    {
-                                        participants.filter(
-                                            (participant) =>
-                                                participant.isValid == true
-                                        ).length
-                                    }
+                                    {analysisData.signUp}
                                 </Typography>
                             </Paper>
                         </Grid>
@@ -218,12 +205,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                                 </Typography>
 
                                 <Typography className={css.chartTypo1}>
-                                    {
-                                        participants.filter(
-                                            (participant) =>
-                                                participant.isAttended == true
-                                        ).length
-                                    }
+                                    {analysisData.showUp}
                                 </Typography>
                             </Paper>
                         </Grid>
@@ -239,7 +221,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                                 </Typography>
 
                                 <Typography className={css.chartTypo1}>
-                                    {event.clickAmount}
+                                    {analysisData.openAmount}
                                 </Typography>
                             </Paper>
                         </Grid>
@@ -258,7 +240,10 @@ const Analysis = ({ eventId, tabs, event }) => {
                                     Signed Up vs Showed Up
                                 </Typography>
                                 <article className={css.chartContainer}>
-                                    <Pie data={chartData} options={options} />
+                                    <Pie
+                                        data={signUpAndShowUpState}
+                                        options={options}
+                                    />
                                 </article>
                             </Paper>
                         </Grid>
@@ -271,7 +256,10 @@ const Analysis = ({ eventId, tabs, event }) => {
                                     Signed Up vs Opened
                                 </Typography>
                                 <article className={css.chartContainer}>
-                                    <Pie data={chartData2} options={options} />
+                                    <Pie
+                                        data={signUpAndOpenUpState}
+                                        options={options}
+                                    />
                                 </article>
                             </Paper>
                         </Grid>

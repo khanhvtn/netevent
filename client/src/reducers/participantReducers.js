@@ -29,10 +29,7 @@ export default function participantReducers(state = initialState, action) {
                 participants: action.payload.data?.data,
                 totalPages: action.payload.data?.totalPages
             };
-        // case SET_INVALID_VERIFIED:
-        //     return {
-        //         ...state
-        //     }
+
         case PARTICIPANT_REGISTER:
             return { ...state, complete: action.payload };
         default:

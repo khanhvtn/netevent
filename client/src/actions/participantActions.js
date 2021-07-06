@@ -12,7 +12,6 @@ import {
     registerParticipantAPI,
     setAttendedParticipantAPI,
     setInvalidAndVerifyParticipantAPI,
-    getParticipantByEventIDAPI,
     getAllParticipants
 } from '../api';
 
@@ -90,16 +89,6 @@ export const getParticipants =
         }
         setPartiticpantIsLoading(false, dispatch);
     };
-export const getParticipantByEventID = (eventId) => async (dispatch) => {
-    setPartiticpantIsLoading(true, dispatch);
-    try {
-        const data = await getParticipantByEventIDAPI(eventId);
-        dispatch({ type: PARTICIPANT_ALL, payload: data });
-    } catch (error) {
-        console.log(error);
-    }
-    setPartiticpantIsLoading(false, dispatch);
-};
 
 export const getAllParicipant = () => async (dispatch) => {
     setPartiticpantIsLoading(true, dispatch);

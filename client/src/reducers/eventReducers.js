@@ -14,6 +14,7 @@ import {
     EVENT_UPDATE,
     EVENT_RECOVERY_SUCCESS,
     GET_EVENT_ANALYSIS,
+    GET_EVENT_ANALYSIS_BY_ID,
     LOADING_ANALYSIS
 } from '../constants';
 
@@ -24,6 +25,7 @@ const initialState = {
     isDetailLoading: false,
     events: [],
     analysis: [],
+    analysisByID: [],
     eventDetail: null,
     totalPages: null,
     createSuccess: false,
@@ -78,6 +80,8 @@ export default function eventReducers(state = initialState, action) {
             return { ...state, recoverySuccess: action.payload };
         case GET_EVENT_ANALYSIS:
             return { ...state, analysis: action.payload.data.data };
+        case GET_EVENT_ANALYSIS_BY_ID:
+            return { ...state, analysisByID: action.payload.data.data };
         default:
             return state;
     }

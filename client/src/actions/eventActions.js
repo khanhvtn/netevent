@@ -16,6 +16,7 @@ import {
     EVENT_UPDATE,
     EVENT_RECOVERY_SUCCESS,
     GET_EVENT_ANALYSIS,
+    GET_EVENT_ANALYSIS_BY_ID,
     LOADING_ANALYSIS
 } from '../constants';
 import {
@@ -31,7 +32,8 @@ import {
     fetchEventsAPI,
     updateEventStatusAPI,
     recoveryEventAPI,
-    getEventsAnalysisAPI
+    getEventsAnalysisAPI,
+    getEventAnalysisByIDAPI
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -81,6 +83,19 @@ export const getEventAnalysis = () => async (dispatch) => {
             type: GET_EVENT_ANALYSIS,
             payload: data
         });
+    } catch (error) {
+        console.log(error);
+    }
+    setAnalysisIsLoading(false, dispatch);
+};
+
+// Get Event Analysis by ID
+
+export const getEventAnalysisByID = (eventId) => async (dispatch) => {
+    setAnalysisIsLoading(true, dispatch);
+    try {
+        const data = await getEventAnalysisByIDAPI(eventId);
+        dispatch({ type: GET_EVENT_ANALYSIS_BY_ID, payload: data });
     } catch (error) {
         console.log(error);
     }
