@@ -6,7 +6,7 @@ import PickRole from './components/PickRole/PickRole';
 import Error from './components/Error/Error';
 import { useDispatch, useSelector } from 'react-redux';
 import { userCheck } from './actions/userActions';
-import { Grid, CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import DashboardLayout from './Layouts/Dashboard/DashboardLayout';
 import Confirmation from './pages/confirmation/Confirmation';
 import Registration from './pages/registration/Registration';
@@ -22,10 +22,12 @@ import EventReview from './components/EventRequest/EventReview/EventReview';
 import MemberTask from './components/MemberTask/MemberTask';
 import FacilityHistory from './components/FacilityUsageHistory/FacilityUsageHistory';
 import FacilityHistoryAll from './components/FacilityUsageHistory/Facility/Facility';
+import useStyles from './styles';
 
 const App = () => {
     const dispatch = useDispatch();
     const history = useHistory();
+    const css = useStyles();
     const { user } = useSelector((state) => ({
         user: state.user
     }));
@@ -37,13 +39,9 @@ const App = () => {
     return (
         <div>
             {user.isUserChecking ? (
-                <Grid container justify="center" alignItems="center">
-                    <CircularProgress
-                        style={{
-                            height: '100%'
-                        }}
-                    />
-                </Grid>
+                <div className={css.circularProgress} align="center">
+                    <CircularProgress color="primary" />
+                </div>
             ) : (
                 <Switch>
                     <Route exact path="/" component={Login} />
