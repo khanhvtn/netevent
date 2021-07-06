@@ -140,9 +140,11 @@ const CalendarApp = ({ targetRole }) => {
                             ' — ' +
                             localizer.format(end, 'DD/MM/YYYY', culture)
                     }}
-                    style={{ height: '100vh' }}
+                    style={{ height: '84vh' }}
                     localizer={localizer}
                     events={genTargetDisplay}
+                    step={15}
+                    timeslots={8}
                     defaultView={Views.MONTH}
                     scrollToTime={new Date()}
                     defaultDate={new Date()}
@@ -155,7 +157,9 @@ const CalendarApp = ({ targetRole }) => {
                         let styleTemplate = {
                             style: {
                                 color: 'white',
-                                outline: 'none'
+                                outline: 'none',
+                                borderRadius: 8,
+                                opacity: 0.9
                             }
                         };
                         const { isApproved, isFinished } = date.resource;
