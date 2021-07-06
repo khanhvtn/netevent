@@ -17,10 +17,30 @@ const { sendInvitation } = require('./misc/mailerInvitation');
  *
  * @version 1.0
  */
-const getParticipants = async (req, res, next) => {
+const getParticipantByEventID = async (req, res, next) => {
+    let options = {
+        eventId: null
+    };
+    if (req.query.eventId) {
+        options = {
+            ...options,
+            eventId: req.query.eventId.toString()
+        };
+    }
     try {
-        const participants = await Participant.find();
+        const participants = await Participant.find({
+            event: options.eventId
+        });
         return cusResponse(res, 200, participants, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
+const getAllParticipants = async (req, res, next) => {
+    try {
+        const allParticipants = await Participant.find().populate('event');
+        return cusResponse(res, 200, allParticipants, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
@@ -393,7 +413,8 @@ const setAttendedParticipant = async (req, res, next) => {
 };
 
 module.exports = {
-    getParticipants,
+    getAllParticipants,
+    getParticipantByEventID,
     registerEvent,
     deleteParticipant,
     filterParticipants,

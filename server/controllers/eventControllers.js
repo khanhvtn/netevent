@@ -1125,6 +1125,142 @@ const getRegistrationPageDetail = async (req, res, next) => {
     }
 };
 
+/**
+ * @decsription Get event analysis
+ * @method GET
+ * @route /api/event/analysis
+ *
+ * @version 1.0
+ */
+
+const getAnalysis = async (req, res, next) => {
+    try {
+        const eventData = await Event.find().populate({
+            path: 'eventTypeId ownerId'
+        });
+        const participantData = await Participant.find().populate('event');
+
+        //Analyze Participant
+        const totalParticipantSignedUp = participantData.filter(
+            (participant) => participant.isValid == true
+        ).length;
+        const totalParticipantShowedUp = participantData.filter(
+            (participant) => participant.isAttended == true
+        ).length;
+
+        const percentageOfShowedUpParticipant =
+            (totalParticipantShowedUp / totalParticipantSignedUp) * 100;
+        const percentageOfSignUp = 100 - percentageOfShowedUpParticipant;
+
+        //Analyze Event
+        const pendingEvents = eventData.filter(
+            (event) => event.isApproved == null
+        ).length;
+        const approvedEvents = eventData.filter(
+            (event) => event.isApproved == true
+        ).length;
+        const completedEvents = eventData.filter(
+            (event) => event.isFinished == true
+        ).length;
+        const onGoing = eventData.filter(
+            (event) => event.isFinished == false && event.isApproved == true
+        ).length;
+        const rejected = eventData.filter(
+            (event) => event.isApproved == false
+        ).length;
+        const totalEvents = eventData.length;
+
+        // Get Participants on Completed Event
+
+        const completed = eventData.filter(
+            (event) => event.isFinished == true && event.isApproved == true
+        );
+        const labelNames = completed.map(
+            (completedEvent) => completedEvent.eventName
+        );
+        let showedUpParticipants = [];
+        for (let i = 0; i < labelNames.length; i++) {
+            let count = 0;
+            for (let x = 0; x < participantData.length; x++) {
+                if (participantData[x].event != null) {
+                    if (
+                        participantData[x].event.eventName === labelNames[i] &&
+                        participantData[x].isAttended === true
+                    ) {
+                        count += 1;
+                    }
+                }
+            }
+            showedUpParticipants.push(count);
+        }
+
+        const analysisData = {
+            percentageOfSignup: percentageOfSignUp,
+            percentageOfShowedUpParticipant: percentageOfShowedUpParticipant,
+            pendingEvents: pendingEvents,
+            approvedEvents: approvedEvents,
+            completedEvents: completedEvents,
+            onGoing: onGoing,
+            rejected: rejected,
+            totalEvents: totalEvents,
+            completedEventNames: labelNames,
+            completedEventParticipants: showedUpParticipants
+        };
+
+        return cusResponse(res, 200, analysisData, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
+/**
+ * @decsription Get all analysis by event ID
+ * @method GET
+ * @route /api/event/analysis
+ *
+ * @version 1.0
+ */
+const getAnalysisByEventID = async (req, res, next) => {
+    let options = {
+        eventId: null
+    };
+    if (req.query.eventId) {
+        options = {
+            ...options,
+            eventId: req.query.eventId.toString()
+        };
+    }
+    try {
+        const participants = await Participant.find({
+            event: options.eventId
+        });
+
+        const event = await Event.findOne({
+            _id: options.eventId
+        });
+
+        const signUpParticipant = participants.filter(
+            (participant) => participant.isValid == true
+        ).length;
+
+        const showUpParticipant = participants.filter(
+            (participant) => participant.isAttended == true
+        ).length;
+
+        const openTime = event.clickAmount;
+
+        const eventAnalysisData = {
+            signUp: signUpParticipant,
+            showUp: showUpParticipant,
+            openAmount: openTime
+        };
+
+        return cusResponse(res, 200, eventAnalysisData, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
     createEvent,
     deleteEvent,
@@ -1137,5 +1273,7 @@ module.exports = {
     deleteEventManagement,
     getFacilityAndTaskByEventCode,
     updateEventStatus,
-    getRegistrationPageDetail
+    getRegistrationPageDetail,
+    getAnalysis,
+    getAnalysisByEventID
 };
