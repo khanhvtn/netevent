@@ -38,6 +38,8 @@ const EventDialog = ({
                 TransitionComponent={Transition}
                 maxWidth="sm"
                 open={openCreateAndUpdateDialog}
+                fullWidth
+                className={css.dialogCreateUpdateFac}
                 onClose={(e) => handleToggleDialogCreateAndUpdate(e)}
                 aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
@@ -64,7 +66,6 @@ const EventDialog = ({
                 <DialogActions className={css.dialogActions}>
                     <Button
                         disabled={isLoading || createSuccess ? true : false}
-                        variant="contained"
                         onClick={handleToggleDialogCreateAndUpdate}
                         color="default">
                         Cancel
@@ -87,11 +88,11 @@ const EventDialog = ({
 
             {/* Dialog Confirm Delete */}
             <Dialog
-                maxWidth="sm"
                 fullWidth
                 TransitionComponent={Transition}
                 open={openDeleteDialog}
                 onClose={handleToggleDialogDelete}
+                className={css.dialogDeleteFac}
                 aria-labelledby="delete-dialog"
                 aria-describedby="delete-dialog-description">
                 <DialogTitle id="delete-dialog">{'Warning!!!'}</DialogTitle>
@@ -102,7 +103,13 @@ const EventDialog = ({
                             : 'Are you sure with your action ?'}
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions className={css.dialogActions}>
+                    <Button
+                        disabled={isLoading ? true : false}
+                        onClick={handleToggleDialogDelete}
+                        color="default">
+                        Cancel
+                    </Button>
                     <Button
                         disabled={isLoading ? true : false}
                         variant="contained"
@@ -113,13 +120,6 @@ const EventDialog = ({
                         ) : (
                             'Delete'
                         )}
-                    </Button>
-                    <Button
-                        disabled={isLoading ? true : false}
-                        variant="outlined"
-                        onClick={handleToggleDialogDelete}
-                        color="default">
-                        Cancel
                     </Button>
                 </DialogActions>
             </Dialog>

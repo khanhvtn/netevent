@@ -275,7 +275,7 @@ const getTasksByEvent = async (req, res, next) => {
             .populate({
                 path: 'userId eventId'
             })
-            .sort({ startDate: -1 });
+            .sort({ startDate: 1 });
 
         // Remove all task not have eventId
         let checkCode = [];
@@ -305,6 +305,14 @@ const getTasksByEvent = async (req, res, next) => {
                 }
             }
         }
+
+        result.sort(function (a, b) {
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return new Date(b.startDate) - new Date(a.startDate);
+        });
+
+        result.limit(2);
 
         return cusResponse(res, 200, result, null);
     } catch (error) {

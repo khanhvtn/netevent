@@ -29,6 +29,8 @@ const CreateEventTypeDialog = ({
             TransitionComponent={Transition}
             maxWidth="sm"
             open={openDialogCreateEventType}
+            fullWidth
+            className={css.dialogCreateUpdateFac}
             onClose={(e) => handleToggleDialogCreateEventType(e)}
             aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">
