@@ -14,7 +14,10 @@ import {
     EVENT_DELETE_SUCCESS,
     EVENT_UPDATE_SUCCESS,
     EVENT_UPDATE,
-    EVENT_RECOVERY_SUCCESS
+    EVENT_RECOVERY_SUCCESS,
+    GET_EVENT_ANALYSIS,
+    GET_EVENT_ANALYSIS_BY_ID,
+    LOADING_ANALYSIS
 } from '../constants';
 import {
     createEventAPI,
@@ -28,13 +31,23 @@ import {
     sendNotificationAPI,
     fetchEventsAPI,
     updateEventStatusAPI,
-    recoveryEventAPI
+    recoveryEventAPI,
+    getEventsAnalysisAPI,
+    getEventAnalysisByIDAPI
 } from '../api';
 
 //setIsLoading func is to set loading status
 const setEventIsLoading = (status, dispatch) => {
     dispatch({
         type: EVENT_LOADING,
+        payload: status
+    });
+};
+
+//setIsLoading func is to set loading status
+const setAnalysisIsLoading = (status, dispatch) => {
+    dispatch({
+        type: LOADING_ANALYSIS,
         payload: status
     });
 };
@@ -58,6 +71,35 @@ export const getAllEvent = () => async (dispatch) => {
         console.log(error);
     }
     setEventIsLoading(false, dispatch);
+};
+
+// Get Analysis
+
+export const getEventAnalysis = () => async (dispatch) => {
+    setAnalysisIsLoading(true, dispatch);
+    try {
+        const data = await getEventsAnalysisAPI();
+        dispatch({
+            type: GET_EVENT_ANALYSIS,
+            payload: data
+        });
+    } catch (error) {
+        console.log(error);
+    }
+    setAnalysisIsLoading(false, dispatch);
+};
+
+// Get Event Analysis by ID
+
+export const getEventAnalysisByID = (eventId) => async (dispatch) => {
+    setAnalysisIsLoading(true, dispatch);
+    try {
+        const data = await getEventAnalysisByIDAPI(eventId);
+        dispatch({ type: GET_EVENT_ANALYSIS_BY_ID, payload: data });
+    } catch (error) {
+        console.log(error);
+    }
+    setAnalysisIsLoading(false, dispatch);
 };
 
 // Minh Part Send Notification

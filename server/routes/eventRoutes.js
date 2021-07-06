@@ -23,5 +23,7 @@ router.get(
     '/registrationPageDetail',
     eventControllers.getRegistrationPageDetail
 );
+router.get('/analysisAll', eventControllers.getAnalysis);
+router.get('/analysis', eventControllers.getAnalysisByEventID);
 
 module.exports = router;

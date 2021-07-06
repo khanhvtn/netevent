@@ -22,6 +22,7 @@ import EventReview from './components/EventRequest/EventReview/EventReview';
 import MemberTask from './components/MemberTask/MemberTask';
 import FacilityHistory from './components/FacilityUsageHistory/FacilityUsageHistory';
 import FacilityHistoryAll from './components/FacilityUsageHistory/Facility/Facility';
+import EventAnalysis from './components/EventAnalysis/EventAnalysis';
 import useStyles from './styles';
 
 const App = () => {
@@ -158,7 +159,7 @@ const App = () => {
                                 path="/dashboard/reviewer/event-analysis"
                                 render={() => (
                                     <DashboardLayout>
-                                        Event Analysis
+                                        <EventAnalysis />
                                     </DashboardLayout>
                                 )}
                             />
