@@ -16,7 +16,7 @@ export default makeStyles((theme) => ({
     description: {
         flex: '1 0 auto',
         padding: 0,
-        minHeight: 300
+        minHeight: 250
     },
     cover: {
         width: '100%',
@@ -32,9 +32,9 @@ export default makeStyles((theme) => ({
     reviewBy: {
         display: 'flex',
         flex: '1 1 100%',
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingTop: 16
+        marginTop: 8
     },
     getButton: {
         color: 'white'

@@ -40,7 +40,7 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                         {isLoading ? (
                             <Skeleton
                                 variant="rect"
-                                height={190}
+                                height={250}
                                 style={{ borderRadius: 16 }}
                             />
                         ) : (
