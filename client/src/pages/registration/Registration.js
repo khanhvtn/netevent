@@ -4,7 +4,6 @@ import {
     Grid,
     Typography,
     Container,
-    Button,
     CircularProgress,
     Divider
 } from '@material-ui/core';
@@ -34,6 +33,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { ERROR_CLEAR } from '../../constants';
+import { Button } from '@material-ui/core';
 import useStyles from './styles';
 
 const participantInitialState = {
