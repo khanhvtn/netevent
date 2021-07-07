@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
     Paper,
+    FormControl,
+    TextField,
     Grid,
     Button,
     Typography,
@@ -10,8 +12,6 @@ import {
     Table,
     TableBody,
     TableCell,
-    FormControl,
-    TextField,
     TableContainer,
     TableHead,
     TableRow,
@@ -20,7 +20,6 @@ import {
     InputLabel,
     MenuItem
 } from '@material-ui/core';
-import useStyles from './styles';
 import moment from 'moment';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -35,6 +34,7 @@ import { useParams, useHistory } from 'react-router';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import SystemNotification from '../../components/Notification/Notification';
 import { ERROR_CLEAR } from '../../constants';
+import useStyles from './styles';
 
 const participantInitialState = {
     event: null,
@@ -275,15 +275,15 @@ const Registration = () => {
                                         </Typography>
                                     </Grid> */}
                                 <Grid
-                                    className={css.registerBottomButton}
                                     container
                                     justify="flex-start"
                                     alignItems="flex-end"
+                                    className={css.registerBottomButton}
                                     item>
                                     <Button
-                                        className={css.registerButtonTop}
                                         color="primary"
                                         variant="contained"
+                                        className={css.registerButtonTop}
                                         onClick={executeScroll}>
                                         Register Now
                                     </Button>
