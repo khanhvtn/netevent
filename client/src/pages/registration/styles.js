@@ -61,11 +61,6 @@ export default makeStyles((theme) => ({
             marginTop: 8
         }
     },
-    registerBottomButton: {
-        [theme.breakpoints.down('md')]: {
-            marginTop: 48
-        }
-    },
     responsive: {
         position: 'absolute',
         width: '100%',
@@ -182,6 +177,11 @@ export default makeStyles((theme) => ({
         backgroundColor: 'red',
         '&:hover': {
             backgroundColor: '#a2001c'
+        }
+    },
+    registerBottomButton: {
+        [theme.breakpoints.down('md')]: {
+            marginTop: 48
         }
     },
     registerButtonTop: {
