@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
     Paper,
+    Typography,
+    Grid,
     FormControl,
     TextField,
-    Grid,
-    Button,
-    Typography,
     Container,
-    CircularProgress,
     Divider,
     Table,
     TableBody,
@@ -15,9 +13,11 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    Button,
     Chip,
     Select,
     InputLabel,
+    CircularProgress,
     MenuItem
 } from '@material-ui/core';
 import moment from 'moment';
@@ -268,12 +268,6 @@ const Registration = () => {
                                     </Typography>
                                 </Grid>
 
-                                {/* <Grid container direction="row" item>
-                                        <LocationOnIcon style={{ marginRight: 8 }} />
-                                        <Typography >
-                                            {state.event?.location}
-                                        </Typography>
-                                    </Grid> */}
                                 <Grid
                                     container
                                     justify="flex-start"
