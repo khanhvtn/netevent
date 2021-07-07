@@ -2,20 +2,25 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
     Paper,
     Grid,
+    Button,
     Typography,
     Container,
     CircularProgress,
-    Divider
+    Divider,
+    Table,
+    TableBody,
+    TableCell,
+    FormControl,
+    TextField,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Chip,
+    Select,
+    InputLabel,
+    MenuItem
 } from '@material-ui/core';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Chip from '@material-ui/core/Chip';
+import useStyles from './styles';
 import moment from 'moment';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -29,12 +34,7 @@ import { registerParticipant } from '../../actions/participantActions';
 import { useParams, useHistory } from 'react-router';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import SystemNotification from '../../components/Notification/Notification';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import { ERROR_CLEAR } from '../../constants';
-import { Button } from '@material-ui/core';
-import useStyles from './styles';
 
 const participantInitialState = {
     event: null,
