@@ -39,7 +39,7 @@ export const getUsersAPI = (
 export const confirmUser = (id, password) =>
     AXIOS.patch(`/link/confirm/${id}`, { password: password });
 export const getLinks = () => AXIOS.get('/link');
-
+export const getLinkAPI = (id) => AXIOS.get(`/link/${id}`);
 //Facility APIs
 export const getFacilitiesAPI = (userQueries) => {
     const {
