@@ -39,5 +39,23 @@ export default makeStyles((theme) => ({
         [theme.breakpoints.down('xs')]: {
             fontSize: '15px'
         }
+    },
+    filterBox: {
+        margin: '18px 40px',
+        [theme.breakpoints.down('md')]: {
+            margin: 16
+        },
+        [theme.breakpoints.down('sm')]: {
+            marginTop: 32,
+            margin: 0
+        }
+    },
+    accordianStyle: {
+        margin: '8px 24px 16px 0',
+        minWidth: 0,
+        width: '100%',
+        [theme.breakpoints.down('md')]: {
+            margin: '8px 0 16px'
+        }
     }
 }));

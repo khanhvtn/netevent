@@ -1,4 +1,4 @@
-const { Task } = require('../models');
+const { Task, Event } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
 
@@ -269,52 +269,69 @@ const updateTask = async (req, res, next) => {
  */
 const getTasksByEvent = async (req, res, next) => {
     try {
-        const tasks = await Task.find({
-            userId: req.query.userId
-        })
-            .populate({
-                path: 'userId eventId'
-            })
-            .sort({ startDate: 1 });
+        let options = {
+            search: '',
+            take: 5
+        };
 
-        // Remove all task not have eventId
-        let checkCode = [];
-        let result = [];
-        const filterTasks = tasks.filter((task) => task.eventId);
-        for (task of filterTasks) {
-            let tmpObj = {
-                code: null,
-                eventName: null,
-                startDate: null,
-                tasks: []
+        /* Create Default Query Options */
+        let queryOptions = {};
+
+        //add useId filter
+        if (req.query.userId) {
+            queryOptions = {
+                ...queryOptions,
+                userId: req.query.userId
             };
-            if (!checkCode.includes(task.eventId?.urlCode)) {
-                tmpObj.code = task.eventId?.urlCode;
-                tmpObj.eventName = task.eventId?.eventName;
-                tmpObj.startDate = task.eventId?.startDate;
-                tmpObj.tasks.push(task);
-
-                result.push(tmpObj);
-                checkCode.push(task.eventId?.urlCode);
-            } else {
-                for (currentTask of result) {
-                    if (currentTask.code === task.eventId?.urlCode) {
-                        currentTask.tasks.push(task);
-                        break;
-                    }
-                }
-            }
         }
 
-        result.sort(function (a, b) {
-            // Turn your strings into dates, and then subtract them
-            // to get a value that is either negative, positive, or zero.
-            return new Date(b.startDate) - new Date(a.startDate);
-        });
+        /* 
+        Add take row filter
+        Default take is 5
+         */
+        if (req.query.take) {
+            options = {
+                ...options,
+                take: parseInt(req.query.take.toString())
+            };
+        }
 
-        result.limit(2);
+        /* 
+        Variable page default is 1
+         */
+        const page = parseInt(req.query.page) || 1;
 
-        return cusResponse(res, 200, result, null);
+        /* 
+        Variable total task based on search and filter
+         */
+        const queryEvent = await Event.find()
+            .populate({
+                path: 'taskListId',
+                match: { userId: { $in: queryOptions.userId } },
+                populate: {
+                    path: 'userId',
+                    model: 'User'
+                }
+            })
+            .sort({ endDate: 1 });
+
+        const filterEvents = queryEvent.filter(
+            (event) => event.taskListId.length !== 0
+        );
+
+        const totalEventHaveUserId = filterEvents.length;
+
+        let totalPages = (totalEventHaveUserId / options.take)
+            .toString()
+            .includes('.')
+            ? Math.ceil(totalEventHaveUserId / options.take)
+            : totalEventHaveUserId / options.take;
+
+        const results = filterEvents
+            .skip((page - 1) * options.take)
+            .limit(options.take);
+
+        return cusResponse(res, 200, results, null, totalPages);
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
