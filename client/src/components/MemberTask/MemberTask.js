@@ -202,7 +202,7 @@ const MemberTask = () => {
                             style={{ fontWeight: 'bold' }}
                             align="left"
                             variant="h4">
-                            Finish task
+                            Assigned tasks
                         </Typography>
                     </Toolbar>
                 ) : null}
