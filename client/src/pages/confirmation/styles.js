@@ -26,7 +26,7 @@ export default makeStyles(() => ({
         }
     },
     textFieldPass2: {
-        margin: '20px 0 0 0',
+        margin: '20px 0',
         '& .MuiOutlinedInput-root': {
             '& fieldset': {
                 borderRadius: 8

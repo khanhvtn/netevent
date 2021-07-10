@@ -70,7 +70,7 @@ const Confirmation = () => {
         <div className={css.main}>
             <div className={css.wrapper}>
                 <Zoom in>
-                    <Paper className={css.confirmationWrapper}>
+                    <Paper className={css.confirmationWrapper} elevation={3}>
                         <CardMedia
                             className={css.media}
                             image={logo}
@@ -101,7 +101,7 @@ const Confirmation = () => {
                                         variant="outlined"
                                         className={css.textFieldPass1}
                                         type="password"
-                                        label="Password"
+                                        label="Enter new password"
                                         value={password.password1}
                                         name="password1"
                                         fullWidth
