@@ -34,7 +34,7 @@ export const PASSWORD_MATCHED =
 //link action types
 export const GET_LINKS = 'GET_LIKKS';
 export const GET_LINK_COMPLETE = 'GET_LINK_COMPLETE';
-
+export const GET_LINK_BY_ID = 'GET_LINK_BY_ID';
 //Facility action types
 export const FACILITY_GET_ALL = 'FACILITY_GET_ALL';
 export const FACILITY_GET_ALL_FILTER = 'FACILITY_GET_ALL_FILTER';

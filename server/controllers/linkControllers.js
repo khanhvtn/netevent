@@ -2,6 +2,8 @@ const Link = require('../models/linkModel');
 const User = require('../models/userModel');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const { cusResponse } = require('../utils');
+const CustomError = require('../class/CustomeError');
 
 /**
  *  =====================================
@@ -39,17 +41,15 @@ const getLinks = async (req, res) => {
 const getLink = async (req, res, next) => {
     const { id: _id } = req.params;
     try {
-        const link = await Link.findById(_id);
-
-        if (link) {
-            await User.findByIdAndUpdate(
-                link.user,
-                { $set: { isConfirmed: true } },
-
-                { new: true }
-            );
-            await Link.findByIdAndRemove(_id);
-            return res.status(200).json('Successful');
+        if (!mongoose.Types.ObjectId.isValid(_id)) {
+            return cusResponse(res, 200, false, null);
+        } else {
+            const link = await Link.findById(_id);
+            if (link) {
+                return cusResponse(res, 200, true, null);
+            } else {
+                return cusResponse(res, 200, false, null);
+            }
         }
     } catch (error) {
         return next(new CustomError(500, error.message));

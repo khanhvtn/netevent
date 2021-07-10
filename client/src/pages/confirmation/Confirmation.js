@@ -15,7 +15,7 @@ import logo from '../../images/logo.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { userConfirm } from '../../actions/userActions';
-import { getLinks } from '../../actions/linkActions';
+import { getLink } from '../../actions/linkActions';
 import { PASSWORD_MATCHED } from '../../constants';
 
 const initialState = {
@@ -28,7 +28,6 @@ const Confirmation = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const [password, setPassword] = useState(initialState);
-    const [validLink] = useState([]);
     const [errorPassword, setErrorPassword] = useState(false);
     const id = useParams();
     const { link } = useSelector((state) => ({
@@ -39,23 +38,16 @@ const Confirmation = () => {
     }));
 
     useEffect(() => {
-        dispatch(getLinks());
-    }, [dispatch]);
+        dispatch(getLink(id.id));
+    }, [dispatch, id.id]);
 
     useEffect(() => {
         if (link.complete) {
-            if (link.links.length > 0 && link.links !== null) {
-                for (var i = 0; i < link.links.length; i++) {
-                    validLink.push(link.links[i]._id);
-                }
-                if (!validLink.includes(id.id)) {
-                    history.push('/404');
-                }
-            } else {
+            if (!link.link.data) {
                 history.push('/404');
             }
         }
-    }, [id, history, link.complete, link.links, validLink]);
+    }, [link, history]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -78,7 +70,7 @@ const Confirmation = () => {
         <div className={css.main}>
             <div className={css.wrapper}>
                 <Zoom in>
-                    <Paper className={css.confirmationWrapper}>
+                    <Paper className={css.confirmationWrapper} elevation={3}>
                         <CardMedia
                             className={css.media}
                             image={logo}
@@ -109,7 +101,7 @@ const Confirmation = () => {
                                         variant="outlined"
                                         className={css.textFieldPass1}
                                         type="password"
-                                        label="Password"
+                                        label="Enter new password"
                                         value={password.password1}
                                         name="password1"
                                         fullWidth
