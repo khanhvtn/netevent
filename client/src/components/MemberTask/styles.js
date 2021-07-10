@@ -2,20 +2,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
     circularProgress: {
-        position: 'absolute',
-        top: '50%',
-        left: '55%',
-        [theme.breakpoints.down('md')]: {
-            left: '50%'
-        }
+        marginTop: '25%'
     },
     noTask: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        [theme.breakpoints.down('md')]: {
-            left: '40%'
-        }
+        marginTop: '10%'
     },
     grow: {
         flexGrow: 1
@@ -38,6 +28,24 @@ export default makeStyles((theme) => ({
         maxWidth: 150,
         [theme.breakpoints.down('xs')]: {
             fontSize: '15px'
+        }
+    },
+    filterBox: {
+        margin: '18px 40px',
+        [theme.breakpoints.down('md')]: {
+            margin: 16
+        },
+        [theme.breakpoints.down('sm')]: {
+            marginBottom: 32,
+            margin: 0
+        }
+    },
+    accordianStyle: {
+        margin: '8px 24px 16px 0',
+        minWidth: 0,
+        width: '100%',
+        [theme.breakpoints.down('md')]: {
+            margin: '8px 0 16px'
         }
     }
 }));

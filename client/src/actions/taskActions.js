@@ -9,10 +9,10 @@ const setTaskIsLoading = (status, dispatch) => {
     });
 };
 
-export const getTasksByEvent = (userId) => async (dispatch) => {
+export const getTasksByEvent = (userQueries) => async (dispatch) => {
     setTaskIsLoading(true, dispatch);
     try {
-        const data = await getTasksByEventAPI(userId);
+        const data = await getTasksByEventAPI(userQueries);
         dispatch({
             type: TASK_GET_ALL,
             payload: data
