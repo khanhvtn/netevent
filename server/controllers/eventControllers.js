@@ -1229,7 +1229,13 @@ const getAnalysis = async (req, res, next) => {
             path: 'eventTypeId ownerId'
         });
 
-        const participantData = await Participant.find().populate('event');
+        const getAllFilteredEventId = eventData.map((event) => event._id);
+
+        const participantData = await Participant.find({
+            event: {
+                $in: getAllFilteredEventId
+            }
+        }).populate('event');
 
         //Analyze Participant
         const totalParticipantSignedUp = participantData.filter(
@@ -1262,7 +1268,6 @@ const getAnalysis = async (req, res, next) => {
         const totalEvents = eventData.length;
 
         // Get Participants on Completed Event
-
         const completed = eventData.filter(
             (event) => event.isFinished == true && event.isApproved == true
         );
