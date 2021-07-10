@@ -4,16 +4,18 @@ export default makeStyles((theme) => ({
     paper: {
         margin: '40px 30px',
         paddingBottom: 80,
-        minHeight: '70vh',
-        flexGrow: 1,
-        textAlign: 'center',
+        minHeight: '86vh',
+        color: theme.palette.text.secondary,
+        backgroundColor: theme.palette.background.default,
         [theme.breakpoints.down('md')]: {
             margin: '20px'
         }
     },
 
     title: {
-        padding: theme.spacing(2)
+        flex: '1 1 100%',
+        fontWeight: 'bold',
+        padding: theme.spacing(3)
     },
 
     analysisCard: {
@@ -29,14 +31,13 @@ export default makeStyles((theme) => ({
     },
 
     chartContainer: {
-        height: '50vh'
+        height: 80
     },
 
     chartTypo: {
         color: '#0e2045',
         fontSize: 18,
         fontWeight: 'bold',
-        verticalAlign: 'middle',
         display: 'inline-flex'
     },
 
@@ -49,10 +50,16 @@ export default makeStyles((theme) => ({
     iconAnalysis: {
         paddingRight: theme.spacing(1)
     },
-    contentWrapper: {
-        marginTop: '20%',
-        minHeight: '40vh'
+
+    circularProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '55%',
+        [theme.breakpoints.down('md')]: {
+            left: '50%'
+        }
     },
+
     titleExportBtn: {
         color: '#ffffff',
         fontSize: 18,
@@ -63,11 +70,19 @@ export default makeStyles((theme) => ({
 
     exportBtn: {
         margin: theme.spacing(2),
-        text: 'right',
-        float: 'right',
         backgroundColor: '#0e2045'
     },
+
     gridChart: {
         padding: theme.spacing(2)
+    },
+
+    paperChart: {
+        margin: theme.spacing(2),
+        padding: theme.spacing(2)
+    },
+
+    paperToolbar: {
+        margin: theme.spacing(2)
     }
 }));

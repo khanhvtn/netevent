@@ -5,17 +5,19 @@ import {
     Paper,
     Typography,
     Button,
-    CircularProgress
+    CircularProgress,
+    Toolbar,
+    Tooltip,
+    IconButton
 } from '@material-ui/core';
+import { FilterList } from '@material-ui/icons';
 import { Pie, Bar } from 'react-chartjs-2';
 import { getEventAnalysis } from '../../actions/eventActions';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ExportToCsv } from 'export-to-csv';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import { useDispatch, useSelector } from 'react-redux';
-const options = {
-    maintainAspectRatio: false // Don't maintain w/h ratio
-};
+import EventAnalysisFilter from './EventAnalysisFilter/EventAnalysisFilter';
 
 const signUpAndShowUpData = {
     labels: ['Signed Up', 'Showed Up'],
@@ -116,6 +118,21 @@ const optionVerticalBarChart = {
         precision: 0
     }
 };
+
+const initialState = {
+    startFrom: null,
+    startTo: null,
+    endFrom: null,
+    endTo: null
+};
+
+const filterState = {
+    startFrom: null,
+    startTo: null,
+    endFrom: null,
+    endTo: null
+};
+
 const EventAnalysis = () => {
     const css = useStyles();
     const dispatch = useDispatch();
@@ -126,14 +143,27 @@ const EventAnalysis = () => {
         participantOfCompletedEventState,
         setParticipantOfCompletedEventState
     ] = useState(participantOfCompletedEventData);
+
+    const [state, setState] = useState(initialState);
+    const [filters, setFilters] = useState(filterState);
+
+    // Get selector redux store
     const { loadingAnalysis, analysis } = useSelector((state) => ({
         loadingAnalysis: state.event.loadingAnalysis,
         analysis: state.event.analysis
     }));
 
+    // Use Effect for get event analysis
     useEffect(() => {
-        dispatch(getEventAnalysis());
-    }, [dispatch]);
+        dispatch(
+            getEventAnalysis({
+                startFrom: state.startFrom,
+                startTo: state.startTo,
+                endFrom: state.endFrom,
+                endTo: state.endTo
+            })
+        );
+    }, [dispatch, state.startFrom, state.startTo, state.endFrom, state.endTo]);
 
     useEffect(() => {
         if (!loadingAnalysis && analysis.completedEventNames !== undefined) {
@@ -271,80 +301,175 @@ const EventAnalysis = () => {
         console.log(exportEventData);
     };
 
+    //handle ToggleFilter
+    const handleToggleFilter = () => {
+        setState((prevState) => ({
+            ...prevState,
+            openFilter: !prevState.openFilter
+        }));
+    };
+
+    //handle Apply Filter
+    const handleApplyFilter = () => {
+        setState((prevState) => ({
+            ...prevState,
+            ...filters,
+            openFilter: !prevState.openFilter
+        }));
+    };
+
+    //handle Clear Filter
+    const handleClearFilter = () => {
+        setFilters((prevState) => ({
+            ...prevState,
+            ...filterState
+        }));
+        setState((prevState) => ({
+            ...prevState,
+            ...filterState,
+            openFilter: !prevState.openFilter
+        }));
+    };
+
     return (
         <>
             {loadingAnalysis ? (
-                <div className={css.contentWrapper} align="center">
+                <div className={css.circularProgress} align="center">
                     <CircularProgress color="primary" />
                 </div>
             ) : (
-                <Paper elevation={0} className={css.paper}>
-                    <Grid container className={css.gridChart}>
-                        <Grid item xs={6}>
-                            <Typography
-                                className={css.title}
-                                style={{ fontWeight: 'bold' }}
-                                align="left"
-                                variant="h4">
-                                Analysis
-                            </Typography>
-                        </Grid>
+                <>
+                    <Paper elevation={0} className={css.paper}>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Paper className={css.paperToolbar}>
+                                    <Toolbar>
+                                        <Typography
+                                            className={css.title}
+                                            style={{ fontWeight: 'bold' }}
+                                            align="left"
+                                            variant="h4">
+                                            Analysis
+                                        </Typography>
+                                        <Button
+                                            variant="contained"
+                                            className={css.exportBtn}
+                                            onClick={() => handleOnExport()}>
+                                            <Typography
+                                                className={css.titleExportBtn}>
+                                                <GetAppIcon
+                                                    className={css.iconAnalysis}
+                                                />
+                                                Export
+                                            </Typography>
+                                        </Button>
+                                        <Tooltip
+                                            title="Filter"
+                                            className={css.filterButton}
+                                            onClick={handleToggleFilter}>
+                                            <div>
+                                                <IconButton color="inherit">
+                                                    <FilterList />
+                                                </IconButton>
+                                            </div>
+                                        </Tooltip>
+                                    </Toolbar>
+                                </Paper>
+                            </Grid>
 
-                        <Grid item xs={6}>
-                            <Button
-                                variant="contained"
-                                className={css.exportBtn}
-                                onClick={() => handleOnExport()}>
-                                <Typography className={css.titleExportBtn}>
-                                    <GetAppIcon className={css.iconAnalysis} />
-                                    Export
-                                </Typography>
-                            </Button>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography className={css.chartTypo}>
-                                <PieChartIcon className={css.iconAnalysis} />
-                                Percentage of People Showing Up Across All
-                                Events
-                            </Typography>
-                            <article className={css.chartContainer}>
-                                <Pie
-                                    data={signUpAndShowUpState}
-                                    options={options}
-                                />
-                            </article>
-                        </Grid>
-
-                        <Grid item xs={6}>
-                            <Typography className={css.chartTypo}>
-                                <PieChartIcon className={css.iconAnalysis} />
-                                Number of Events
-                            </Typography>
-                            <article className={css.chartContainer}>
-                                <Bar
-                                    data={eventStatusState}
-                                    options={optionBarChart}
-                                />
-                            </article>
-                        </Grid>
-                        <Grid container spacing={3} style={{ paddingTop: 10 }}>
-                            <Grid item xs={6}>
-                                <Typography className={css.chartTypo}>
-                                    <PieChartIcon
-                                        className={css.iconAnalysis}
-                                    />
-                                    Number of Participants in Completed Events
-                                </Typography>
-                                <article className={css.chartContainer}>
+                            {/* Number of participant in completed events */}
+                            <Grid item xs={12}>
+                                <Paper className={css.paperChart}>
+                                    <div align="center">
+                                        <Typography
+                                            align="center"
+                                            className={css.chartTypo}>
+                                            <PieChartIcon
+                                                className={css.iconAnalysis}
+                                            />
+                                            Number of Participants in Completed
+                                            Events
+                                        </Typography>
+                                    </div>
                                     <Bar
                                         data={participantOfCompletedEventState}
                                         options={optionVerticalBarChart}
+                                        height={80}
                                     />
-                                </article>
+                                </Paper>
+                            </Grid>
+
+                            <Grid container direction="row" item xs={12}>
+                                {/* Number of Events Chart */}
+                                <Grid
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    item
+                                    xs={12}
+                                    md={6}>
+                                    <Paper
+                                        style={{ justifyContent: 'center' }}
+                                        className={css.paperChart}>
+                                        <div align="center">
+                                            <Typography
+                                                align="center"
+                                                className={css.chartTypo}>
+                                                <PieChartIcon
+                                                    className={css.iconAnalysis}
+                                                />
+                                                Percentage of People Showing Up
+                                                Across All Events
+                                            </Typography>
+                                            <div style={{ width: '50%' }}>
+                                                <Pie
+                                                    data={signUpAndShowUpState}
+                                                />
+                                            </div>
+                                        </div>
+                                    </Paper>
+                                </Grid>
+
+                                {/* Number of showing up event chart */}
+                                <Grid
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    item
+                                    xs={12}
+                                    md={6}>
+                                    <Paper className={css.paperChart}>
+                                        <div align="center">
+                                            <Typography
+                                                align="center"
+                                                className={css.chartTypo}>
+                                                <PieChartIcon
+                                                    className={css.iconAnalysis}
+                                                />
+                                                Number of Events
+                                            </Typography>
+                                        </div>
+                                        <Bar
+                                            data={eventStatusState}
+                                            options={optionBarChart}
+                                        />
+                                    </Paper>
+                                </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
-                </Paper>
+                    </Paper>
+
+                    {/* Filter Sidebar */}
+                    <EventAnalysisFilter
+                        openFilter={state.openFilter}
+                        startFrom={filters.startFrom}
+                        startTo={filters.startTo}
+                        endFrom={filters.endFrom}
+                        endTo={filters.endTo}
+                        setFilters={setFilters}
+                        handleToggleFilter={handleToggleFilter}
+                        handleApplyFilter={handleApplyFilter}
+                        handleClearFilter={handleClearFilter}
+                    />
+                </>
             )}
         </>
     );

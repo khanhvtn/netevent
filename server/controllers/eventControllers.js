@@ -449,6 +449,7 @@ const filterEventManagement = async (req, res, next) => {
                 $lte: options.endMaxDate
             }
         };
+
         /* 
         Variable page default is 1
          */
@@ -1135,9 +1136,99 @@ const getRegistrationPageDetail = async (req, res, next) => {
 
 const getAnalysis = async (req, res, next) => {
     try {
-        const eventData = await Event.find().populate({
+        //get max date and min date of updatedAt and createdAt
+        const startMaxDate = await Event.find()
+            .sort({ startDate: -1 })
+            .limit(1);
+        const startMinDate = await Event.find().sort({ startDate: 1 }).limit(1);
+        const endMaxDate = await Event.find().sort({ endDate: -1 }).limit(1);
+        const endMinDate = await Event.find().sort({ endDate: 1 }).limit(1);
+        const listRangeDate = await Promise.all([
+            startMaxDate,
+            startMinDate,
+            endMaxDate,
+            endMinDate
+        ]);
+
+        //return empty result to client if database has no data.
+        if (
+            !startMaxDate.length ||
+            !startMinDate.length ||
+            !endMaxDate.length ||
+            !endMinDate.length
+        ) {
+            return cusResponse(res, 200, [], null);
+        }
+
+        let options = {
+            startMaxDate: listRangeDate[0][0].startDate,
+            startMinDate: listRangeDate[1][0].startDate,
+            endMaxDate: listRangeDate[2][0].endDate,
+            endMinDate: listRangeDate[3][0].endDate
+        };
+
+        /* Create Default Query Options */
+        let queryOptions = {};
+
+        /* 
+        Add startFrom filter
+         */
+        if (req.query.startFrom) {
+            options = {
+                ...options,
+                startMinDate: new Date(req.query.startFrom)
+            };
+        }
+
+        /* 
+        Add startTo filter
+         */
+
+        if (req.query.startTo) {
+            options = {
+                ...options,
+                startMaxDate: new Date(req.query.startTo)
+            };
+        }
+
+        /* 
+        Add endFrom filter
+         */
+        if (req.query.endFrom) {
+            options = {
+                ...options,
+                endMinDate: new Date(req.query.endFrom)
+            };
+        }
+
+        /* 
+        Add endTo filter
+         */
+
+        if (req.query.endTo) {
+            options = {
+                ...options,
+                endMaxDate: new Date(req.query.endTo)
+            };
+        }
+
+        /* Set StartDate and EndDate Filter for query options */
+        queryOptions = {
+            ...queryOptions,
+            startDate: {
+                $gte: options.startMinDate,
+                $lte: options.startMaxDate
+            },
+            endDate: {
+                $gte: options.endMinDate,
+                $lte: options.endMaxDate
+            }
+        };
+
+        const eventData = await Event.find(queryOptions).populate({
             path: 'eventTypeId ownerId'
         });
+
         const participantData = await Participant.find().populate('event');
 
         //Analyze Participant

@@ -172,7 +172,22 @@ export const fetchEventsAPI = () => AXIOS.get('/event/all');
 export const getAllEventAPI = () => AXIOS.get(`/event/all`);
 
 //Get All Event Analysis
-export const getEventsAnalysisAPI = () => AXIOS.get('/event/analysisAll');
+export const getEventsAnalysisAPI = (userQueries) => {
+    const startFromQuery = `startFrom=${
+        userQueries?.startFrom ? userQueries?.startFrom : ''
+    }`;
+    const startToQuery = `startTo=${
+        userQueries?.startTo ? userQueries?.startTo : ''
+    }`;
+    const endFromQuery = `endFrom=${
+        userQueries?.endFrom ? userQueries?.endFrom : ''
+    }`;
+    const endToQuery = `endTo=${userQueries?.endTo ? userQueries?.endTo : ''}`;
+
+    return AXIOS.get(
+        `/event/analysisAll?${startFromQuery}&${startToQuery}&${endFromQuery}&${endToQuery}`
+    );
+};
 
 // Get Event Analysis by ID
 

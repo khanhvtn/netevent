@@ -75,10 +75,10 @@ export const getAllEvent = () => async (dispatch) => {
 
 // Get Analysis
 
-export const getEventAnalysis = () => async (dispatch) => {
+export const getEventAnalysis = (userQueries) => async (dispatch) => {
     setAnalysisIsLoading(true, dispatch);
     try {
-        const data = await getEventsAnalysisAPI();
+        const data = await getEventsAnalysisAPI(userQueries);
         dispatch({
             type: GET_EVENT_ANALYSIS,
             payload: data

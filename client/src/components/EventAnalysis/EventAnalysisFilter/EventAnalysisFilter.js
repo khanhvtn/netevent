@@ -8,14 +8,14 @@ import MomentUtils from '@date-io/moment';
 //import useStyles in the last
 import useStyles from './styles';
 
-const EventFilter = ({
+const EventAnalysisFilter = ({
     openFilter,
-    handleToggleFilter,
-    createdFrom,
-    createdTo,
+    startFrom,
+    startTo,
+    endFrom,
+    endTo,
     setFilters,
-    updatedFrom,
-    updatedTo,
+    handleToggleFilter,
     handleClearFilter,
     handleApplyFilter
 }) => {
@@ -27,7 +27,7 @@ const EventFilter = ({
                     style={{ fontWeight: 'bold' }}
                     align="center"
                     variant="h6">
-                    Filter Event Type
+                    Filter Event Analysis
                 </Typography>
             </div>
             <div className={css.filterWrapper}>
@@ -39,14 +39,14 @@ const EventFilter = ({
                                 size="small"
                                 fullWidth
                                 margin="normal"
-                                id="createdFrom"
-                                label="Created From"
+                                id="startFrom"
+                                label="Start From"
                                 format="MM/DD/YYYY"
-                                value={createdFrom}
+                                value={startFrom}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        createdFrom: date.toDate()
+                                        startFrom: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
@@ -58,14 +58,14 @@ const EventFilter = ({
                                 size="small"
                                 fullWidth
                                 margin="normal"
-                                id="createdTo"
-                                label="Created To"
+                                id="startTo"
+                                label="Start To"
                                 format="MM/DD/YYYY"
-                                value={createdTo}
+                                value={startTo}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        createdTo: date.toDate()
+                                        startTo: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
@@ -73,18 +73,18 @@ const EventFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                inputVariant="outlined"
-                                size="small"
                                 fullWidth
+                                id="endFrom"
+                                label="End From"
+                                size="small"
                                 margin="normal"
-                                id="updatedFrom"
-                                label="Updated From"
                                 format="MM/DD/YYYY"
-                                value={updatedFrom}
+                                inputVariant="outlined"
+                                value={endFrom}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        updatedFrom: date.toDate()
+                                        endFrom: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
@@ -92,18 +92,18 @@ const EventFilter = ({
                                 }}
                             />
                             <KeyboardDatePicker
-                                inputVariant="outlined"
-                                size="small"
                                 fullWidth
+                                id="endTo"
+                                label="End To"
+                                size="small"
                                 margin="normal"
-                                id="updatedTo"
-                                label="Updated To"
                                 format="MM/DD/YYYY"
-                                value={updatedTo}
+                                inputVariant="outlined"
+                                value={endTo}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
-                                        updatedTo: date.toDate()
+                                        endTo: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{
@@ -133,4 +133,4 @@ const EventFilter = ({
     );
 };
 
-export default EventFilter;
+export default EventAnalysisFilter;
