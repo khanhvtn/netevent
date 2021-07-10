@@ -2,20 +2,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
     circularProgress: {
-        position: 'absolute',
-        top: '50%',
-        left: '55%',
-        [theme.breakpoints.down('md')]: {
-            left: '50%'
-        }
+        marginTop: '25%'
     },
     noTask: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        [theme.breakpoints.down('md')]: {
-            left: '40%'
-        }
+        marginTop: '10%'
     },
     grow: {
         flexGrow: 1
@@ -46,7 +36,7 @@ export default makeStyles((theme) => ({
             margin: 16
         },
         [theme.breakpoints.down('sm')]: {
-            marginTop: 32,
+            marginBottom: 32,
             margin: 0
         }
     },

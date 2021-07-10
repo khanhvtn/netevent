@@ -259,9 +259,12 @@ export const getTasksByEventAPI = (userQueries) => {
     const userIdQuery = `userId=${
         userQueries?.userId ? userQueries?.userId : ''
     }`;
+    const statusQuery = `status=${
+        userQueries?.status ? userQueries?.status : ''
+    }`;
 
     return AXIOS.get(
-        `/task/getTasksByEvent?${takeQuery}&${pageQuery}&${userIdQuery}`
+        `/task/getTasksByEvent?${takeQuery}&${pageQuery}&${userIdQuery}&${statusQuery}`
     );
 };
 export const getTasksAPI = (userQueries) => {

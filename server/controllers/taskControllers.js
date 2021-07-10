@@ -296,6 +296,34 @@ const getTasksByEvent = async (req, res, next) => {
             };
         }
 
+        /* Create Default Query Options */
+        let statusOptions = {};
+
+        /* 
+        Add status row filter
+        Default status is incoming
+         */
+        if (req.query.status) {
+            switch (req.query.status) {
+                case 'incoming':
+                    statusOptions = {
+                        ...statusOptions,
+                        endDate: {
+                            $gte: new Date()
+                        }
+                    };
+                    break;
+                case 'assigned':
+                    statusOptions = {
+                        ...statusOptions,
+                        endDate: {
+                            $lte: new Date()
+                        }
+                    };
+                    break;
+            }
+        }
+
         /* 
         Variable page default is 1
          */
@@ -304,7 +332,7 @@ const getTasksByEvent = async (req, res, next) => {
         /* 
         Variable total task based on search and filter
          */
-        const queryEvent = await Event.find()
+        const queryEvent = await Event.find(statusOptions)
             .populate({
                 path: 'taskListId',
                 match: { userId: { $in: queryOptions.userId } },
@@ -313,7 +341,7 @@ const getTasksByEvent = async (req, res, next) => {
                     model: 'User'
                 }
             })
-            .sort({ endDate: 1 });
+            .sort({ endDate: -1 });
 
         const filterEvents = queryEvent.filter(
             (event) => event.taskListId.length !== 0
