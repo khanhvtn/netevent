@@ -4,7 +4,7 @@ import useStyle from './styles';
 import QrReader from 'react-qr-reader';
 import { useDispatch, useSelector } from 'react-redux';
 import SystemNotification from '../Notification/Notification';
-import { setAttendedParticipant } from '../../actions/participantActions';
+import { setAttendedParticipantByQrCode } from '../../actions/participantActions';
 const ParticipantChecking = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [scanDelay, setScanDelay] = useState(1000);
@@ -12,17 +12,13 @@ const ParticipantChecking = () => {
     const [openUpdateSnackBar, SetOpenUpdateSnackBar] = useState(false);
     const css = useStyle();
     const dispatch = useDispatch();
-    const { isParticipantUpdated } = useSelector((state) => ({
+    const { isParticipantUpdated, errors } = useSelector((state) => ({
         isParticipantUpdated: state.participant.isUpdated,
-        isLoading: state.participant.isLoading
+        isLoading: state.participant.isLoading,
+        errors: state.error.errors
     }));
     // UseEffect for update event success
     useEffect(() => {
-        if (isParticipantUpdated) {
-            setTimeout(() => {
-                setScanDelay(1000);
-            }, 3000);
-        }
         SetOpenUpdateSnackBar(isParticipantUpdated);
     }, [dispatch, isParticipantUpdated]);
 
@@ -30,12 +26,16 @@ const ParticipantChecking = () => {
     Then, request to server to change the participant status */
     useEffect(() => {
         if (qrCodeData) {
+            console.log(qrCodeData);
             setScanDelay(false);
             dispatch(
-                setAttendedParticipant({
-                    attendedList: [qrCodeData],
-                    action: true
-                })
+                setAttendedParticipantByQrCode(
+                    {
+                        cipherTextQrCodeData: qrCodeData
+                    },
+                    setScanDelay,
+                    setErrorMessage
+                )
             );
         }
     }, [dispatch, qrCodeData]);
@@ -85,7 +85,7 @@ const ParticipantChecking = () => {
                         style={{ width: '100%', maxWidth: '500px' }}
                     />
                 </Grid>
-                {scanDelay === false && (
+                {!errors?.qrCode && scanDelay === false && (
                     <Grid
                         item
                         container
@@ -97,7 +97,7 @@ const ParticipantChecking = () => {
                         <CircularProgress />
                     </Grid>
                 )}
-                {errorMessage && scanDelay && (
+                {errors?.qrCode ? (
                     <Grid
                         item
                         container
@@ -106,9 +106,24 @@ const ParticipantChecking = () => {
                         justify="center"
                         spacing={3}>
                         <Typography color="secondary" variant="h6">
-                            {errorMessage}
+                            {errors.qrCode}
                         </Typography>
                     </Grid>
+                ) : (
+                    errorMessage &&
+                    scanDelay && (
+                        <Grid
+                            item
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justify="center"
+                            spacing={3}>
+                            <Typography color="secondary" variant="h6">
+                                {errorMessage}
+                            </Typography>
+                        </Grid>
+                    )
                 )}
             </Grid>
             {/* Notification */}

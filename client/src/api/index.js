@@ -262,6 +262,8 @@ export const setInvalidAndVerifyParticipantAPI = (userReq) =>
     AXIOS.patch('/participant/update/valid', userReq);
 export const setAttendedParticipantAPI = (userReq) =>
     AXIOS.patch('/participant/update/attend', userReq);
+export const setAttendedParticipantByQrCodeAPI = (userReq) =>
+    AXIOS.patch('/participant/update/attendByQrCode', userReq);
 
 // Notification History API
 export const getNotificationHistoryByEventCodeAPI = (code) =>

@@ -4,6 +4,7 @@ const CustomError = require('../class/CustomeError');
 const mongoose = require('mongoose');
 const { sendInvitation } = require('./misc/mailerInvitation');
 const qrCode = require('qrcode');
+const CryptoJS = require('crypto-js');
 
 /**
  *  =====================================
@@ -358,13 +359,26 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
 
                 //send invitation to participants with QRCode and Calendar event.
                 await Promise.all(
-                    verifiedList.map(async (_id) => {
-                        const qrCodeDataUrl = await qrCode.toDataURL(_id);
+                    participants.map(async (participant) => {
+                        const qrData = JSON.stringify({
+                            eventId: participant.event,
+                            participantId: participant._id
+                        });
+                        //encrypt data
+                        const cipherText = CryptoJS.AES.encrypt(
+                            qrData,
+                            'netevent'
+                        ).toString();
+                        const qrCodeDataUrl = await qrCode.toDataURL(
+                            cipherText,
+                            {
+                                width: 300
+                            }
+                        );
                         return await sendInvitation({
                             from: 'noreply@netevent.com',
                             to: stringUsersMail,
                             subject: `NetEvent - ${event.eventName} - Invitation`,
-                            text: 'Your event registration has been verified. You can now come to an event!',
                             icalEvent: {
                                 filename: 'invitation.ics',
                                 method: 'request',
@@ -373,12 +387,12 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
                             html: `
                             <p>Your event registration has been verified. You can now come to an event!</p>
                             <p>Please show below QR Code to staff when you come to the event:</p> 
-                            <img src="cid:${_id}" alt="QrCode">`,
+                            <img src="cid:${participant.email}" alt="QrCode">`,
                             attachments: [
                                 {
                                     filename: 'qrcode.png',
                                     path: qrCodeDataUrl,
-                                    cid: _id
+                                    cid: participant.email
                                 }
                             ]
                         });
@@ -428,6 +442,39 @@ const setAttendedParticipant = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+/**
+ * @decsription Set Attend participants
+ * @method PATCH
+ * @route /api/participant/update/valid
+ *
+ * @version 1.0
+ */
+const setAttendedParticipantByQrCode = async (req, res, next) => {
+    const { cipherTextQrCodeData } = req.body;
+    try {
+        // Decrypt
+        var bytes = CryptoJS.AES.decrypt(cipherTextQrCodeData, 'netevent');
+        var participantInfo = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        const participant = await Participant.findById(
+            participantInfo.participantId
+        );
+        if (participant.isAttended) {
+            return next(
+                new CustomError(500, {
+                    qrCode: 'This participant already checked'
+                })
+            );
+        }
+        const updateNotAttendedParticipant = await Participant.updateOne(
+            { _id: participantInfo.participantId },
+            { $set: { isAttended: true } },
+            { new: true }
+        );
+        return cusResponse(res, 200, updateNotAttendedParticipant, null);
+    } catch (error) {
+        return next(new CustomError(500, { qrCode: 'Invalid QR Code' }));
+    }
+};
 
 module.exports = {
     getAllParticipants,
@@ -436,5 +483,6 @@ module.exports = {
     deleteParticipant,
     filterParticipants,
     setInvalidAndVerifyParticipant,
-    setAttendedParticipant
+    setAttendedParticipant,
+    setAttendedParticipantByQrCode
 };

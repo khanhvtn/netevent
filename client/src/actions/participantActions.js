@@ -12,7 +12,8 @@ import {
     registerParticipantAPI,
     setAttendedParticipantAPI,
     setInvalidAndVerifyParticipantAPI,
-    getAllParticipants
+    getAllParticipants,
+    setAttendedParticipantByQrCodeAPI
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -142,3 +143,41 @@ export const setAttendedParticipant = (userReq) => async (dispatch) => {
     }
     setPartiticpantIsLoading(false, dispatch);
 };
+export const setAttendedParticipantByQrCode =
+    (userReq, setScanDelay, setErrorMessage) => async (dispatch) => {
+        setPartiticpantIsLoading(true, dispatch);
+        try {
+            await setAttendedParticipantByQrCodeAPI(userReq);
+            dispatch({
+                type: PARTICIPANT_UPDATE_SUCCESS,
+                payload: true
+            });
+
+            //clear error
+            dispatch({
+                type: ERROR,
+                payload: null
+            });
+
+            setTimeout(() => {
+                dispatch({
+                    type: PARTICIPANT_UPDATE_SUCCESS,
+                    payload: false
+                });
+                //enable camera scan time out.
+                setScanDelay(1000);
+                setErrorMessage('');
+            }, 3000);
+        } catch (error) {
+            console.log(error.message);
+            if (error.response?.data?.errors) {
+                dispatch({
+                    type: ERROR,
+                    payload: error.response.data?.errors
+                });
+            }
+            //enable camera scan time out.
+            setScanDelay(1000);
+        }
+        setPartiticpantIsLoading(false, dispatch);
+    };
