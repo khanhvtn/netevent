@@ -106,7 +106,10 @@ const DataTable = ({ take, data, isLoading, headCells }) => {
     const handleGoToHistory = (id, row) => {
         history.push({
             pathname: `/dashboard/reviewer/facility-usage/${id}`,
-            state: { data: row }
+            state: {
+                data: row,
+                from: '/dashboard/reviewer/facility-usage'
+            }
         });
     };
 
@@ -142,9 +145,6 @@ const DataTable = ({ take, data, isLoading, headCells }) => {
                                         return (
                                             <>
                                                 <TableRow key={index}>
-                                                    <TableCell>
-                                                        <Skeleton />
-                                                    </TableCell>
                                                     {headCells.map(
                                                         (row, index) => {
                                                             return (
