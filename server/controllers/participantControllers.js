@@ -416,28 +416,12 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
 const setAttendedParticipant = async (req, res, next) => {
     const { attendedList, action } = req.body;
     try {
-        switch (action) {
-            case false:
-                const updateAttendedParticipant = await Participant.updateMany(
-                    { _id: attendedList },
-                    { $set: { isAttended: action } },
-                    { new: true }
-                );
-                return cusResponse(res, 200, updateAttendedParticipant, null);
-            case true:
-                const updateNotAttendedParticipant =
-                    await Participant.updateMany(
-                        { _id: attendedList },
-                        { $set: { isAttended: action } },
-                        { new: true }
-                    );
-                return cusResponse(
-                    res,
-                    200,
-                    updateNotAttendedParticipant,
-                    null
-                );
-        }
+        const newUpdateParticipants = await Participant.updateMany(
+            { _id: attendedList },
+            { $set: { isAttended: action } },
+            { new: true }
+        );
+        return cusResponse(res, 200, newUpdateParticipants, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
