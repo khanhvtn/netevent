@@ -11,5 +11,9 @@ router.patch(
     participantControllers.setInvalidAndVerifyParticipant
 );
 router.patch('/update/attend', participantControllers.setAttendedParticipant);
+router.patch(
+    '/update/attendByQrCode',
+    participantControllers.setAttendedParticipantByQrCode
+);
 
 module.exports = router;
