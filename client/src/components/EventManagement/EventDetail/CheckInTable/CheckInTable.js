@@ -108,7 +108,7 @@ const CheckInTable = ({ eventId, tabs }) => {
         tabs
     ]);
 
-    const handleSetAttended = (action) => {
+    const handleSetAttended = () => {
         dispatch(
             setAttendedParticipant({ attendedList: selected, action: action })
         );

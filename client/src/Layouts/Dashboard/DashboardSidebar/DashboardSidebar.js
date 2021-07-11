@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { LogOut as LogOutIcon } from 'react-feather';
 import EventIcon from '@material-ui/icons/Event';
 import EventNoteIcon from '@material-ui/icons/EventNote';
-import { CalendarToday } from '@material-ui/icons';
+import { CalendarToday, PlaylistAddCheck } from '@material-ui/icons';
 import { DevicesOther, People } from '@material-ui/icons';
 import ReplayIcon from '@material-ui/icons/Replay';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
@@ -106,6 +106,11 @@ const roleActions = {
             title: 'Calendar',
             icon: CalendarToday,
             href: ['/dashboard/member/calendar']
+        },
+        {
+            title: 'Checking Participant',
+            icon: PlaylistAddCheck,
+            href: ['/dashboard/member/participantChecking']
         }
     ]
 };

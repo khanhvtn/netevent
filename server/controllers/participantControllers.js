@@ -3,6 +3,7 @@ const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
 const mongoose = require('mongoose');
 const { sendInvitation } = require('./misc/mailerInvitation');
+const qrCode = require('qrcode');
 
 /**
  *  =====================================
@@ -325,7 +326,6 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
                 const description = JSON.parse(event.description);
 
                 //Calendar Content
-
                 let content =
                     'BEGIN:VCALENDAR\n' +
                     'VERSION:2.0\n' +
@@ -356,17 +356,34 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
                     'END:VEVENT\n' +
                     'END:VCALENDAR';
 
-                await sendInvitation({
-                    from: 'noreply@netevent.com',
-                    to: stringUsersMail,
-                    subject: `NetEvent - ${event.eventName} - Invitation`,
-                    text: 'Your event registration has been verified. You can now come to an event!',
-                    icalEvent: {
-                        filename: 'invitation.ics',
-                        method: 'request',
-                        content: content
-                    }
-                });
+                //send invitation to participants with QRCode and Calendar event.
+                await Promise.all(
+                    verifiedList.map(async (_id) => {
+                        const qrCodeDataUrl = await qrCode.toDataURL(_id);
+                        return await sendInvitation({
+                            from: 'noreply@netevent.com',
+                            to: stringUsersMail,
+                            subject: `NetEvent - ${event.eventName} - Invitation`,
+                            text: 'Your event registration has been verified. You can now come to an event!',
+                            icalEvent: {
+                                filename: 'invitation.ics',
+                                method: 'request',
+                                content: content
+                            },
+                            html: `
+                            <p>Your event registration has been verified. You can now come to an event!</p>
+                            <p>Please show below QR Code to staff when you come to the event:</p> 
+                            <img src="cid:${_id}" alt="QrCode">`,
+                            attachments: [
+                                {
+                                    filename: 'qrcode.png',
+                                    path: qrCodeDataUrl,
+                                    cid: _id
+                                }
+                            ]
+                        });
+                    })
+                );
 
                 return cusResponse(res, 200, updateVerifiedParticipant, null);
         }
