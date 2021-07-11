@@ -24,6 +24,7 @@ import FacilityHistory from './components/FacilityUsageHistory/FacilityUsageHist
 import FacilityHistoryAll from './components/FacilityUsageHistory/Facility/Facility';
 import EventAnalysis from './components/EventAnalysis/EventAnalysis';
 import useStyles from './styles';
+import ParticipantChecking from './components/ParticipantChecking/ParticipantChecking';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -203,6 +204,14 @@ const App = () => {
                                 render={() => (
                                     <DashboardLayout>
                                         <CalendarApp targetRole={4} />
+                                    </DashboardLayout>
+                                )}
+                            />
+                            <Route
+                                path="/dashboard/member/participantChecking"
+                                render={() => (
+                                    <DashboardLayout>
+                                        <ParticipantChecking />
                                     </DashboardLayout>
                                 )}
                             />
