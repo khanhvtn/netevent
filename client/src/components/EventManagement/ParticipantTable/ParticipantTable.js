@@ -200,6 +200,7 @@ const EnhancedTableToolbar = (props) => {
         handleSetInvalid,
         handleSetVerified,
         handleSetAttended,
+        handleToggleDialogInvitation,
         isLoading
     } = props;
 
@@ -243,74 +244,82 @@ const EnhancedTableToolbar = (props) => {
                             : 'List of participants'}
                     </Typography>
                 )}
-                {checkInMode
-                    ? numSelected > 0 && (
-                          <>
-                              <Button
-                                  disabled={isLoading}
-                                  onClick={() => handleSetAttended(false)}
-                                  style={{ marginLeft: '8px' }}
-                                  variant="contained"
-                                  color="secondary">
-                                  {isLoading ? (
-                                      <CircularProgress
-                                          size={26}
-                                          color="inherit"
-                                      />
-                                  ) : (
-                                      'Absent'
-                                  )}
-                              </Button>
-                              <Button
-                                  disabled={isLoading}
-                                  onClick={() => handleSetAttended(true)}
-                                  style={{ marginLeft: '8px' }}
-                                  variant="contained"
-                                  color="primary">
-                                  {isLoading ? (
-                                      <CircularProgress
-                                          size={26}
-                                          color="inherit"
-                                      />
-                                  ) : (
-                                      'Attend'
-                                  )}
-                              </Button>
-                          </>
-                      )
-                    : numSelected > 0 && (
-                          <>
-                              <Button
-                                  disabled={isLoading}
-                                  onClick={handleSetInvalid}
-                                  variant="contained"
-                                  color="secondary">
-                                  {isLoading ? (
-                                      <CircularProgress
-                                          size={26}
-                                          color="inherit"
-                                      />
-                                  ) : (
-                                      'Invalid'
-                                  )}
-                              </Button>
-                              <Button
-                                  disabled={isLoading}
-                                  onClick={handleSetVerified}
-                                  style={{ marginLeft: '8px' }}
-                                  variant="contained"
-                                  color="primary">
-                                  {isLoading ? (
-                                      <CircularProgress
-                                          size={26}
-                                          color="inherit"
-                                      />
-                                  ) : (
-                                      'Verify'
-                                  )}
-                              </Button>
-                          </>
-                      )}
+
+                {checkInMode ? (
+                    numSelected > 0 && (
+                        <>
+                            <Button
+                                disabled={isLoading}
+                                onClick={() => handleSetAttended(false)}
+                                style={{ marginLeft: '8px' }}
+                                variant="contained"
+                                color="secondary">
+                                {isLoading ? (
+                                    <CircularProgress
+                                        size={26}
+                                        color="inherit"
+                                    />
+                                ) : (
+                                    'Absent'
+                                )}
+                            </Button>
+                            <Button
+                                disabled={isLoading}
+                                onClick={() => handleSetAttended(true)}
+                                style={{ marginLeft: '8px' }}
+                                variant="contained"
+                                color="primary">
+                                {isLoading ? (
+                                    <CircularProgress
+                                        size={26}
+                                        color="inherit"
+                                    />
+                                ) : (
+                                    'Attend'
+                                )}
+                            </Button>
+                        </>
+                    )
+                ) : numSelected > 0 ? (
+                    <>
+                        <Button
+                            disabled={isLoading}
+                            onClick={handleSetInvalid}
+                            variant="contained"
+                            color="secondary">
+                            {isLoading ? (
+                                <CircularProgress size={26} color="inherit" />
+                            ) : (
+                                'Invalid'
+                            )}
+                        </Button>
+                        <Button
+                            disabled={isLoading}
+                            onClick={handleSetVerified}
+                            style={{ marginLeft: '8px' }}
+                            variant="contained"
+                            color="primary">
+                            {isLoading ? (
+                                <CircularProgress size={26} color="inherit" />
+                            ) : (
+                                'Verify'
+                            )}
+                        </Button>
+                    </>
+                ) : (
+                    <Button
+                        disabled={isLoading}
+                        onClick={handleToggleDialogInvitation}
+                        style={{ marginLeft: '8px' }}
+                        variant="contained"
+                        color="primary">
+                        {isLoading ? (
+                            <CircularProgress size={26} color="inherit" />
+                        ) : (
+                            'Invitation'
+                        )}
+                    </Button>
+                )}
             </Toolbar>
         </>
     );
@@ -328,7 +337,8 @@ const ParticipantTable = ({
     setSelected,
     handleSetInvalid,
     handleSetVerified,
-    handleSetAttended
+    handleSetAttended,
+    handleToggleDialogInvitation
 }) => {
     const css = useStyles();
 
@@ -392,6 +402,7 @@ const ParticipantTable = ({
                 handleSetInvalid={handleSetInvalid}
                 handleSetVerified={handleSetVerified}
                 handleSetAttended={handleSetAttended}
+                handleToggleDialogInvitation={handleToggleDialogInvitation}
                 isLoading={isLoading}
             />
             <TableContainer>
