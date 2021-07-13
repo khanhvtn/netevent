@@ -35,6 +35,7 @@ import RichTextEditor from './RichTextEditor/RichTextEditor';
 import CreateEventInputGroup from './CreateEventInputGroup/CreateEventInputGroup';
 import { CreateEventInterface } from '../Context';
 import moment from 'moment';
+import CustomizeFieldDialog from './CustomizeFieldDialog/CustomizeFieldDialog';
 
 let listTag = [];
 const initialDescription =
@@ -92,6 +93,27 @@ const headCellsTask = [
         label: 'End Time'
     }
 ];
+
+const headCellsCustomizeField = [
+    {
+        id: 'title',
+        numeric: false,
+        disablePadding: false,
+        label: 'Title'
+    },
+    {
+        id: 'type',
+        numeric: false,
+        disablePadding: false,
+        label: 'Type'
+    },
+    {
+        id: 'required',
+        numeric: false,
+        disablePadding: false,
+        label: 'Required'
+    }
+];
 const initialState = {
     //create new event
     eventName: '',
@@ -145,6 +167,20 @@ const initialTaskState = {
     openCreateAndUpdateDialogTask: false,
     openDeleteDialogTask: false,
     isTaskCreateMode: true
+};
+
+const initialCustomizeFieldState = {
+    customizeFields: [],
+    isLoading: false,
+    customizeFieldCreatSuccess: false,
+    customizeFieldDeleteSuccess: false,
+    customizeFieldUpdateSuccess: false,
+    title: '',
+    type: '',
+    required: '',
+    openCreateAndUpdateDialogCustomizeField: false,
+    openDeleteDialogCustomizeField: false,
+    isCustomizeFieldCreateMode: true
 };
 
 //Create Event Provider
@@ -211,6 +247,11 @@ const CreateEvent = ({
     //task table
     const [selectedTask, setSelectedTask] = useState([]);
     const [taskState, setTaskState] = useState(initialTaskState);
+    //task table
+    const [selectedCustomizeField, setSelectedCustomizeField] = useState([]);
+    const [customizeFieldState, setCustomizeFieldState] = useState(
+        initialCustomizeFieldState
+    );
 
     // handle clear all fields
     const handleClearFields = useCallback(
@@ -619,6 +660,138 @@ const CreateEvent = ({
 
     /* Borrow Facility */
 
+    /* Customize Fields for Registration Form */
+    const handleChangeCustomizeField = (e) => {
+        setCustomizeFieldState((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value
+        }));
+    };
+
+    const handleToggleDialogCreateAndUpdateCustomizeField = (event, mode) => {
+        let targetEdit;
+        if (mode) {
+            targetEdit = customizeFieldState.customizeFields.find(
+                (target) => target.title === selectedCustomizeField[0]
+            );
+        }
+        setCustomizeFieldState((prevState) => ({
+            ...prevState,
+            title: mode ? targetEdit.title : '',
+            type: mode ? targetEdit.type : '',
+            required: mode ? targetEdit.required : '',
+            openCreateAndUpdateDialogCustomizeField:
+                !prevState.openCreateAndUpdateDialogCustomizeField,
+            isCustomizeFieldCreateMode: mode ? false : true
+        }));
+        //clear Error
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null
+        });
+    };
+
+    const handleToggleDialogDeleteCustomizeField = () => {
+        setCustomizeFieldState((prevState) => ({
+            ...prevState,
+            openDeleteDialogCustomizeField:
+                !prevState.openDeleteDialogCustomizeField
+        }));
+    };
+
+    const handleCreateAndUpdateCustomizeField = () => {
+        const { title, type, required } = customizeFieldState;
+        let listErrors = {};
+        if (!title) {
+            listErrors = {
+                ...listErrors,
+                title: 'Title cannot be blanked.'
+            };
+        }
+        if (
+            customizeFieldState.customizeFields.some(
+                (target) => target.title === title
+            )
+        ) {
+            listErrors = {
+                ...listErrors,
+                title: 'Title already existed.'
+            };
+        }
+        if (!type) {
+            listErrors = {
+                ...listErrors,
+                type: 'Type cannot be blanked.'
+            };
+        }
+        if (!required) {
+            listErrors = {
+                ...listErrors,
+                required: 'Require cannot be blanked.'
+            };
+        }
+        if (Object.keys(listErrors).length !== 0) {
+            return dispatch({
+                type: ERROR,
+                payload: listErrors
+            });
+        }
+
+        //generate new update when in edit mode
+        let update;
+        if (!customizeFieldState.isCustomizeFieldCreateMode) {
+            update = customizeFieldState.customizeFields.filter(
+                (target) => target.title !== selectedCustomizeField[0]
+            );
+        }
+
+        //create
+        setCustomizeFieldState((prevState) => {
+            update = update ? update : prevState.customizeFields;
+            return {
+                ...prevState,
+                customizeFields: [
+                    ...update,
+                    {
+                        title: prevState.title,
+                        type: prevState.type,
+                        required: prevState.required
+                    }
+                ],
+                title: '',
+                type: '',
+                required: '',
+                openCreateAndUpdateDialogCustomizeField: false
+            };
+        });
+
+        //clear error
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null
+        });
+        setSelectedCustomizeField([]);
+    };
+
+    const handleDeleteCustomizeField = () => {
+        setCustomizeFieldState((prevState) => {
+            return {
+                ...prevState,
+                customizeFields: prevState.customizeFields.filter(
+                    (target) => !selectedCustomizeField.includes(target.title)
+                ),
+                title: '',
+                type: '',
+                required: '',
+                openDeleteDialogCustomizeField:
+                    !prevState.openDeleteDialogCustomizeField
+            };
+        });
+        setSelectedCustomizeField([]);
+    };
+
+    /* Customize Field */
+
     /* Task Table */
     const handleChangeTask = (e) => {
         setTaskState((prevState) => ({
@@ -918,7 +1091,23 @@ const CreateEvent = ({
                 setState={setState}
                 setSelectedFacility={setSelectedFacility}
                 setSelectedTask={setSelectedTask}
-                setTaskState={setTaskState}>
+                setTaskState={setTaskState}
+                //Customize Fields
+                selectedCustomizeField={selectedCustomizeField}
+                setSelectedCustomizeField={setSelectedCustomizeField}
+                customizeFieldState={customizeFieldState}
+                setCustomizeFieldState={setCustomizeFieldState}
+                handleChangeCustomizeField={handleChangeCustomizeField}
+                handleToggleDialogCreateAndUpdateCustomizeField={
+                    handleToggleDialogCreateAndUpdateCustomizeField
+                }
+                handleToggleDialogDeleteCustomizeField={
+                    handleToggleDialogDeleteCustomizeField
+                }
+                handleCreateAndUpdateCustomizeField={
+                    handleCreateAndUpdateCustomizeField
+                }
+                handleDeleteCustomizeField={handleDeleteCustomizeField}>
                 <Paper className={css.paper} elevation={3}>
                     <Grid
                         container
@@ -1060,6 +1249,7 @@ const CreateEvent = ({
                                 xs={12}>
                                 <Paper className={css.paper1} elevation={3}>
                                     <DataTable
+                                        selectedName="name"
                                         constrainRangeDate={
                                             !!state.startDate && !!state.endDate
                                         }
@@ -1109,6 +1299,7 @@ const CreateEvent = ({
                                 xs={12}>
                                 <Paper className={css.paper1} elevation={3}>
                                     <DataTable
+                                        selectedName="name"
                                         disabled={eventIsLoading}
                                         constrainRangeDate={!!state.endDate}
                                         handleToggleDialogCreateAndUpdate={
@@ -1127,13 +1318,13 @@ const CreateEvent = ({
                                             borrowFacilityState.borrowFacilityLoading
                                         }
                                         createSuccess={
-                                            borrowFacilityState.borrowFacilityCreatSucces
+                                            borrowFacilityState.borrowFacilityCreatSuccess
                                         }
                                         deleteSuccess={
-                                            borrowFacilityState.borrowFacilityDeleteSucces
+                                            borrowFacilityState.borrowFacilityDeleteSuccess
                                         }
                                         updateSuccess={
-                                            borrowFacilityState.borrowFacilityUpdateSucces
+                                            borrowFacilityState.borrowFacilityUpdateSuccess
                                         }
                                         tableName="Borrow Facility"
                                         headCells={headCellBorrowFacility}
@@ -1184,6 +1375,41 @@ const CreateEvent = ({
                                             : ''}
                                     </FormHelperText>
                                 </FormControl>
+                            </Grid>
+                            {/* Customize Fields For Registration Portal  */}
+                            <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
+                                <Paper elevation={3}>
+                                    <DataTable
+                                        selectedName="title"
+                                        disabled={eventIsLoading}
+                                        handleToggleDialogCreateAndUpdate={
+                                            handleToggleDialogCreateAndUpdateCustomizeField
+                                        }
+                                        handleToggleDialogDelete={
+                                            handleToggleDialogDeleteCustomizeField
+                                        }
+                                        take={1}
+                                        selected={selectedCustomizeField}
+                                        setSelected={setSelectedCustomizeField}
+                                        data={
+                                            customizeFieldState.customizeFields
+                                        }
+                                        isLoading={
+                                            customizeFieldState.isLoading
+                                        }
+                                        createSuccess={
+                                            customizeFieldState.customizeFieldCreatSuccess
+                                        }
+                                        deleteSuccess={
+                                            customizeFieldState.customizeFieldDeleteSuccess
+                                        }
+                                        updateSuccess={
+                                            customizeFieldState.customizeFieldUpdateSuccess
+                                        }
+                                        tableName="Customize Fields For Registration Portal"
+                                        headCells={headCellsCustomizeField}
+                                    />
+                                </Paper>
                             </Grid>
                             {/* Button Control */}
                             <Grid
@@ -1267,6 +1493,8 @@ const CreateEvent = ({
                 <BorrowFacilityDialog />
                 {/* Task Dialog */}
                 <TaskDialog />
+                {/* Customize Field Dialog */}
+                <CustomizeFieldDialog />
                 {/* Notification */}
                 <SystemNotification
                     openCreateSnackBar={state.openCreateSnackBar}

@@ -294,6 +294,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 const DataTable = ({
+    selectedName,
     handleToggleDialogCreateAndUpdate,
     handleToggleDialogDelete,
     take,
@@ -325,7 +326,7 @@ const DataTable = ({
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = dataFilter.map((n) => n.name);
+            const newSelected = dataFilter.map((n) => n[selectedName]);
             setSelected(newSelected);
             return;
         }
@@ -436,14 +437,19 @@ const DataTable = ({
                                     dataFilter,
                                     getComparator(order, orderBy)
                                 ).map((row, index) => {
-                                    const isItemSelected = isSelected(row.name);
+                                    const isItemSelected = isSelected(
+                                        row[selectedName]
+                                    );
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
                                             onClick={(event) =>
-                                                handleClick(event, row.name)
+                                                handleClick(
+                                                    event,
+                                                    row[selectedName]
+                                                )
                                             }
                                             role="checkbox"
                                             aria-checked={isItemSelected}
