@@ -13,7 +13,9 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    FormHelperText
+    FormHelperText,
+    FormControlLabel,
+    Checkbox
 } from '@material-ui/core';
 //import useStyles in the last
 import useStyles from './styles';
@@ -95,31 +97,17 @@ const CustomizeFieldDialog = () => {
                             {errors?.type ? errors.type : ''}
                         </FormHelperText>
                     </FormControl>
-                    <FormControl
-                        margin="normal"
-                        variant="outlined"
-                        fullWidth
-                        error={errors?.required ? true : false}>
-                        <InputLabel id="select-label-type">Require</InputLabel>
-                        <Select
-                            labelId="select-label-type"
-                            id="select-type"
-                            name="required"
-                            margin="normal"
-                            value={customizeFieldState.required}
-                            onChange={handleChangeCustomizeField}
-                            label="Require">
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-
-                            <MenuItem value={'Yes'}>Yes</MenuItem>
-                            <MenuItem value={'No'}>No</MenuItem>
-                        </Select>
-                        <FormHelperText>
-                            {errors?.required ? errors.required : ''}
-                        </FormHelperText>
-                    </FormControl>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                color="primary"
+                                checked={customizeFieldState.isRequired}
+                                onChange={handleChangeCustomizeField}
+                                name="isRequired"
+                            />
+                        }
+                        label="Required"
+                    />
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
                     <Button

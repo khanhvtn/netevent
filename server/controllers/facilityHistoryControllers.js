@@ -1,6 +1,6 @@
 const { FacilityHistory } = require('../models');
 const { cusResponse } = require('../utils');
-const CustomError = require('../class/CustomeError');
+const CustomError = require('../class/CustomError');
 const mongoose = require('mongoose');
 
 /**

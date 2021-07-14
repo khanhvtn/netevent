@@ -7,7 +7,7 @@ const {
     NotificationHistory
 } = require('../models');
 const { cusResponse } = require('../utils');
-const CustomError = require('../class/CustomeError');
+const CustomError = require('../class/CustomError');
 const { sendEmail } = require('./misc/mailer');
 const { Types } = require('mongoose');
 const { bucketInstance } = require(`../services/firebase`);
@@ -40,7 +40,7 @@ Array.prototype.skip = skip;
  */
 
 /**
- * @decsription Create new event with following request
+ * @description Create new event with following request
  * @method POST
  * @route /api/event/create
  *
@@ -169,7 +169,7 @@ const createEvent = async (req, res, next) => {
 };
 
 /**
- * @decsription Get, search and filter events (included paging)
+ * @description Get, search and filter events (included paging)
  * @method GET
  * @route /api/event/filter
  *
@@ -509,7 +509,7 @@ const filterEventManagement = async (req, res, next) => {
 };
 
 /**
- * @decsription Delete all event and task + Facility history
+ * @description Delete all event and task + Facility history
  * @method DELETE
  * @route /api/event/deleteManagement
  *
@@ -538,7 +538,7 @@ const deleteEventManagement = async (req, res, next) => {
 };
 
 /**
- * @decsription Delete events from the request list of eventName
+ * @description Delete events from the request list of eventName
  * @method DELETE
  * @route /api/event/delete
  *
@@ -565,7 +565,7 @@ const deleteEvent = async (req, res, next) => {
 };
 
 /**
- * @decsription Delete events from the request names
+ * @description Delete events from the request names
  * @method DELETE
  * @route /api/event/deleteP
  *
@@ -601,7 +601,7 @@ const deleteEventPermanent = async (req, res, next) => {
 };
 
 /**
- * @decsription Recovery events from the request names
+ * @description Recovery events from the request names
  * @method PATCH
  * @route /api/event/recovery
  *
@@ -621,7 +621,7 @@ const recoveryEvent = async (req, res, next) => {
 };
 
 /**
- * @decsription Update event by new request update
+ * @description Update event by new request update
  * @method PATCH
  * @route /api/event/filter
  *
@@ -633,9 +633,7 @@ const updateEvent = async (req, res, next) => {
         const { tasks, borrowFacilities, _id, ...eventDetail } = req.body;
 
         // Get current task and facility id
-        const currentEvent = await Event.findOne({
-            _id: _id
-        });
+        const currentEvent = await Event.findOne({ _id });
 
         eventDetailChecking = {
             ...eventDetail,
@@ -870,7 +868,7 @@ const updateEvent = async (req, res, next) => {
 };
 
 /**
- * @decsription Get all events
+ * @description Get all events
  * @method GET
  * @route /api/event/all
  *
@@ -890,7 +888,7 @@ const getAllEvent = async (req, res, next) => {
 };
 
 /**
- * @decsription Send Mass Notification
+ * @description Send Mass Notification
  * @method POST
  * @route /api/event/sendMassNotification
  *
@@ -938,7 +936,7 @@ const sendNotification = async (req, res, next) => {
 };
 
 /**
- * @decsription Get specific event detail
+ * @description Get specific event detail
  * @method GET
  * @route /api/event/detail
  *
@@ -977,7 +975,7 @@ const getFacilityAndTaskByEventCode = async (req, res, next) => {
 };
 
 /**
- * @decsription Get specific event detail
+ * @description Get specific event detail
  * @method PATCH
  * @route /api/event/detail
  *
@@ -1041,7 +1039,7 @@ const updateEventStatus = async (req, res, next) => {
 };
 
 /**
- * @decsription Get registration page and update click amount
+ * @description Get registration page and update click amount
  * @method GET
  * @route /api/event/registrationPageDetail
  *
@@ -1127,7 +1125,7 @@ const getRegistrationPageDetail = async (req, res, next) => {
 };
 
 /**
- * @decsription Get event analysis
+ * @description Get event analysis
  * @method GET
  * @route /api/event/analysis
  *
@@ -1310,7 +1308,7 @@ const getAnalysis = async (req, res, next) => {
 };
 
 /**
- * @decsription Get all analysis by event ID
+ * @description Get all analysis by event ID
  * @method GET
  * @route /api/event/analysis
  *

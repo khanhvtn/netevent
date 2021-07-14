@@ -3,7 +3,7 @@ const Link = require('../models/linkModel');
 const { cusResponse } = require('../utils');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const CustomError = require('../class/CustomeError');
+const CustomError = require('../class/CustomError');
 const { sendEmail } = require('./misc/mailer');
 const { html } = require('../mail-template/template');
 

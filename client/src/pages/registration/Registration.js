@@ -35,6 +35,8 @@ import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import SystemNotification from '../../components/Notification/Notification';
 import { ERROR_CLEAR } from '../../constants';
 import useStyles from './styles';
+import { useForm } from 'react-hook-form';
+import CustomizeForm from '../../components/CustomizeForm/CustomizeForm';
 
 const participantInitialState = {
     event: null,
@@ -64,6 +66,14 @@ const Registration = () => {
     const myRef = useRef(null);
     const history = useHistory();
     const dispatch = useDispatch();
+
+    //use form hook
+    const {
+        handleSubmit,
+        control,
+        formState: { errors },
+        reset
+    } = useForm();
 
     // UseParams to get pathname
     const { code } = useParams();
@@ -156,8 +166,9 @@ const Registration = () => {
     useEffect(() => {
         if (registerSuccess) {
             handleClearField();
+            reset();
         }
-    }, [dispatch, registerSuccess, handleClearField]);
+    }, [dispatch, registerSuccess, handleClearField, reset]);
 
     // On scroll register button
     const executeScroll = () =>
@@ -189,9 +200,12 @@ const Registration = () => {
     };
 
     // Handle On Click Register
-    const handleOnRegister = (e) => {
-        e.preventDefault();
-        dispatch(registerParticipant(participant));
+    const handleOnRegister = (data) => {
+        let customizeFieldData = [];
+        for (let key in data) {
+            customizeFieldData.push({ title: key, value: data[key] });
+        }
+        dispatch(registerParticipant({ ...participant, customizeFieldData }));
     };
 
     return isLoading ? (
@@ -543,331 +557,368 @@ const Registration = () => {
                                             Registration Form
                                         </Typography>
 
-                                        <FormControl fullWidth>
-                                            <TextField
-                                                disabled={isReviewed}
-                                                label="Full Name"
-                                                variant="outlined"
-                                                margin="none"
-                                                name="name"
-                                                error={
-                                                    error.errors?.name
-                                                        ? true
-                                                        : false
-                                                }
-                                                value={participant.name}
-                                                onChange={handleOnChange}
-                                                required
-                                                fullWidth
-                                                className={
-                                                    css.textField
-                                                }></TextField>
-                                            {error.errors !== null ? (
-                                                error.errors.name && (
-                                                    <Typography
-                                                        className={
-                                                            css.errorStyle
-                                                        }>
-                                                        {error.errors.name}
-                                                    </Typography>
-                                                )
-                                            ) : (
-                                                <></>
-                                            )}
-
-                                            <TextField
-                                                disabled={isReviewed}
-                                                label="Email"
-                                                type="email"
-                                                name="email"
-                                                margin="none"
-                                                variant="outlined"
-                                                error={
-                                                    error.errors?.email
-                                                        ? true
-                                                        : false
-                                                }
-                                                value={participant.email}
-                                                onChange={handleOnChange}
-                                                required
-                                                fullWidth
-                                                className={
-                                                    css.textField
-                                                }></TextField>
-                                            {error.errors !== null ? (
-                                                error.errors.email && (
-                                                    <Typography
-                                                        className={
-                                                            css.errorStyle
-                                                        }>
-                                                        {error.errors.email}
-                                                    </Typography>
-                                                )
-                                            ) : (
-                                                <></>
-                                            )}
-
-                                            <TextField
-                                                disabled={isReviewed}
-                                                label="University"
-                                                margin="none"
-                                                variant="outlined"
-                                                name="school"
-                                                error={
-                                                    error.errors?.school
-                                                        ? true
-                                                        : false
-                                                }
-                                                value={participant.school}
-                                                onChange={handleOnChange}
-                                                required
-                                                fullWidth
-                                                className={
-                                                    css.textField
-                                                }></TextField>
-                                            {error.errors !== null ? (
-                                                error.errors.school && (
-                                                    <Typography
-                                                        className={
-                                                            css.errorStyle
-                                                        }>
-                                                        {error.errors.school}
-                                                    </Typography>
-                                                )
-                                            ) : (
-                                                <></>
-                                            )}
-
-                                            <FormControl
-                                                disabled={isReviewed}
-                                                margin="none"
-                                                className={css.textField}>
-                                                <InputLabel
-                                                    id="demo-simple-select-outlined-label1"
-                                                    error={
-                                                        error.errors?.academic
-                                                            ? true
-                                                            : false
-                                                    }
-                                                    className={
-                                                        css.academicField
-                                                    }>
-                                                    Academic *
-                                                </InputLabel>
-                                                <Select
-                                                    fullWidth
-                                                    labelId="demo-simple-select-outlined-label1"
-                                                    id="demo-simple-select-outlined"
-                                                    name="academic"
-                                                    error={
-                                                        error.errors?.academic
-                                                            ? true
-                                                            : false
-                                                    }
+                                        <form
+                                            noValidate
+                                            onSubmit={handleSubmit(
+                                                handleOnRegister
+                                            )}>
+                                            <FormControl fullWidth>
+                                                <TextField
+                                                    disabled={isReviewed}
+                                                    label="Full Name"
                                                     variant="outlined"
-                                                    value={participant.academic}
+                                                    margin="none"
+                                                    name="name"
+                                                    error={
+                                                        error.errors?.name
+                                                            ? true
+                                                            : false
+                                                    }
+                                                    value={participant.name}
                                                     onChange={handleOnChange}
-                                                    label="Academic">
-                                                    <MenuItem value="Bachelor">
-                                                        <em>Bachelor</em>
-                                                    </MenuItem>
-                                                    <MenuItem value="Master">
-                                                        <em>Master</em>
-                                                    </MenuItem>
-                                                    <MenuItem value="Phd">
-                                                        <em>Phd</em>
-                                                    </MenuItem>
-                                                </Select>
+                                                    required
+                                                    fullWidth
+                                                    className={
+                                                        css.textField
+                                                    }></TextField>
                                                 {error.errors !== null ? (
-                                                    error.errors.academic && (
+                                                    error.errors.name && (
+                                                        <Typography
+                                                            className={
+                                                                css.errorStyle
+                                                            }>
+                                                            {error.errors.name}
+                                                        </Typography>
+                                                    )
+                                                ) : (
+                                                    <></>
+                                                )}
+
+                                                <TextField
+                                                    disabled={isReviewed}
+                                                    label="Email"
+                                                    type="email"
+                                                    name="email"
+                                                    margin="none"
+                                                    variant="outlined"
+                                                    error={
+                                                        error.errors?.email
+                                                            ? true
+                                                            : false
+                                                    }
+                                                    value={participant.email}
+                                                    onChange={handleOnChange}
+                                                    required
+                                                    fullWidth
+                                                    className={
+                                                        css.textField
+                                                    }></TextField>
+                                                {error.errors !== null ? (
+                                                    error.errors.email && (
+                                                        <Typography
+                                                            className={
+                                                                css.errorStyle
+                                                            }>
+                                                            {error.errors.email}
+                                                        </Typography>
+                                                    )
+                                                ) : (
+                                                    <></>
+                                                )}
+
+                                                <TextField
+                                                    disabled={isReviewed}
+                                                    label="University"
+                                                    margin="none"
+                                                    variant="outlined"
+                                                    name="school"
+                                                    error={
+                                                        error.errors?.school
+                                                            ? true
+                                                            : false
+                                                    }
+                                                    value={participant.school}
+                                                    onChange={handleOnChange}
+                                                    required
+                                                    fullWidth
+                                                    className={
+                                                        css.textField
+                                                    }></TextField>
+                                                {error.errors !== null ? (
+                                                    error.errors.school && (
                                                         <Typography
                                                             className={
                                                                 css.errorStyle
                                                             }>
                                                             {
                                                                 error.errors
-                                                                    .academic
+                                                                    .school
                                                             }
                                                         </Typography>
                                                     )
                                                 ) : (
                                                     <></>
                                                 )}
-                                            </FormControl>
 
-                                            <TextField
-                                                disabled={isReviewed}
-                                                name="major"
-                                                label="Major"
-                                                margin="none"
-                                                variant="outlined"
-                                                error={
-                                                    error.errors?.major
-                                                        ? true
-                                                        : false
-                                                }
-                                                value={participant.major}
-                                                onChange={handleOnChange}
-                                                required
-                                                fullWidth
-                                                className={
-                                                    css.textField
-                                                }></TextField>
-                                            {error.errors !== null ? (
-                                                error.errors.major && (
-                                                    <Typography
-                                                        className={
-                                                            css.errorStyle
-                                                        }>
-                                                        {error.errors.major}
-                                                    </Typography>
-                                                )
-                                            ) : (
-                                                <></>
-                                            )}
-
-                                            <TextField
-                                                disabled={isReviewed}
-                                                name="phone"
-                                                label="Phone"
-                                                type="number"
-                                                margin="none"
-                                                variant="outlined"
-                                                error={
-                                                    error.errors?.phone
-                                                        ? true
-                                                        : false
-                                                }
-                                                value={participant.phone}
-                                                onChange={handleOnChange}
-                                                required
-                                                fullWidth
-                                                className={
-                                                    css.textField
-                                                }></TextField>
-                                            {error.errors !== null ? (
-                                                error.errors.phone && (
-                                                    <Typography
-                                                        className={
-                                                            css.errorStyle
-                                                        }>
-                                                        {error.errors.phone}
-                                                    </Typography>
-                                                )
-                                            ) : (
-                                                <></>
-                                            )}
-
-                                            <MuiPickersUtilsProvider
-                                                utils={DateFnsUtils}>
-                                                <KeyboardDatePicker
+                                                <FormControl
                                                     disabled={isReviewed}
-                                                    inputVariant="outlined"
-                                                    format="MM/dd/yyyy"
-                                                    margin="normal"
-                                                    id="date-picker-inline-DOB"
+                                                    margin="none"
+                                                    className={css.textField}>
+                                                    <InputLabel
+                                                        id="demo-simple-select-outlined-label1"
+                                                        error={
+                                                            error.errors
+                                                                ?.academic
+                                                                ? true
+                                                                : false
+                                                        }
+                                                        className={
+                                                            css.academicField
+                                                        }>
+                                                        Academic *
+                                                    </InputLabel>
+                                                    <Select
+                                                        fullWidth
+                                                        labelId="demo-simple-select-outlined-label1"
+                                                        id="demo-simple-select-outlined"
+                                                        name="academic"
+                                                        error={
+                                                            error.errors
+                                                                ?.academic
+                                                                ? true
+                                                                : false
+                                                        }
+                                                        variant="outlined"
+                                                        value={
+                                                            participant.academic
+                                                        }
+                                                        onChange={
+                                                            handleOnChange
+                                                        }
+                                                        label="Academic">
+                                                        <MenuItem value="Bachelor">
+                                                            <em>Bachelor</em>
+                                                        </MenuItem>
+                                                        <MenuItem value="Master">
+                                                            <em>Master</em>
+                                                        </MenuItem>
+                                                        <MenuItem value="Phd">
+                                                            <em>Phd</em>
+                                                        </MenuItem>
+                                                    </Select>
+                                                    {error.errors !== null ? (
+                                                        error.errors
+                                                            .academic && (
+                                                            <Typography
+                                                                className={
+                                                                    css.errorStyle
+                                                                }>
+                                                                {
+                                                                    error.errors
+                                                                        .academic
+                                                                }
+                                                            </Typography>
+                                                        )
+                                                    ) : (
+                                                        <></>
+                                                    )}
+                                                </FormControl>
+
+                                                <TextField
+                                                    disabled={isReviewed}
+                                                    name="major"
+                                                    label="Major"
+                                                    margin="none"
+                                                    variant="outlined"
                                                     error={
-                                                        error.errors?.DOB
+                                                        error.errors?.major
                                                             ? true
                                                             : false
                                                     }
-                                                    label="Date of Birth"
-                                                    value={participant.DOB}
-                                                    onChange={(date) => {
-                                                        setParticipant(
-                                                            (prevState) => ({
-                                                                ...prevState,
-                                                                DOB: date
-                                                                    ? date
-                                                                    : null
-                                                            })
-                                                        );
-                                                    }}
-                                                    KeyboardButtonProps={{
-                                                        'aria-label':
-                                                            'change date'
-                                                    }}
-                                                />
+                                                    value={participant.major}
+                                                    onChange={handleOnChange}
+                                                    required
+                                                    fullWidth
+                                                    className={
+                                                        css.textField
+                                                    }></TextField>
                                                 {error.errors !== null ? (
-                                                    error.errors.DOB && (
+                                                    error.errors.major && (
                                                         <Typography
                                                             className={
                                                                 css.errorStyle
                                                             }>
-                                                            {error.errors.DOB}
+                                                            {error.errors.major}
                                                         </Typography>
                                                     )
                                                 ) : (
                                                     <></>
                                                 )}
 
-                                                <KeyboardDatePicker
+                                                <TextField
                                                     disabled={isReviewed}
-                                                    format="MM/dd/yyyy"
-                                                    margin="normal"
-                                                    inputVariant="outlined"
-                                                    id="date-picker-inline-expectedGraduateDate"
-                                                    label="Graduation Date"
+                                                    name="phone"
+                                                    label="Phone"
+                                                    type="number"
+                                                    margin="none"
+                                                    variant="outlined"
                                                     error={
-                                                        error.errors
-                                                            ?.expectedGraduateDate
+                                                        error.errors?.phone
                                                             ? true
                                                             : false
                                                     }
-                                                    value={
-                                                        participant.expectedGraduateDate
-                                                    }
-                                                    onChange={(date) => {
-                                                        setParticipant(
-                                                            (prevState) => ({
-                                                                ...prevState,
-                                                                expectedGraduateDate:
-                                                                    date
+                                                    value={participant.phone}
+                                                    onChange={handleOnChange}
+                                                    required
+                                                    fullWidth
+                                                    className={
+                                                        css.textField
+                                                    }></TextField>
+                                                {error.errors !== null ? (
+                                                    error.errors.phone && (
+                                                        <Typography
+                                                            className={
+                                                                css.errorStyle
+                                                            }>
+                                                            {error.errors.phone}
+                                                        </Typography>
+                                                    )
+                                                ) : (
+                                                    <></>
+                                                )}
+
+                                                <MuiPickersUtilsProvider
+                                                    utils={DateFnsUtils}>
+                                                    <KeyboardDatePicker
+                                                        disabled={isReviewed}
+                                                        inputVariant="outlined"
+                                                        format="MM/dd/yyyy"
+                                                        margin="normal"
+                                                        id="date-picker-inline-DOB"
+                                                        error={
+                                                            error.errors?.DOB
+                                                                ? true
+                                                                : false
+                                                        }
+                                                        label="Date of Birth"
+                                                        value={participant.DOB}
+                                                        onChange={(date) => {
+                                                            setParticipant(
+                                                                (
+                                                                    prevState
+                                                                ) => ({
+                                                                    ...prevState,
+                                                                    DOB: date
                                                                         ? date
                                                                         : null
-                                                            })
-                                                        );
-                                                    }}
-                                                    KeyboardButtonProps={{
-                                                        'aria-label':
-                                                            'change date'
-                                                    }}
-                                                />
-                                                {error.errors !== null ? (
-                                                    error.errors
-                                                        .expectedGraduateDate && (
-                                                        <Typography
-                                                            className={
-                                                                css.errorStyle
-                                                            }>
-                                                            {
-                                                                error.errors
-                                                                    .expectedGraduateDate
-                                                            }
-                                                        </Typography>
-                                                    )
-                                                ) : (
-                                                    <></>
-                                                )}
-                                            </MuiPickersUtilsProvider>
-                                            <Button
-                                                disabled={
-                                                    isRegistered || isReviewed
-                                                }
-                                                className={css.registerButton}
-                                                color="primary"
-                                                variant="contained"
-                                                onClick={handleOnRegister}>
-                                                {isRegistered ? (
-                                                    <CircularProgress
-                                                        size={26}
-                                                        color="inherit"
+                                                                })
+                                                            );
+                                                        }}
+                                                        KeyboardButtonProps={{
+                                                            'aria-label':
+                                                                'change date'
+                                                        }}
                                                     />
-                                                ) : (
-                                                    'Register Now'
-                                                )}
-                                            </Button>
-                                        </FormControl>
+                                                    {error.errors !== null ? (
+                                                        error.errors.DOB && (
+                                                            <Typography
+                                                                className={
+                                                                    css.errorStyle
+                                                                }>
+                                                                {
+                                                                    error.errors
+                                                                        .DOB
+                                                                }
+                                                            </Typography>
+                                                        )
+                                                    ) : (
+                                                        <></>
+                                                    )}
+
+                                                    <KeyboardDatePicker
+                                                        disabled={isReviewed}
+                                                        format="MM/dd/yyyy"
+                                                        margin="normal"
+                                                        inputVariant="outlined"
+                                                        id="date-picker-inline-expectedGraduateDate"
+                                                        label="Graduation Date"
+                                                        error={
+                                                            error.errors
+                                                                ?.expectedGraduateDate
+                                                                ? true
+                                                                : false
+                                                        }
+                                                        value={
+                                                            participant.expectedGraduateDate
+                                                        }
+                                                        onChange={(date) => {
+                                                            setParticipant(
+                                                                (
+                                                                    prevState
+                                                                ) => ({
+                                                                    ...prevState,
+                                                                    expectedGraduateDate:
+                                                                        date
+                                                                            ? date
+                                                                            : null
+                                                                })
+                                                            );
+                                                        }}
+                                                        KeyboardButtonProps={{
+                                                            'aria-label':
+                                                                'change date'
+                                                        }}
+                                                    />
+                                                    {error.errors !== null ? (
+                                                        error.errors
+                                                            .expectedGraduateDate && (
+                                                            <Typography
+                                                                className={
+                                                                    css.errorStyle
+                                                                }>
+                                                                {
+                                                                    error.errors
+                                                                        .expectedGraduateDate
+                                                                }
+                                                            </Typography>
+                                                        )
+                                                    ) : (
+                                                        <></>
+                                                    )}
+                                                </MuiPickersUtilsProvider>
+                                                <CustomizeForm
+                                                    errors={errors}
+                                                    control={control}
+                                                    fieldList={
+                                                        state.event
+                                                            ?.customizeFields
+                                                            ? state.event
+                                                                  ?.customizeFields
+                                                            : []
+                                                    }
+                                                />
+                                                <Button
+                                                    disabled={
+                                                        isRegistered ||
+                                                        isReviewed
+                                                    }
+                                                    className={
+                                                        css.registerButton
+                                                    }
+                                                    type="submit"
+                                                    color="primary"
+                                                    variant="contained">
+                                                    {isRegistered ? (
+                                                        <CircularProgress
+                                                            size={26}
+                                                            color="inherit"
+                                                        />
+                                                    ) : (
+                                                        'Register Now'
+                                                    )}
+                                                </Button>
+                                            </FormControl>
+                                        </form>
                                     </Container>
                                 </Grid>
                             </Grid>

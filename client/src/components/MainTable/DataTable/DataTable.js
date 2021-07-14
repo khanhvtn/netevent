@@ -466,12 +466,7 @@ const DataTable = ({
                                                 />
                                             </TableCell>
                                             {headCells.map((cell, index) => {
-                                                if (
-                                                    cell.id === 'createdAt' ||
-                                                    cell.id === 'updatedAt' ||
-                                                    cell.id.includes('Date') ||
-                                                    cell.id.includes('Time')
-                                                ) {
+                                                if (cell.type === 'date') {
                                                     return (
                                                         <TableCell key={index}>
                                                             {moment(
@@ -479,6 +474,15 @@ const DataTable = ({
                                                             ).format(
                                                                 'DD/MM/YYYY, h:mm a'
                                                             )}
+                                                        </TableCell>
+                                                    );
+                                                }
+                                                if (cell.type === 'boolean') {
+                                                    return (
+                                                        <TableCell key={index}>
+                                                            {row[
+                                                                cell.id
+                                                            ].toString()}
                                                         </TableCell>
                                                     );
                                                 }

@@ -44,19 +44,19 @@ const initialDescription =
 const headCellBorrowFacility = [
     {
         id: 'name',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Name'
     },
     {
         id: 'borrowDate',
-        numeric: false,
+        type: 'date',
         disablePadding: false,
         label: 'Borrow Date'
     },
     {
         id: 'returnDate',
-        numeric: false,
+        type: 'date',
         disablePadding: false,
         label: 'Return Date'
     }
@@ -64,31 +64,31 @@ const headCellBorrowFacility = [
 const headCellsTask = [
     {
         id: 'name',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Name'
     },
     {
         id: 'email',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Email'
     },
     {
         id: 'type',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Type'
     },
     {
         id: 'startTime',
-        numeric: false,
+        type: 'date',
         disablePadding: false,
         label: 'Start Time'
     },
     {
         id: 'endTime',
-        numeric: false,
+        type: 'date',
         disablePadding: false,
         label: 'End Time'
     }
@@ -97,19 +97,19 @@ const headCellsTask = [
 const headCellsCustomizeField = [
     {
         id: 'title',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Title'
     },
     {
         id: 'type',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Type'
     },
     {
-        id: 'required',
-        numeric: false,
+        id: 'isRequired',
+        type: 'boolean',
         disablePadding: false,
         label: 'Required'
     }
@@ -177,7 +177,7 @@ const initialCustomizeFieldState = {
     customizeFieldUpdateSuccess: false,
     title: '',
     type: '',
-    required: '',
+    isRequired: false,
     openCreateAndUpdateDialogCustomizeField: false,
     openDeleteDialogCustomizeField: false,
     isCustomizeFieldCreateMode: true
@@ -265,8 +265,10 @@ const CreateEvent = ({
             });
             setBorrowFacilityState(initialBorrowFacilityState);
             setTaskState(initialTaskState);
+            setCustomizeFieldState(initialCustomizeFieldState);
             setSelectedFacility([]);
             setSelectedTask([]);
+            setSelectedCustomizeField([]);
             setDefaultValueTags([]);
             setDefaultDescription(initialDescription);
             handleUpdateListTag([]);
@@ -320,7 +322,7 @@ const CreateEvent = ({
         }
     }, [dispatch, createEventTypeSuccess]);
 
-    //useEffect to get all needed data for crete event
+    //useEffect to get all needed data for create event
     useEffect(() => {
         dispatch(getAllEventTypes());
         dispatch(getAllFacilities());
@@ -352,6 +354,12 @@ const CreateEvent = ({
                 ).toDate(),
                 eventTypeTarget: updateEventDetail.eventTypeId.name,
                 description: updateEventDetail?.description
+            }));
+
+            // set initial customize fields for updating
+            setCustomizeFieldState((prevState) => ({
+                ...prevState,
+                customizeFields: updateEventDetail.customizeFields
             }));
 
             // setup initial facilities
@@ -470,7 +478,8 @@ const CreateEvent = ({
                         returnDate
                     };
                 }
-            )
+            ),
+            customizeFields: customizeFieldState.customizeFields
         };
         if (!isUpdateMode) {
             dispatch(createEvent(templateRequest));
@@ -664,7 +673,8 @@ const CreateEvent = ({
     const handleChangeCustomizeField = (e) => {
         setCustomizeFieldState((prevState) => ({
             ...prevState,
-            [e.target.name]: e.target.value
+            [e.target.name]:
+                e.target.type === 'checkbox' ? e.target.checked : e.target.value
         }));
     };
 
@@ -679,7 +689,7 @@ const CreateEvent = ({
             ...prevState,
             title: mode ? targetEdit.title : '',
             type: mode ? targetEdit.type : '',
-            required: mode ? targetEdit.required : '',
+            isRequired: mode ? targetEdit.isRequired : '',
             openCreateAndUpdateDialogCustomizeField:
                 !prevState.openCreateAndUpdateDialogCustomizeField,
             isCustomizeFieldCreateMode: mode ? false : true
@@ -700,7 +710,7 @@ const CreateEvent = ({
     };
 
     const handleCreateAndUpdateCustomizeField = () => {
-        const { title, type, required } = customizeFieldState;
+        const { title, type, isCustomizeFieldCreateMode } = customizeFieldState;
         let listErrors = {};
         if (!title) {
             listErrors = {
@@ -711,7 +721,8 @@ const CreateEvent = ({
         if (
             customizeFieldState.customizeFields.some(
                 (target) => target.title === title
-            )
+            ) &&
+            isCustomizeFieldCreateMode === true
         ) {
             listErrors = {
                 ...listErrors,
@@ -722,12 +733,6 @@ const CreateEvent = ({
             listErrors = {
                 ...listErrors,
                 type: 'Type cannot be blanked.'
-            };
-        }
-        if (!required) {
-            listErrors = {
-                ...listErrors,
-                required: 'Require cannot be blanked.'
             };
         }
         if (Object.keys(listErrors).length !== 0) {
@@ -755,12 +760,12 @@ const CreateEvent = ({
                     {
                         title: prevState.title,
                         type: prevState.type,
-                        required: prevState.required
+                        isRequired: prevState.isRequired
                     }
                 ],
                 title: '',
                 type: '',
-                required: '',
+                isRequired: false,
                 openCreateAndUpdateDialogCustomizeField: false
             };
         });
@@ -782,7 +787,7 @@ const CreateEvent = ({
                 ),
                 title: '',
                 type: '',
-                required: '',
+                isRequired: false,
                 openDeleteDialogCustomizeField:
                     !prevState.openDeleteDialogCustomizeField
             };
