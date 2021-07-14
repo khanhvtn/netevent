@@ -39,15 +39,6 @@ const getParticipantByEventID = async (req, res, next) => {
     }
 };
 
-const getAllParticipants = async (req, res, next) => {
-    try {
-        const allParticipants = await Participant.find().populate('event');
-        return cusResponse(res, 200, allParticipants, null);
-    } catch (error) {
-        return next(new CustomError(500, error.message));
-    }
-};
-
 /**
  * @decsription Filter all participants
  * @method PATCH
@@ -426,6 +417,7 @@ const setAttendedParticipant = async (req, res, next) => {
         return next(new CustomError(500, error.message));
     }
 };
+
 /**
  * @decsription Set Attend participants
  * @method PATCH
@@ -460,13 +452,145 @@ const setAttendedParticipantByQrCode = async (req, res, next) => {
     }
 };
 
+function uniqueBy(a, cond) {
+    return a.filter((e, i) => a.findIndex((e2) => cond(e, e2)) === i);
+}
+
+/**
+ * @decsription Get suggest participants
+ * @method GET
+ * @route /api/participant/suggest
+ *
+ * @version 1.0
+ */
+const getSuggestedParticipants = async (req, res, next) => {
+    try {
+        let options = {
+            search: '',
+            take: 10,
+            eventType: null,
+            tags: [],
+            language: {
+                $in: ['English', 'Vietnamese']
+            }
+        };
+
+        //adding search
+        if (req.query.search) {
+            options = {
+                ...options,
+                search: req.query.search.toString()
+            };
+        }
+
+        /* 
+        Add take row filter
+        Default take is 5
+         */
+        if (req.query.take) {
+            options = {
+                ...options,
+                take: parseInt(req.query.take.toString())
+            };
+        }
+
+        const event = await Event.findOne({
+            urlCode: req.query.eventCode
+        }).populate('eventTypeId');
+
+        const allParticipants = await Participant.find({
+            name: new RegExp(options.search, 'i')
+        }).populate({
+            path: 'event',
+            match: {
+                language: event.language,
+                tags: { $in: event.tags }
+            },
+            populate: {
+                path: 'eventTypeId',
+                model: 'EventType',
+                match: {
+                    name: event.eventTypeId.name
+                }
+            }
+        });
+
+        // Filter all participant following language and tags
+        const filterParticipantsByLanguageAndTags = allParticipants.filter(
+            (participant) => participant.event
+        );
+
+        // Filter all participant haven't attended to the current event
+        const filterParticipantsByEventId =
+            filterParticipantsByLanguageAndTags.filter(
+                (participant) =>
+                    participant.event.urlCode !== req.query.eventCode
+            );
+
+        // Filter all participant with the unique email
+        const filterUniqueParticipants = uniqueBy(
+            filterParticipantsByEventId,
+            (o1, o2) => o1.email === o2.email
+        );
+
+        return cusResponse(
+            res,
+            200,
+            {
+                suggestedParticipants: filterUniqueParticipants,
+                invitationListEmail: event.invitationListEmail
+            },
+            null
+        );
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
+/**
+ * @decsription Invite Suggest Participant
+ * @method POST
+ * @route /api/participant/invite
+ *
+ * @version 1.0
+ */
+const inviteParticipant = async (req, res, next) => {
+    const { email, eventCode } = req.body;
+    try {
+        const event = await Event.findOne({ urlCode: eventCode });
+        if (event.invitationListEmail.includes(email)) {
+            return next(
+                new CustomError(500, { error: 'Email has been invited' })
+            );
+        }
+
+        let newInvitationList = [...event.invitationListEmail, email];
+
+        const updateEvent = await Event.findOneAndUpdate(
+            { urlCode: eventCode },
+            { invitationListEmail: newInvitationList },
+            { new: true }
+        );
+
+        // Minh code here for sending invitation
+        //
+        //
+        //
+
+        return cusResponse(res, 200, updateEvent.invitationListEmail, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
-    getAllParticipants,
+    getSuggestedParticipants,
     getParticipantByEventID,
     registerEvent,
     deleteParticipant,
     filterParticipants,
     setInvalidAndVerifyParticipant,
     setAttendedParticipant,
-    setAttendedParticipantByQrCode
+    setAttendedParticipantByQrCode,
+    inviteParticipant
 };

@@ -13,13 +13,31 @@ export default makeStyles((theme) => ({
         }
     },
 
+    dialogPaper: {
+        height: 600
+    },
+
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper
     },
 
     inviteButton: {
-        textTransform: 'none'
+        textTransform: 'none',
+        backgroundColor: '#eceef7',
+        color: '#3f51b5',
+        '&:hover': {
+            backgroundColor: '#c5cae9'
+        }
+    },
+
+    sentButton: {
+        textTransform: 'none',
+        backgroundColor: '#e8f5e9',
+        color: '#4caf50',
+        '&:hover': {
+            backgroundColor: '#c8e6c9'
+        }
     },
 
     closeButton: {

@@ -15,6 +15,7 @@ import useStyles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     getParticipants,
+    inviteParticipant,
     setInvalidAndVerifyParticipant
 } from '../../../../actions/participantActions';
 import ParticipantFilter from '../../ParticipantFilter/ParticipantFilter';
@@ -197,6 +198,10 @@ const VerifyTable = ({ eventId, tabs }) => {
         }));
     };
 
+    const handleInviteParticipant = (index, email, eventCode) => {
+        dispatch(inviteParticipant(index, email, eventCode));
+    };
+
     return (
         <AppBar elevation={0} position="static" color="default">
             <Grid container direction="column">
@@ -258,6 +263,7 @@ const VerifyTable = ({ eventId, tabs }) => {
                 <InvitationDialog
                     openInvitationDialog={state.openInvitationDialog}
                     handleToggleDialogInvitation={handleToggleDialogInvitation}
+                    handleInviteParticipant={handleInviteParticipant}
                 />
 
                 {/* Notification */}

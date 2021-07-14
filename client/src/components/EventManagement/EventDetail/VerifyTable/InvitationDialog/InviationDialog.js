@@ -17,12 +17,13 @@ import {
     ListItemAvatar,
     IconButton
 } from '@material-ui/core';
+import Skeleton from '@material-ui/lab/Skeleton';
 import ImageIcon from '@material-ui/icons/Image';
 import CloseIcon from '@material-ui/icons/Close';
 //import useStyles in the last
 import useStyles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllParicipant } from '../../../../../actions/participantActions';
+import { getSuggestedParticipants } from '../../../../../actions/participantActions';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -30,25 +31,42 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const InvitationDialog = ({
     openInvitationDialog,
-    handleToggleDialogInvitation
-    // handleInviteParticipant,
+    handleToggleDialogInvitation,
+    handleInviteParticipant
 }) => {
     const css = useStyles();
     const dispatch = useDispatch();
+    const take = 5;
 
-    const { participants, isLoading } = useSelector((state) => ({
-        participants: state.participant.allParticipants,
-        isLoading: state.participant.isLoading
+    const {
+        participants,
+        isLoading,
+        eventDetail,
+        invitationListEmail,
+        isInvitationLoading,
+        spinnerIndex
+    } = useSelector((state) => ({
+        participants: state.participant.suggestedParticipants,
+        invitationListEmail: state.participant.invitationListEmail,
+        isLoading: state.participant.isLoading,
+        eventDetail: state.event.eventDetail,
+        isInvitationLoading: state.participant.isInviteLoading,
+        spinnerIndex: state.participant.spinnerIndex
     }));
 
     useEffect(() => {
         if (openInvitationDialog) {
-            dispatch(getAllParicipant());
+            dispatch(
+                getSuggestedParticipants({
+                    eventCode: eventDetail.urlCode
+                })
+            );
         }
-    }, [dispatch, openInvitationDialog]);
+    }, [dispatch, openInvitationDialog, eventDetail.urlCode]);
 
     return (
         <Dialog
+            classes={{ paper: css.dialogPaper }}
             TransitionComponent={Transition}
             maxWidth="sm"
             open={openInvitationDialog}
@@ -57,7 +75,7 @@ const InvitationDialog = ({
             onClose={handleToggleDialogInvitation}
             aria-labelledby="invitation-dialog">
             <DialogTitle id="invitation-dialog">
-                <Typography variant="h5" align="center">
+                <Typography align="center">
                     Invitation Recommendation
                     <IconButton
                         size="small"
@@ -73,19 +91,48 @@ const InvitationDialog = ({
                     the current event!
                 </DialogContentText>
                 {isLoading ? (
-                    <div className={css.circularProgress} align="center">
-                        <CircularProgress color="primary" />
-                    </div>
+                    <List className={css.root}>
+                        {Array.apply(null, { length: take + 1 }).map(
+                            (row, index) => {
+                                return (
+                                    <ListItem key={index}>
+                                        <ListItemAvatar>
+                                            <Skeleton
+                                                animation="wave"
+                                                variant="circle"
+                                                width={40}
+                                                height={40}
+                                            />
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary={<Skeleton width={150} />}
+                                            secondary={<Skeleton width={300} />}
+                                        />
+                                        <ListItemSecondaryAction>
+                                            <Skeleton height={20} width={50}>
+                                                <Button
+                                                    variant="outlined"
+                                                    size="small"
+                                                    className={
+                                                        css.inviteButton
+                                                    }>
+                                                    Invite
+                                                </Button>
+                                            </Skeleton>
+                                        </ListItemSecondaryAction>
+                                    </ListItem>
+                                );
+                            }
+                        )}
+                    </List>
                 ) : (
                     <List className={css.root}>
                         {participants.length === 0 ? (
-                            <div
-                                className={css.circularProgress}
-                                align="center">
+                            <div style={{ marginTop: '30%' }} align="center">
                                 <Typography>No Data Matched.</Typography>
                             </div>
                         ) : (
-                            participants.map((participant) => {
+                            participants.map((participant, index) => {
                                 return (
                                     <ListItem key={participant._id}>
                                         <ListItemAvatar>
@@ -98,19 +145,38 @@ const InvitationDialog = ({
                                             secondary={participant.email}
                                         />
                                         <ListItemSecondaryAction>
-                                            <Button
-                                                variant="outlined"
-                                                size="small"
-                                                className={css.inviteButton}>
-                                                {isLoading ? (
-                                                    <CircularProgress
-                                                        size={26}
-                                                        color="inherit"
-                                                    />
-                                                ) : (
-                                                    'Invite'
-                                                )}
-                                            </Button>
+                                            {invitationListEmail.includes(
+                                                participant.email
+                                            ) ? (
+                                                <Button
+                                                    size="small"
+                                                    className={css.sentButton}>
+                                                    Sent
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    size="small"
+                                                    onClick={() =>
+                                                        handleInviteParticipant(
+                                                            index,
+                                                            participant.email,
+                                                            eventDetail.urlCode
+                                                        )
+                                                    }
+                                                    className={
+                                                        css.inviteButton
+                                                    }>
+                                                    {spinnerIndex === index &&
+                                                    isInvitationLoading ? (
+                                                        <CircularProgress
+                                                            size={20}
+                                                            color="inherit"
+                                                        />
+                                                    ) : (
+                                                        'Invite'
+                                                    )}
+                                                </Button>
+                                            )}
                                         </ListItemSecondaryAction>
                                     </ListItem>
                                 );

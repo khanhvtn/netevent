@@ -201,6 +201,7 @@ const EnhancedTableToolbar = (props) => {
         handleSetVerified,
         handleSetAttended,
         handleToggleDialogInvitation,
+        eventDetail,
         isLoading
     } = props;
 
@@ -307,18 +308,21 @@ const EnhancedTableToolbar = (props) => {
                         </Button>
                     </>
                 ) : (
-                    <Button
-                        disabled={isLoading}
-                        onClick={handleToggleDialogInvitation}
-                        style={{ marginLeft: '8px' }}
-                        variant="contained"
-                        color="primary">
-                        {isLoading ? (
-                            <CircularProgress size={26} color="inherit" />
-                        ) : (
-                            'Invitation'
-                        )}
-                    </Button>
+                    !eventDetail.isFinished &&
+                    eventDetail.isApproved && (
+                        <Button
+                            disabled={isLoading}
+                            onClick={handleToggleDialogInvitation}
+                            style={{ marginLeft: '8px' }}
+                            variant="contained"
+                            color="primary">
+                            {isLoading ? (
+                                <CircularProgress size={26} color="inherit" />
+                            ) : (
+                                'Invitation'
+                            )}
+                        </Button>
+                    )
                 )}
             </Toolbar>
         </>
@@ -342,9 +346,10 @@ const ParticipantTable = ({
 }) => {
     const css = useStyles();
 
-    const { participants, isLoading } = useSelector((state) => ({
+    const { participants, isLoading, eventDetail } = useSelector((state) => ({
         participants: state.participant.participants,
-        isLoading: state.participant.isLoading
+        isLoading: state.participant.isLoading,
+        eventDetail: state.event.eventDetail
     }));
 
     const [order, setOrder] = useState('asc');
@@ -403,6 +408,7 @@ const ParticipantTable = ({
                 handleSetVerified={handleSetVerified}
                 handleSetAttended={handleSetAttended}
                 handleToggleDialogInvitation={handleToggleDialogInvitation}
+                eventDetail={eventDetail}
                 isLoading={isLoading}
             />
             <TableContainer>
@@ -428,7 +434,8 @@ const ParticipantTable = ({
                                     (row, index) => {
                                         return (
                                             <>
-                                                <TableRow key={index}>
+                                                <TableRow
+                                                    key={`${index}-skeleton`}>
                                                     {!reviewerMode && (
                                                         <TableCell>
                                                             <Skeleton />
@@ -438,7 +445,7 @@ const ParticipantTable = ({
                                                         (row, index) => {
                                                             return (
                                                                 <TableCell
-                                                                    key={index}>
+                                                                    key={`${index}-skeleton-row`}>
                                                                     <Skeleton />
                                                                 </TableCell>
                                                             );
@@ -453,6 +460,7 @@ const ParticipantTable = ({
                         ) : participants.length === 0 ? (
                             <>
                                 <TableRow
+                                    key={'NoDataMatched'}
                                     style={{
                                         height: 50 * take
                                     }}>
@@ -586,6 +594,7 @@ const ParticipantTable = ({
                                 })}
                                 {emptyRows > 0 && (
                                     <TableRow
+                                        key={'emptyRowKey'}
                                         style={{
                                             height: 50 * emptyRows
                                         }}>

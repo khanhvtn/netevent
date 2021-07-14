@@ -149,6 +149,9 @@ const eventSchema = mongoose.Schema(
         isDeleted: {
             type: Boolean,
             default: false
+        },
+        invitationListEmail: {
+            type: [String]
         }
     },
     { timestamps: true }
