@@ -1238,9 +1238,10 @@ const getAnalysis = async (req, res, next) => {
         }).populate('event');
 
         //Analyze Participant
-        const totalParticipantSignedUp = participantData.filter(
-            (participant) => participant.isValid == true
-        ).length;
+        const totalParticipantSignedUp = participantData.length;
+        // participantData.filter(
+        //     (participant) => participant.isValid == false
+        // ).length;
         const totalParticipantShowedUp = participantData.filter(
             (participant) => participant.isAttended == true
         ).length;
@@ -1335,9 +1336,7 @@ const getAnalysisByEventID = async (req, res, next) => {
             _id: options.eventId
         });
 
-        const signUpParticipant = participants.filter(
-            (participant) => participant.isValid == true
-        ).length;
+        const signUpParticipant = participants.length;
 
         const showUpParticipant = participants.filter(
             (participant) => participant.isAttended == true
