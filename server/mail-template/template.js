@@ -404,6 +404,7 @@ const html = (email, id) => {
 };
 
 const eventInvitationTemplate = (event) => {
+    const description = JSON.parse(event.description);
     return `
   
   <!DOCTYPE html>
@@ -557,7 +558,7 @@ const eventInvitationTemplate = (event) => {
                                 <td class="h3 pb20" style="color:#ffffff; font-family:'Muli', Arial,sans-serif; font-size:25px; line-height:32px; text-align:left; padding-bottom:20px;">${event.eventName}</td>
                               </tr>
                               <tr>
-                                <td class="text pb20" style="color:#ffffff; font-family:Arial,sans-serif; font-size:14px; line-height:26px; text-align:left; padding-bottom:20px;">${event.description.blocks[0].text}</td>
+                                <td class="text pb20" style="color:#ffffff; font-family:Arial,sans-serif; font-size:14px; line-height:26px; text-align:left; padding-bottom:20px;">${description.blocks[0].text}</td>
                               </tr>
                               <!-- Button -->
                               <tr>
