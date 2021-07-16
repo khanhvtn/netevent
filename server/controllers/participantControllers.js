@@ -2,9 +2,10 @@ const { Participant, Event } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomeError');
 const mongoose = require('mongoose');
-const { sendInvitation } = require('./misc/mailerInvitation');
+const { sendInvitation, sendEmail } = require('./misc/mailer');
 const qrCode = require('qrcode');
 const CryptoJS = require('crypto-js');
+const { eventInvitationTemplate } = require('../mail-template/template');
 
 /**
  *  =====================================
@@ -572,10 +573,13 @@ const inviteParticipant = async (req, res, next) => {
             { new: true }
         );
 
-        // Minh code here for sending invitation
-        //
-        //
-        //
+        // Send Email Invitation (Minh)
+        await sendEmail(
+            'noreply@netevent.com',
+            newInvitationList.join(', '),
+            'Netcompany - You May Interest In This Event',
+            eventInvitationTemplate(event)
+        );
 
         return cusResponse(res, 200, updateEvent.invitationListEmail, null);
     } catch (error) {
