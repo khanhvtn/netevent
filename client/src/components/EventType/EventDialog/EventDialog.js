@@ -43,11 +43,13 @@ const EventDialog = ({
                 onClose={(e) => handleToggleDialogCreateAndUpdate(e)}
                 aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                    {isCreateMode
-                        ? 'Create New Event Type'
-                        : 'Update a Event Type'}
+                    <div align="center">
+                        {isCreateMode
+                            ? 'Create New Event Type'
+                            : 'Update a Event Type'}
+                    </div>
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent dividers>
                     <TextField
                         disabled={isLoading || createSuccess ? true : false}
                         className={css.textField}

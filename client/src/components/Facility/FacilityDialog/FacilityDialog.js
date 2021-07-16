@@ -51,9 +51,13 @@ const FacilityDialog = ({
                 onClose={(e) => handleToggleDialogCreateAndUpdate(e)}
                 aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                    {isCreateMode ? 'Create New Facility' : 'Update a Facility'}
+                    <div align="center">
+                        {isCreateMode
+                            ? 'Create New Facility'
+                            : 'Update a Facility'}
+                    </div>
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent dividers>
                     <Collapse in={openAlert} className={css.textField}>
                         <Alert severity="success">
                             Create New Facility Success!
