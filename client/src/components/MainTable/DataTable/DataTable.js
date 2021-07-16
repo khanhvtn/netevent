@@ -486,6 +486,28 @@ const DataTable = ({
                                                         </TableCell>
                                                     );
                                                 }
+                                                if (cell.type === 'array') {
+                                                    if (
+                                                        row[cell.id].length ===
+                                                        0
+                                                    ) {
+                                                        return (
+                                                            <TableCell
+                                                                key={index}>
+                                                                None
+                                                            </TableCell>
+                                                        );
+                                                    } else {
+                                                        return (
+                                                            <TableCell
+                                                                key={index}>
+                                                                {row[
+                                                                    cell.id
+                                                                ].join(',')}
+                                                            </TableCell>
+                                                        );
+                                                    }
+                                                }
                                                 return (
                                                     <TableCell key={index}>
                                                         {row[cell.id]}

@@ -18,7 +18,8 @@ import {
     Select,
     InputLabel,
     CircularProgress,
-    MenuItem
+    MenuItem,
+    FormHelperText
 } from '@material-ui/core';
 import moment from 'moment';
 import 'date-fns';
@@ -35,20 +36,8 @@ import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import SystemNotification from '../../components/Notification/Notification';
 import { ERROR_CLEAR } from '../../constants';
 import useStyles from './styles';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import CustomizeForm from '../../components/CustomizeForm/CustomizeForm';
-
-const participantInitialState = {
-    event: null,
-    email: '',
-    name: '',
-    academic: '',
-    school: '',
-    major: '',
-    phone: '',
-    DOB: new Date(Date.now()),
-    expectedGraduateDate: new Date(Date.now())
-};
 
 const eventInitialState = {
     event: null,
@@ -61,7 +50,6 @@ const initialDescription =
 const Registration = () => {
     const css = useStyles();
     const [state, setState] = useState(eventInitialState);
-    const [participant, setParticipant] = useState(participantInitialState);
 
     const myRef = useRef(null);
     const history = useHistory();
@@ -72,7 +60,8 @@ const Registration = () => {
         handleSubmit,
         control,
         formState: { errors },
-        reset
+        reset,
+        setError
     } = useForm();
 
     // UseParams to get pathname
@@ -84,10 +73,19 @@ const Registration = () => {
         useSelector((state) => ({
             isLoading: state.event.isDetailLoading,
             eventDetail: state.event.eventDetail,
-            error: state.error,
+            error: state.error.errors,
             isRegistered: state.participant.isLoading,
             registerSuccess: state.participant.complete
         }));
+
+    //useEffect to push error of global state to react-form-hook
+    useEffect(() => {
+        if (error) {
+            for (const err in error) {
+                setError(err, { type: 'manual', message: error[err] });
+            }
+        }
+    }, [error, setError]);
 
     // UseEffect to scroll to top at the first mount
     useEffect(() => {
@@ -119,16 +117,6 @@ const Registration = () => {
         }
     }, [state.event?.urlCode, isReviewed, state.isLoaded, history]);
 
-    // UseEffect to set current event for participant when get the event state
-    useEffect(() => {
-        if (state.event?._id) {
-            setParticipant((prevState) => ({
-                ...prevState,
-                event: state.event?._id
-            }));
-        }
-    }, [state.event?._id]);
-
     const contentState = convertFromRaw(
         JSON.parse(
             state.event?.description
@@ -139,28 +127,13 @@ const Registration = () => {
     const editorState = EditorState.createWithContent(contentState);
 
     // handle clear all fields
-    const handleClearField = useCallback(
-        (action) => {
-            setParticipant(participantInitialState);
-
-            //clear all error
-            if (action) {
-                dispatch({
-                    type: ERROR_CLEAR,
-                    payload: null
-                });
-            }
-        },
-        [dispatch]
-    );
-
-    const handleOnChange = (e) => {
-        const { name, value } = e.target;
-        setParticipant((prevState) => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
+    const handleClearField = useCallback(() => {
+        //clear all error
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null
+        });
+    }, [dispatch]);
 
     // Handle success register
     useEffect(() => {
@@ -201,11 +174,36 @@ const Registration = () => {
 
     // Handle On Click Register
     const handleOnRegister = (data) => {
+        console.log(data);
+        const {
+            email,
+            name,
+            academic,
+            school,
+            major,
+            phone,
+            DOB,
+            expectedGraduateDate,
+            ...rest
+        } = data;
         let customizeFieldData = [];
-        for (let key in data) {
-            customizeFieldData.push({ title: key, value: data[key] });
+        for (let key in rest) {
+            customizeFieldData.push({ title: key, value: rest[key] });
         }
-        dispatch(registerParticipant({ ...participant, customizeFieldData }));
+        dispatch(
+            registerParticipant({
+                event: state.event._id,
+                email,
+                name,
+                academic,
+                school,
+                major,
+                phone,
+                DOB,
+                expectedGraduateDate,
+                customizeFieldData
+            })
+        );
     };
 
     return isLoading ? (
@@ -563,330 +561,374 @@ const Registration = () => {
                                                 handleOnRegister
                                             )}>
                                             <FormControl fullWidth>
-                                                <TextField
-                                                    disabled={isReviewed}
-                                                    label="Full Name"
-                                                    variant="outlined"
-                                                    margin="none"
+                                                <Controller
+                                                    defaultValue=""
                                                     name="name"
-                                                    error={
-                                                        error.errors?.name
-                                                            ? true
-                                                            : false
-                                                    }
-                                                    value={participant.name}
-                                                    onChange={handleOnChange}
-                                                    required
-                                                    fullWidth
-                                                    className={
-                                                        css.textField
-                                                    }></TextField>
-                                                {error.errors !== null ? (
-                                                    error.errors.name && (
-                                                        <Typography
-                                                            className={
-                                                                css.errorStyle
-                                                            }>
-                                                            {error.errors.name}
-                                                        </Typography>
-                                                    )
-                                                ) : (
-                                                    <></>
-                                                )}
-
-                                                <TextField
-                                                    disabled={isReviewed}
-                                                    label="Email"
-                                                    type="email"
-                                                    name="email"
-                                                    margin="none"
-                                                    variant="outlined"
-                                                    error={
-                                                        error.errors?.email
-                                                            ? true
-                                                            : false
-                                                    }
-                                                    value={participant.email}
-                                                    onChange={handleOnChange}
-                                                    required
-                                                    fullWidth
-                                                    className={
-                                                        css.textField
-                                                    }></TextField>
-                                                {error.errors !== null ? (
-                                                    error.errors.email && (
-                                                        <Typography
-                                                            className={
-                                                                css.errorStyle
-                                                            }>
-                                                            {error.errors.email}
-                                                        </Typography>
-                                                    )
-                                                ) : (
-                                                    <></>
-                                                )}
-
-                                                <TextField
-                                                    disabled={isReviewed}
-                                                    label="University"
-                                                    margin="none"
-                                                    variant="outlined"
-                                                    name="school"
-                                                    error={
-                                                        error.errors?.school
-                                                            ? true
-                                                            : false
-                                                    }
-                                                    value={participant.school}
-                                                    onChange={handleOnChange}
-                                                    required
-                                                    fullWidth
-                                                    className={
-                                                        css.textField
-                                                    }></TextField>
-                                                {error.errors !== null ? (
-                                                    error.errors.school && (
-                                                        <Typography
-                                                            className={
-                                                                css.errorStyle
-                                                            }>
-                                                            {
-                                                                error.errors
-                                                                    .school
+                                                    control={control}
+                                                    rules={{
+                                                        validate: (value) =>
+                                                            !!value ||
+                                                            `Full Name can not be blanked`
+                                                    }}
+                                                    render={({ field }) => (
+                                                        <TextField
+                                                            {...field}
+                                                            disabled={
+                                                                isReviewed
                                                             }
-                                                        </Typography>
-                                                    )
-                                                ) : (
-                                                    <></>
-                                                )}
-
-                                                <FormControl
-                                                    disabled={isReviewed}
-                                                    margin="none"
-                                                    className={css.textField}>
-                                                    <InputLabel
-                                                        id="demo-simple-select-outlined-label1"
-                                                        error={
-                                                            error.errors
-                                                                ?.academic
-                                                                ? true
-                                                                : false
-                                                        }
-                                                        className={
-                                                            css.academicField
-                                                        }>
-                                                        Academic *
-                                                    </InputLabel>
-                                                    <Select
-                                                        fullWidth
-                                                        labelId="demo-simple-select-outlined-label1"
-                                                        id="demo-simple-select-outlined"
-                                                        name="academic"
-                                                        error={
-                                                            error.errors
-                                                                ?.academic
-                                                                ? true
-                                                                : false
-                                                        }
-                                                        variant="outlined"
-                                                        value={
-                                                            participant.academic
-                                                        }
-                                                        onChange={
-                                                            handleOnChange
-                                                        }
-                                                        label="Academic">
-                                                        <MenuItem value="Bachelor">
-                                                            <em>Bachelor</em>
-                                                        </MenuItem>
-                                                        <MenuItem value="Master">
-                                                            <em>Master</em>
-                                                        </MenuItem>
-                                                        <MenuItem value="Phd">
-                                                            <em>Phd</em>
-                                                        </MenuItem>
-                                                    </Select>
-                                                    {error.errors !== null ? (
-                                                        error.errors
-                                                            .academic && (
-                                                            <Typography
-                                                                className={
-                                                                    css.errorStyle
-                                                                }>
-                                                                {
-                                                                    error.errors
-                                                                        .academic
-                                                                }
-                                                            </Typography>
-                                                        )
-                                                    ) : (
-                                                        <></>
+                                                            label="Full Name"
+                                                            variant="outlined"
+                                                            margin="none"
+                                                            error={
+                                                                errors['name']
+                                                                    ? true
+                                                                    : false
+                                                            }
+                                                            helperText={
+                                                                errors['name']
+                                                                    ? errors[
+                                                                          'name'
+                                                                      ].message
+                                                                    : ''
+                                                            }
+                                                            required
+                                                            fullWidth
+                                                            className={
+                                                                css.textField
+                                                            }
+                                                        />
                                                     )}
-                                                </FormControl>
+                                                />
 
-                                                <TextField
-                                                    disabled={isReviewed}
+                                                <Controller
+                                                    defaultValue=""
+                                                    name="email"
+                                                    control={control}
+                                                    rules={{
+                                                        validate: (value) =>
+                                                            !!value ||
+                                                            `Email can not be blanked`
+                                                    }}
+                                                    render={({ field }) => (
+                                                        <TextField
+                                                            {...field}
+                                                            disabled={
+                                                                isReviewed
+                                                            }
+                                                            label="Email"
+                                                            variant="outlined"
+                                                            margin="none"
+                                                            error={
+                                                                errors['email']
+                                                                    ? true
+                                                                    : false
+                                                            }
+                                                            helperText={
+                                                                errors['email']
+                                                                    ? errors[
+                                                                          'email'
+                                                                      ].message
+                                                                    : ''
+                                                            }
+                                                            required
+                                                            fullWidth
+                                                            className={
+                                                                css.textField
+                                                            }
+                                                        />
+                                                    )}
+                                                />
+                                                <Controller
+                                                    defaultValue=""
+                                                    name="school"
+                                                    control={control}
+                                                    rules={{
+                                                        validate: (value) =>
+                                                            !!value ||
+                                                            `University can not be blanked`
+                                                    }}
+                                                    render={({ field }) => (
+                                                        <TextField
+                                                            {...field}
+                                                            disabled={
+                                                                isReviewed
+                                                            }
+                                                            label="University"
+                                                            variant="outlined"
+                                                            margin="none"
+                                                            error={
+                                                                errors['school']
+                                                                    ? true
+                                                                    : false
+                                                            }
+                                                            helperText={
+                                                                errors['school']
+                                                                    ? errors[
+                                                                          'school'
+                                                                      ].message
+                                                                    : ''
+                                                            }
+                                                            required
+                                                            fullWidth
+                                                            className={
+                                                                css.textField
+                                                            }
+                                                        />
+                                                    )}
+                                                />
+
+                                                <Controller
+                                                    defaultValue=""
+                                                    name="academic"
+                                                    control={control}
+                                                    rules={{
+                                                        validate: (value) =>
+                                                            !!value ||
+                                                            `Academic can not be blanked`
+                                                    }}
+                                                    render={({ field }) => (
+                                                        <FormControl
+                                                            error={
+                                                                errors[
+                                                                    'academic'
+                                                                ]
+                                                                    ? true
+                                                                    : false
+                                                            }
+                                                            disabled={
+                                                                isReviewed
+                                                            }
+                                                            margin="none"
+                                                            className={
+                                                                css.textField
+                                                            }>
+                                                            <InputLabel
+                                                                id="demo-simple-select-outlined-label1"
+                                                                className={
+                                                                    css.academicField
+                                                                }>
+                                                                Academic *
+                                                            </InputLabel>
+                                                            <Select
+                                                                {...field}
+                                                                fullWidth
+                                                                variant="outlined"
+                                                                label="Academic">
+                                                                <MenuItem value="">
+                                                                    <em>
+                                                                        None
+                                                                    </em>
+                                                                </MenuItem>
+                                                                <MenuItem value="Bachelor">
+                                                                    <em>
+                                                                        Bachelor
+                                                                    </em>
+                                                                </MenuItem>
+                                                                <MenuItem value="Master">
+                                                                    <em>
+                                                                        Master
+                                                                    </em>
+                                                                </MenuItem>
+                                                                <MenuItem value="Phd">
+                                                                    <em>Phd</em>
+                                                                </MenuItem>
+                                                            </Select>
+                                                            <FormHelperText>
+                                                                {errors[
+                                                                    'academic'
+                                                                ]
+                                                                    ? errors[
+                                                                          'academic'
+                                                                      ].message
+                                                                    : ''}
+                                                            </FormHelperText>
+                                                        </FormControl>
+                                                    )}
+                                                />
+
+                                                <Controller
+                                                    defaultValue=""
                                                     name="major"
-                                                    label="Major"
-                                                    margin="none"
-                                                    variant="outlined"
-                                                    error={
-                                                        error.errors?.major
-                                                            ? true
-                                                            : false
-                                                    }
-                                                    value={participant.major}
-                                                    onChange={handleOnChange}
-                                                    required
-                                                    fullWidth
-                                                    className={
-                                                        css.textField
-                                                    }></TextField>
-                                                {error.errors !== null ? (
-                                                    error.errors.major && (
-                                                        <Typography
+                                                    control={control}
+                                                    rules={{
+                                                        validate: (value) =>
+                                                            !!value ||
+                                                            `Major can not be blanked`
+                                                    }}
+                                                    render={({ field }) => (
+                                                        <TextField
+                                                            {...field}
+                                                            disabled={
+                                                                isReviewed
+                                                            }
+                                                            label="Major"
+                                                            variant="outlined"
+                                                            margin="none"
+                                                            error={
+                                                                errors['major']
+                                                                    ? true
+                                                                    : false
+                                                            }
+                                                            helperText={
+                                                                errors['major']
+                                                                    ? errors[
+                                                                          'major'
+                                                                      ].message
+                                                                    : ''
+                                                            }
+                                                            required
+                                                            fullWidth
                                                             className={
-                                                                css.errorStyle
-                                                            }>
-                                                            {error.errors.major}
-                                                        </Typography>
-                                                    )
-                                                ) : (
-                                                    <></>
-                                                )}
+                                                                css.textField
+                                                            }
+                                                        />
+                                                    )}
+                                                />
 
-                                                <TextField
-                                                    disabled={isReviewed}
+                                                <Controller
+                                                    defaultValue=""
                                                     name="phone"
-                                                    label="Phone"
-                                                    type="number"
-                                                    margin="none"
-                                                    variant="outlined"
-                                                    error={
-                                                        error.errors?.phone
-                                                            ? true
-                                                            : false
-                                                    }
-                                                    value={participant.phone}
-                                                    onChange={handleOnChange}
-                                                    required
-                                                    fullWidth
-                                                    className={
-                                                        css.textField
-                                                    }></TextField>
-                                                {error.errors !== null ? (
-                                                    error.errors.phone && (
-                                                        <Typography
+                                                    control={control}
+                                                    rules={{
+                                                        validate: (value) =>
+                                                            !!value ||
+                                                            `Phone can not be blanked`
+                                                    }}
+                                                    render={({ field }) => (
+                                                        <TextField
+                                                            {...field}
+                                                            disabled={
+                                                                isReviewed
+                                                            }
+                                                            label="Phone"
+                                                            variant="outlined"
+                                                            margin="none"
+                                                            error={
+                                                                errors['phone']
+                                                                    ? true
+                                                                    : false
+                                                            }
+                                                            helperText={
+                                                                errors['phone']
+                                                                    ? errors[
+                                                                          'phone'
+                                                                      ].message
+                                                                    : ''
+                                                            }
+                                                            required
+                                                            fullWidth
                                                             className={
-                                                                css.errorStyle
-                                                            }>
-                                                            {error.errors.phone}
-                                                        </Typography>
-                                                    )
-                                                ) : (
-                                                    <></>
-                                                )}
+                                                                css.textField
+                                                            }
+                                                        />
+                                                    )}
+                                                />
 
                                                 <MuiPickersUtilsProvider
                                                     utils={DateFnsUtils}>
-                                                    <KeyboardDatePicker
-                                                        disabled={isReviewed}
-                                                        inputVariant="outlined"
-                                                        format="MM/dd/yyyy"
-                                                        margin="normal"
-                                                        id="date-picker-inline-DOB"
-                                                        error={
-                                                            error.errors?.DOB
-                                                                ? true
-                                                                : false
-                                                        }
-                                                        label="Date of Birth"
-                                                        value={participant.DOB}
-                                                        onChange={(date) => {
-                                                            setParticipant(
-                                                                (
-                                                                    prevState
-                                                                ) => ({
-                                                                    ...prevState,
-                                                                    DOB: date
-                                                                        ? date
-                                                                        : null
-                                                                })
+                                                    <Controller
+                                                        defaultValue={Date.now()}
+                                                        rules={{
+                                                            validate: (
+                                                                targetValue
+                                                            ) =>
+                                                                !!targetValue ||
+                                                                `Date of Birth can not be blanked`
+                                                        }}
+                                                        name="DOB"
+                                                        control={control}
+                                                        render={({ field }) => {
+                                                            delete field.ref;
+                                                            return (
+                                                                <KeyboardDatePicker
+                                                                    error={
+                                                                        errors[
+                                                                            'DOB'
+                                                                        ]
+                                                                            ? true
+                                                                            : false
+                                                                    }
+                                                                    helperText={
+                                                                        errors[
+                                                                            'DOB'
+                                                                        ]
+                                                                            ? errors[
+                                                                                  'DOB'
+                                                                              ]
+                                                                                  .message
+                                                                            : ''
+                                                                    }
+                                                                    inputVariant="outlined"
+                                                                    required
+                                                                    className={
+                                                                        css.textField
+                                                                    }
+                                                                    margin="normal"
+                                                                    id="date-picker-dialog"
+                                                                    label="Date of Birth"
+                                                                    format="dd/MM/yyyy"
+                                                                    KeyboardButtonProps={{
+                                                                        'aria-label':
+                                                                            'change date'
+                                                                    }}
+                                                                    {...field}
+                                                                />
                                                             );
                                                         }}
-                                                        KeyboardButtonProps={{
-                                                            'aria-label':
-                                                                'change date'
-                                                        }}
                                                     />
-                                                    {error.errors !== null ? (
-                                                        error.errors.DOB && (
-                                                            <Typography
-                                                                className={
-                                                                    css.errorStyle
-                                                                }>
-                                                                {
-                                                                    error.errors
-                                                                        .DOB
-                                                                }
-                                                            </Typography>
-                                                        )
-                                                    ) : (
-                                                        <></>
-                                                    )}
-
-                                                    <KeyboardDatePicker
-                                                        disabled={isReviewed}
-                                                        format="MM/dd/yyyy"
-                                                        margin="normal"
-                                                        inputVariant="outlined"
-                                                        id="date-picker-inline-expectedGraduateDate"
-                                                        label="Graduation Date"
-                                                        error={
-                                                            error.errors
-                                                                ?.expectedGraduateDate
-                                                                ? true
-                                                                : false
-                                                        }
-                                                        value={
-                                                            participant.expectedGraduateDate
-                                                        }
-                                                        onChange={(date) => {
-                                                            setParticipant(
-                                                                (
-                                                                    prevState
-                                                                ) => ({
-                                                                    ...prevState,
-                                                                    expectedGraduateDate:
-                                                                        date
-                                                                            ? date
-                                                                            : null
-                                                                })
+                                                    <Controller
+                                                        defaultValue={Date.now()}
+                                                        rules={{
+                                                            validate: (
+                                                                targetValue
+                                                            ) =>
+                                                                !!targetValue ||
+                                                                `Graduation Date can not be blanked`
+                                                        }}
+                                                        name="expectedGraduateDate"
+                                                        control={control}
+                                                        render={({ field }) => {
+                                                            delete field.ref;
+                                                            return (
+                                                                <KeyboardDatePicker
+                                                                    error={
+                                                                        errors[
+                                                                            'expectedGraduateDate'
+                                                                        ]
+                                                                            ? true
+                                                                            : false
+                                                                    }
+                                                                    helperText={
+                                                                        errors[
+                                                                            'expectedGraduateDate'
+                                                                        ]
+                                                                            ? errors[
+                                                                                  'expectedGraduateDate'
+                                                                              ]
+                                                                                  .message
+                                                                            : ''
+                                                                    }
+                                                                    inputVariant="outlined"
+                                                                    required
+                                                                    className={
+                                                                        css.textField
+                                                                    }
+                                                                    margin="normal"
+                                                                    id="date-picker-dialog"
+                                                                    label="Graduation Date"
+                                                                    format="dd/MM/yyyy"
+                                                                    KeyboardButtonProps={{
+                                                                        'aria-label':
+                                                                            'change date'
+                                                                    }}
+                                                                    {...field}
+                                                                />
                                                             );
                                                         }}
-                                                        KeyboardButtonProps={{
-                                                            'aria-label':
-                                                                'change date'
-                                                        }}
                                                     />
-                                                    {error.errors !== null ? (
-                                                        error.errors
-                                                            .expectedGraduateDate && (
-                                                            <Typography
-                                                                className={
-                                                                    css.errorStyle
-                                                                }>
-                                                                {
-                                                                    error.errors
-                                                                        .expectedGraduateDate
-                                                                }
-                                                            </Typography>
-                                                        )
-                                                    ) : (
-                                                        <></>
-                                                    )}
                                                 </MuiPickersUtilsProvider>
                                                 <CustomizeForm
+                                                    globalError={error}
                                                     errors={errors}
                                                     control={control}
                                                     fieldList={

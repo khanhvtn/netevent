@@ -15,8 +15,10 @@ import {
     MenuItem,
     FormHelperText,
     FormControlLabel,
-    Checkbox
+    Checkbox,
+    Chip
 } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 //import useStyles in the last
 import useStyles from './styles';
 import { CreateEventInterface } from '../../Context';
@@ -26,6 +28,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const CustomizeFieldDialog = () => {
     const css = useStyles();
     const {
+        state,
+        handleUpdateOptionValues,
         customizeFieldState,
         handleToggleDialogCreateAndUpdateCustomizeField,
         handleChangeCustomizeField,
@@ -38,6 +42,7 @@ const CustomizeFieldDialog = () => {
         <div>
             {/* Dialog Create and Update */}
             <Dialog
+                fullWidth
                 TransitionComponent={Transition}
                 maxWidth="sm"
                 open={
@@ -75,7 +80,6 @@ const CustomizeFieldDialog = () => {
                             labelId="select-label-type"
                             id="select-type"
                             name="type"
-                            margin="normal"
                             value={customizeFieldState.type}
                             onChange={handleChangeCustomizeField}
                             label="Type">
@@ -90,24 +94,64 @@ const CustomizeFieldDialog = () => {
                             <MenuItem value={'Range'}>Range</MenuItem>
                             <MenuItem value={'Radio'}>Radio</MenuItem>
                             <MenuItem value={'Number'}>Number</MenuItem>
-                            <MenuItem value={'TextArea'}>TextArea</MenuItem>
                             <MenuItem value={'DateTime'}>DateTime</MenuItem>
                         </Select>
                         <FormHelperText>
                             {errors?.type ? errors.type : ''}
                         </FormHelperText>
                     </FormControl>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                color="primary"
-                                checked={customizeFieldState.isRequired}
-                                onChange={handleChangeCustomizeField}
-                                name="isRequired"
-                            />
-                        }
-                        label="Required"
-                    />
+                    {['Radio', 'Select'].includes(customizeFieldState.type) && (
+                        <Autocomplete
+                            defaultValue={customizeFieldState.optionValues}
+                            id="optionValues"
+                            key={state.isResetOptionValues}
+                            limitTags={4}
+                            multiple
+                            options={[]}
+                            freeSolo
+                            renderTags={(value, getTagProps) => {
+                                handleUpdateOptionValues(value);
+                                return value.map((option, index) => (
+                                    <Chip
+                                        key={index}
+                                        color="primary"
+                                        variant="default"
+                                        label={option}
+                                        {...getTagProps({ index })}
+                                    />
+                                ));
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    error={errors?.optionValues ? true : false}
+                                    helperText={
+                                        errors?.optionValues
+                                            ? errors?.optionValues
+                                            : ''
+                                    }
+                                    size="medium"
+                                    {...params}
+                                    variant="outlined"
+                                    label="Option Value"
+                                    name="optionValues"
+                                    placeholder="Input your option value"
+                                />
+                            )}
+                        />
+                    )}
+                    {!['Checkbox'].includes(customizeFieldState.type) && (
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    color="primary"
+                                    checked={customizeFieldState.isRequired}
+                                    onChange={handleChangeCustomizeField}
+                                    name="isRequired"
+                                />
+                            }
+                            label="Required"
+                        />
+                    )}
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
                     <Button

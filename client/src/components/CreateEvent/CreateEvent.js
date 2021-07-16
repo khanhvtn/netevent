@@ -38,6 +38,7 @@ import moment from 'moment';
 import CustomizeFieldDialog from './CustomizeFieldDialog/CustomizeFieldDialog';
 
 let listTag = [];
+let optionValues = [];
 const initialDescription =
     '{"blocks":[{"key":"4jrep","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}';
 
@@ -108,6 +109,12 @@ const headCellsCustomizeField = [
         label: 'Type'
     },
     {
+        id: 'optionValues',
+        type: 'array',
+        disablePadding: false,
+        label: 'Option Values'
+    },
+    {
         id: 'isRequired',
         type: 'boolean',
         disablePadding: false,
@@ -133,6 +140,7 @@ const initialState = {
     tags: [],
     borrowFacilities: [],
     isResetListTag: false,
+    isResetOptionValues: false,
     // create event type
     openDialogCreateEventType: false,
     eventTypeTarget: '',
@@ -177,6 +185,7 @@ const initialCustomizeFieldState = {
     customizeFieldUpdateSuccess: false,
     title: '',
     type: '',
+    optionValues: [],
     isRequired: false,
     openCreateAndUpdateDialogCustomizeField: false,
     openDeleteDialogCustomizeField: false,
@@ -540,6 +549,11 @@ const CreateEvent = ({
         listTag = newTagList;
     };
 
+    //handle update listTag
+    const handleUpdateOptionValues = (newOptionValues) => {
+        optionValues = newOptionValues;
+    };
+
     /* Borrow Facility */
     const handleChangeBorrowFacility = (e) => {
         setBorrowFacilityState((prevState) => ({
@@ -689,7 +703,8 @@ const CreateEvent = ({
             ...prevState,
             title: mode ? targetEdit.title : '',
             type: mode ? targetEdit.type : '',
-            isRequired: mode ? targetEdit.isRequired : '',
+            isRequired: mode ? targetEdit.isRequired : false,
+            optionValues: mode ? targetEdit.optionValues : [],
             openCreateAndUpdateDialogCustomizeField:
                 !prevState.openCreateAndUpdateDialogCustomizeField,
             isCustomizeFieldCreateMode: mode ? false : true
@@ -760,12 +775,14 @@ const CreateEvent = ({
                     {
                         title: prevState.title,
                         type: prevState.type,
-                        isRequired: prevState.isRequired
+                        isRequired: prevState.isRequired,
+                        optionValues
                     }
                 ],
                 title: '',
                 type: '',
                 isRequired: false,
+                optionValues: [],
                 openCreateAndUpdateDialogCustomizeField: false
             };
         });
@@ -776,6 +793,7 @@ const CreateEvent = ({
             payload: null
         });
         setSelectedCustomizeField([]);
+        optionValues = [];
     };
 
     const handleDeleteCustomizeField = () => {
@@ -788,6 +806,7 @@ const CreateEvent = ({
                 title: '',
                 type: '',
                 isRequired: false,
+                optionValues: [],
                 openDeleteDialogCustomizeField:
                     !prevState.openDeleteDialogCustomizeField
             };
@@ -1046,10 +1065,12 @@ const CreateEvent = ({
     return (
         <div>
             <CreateEventProvider
+                handleUpdateOptionValues={handleUpdateOptionValues}
                 startDate={startDate}
                 endDate={endDate}
                 handleCloseCreateDialog={handleCloseCreateDialog}
                 listTag={listTag}
+                optionValues={optionValues}
                 fileInput={fileInput}
                 eventTypes={eventTypes}
                 errors={errors}

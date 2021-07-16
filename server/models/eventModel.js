@@ -10,6 +10,7 @@ const nanoid = customAlphabet(alphabet, 7);
 const customizeFieldSchema = mongoose.Schema({
     title: { type: String, required: true, trim: true },
     type: { type: String, required: true, trim: true },
+    optionValues: { type: [String] },
     isRequired: { type: Boolean, required: true }
 });
 

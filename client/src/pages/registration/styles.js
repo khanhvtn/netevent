@@ -170,7 +170,7 @@ export default makeStyles((theme) => ({
     //     marginTop: 7
     // },
     textField: {
-        marginTop: 7
+        marginTop: '20px'
     },
     registerButton: {
         marginTop: 20,
