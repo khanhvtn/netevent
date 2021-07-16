@@ -30,5 +30,8 @@ export default makeStyles(() => ({
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis'
+    },
+    selected: {
+        backgroundColor: '#eceef7 !important'
     }
 }));

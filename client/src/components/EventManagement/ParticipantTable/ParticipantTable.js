@@ -18,8 +18,10 @@ import {
     Chip,
     CircularProgress
 } from '@material-ui/core';
-import { lighten, makeStyles } from '@material-ui/core/styles';
-
+import { makeStyles } from '@material-ui/core/styles';
+import VerifiedUserOutlinedIcon from '@material-ui/icons/VerifiedUserOutlined';
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import MailOutlineOutlinedIcon from '@material-ui/icons/MailOutlineOutlined';
 import { useSelector } from 'react-redux';
 
 //import makeStyles in the last
@@ -124,6 +126,8 @@ function EnhancedTableHead(props) {
                 {!reviewerMode && (
                     <TableCell TableCell padding="checkbox">
                         <Checkbox
+                            size="small"
+                            color="primary"
                             indeterminate={
                                 numSelected > 0 && numSelected < rowCount
                             }
@@ -178,8 +182,7 @@ const useToolbarStyles = makeStyles((theme) => ({
     highlight:
         theme.palette.type === 'light'
             ? {
-                  color: theme.palette.secondary.main,
-                  backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+                  color: theme.palette.primary.dark
               }
             : {
                   color: theme.palette.text.primary,
@@ -188,6 +191,9 @@ const useToolbarStyles = makeStyles((theme) => ({
     title: {
         flex: '1 1 100%',
         fontWeight: 'bold'
+    },
+    normalText: {
+        textTransform: 'none'
     }
 }));
 
@@ -250,8 +256,10 @@ const EnhancedTableToolbar = (props) => {
                     numSelected > 0 && (
                         <>
                             <Button
+                                className={classes.normalText}
                                 disabled={isLoading}
                                 onClick={() => handleSetAttended(false)}
+                                endIcon={<CloseOutlinedIcon />}
                                 style={{ marginLeft: '8px' }}
                                 variant="contained"
                                 color="secondary">
@@ -265,8 +273,10 @@ const EnhancedTableToolbar = (props) => {
                                 )}
                             </Button>
                             <Button
+                                className={classes.normalText}
                                 disabled={isLoading}
                                 onClick={() => handleSetAttended(true)}
+                                endIcon={<VerifiedUserOutlinedIcon />}
                                 style={{ marginLeft: '8px' }}
                                 variant="contained"
                                 color="primary">
@@ -284,8 +294,10 @@ const EnhancedTableToolbar = (props) => {
                 ) : numSelected > 0 ? (
                     <>
                         <Button
+                            className={classes.normalText}
                             disabled={isLoading}
                             onClick={handleSetInvalid}
+                            endIcon={<CloseOutlinedIcon />}
                             variant="contained"
                             color="secondary">
                             {isLoading ? (
@@ -295,8 +307,10 @@ const EnhancedTableToolbar = (props) => {
                             )}
                         </Button>
                         <Button
+                            className={classes.normalText}
                             disabled={isLoading}
                             onClick={handleSetVerified}
+                            endIcon={<VerifiedUserOutlinedIcon />}
                             style={{ marginLeft: '8px' }}
                             variant="contained"
                             color="primary">
@@ -311,8 +325,10 @@ const EnhancedTableToolbar = (props) => {
                     !eventDetail.isFinished &&
                     eventDetail.isApproved && (
                         <Button
+                            className={classes.normalText}
                             disabled={isLoading}
                             onClick={handleToggleDialogInvitation}
+                            endIcon={<MailOutlineOutlinedIcon />}
                             style={{ marginLeft: '8px' }}
                             variant="contained"
                             color="primary">
@@ -494,10 +510,13 @@ const ParticipantTable = ({
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
                                             key={row._id}
+                                            classes={{ selected: css.selected }}
                                             selected={isItemSelected}>
                                             {!reviewerMode && (
                                                 <TableCell padding="checkbox">
                                                     <Checkbox
+                                                        size="small"
+                                                        color="primary"
                                                         checked={isItemSelected}
                                                         inputProps={{
                                                             'aria-labelledby':

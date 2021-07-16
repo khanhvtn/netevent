@@ -17,7 +17,7 @@ import {
     Button
 } from '@material-ui/core';
 import { Delete, DeleteForever, Create, Edit } from '@material-ui/icons';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 //import makeStyles in the last
 import useStyles from './styles';
@@ -69,6 +69,8 @@ function EnhancedTableHead(props) {
             <TableRow>
                 <TableCell padding="checkbox">
                     <Checkbox
+                        size="small"
+                        color="primary"
                         indeterminate={
                             numSelected > 0 && numSelected < rowCount
                         }
@@ -122,8 +124,7 @@ const useToolbarStyles = makeStyles((theme) => ({
     highlight:
         theme.palette.type === 'light'
             ? {
-                  color: theme.palette.secondary.main,
-                  backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+                  color: theme.palette.primary.dark
               }
             : {
                   color: theme.palette.text.primary,
@@ -132,6 +133,9 @@ const useToolbarStyles = makeStyles((theme) => ({
     title: {
         flex: '1 1 100%',
         fontWeight: 'bold'
+    },
+    normalText: {
+        textTransform: 'none'
     }
 }));
 
@@ -176,6 +180,7 @@ const EnhancedTableToolbar = (props) => {
                 <>
                     {recoveryMode && (
                         <Button
+                            className={classes.normalText}
                             disabled={
                                 constrainRangeDate === undefined ||
                                 disabled === undefined
@@ -198,6 +203,7 @@ const EnhancedTableToolbar = (props) => {
 
                     {!isRecoveryMode && (
                         <Button
+                            className={classes.normalText}
                             disabled={
                                 constrainRangeDate === undefined ||
                                 disabled === undefined
@@ -208,7 +214,7 @@ const EnhancedTableToolbar = (props) => {
                                     ? true
                                     : false
                             }
-                            style={{ marginLeft: '20px' }}
+                            style={{ marginLeft: 8 }}
                             onClick={handleToggleDialogCreateAndUpdate}
                             endIcon={<Create />}
                             variant="contained"
@@ -222,6 +228,7 @@ const EnhancedTableToolbar = (props) => {
                     {isRecoveryMode && (
                         <>
                             <Button
+                                className={classes.normalText}
                                 onClick={handleToggleDialogDelete}
                                 endIcon={<DeleteForever />}
                                 variant="contained"
@@ -229,6 +236,7 @@ const EnhancedTableToolbar = (props) => {
                                 Delete
                             </Button>
                             <Button
+                                className={classes.normalText}
                                 style={{ marginLeft: '8px' }}
                                 onClick={handleRecovery}
                                 variant="contained"
@@ -239,6 +247,7 @@ const EnhancedTableToolbar = (props) => {
                     )}
                     {!isRecoveryMode && (
                         <Button
+                            className={classes.normalText}
                             onClick={handleToggleDialogDelete}
                             endIcon={<DeleteForever />}
                             variant="contained"
@@ -248,6 +257,7 @@ const EnhancedTableToolbar = (props) => {
                     )}
                     {!isRecoveryMode && (
                         <Button
+                            className={classes.normalText}
                             onClick={(e) =>
                                 handleToggleDialogCreateAndUpdate(e, 'edit')
                             }
@@ -262,6 +272,7 @@ const EnhancedTableToolbar = (props) => {
             ) : isRecoveryMode ? (
                 <>
                     <Button
+                        className={classes.normalText}
                         onClick={handleToggleDialogDelete}
                         endIcon={<DeleteForever />}
                         variant="contained"
@@ -269,6 +280,7 @@ const EnhancedTableToolbar = (props) => {
                         Delete
                     </Button>
                     <Button
+                        className={classes.normalText}
                         style={{ marginLeft: '8px' }}
                         onClick={handleRecovery}
                         variant="contained"
@@ -278,6 +290,7 @@ const EnhancedTableToolbar = (props) => {
                 </>
             ) : (
                 <Button
+                    className={classes.normalText}
                     onClick={handleToggleDialogDelete}
                     endIcon={<Delete />}
                     variant="contained"
@@ -449,9 +462,12 @@ const DataTable = ({
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
                                             key={row._id}
+                                            classes={{ selected: css.selected }}
                                             selected={isItemSelected}>
                                             <TableCell padding="checkbox">
                                                 <Checkbox
+                                                    size="small"
+                                                    color="primary"
                                                     checked={isItemSelected}
                                                     inputProps={{
                                                         'aria-labelledby':
