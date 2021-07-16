@@ -179,14 +179,8 @@ export const getEventsAnalysisAPI = (userQueries) => {
     const startToQuery = `startTo=${
         userQueries?.startTo ? userQueries?.startTo : ''
     }`;
-    const endFromQuery = `endFrom=${
-        userQueries?.endFrom ? userQueries?.endFrom : ''
-    }`;
-    const endToQuery = `endTo=${userQueries?.endTo ? userQueries?.endTo : ''}`;
 
-    return AXIOS.get(
-        `/event/analysisAll?${startFromQuery}&${startToQuery}&${endFromQuery}&${endToQuery}`
-    );
+    return AXIOS.get(`/event/analysisAll?${startFromQuery}&${startToQuery}`);
 };
 
 // Get Event Analysis by ID

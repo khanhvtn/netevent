@@ -1191,37 +1191,12 @@ const getAnalysis = async (req, res, next) => {
             };
         }
 
-        /* 
-        Add endFrom filter
-         */
-        if (req.query.endFrom) {
-            options = {
-                ...options,
-                endMinDate: new Date(req.query.endFrom)
-            };
-        }
-
-        /* 
-        Add endTo filter
-         */
-
-        if (req.query.endTo) {
-            options = {
-                ...options,
-                endMaxDate: new Date(req.query.endTo)
-            };
-        }
-
         /* Set StartDate and EndDate Filter for query options */
         queryOptions = {
             ...queryOptions,
             startDate: {
                 $gte: options.startMinDate,
                 $lte: options.startMaxDate
-            },
-            endDate: {
-                $gte: options.endMinDate,
-                $lte: options.endMaxDate
             }
         };
 
