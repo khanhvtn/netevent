@@ -235,7 +235,20 @@ export const getAllFacilityHistoriesAPI = () =>
     AXIOS.get(`/facilityHistory/all`);
 
 // Participant API
-export const getAllParticipants = () => AXIOS.get('/participant');
+export const getSuggestedParticipantsAPI = (userQueries) => {
+    const eventCodeQuery = `eventCode=${
+        userQueries?.eventCode ? userQueries.eventCode : ''
+    }`;
+
+    return AXIOS.get(`/participant/suggest?${eventCodeQuery}`);
+};
+
+export const inviteParticipantAPI = (email, eventCode) => {
+    return AXIOS.post('/participant/invite', {
+        email: email,
+        eventCode: eventCode
+    });
+};
 
 export const registerParticipantAPI = (participantData) =>
     AXIOS.post('/participant/registerEvent', participantData);

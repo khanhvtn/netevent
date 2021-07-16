@@ -15,10 +15,12 @@ import useStyles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     getParticipants,
+    inviteParticipant,
     setInvalidAndVerifyParticipant
 } from '../../../../actions/participantActions';
 import ParticipantFilter from '../../ParticipantFilter/ParticipantFilter';
 import SystemNotification from '../../../Notification/Notification';
+import InvitationDialog from './InvitationDialog/InviationDialog';
 
 const initialState = {
     search: '',
@@ -30,7 +32,8 @@ const initialState = {
     isAttended: false,
     isParticipantUpdated: false,
     checkInMode: false,
-    openUpdateSnackBar: false
+    openUpdateSnackBar: false,
+    openInvitationDialog: false
 };
 
 const filterState = {
@@ -188,6 +191,17 @@ const VerifyTable = ({ eventId, tabs }) => {
         setSelected([]);
     };
 
+    const handleToggleDialogInvitation = () => {
+        setState((prevState) => ({
+            ...prevState,
+            openInvitationDialog: !prevState.openInvitationDialog
+        }));
+    };
+
+    const handleInviteParticipant = (index, email, eventCode) => {
+        dispatch(inviteParticipant(index, email, eventCode));
+    };
+
     return (
         <AppBar elevation={0} position="static" color="default">
             <Grid container direction="column">
@@ -221,6 +235,7 @@ const VerifyTable = ({ eventId, tabs }) => {
                     take={state.take}
                     handleSetInvalid={handleSetInvalid}
                     handleSetVerified={handleSetVerified}
+                    handleToggleDialogInvitation={handleToggleDialogInvitation}
                     checkInMode={state.checkInMode}
                     selected={selected}
                     setSelected={setSelected}
@@ -243,6 +258,12 @@ const VerifyTable = ({ eventId, tabs }) => {
                     handleFilterChange={handleFilterChange}
                     handleApplyFilter={handleApplyFilter}
                     handleClearFilter={handleClearFilter}
+                />
+
+                <InvitationDialog
+                    openInvitationDialog={state.openInvitationDialog}
+                    handleToggleDialogInvitation={handleToggleDialogInvitation}
+                    handleInviteParticipant={handleInviteParticipant}
                 />
 
                 {/* Notification */}
