@@ -464,7 +464,10 @@ const EventReview = () => {
                                             <Typography
                                                 variant="body2"
                                                 style={{ fontWeight: 'bold' }}>
-                                                {state.event?.eventTypeId?.name}
+                                                {state.event?.eventTypeId?.name
+                                                    ? state.event?.eventTypeId
+                                                          ?.name
+                                                    : 'N/A'}
                                             </Typography>
                                         </Grid>
                                         <Grid
@@ -591,10 +594,12 @@ const EventReview = () => {
                                                                 className={
                                                                     css.secondaryHeading
                                                                 }>
-                                                                {
-                                                                    task.userId
-                                                                        ?.email
-                                                                }
+                                                                {task.userId
+                                                                    ?.email
+                                                                    ? task
+                                                                          .userId
+                                                                          .email
+                                                                    : 'N/A'}
                                                             </Typography>
                                                         </AccordionSummary>
                                                         <AccordionDetails
@@ -713,11 +718,13 @@ const EventReview = () => {
                                                                 aria-controls={`facility-panel${index}bh-content`}
                                                                 id={`facility-panel${index}bh-header`}>
                                                                 <Typography>
-                                                                    {
-                                                                        facility
-                                                                            .facilityId
-                                                                            ?.name
-                                                                    }
+                                                                    {facility
+                                                                        .facilityId
+                                                                        ?.name
+                                                                        ? facility
+                                                                              .facilityId
+                                                                              ?.name
+                                                                        : 'N/A'}
                                                                 </Typography>
                                                             </AccordionSummary>
                                                             <AccordionDetails
