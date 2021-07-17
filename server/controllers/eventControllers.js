@@ -1189,37 +1189,12 @@ const getAnalysis = async (req, res, next) => {
             };
         }
 
-        /* 
-        Add endFrom filter
-         */
-        if (req.query.endFrom) {
-            options = {
-                ...options,
-                endMinDate: new Date(req.query.endFrom)
-            };
-        }
-
-        /* 
-        Add endTo filter
-         */
-
-        if (req.query.endTo) {
-            options = {
-                ...options,
-                endMaxDate: new Date(req.query.endTo)
-            };
-        }
-
         /* Set StartDate and EndDate Filter for query options */
         queryOptions = {
             ...queryOptions,
             startDate: {
                 $gte: options.startMinDate,
                 $lte: options.startMaxDate
-            },
-            endDate: {
-                $gte: options.endMinDate,
-                $lte: options.endMaxDate
             }
         };
 
@@ -1236,9 +1211,8 @@ const getAnalysis = async (req, res, next) => {
         }).populate('event');
 
         //Analyze Participant
-        const totalParticipantSignedUp = participantData.filter(
-            (participant) => participant.isValid == true
-        ).length;
+        const totalParticipantSignedUp = participantData.length;
+
         const totalParticipantShowedUp = participantData.filter(
             (participant) => participant.isAttended == true
         ).length;
@@ -1333,10 +1307,10 @@ const getAnalysisByEventID = async (req, res, next) => {
             _id: options.eventId
         });
 
-        const signUpParticipant = participants.filter(
+        const signUpParticipant = participants.length;
+        const validParticipant = participants.filter(
             (participant) => participant.isValid == true
         ).length;
-
         const showUpParticipant = participants.filter(
             (participant) => participant.isAttended == true
         ).length;
@@ -1346,6 +1320,7 @@ const getAnalysisByEventID = async (req, res, next) => {
         const eventAnalysisData = {
             signUp: signUpParticipant,
             showUp: showUpParticipant,
+            valid: validParticipant,
             openAmount: openTime
         };
 

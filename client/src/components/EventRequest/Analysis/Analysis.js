@@ -210,18 +210,31 @@ const Analysis = ({ eventId, tabs, event }) => {
                             </Paper>
                         </Grid>
 
-                        <Grid item xs={12}>
+                        <Grid item xs={6}>
                             <Paper className={css.analysisCard}>
                                 <Typography className={css.chartTypo}>
                                     <BrandingWatermarkIcon
                                         className={css.iconAnalysis}
                                     />
-                                    Number of times the registration page has
-                                    been opened
+                                    Opened Times of Registration Page
                                 </Typography>
 
                                 <Typography className={css.chartTypo1}>
                                     {analysisData.openAmount}
+                                </Typography>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Paper className={css.analysisCard}>
+                                <Typography className={css.chartTypo}>
+                                    <BrandingWatermarkIcon
+                                        className={css.iconAnalysis}
+                                    />
+                                    Number of Valid Participants
+                                </Typography>
+
+                                <Typography className={css.chartTypo1}>
+                                    {analysisData.valid}
                                 </Typography>
                             </Paper>
                         </Grid>

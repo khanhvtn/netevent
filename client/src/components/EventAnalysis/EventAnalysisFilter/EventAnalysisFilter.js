@@ -12,8 +12,6 @@ const EventAnalysisFilter = ({
     openFilter,
     startFrom,
     startTo,
-    endFrom,
-    endTo,
     setFilters,
     handleToggleFilter,
     handleClearFilter,
@@ -40,7 +38,7 @@ const EventAnalysisFilter = ({
                                 fullWidth
                                 margin="normal"
                                 id="startFrom"
-                                label="Start From"
+                                label="From"
                                 format="MM/DD/YYYY"
                                 value={startFrom}
                                 onChange={(date) => {
@@ -59,51 +57,13 @@ const EventAnalysisFilter = ({
                                 fullWidth
                                 margin="normal"
                                 id="startTo"
-                                label="Start To"
+                                label="To"
                                 format="MM/DD/YYYY"
                                 value={startTo}
                                 onChange={(date) => {
                                     setFilters((prevState) => ({
                                         ...prevState,
                                         startTo: date.toDate()
-                                    }));
-                                }}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date'
-                                }}
-                            />
-                            <KeyboardDatePicker
-                                fullWidth
-                                id="endFrom"
-                                label="End From"
-                                size="small"
-                                margin="normal"
-                                format="MM/DD/YYYY"
-                                inputVariant="outlined"
-                                value={endFrom}
-                                onChange={(date) => {
-                                    setFilters((prevState) => ({
-                                        ...prevState,
-                                        endFrom: date.toDate()
-                                    }));
-                                }}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date'
-                                }}
-                            />
-                            <KeyboardDatePicker
-                                fullWidth
-                                id="endTo"
-                                label="End To"
-                                size="small"
-                                margin="normal"
-                                format="MM/DD/YYYY"
-                                inputVariant="outlined"
-                                value={endTo}
-                                onChange={(date) => {
-                                    setFilters((prevState) => ({
-                                        ...prevState,
-                                        endTo: date.toDate()
                                     }));
                                 }}
                                 KeyboardButtonProps={{

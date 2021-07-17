@@ -18,8 +18,10 @@ import {
     Chip,
     CircularProgress
 } from '@material-ui/core';
-import { lighten, makeStyles } from '@material-ui/core/styles';
-
+import { makeStyles } from '@material-ui/core/styles';
+import VerifiedUserOutlinedIcon from '@material-ui/icons/VerifiedUserOutlined';
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import MailOutlineOutlinedIcon from '@material-ui/icons/MailOutlineOutlined';
 import { useSelector } from 'react-redux';
 
 //import makeStyles in the last
@@ -124,6 +126,8 @@ function EnhancedTableHead(props) {
                 {!reviewerMode && (
                     <TableCell TableCell padding="checkbox">
                         <Checkbox
+                            size="small"
+                            color="primary"
                             indeterminate={
                                 numSelected > 0 && numSelected < rowCount
                             }
@@ -178,8 +182,7 @@ const useToolbarStyles = makeStyles((theme) => ({
     highlight:
         theme.palette.type === 'light'
             ? {
-                  color: theme.palette.secondary.main,
-                  backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+                  color: theme.palette.primary.dark
               }
             : {
                   color: theme.palette.text.primary,
@@ -188,6 +191,9 @@ const useToolbarStyles = makeStyles((theme) => ({
     title: {
         flex: '1 1 100%',
         fontWeight: 'bold'
+    },
+    normalText: {
+        textTransform: 'none'
     }
 }));
 
@@ -200,6 +206,8 @@ const EnhancedTableToolbar = (props) => {
         handleSetInvalid,
         handleSetVerified,
         handleSetAttended,
+        handleToggleDialogInvitation,
+        eventDetail,
         isLoading
     } = props;
 
@@ -243,74 +251,95 @@ const EnhancedTableToolbar = (props) => {
                             : 'List of participants'}
                     </Typography>
                 )}
-                {checkInMode
-                    ? numSelected > 0 && (
-                          <>
-                              <Button
-                                  disabled={isLoading}
-                                  onClick={() => handleSetAttended(false)}
-                                  style={{ marginLeft: '8px' }}
-                                  variant="contained"
-                                  color="secondary">
-                                  {isLoading ? (
-                                      <CircularProgress
-                                          size={26}
-                                          color="inherit"
-                                      />
-                                  ) : (
-                                      'Absent'
-                                  )}
-                              </Button>
-                              <Button
-                                  disabled={isLoading}
-                                  onClick={() => handleSetAttended(true)}
-                                  style={{ marginLeft: '8px' }}
-                                  variant="contained"
-                                  color="primary">
-                                  {isLoading ? (
-                                      <CircularProgress
-                                          size={26}
-                                          color="inherit"
-                                      />
-                                  ) : (
-                                      'Attend'
-                                  )}
-                              </Button>
-                          </>
-                      )
-                    : numSelected > 0 && (
-                          <>
-                              <Button
-                                  disabled={isLoading}
-                                  onClick={handleSetInvalid}
-                                  variant="contained"
-                                  color="secondary">
-                                  {isLoading ? (
-                                      <CircularProgress
-                                          size={26}
-                                          color="inherit"
-                                      />
-                                  ) : (
-                                      'Invalid'
-                                  )}
-                              </Button>
-                              <Button
-                                  disabled={isLoading}
-                                  onClick={handleSetVerified}
-                                  style={{ marginLeft: '8px' }}
-                                  variant="contained"
-                                  color="primary">
-                                  {isLoading ? (
-                                      <CircularProgress
-                                          size={26}
-                                          color="inherit"
-                                      />
-                                  ) : (
-                                      'Verify'
-                                  )}
-                              </Button>
-                          </>
-                      )}
+
+                {checkInMode ? (
+                    numSelected > 0 && (
+                        <>
+                            <Button
+                                className={classes.normalText}
+                                disabled={isLoading}
+                                onClick={() => handleSetAttended(false)}
+                                endIcon={<CloseOutlinedIcon />}
+                                style={{ marginLeft: '8px' }}
+                                variant="contained"
+                                color="secondary">
+                                {isLoading ? (
+                                    <CircularProgress
+                                        size={26}
+                                        color="inherit"
+                                    />
+                                ) : (
+                                    'Absent'
+                                )}
+                            </Button>
+                            <Button
+                                className={classes.normalText}
+                                disabled={isLoading}
+                                onClick={() => handleSetAttended(true)}
+                                endIcon={<VerifiedUserOutlinedIcon />}
+                                style={{ marginLeft: '8px' }}
+                                variant="contained"
+                                color="primary">
+                                {isLoading ? (
+                                    <CircularProgress
+                                        size={26}
+                                        color="inherit"
+                                    />
+                                ) : (
+                                    'Attend'
+                                )}
+                            </Button>
+                        </>
+                    )
+                ) : numSelected > 0 ? (
+                    <>
+                        <Button
+                            className={classes.normalText}
+                            disabled={isLoading}
+                            onClick={handleSetInvalid}
+                            endIcon={<CloseOutlinedIcon />}
+                            variant="contained"
+                            color="secondary">
+                            {isLoading ? (
+                                <CircularProgress size={26} color="inherit" />
+                            ) : (
+                                'Invalid'
+                            )}
+                        </Button>
+                        <Button
+                            className={classes.normalText}
+                            disabled={isLoading}
+                            onClick={handleSetVerified}
+                            endIcon={<VerifiedUserOutlinedIcon />}
+                            style={{ marginLeft: '8px' }}
+                            variant="contained"
+                            color="primary">
+                            {isLoading ? (
+                                <CircularProgress size={26} color="inherit" />
+                            ) : (
+                                'Verify'
+                            )}
+                        </Button>
+                    </>
+                ) : (
+                    !eventDetail.isFinished &&
+                    eventDetail.isApproved && (
+                        <Button
+                            className={classes.normalText}
+                            disabled={isLoading}
+                            onClick={handleToggleDialogInvitation}
+                            endIcon={<MailOutlineOutlinedIcon />}
+                            style={{ marginLeft: '8px' }}
+                            variant="contained"
+                            color="primary">
+                            {isLoading ? (
+                                <CircularProgress size={26} color="inherit" />
+                            ) : (
+                                'Invitation'
+                            )}
+                        </Button>
+                    )
+                )}
             </Toolbar>
         </>
     );
@@ -328,13 +357,15 @@ const ParticipantTable = ({
     setSelected,
     handleSetInvalid,
     handleSetVerified,
-    handleSetAttended
+    handleSetAttended,
+    handleToggleDialogInvitation
 }) => {
     const css = useStyles();
 
-    const { participants, isLoading } = useSelector((state) => ({
+    const { participants, isLoading, eventDetail } = useSelector((state) => ({
         participants: state.participant.participants,
-        isLoading: state.participant.isLoading
+        isLoading: state.participant.isLoading,
+        eventDetail: state.event.eventDetail
     }));
 
     const [order, setOrder] = useState('asc');
@@ -392,6 +423,8 @@ const ParticipantTable = ({
                 handleSetInvalid={handleSetInvalid}
                 handleSetVerified={handleSetVerified}
                 handleSetAttended={handleSetAttended}
+                handleToggleDialogInvitation={handleToggleDialogInvitation}
+                eventDetail={eventDetail}
                 isLoading={isLoading}
             />
             <TableContainer>
@@ -417,7 +450,8 @@ const ParticipantTable = ({
                                     (row, index) => {
                                         return (
                                             <>
-                                                <TableRow key={index}>
+                                                <TableRow
+                                                    key={`${index}-skeleton`}>
                                                     {!reviewerMode && (
                                                         <TableCell>
                                                             <Skeleton />
@@ -427,7 +461,7 @@ const ParticipantTable = ({
                                                         (row, index) => {
                                                             return (
                                                                 <TableCell
-                                                                    key={index}>
+                                                                    key={`${index}-skeleton-row`}>
                                                                     <Skeleton />
                                                                 </TableCell>
                                                             );
@@ -442,6 +476,7 @@ const ParticipantTable = ({
                         ) : participants.length === 0 ? (
                             <>
                                 <TableRow
+                                    key={'NoDataMatched'}
                                     style={{
                                         height: 50 * take
                                     }}>
@@ -475,10 +510,13 @@ const ParticipantTable = ({
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
                                             key={row._id}
+                                            classes={{ selected: css.selected }}
                                             selected={isItemSelected}>
                                             {!reviewerMode && (
                                                 <TableCell padding="checkbox">
                                                     <Checkbox
+                                                        size="small"
+                                                        color="primary"
                                                         checked={isItemSelected}
                                                         inputProps={{
                                                             'aria-labelledby':
@@ -575,6 +613,7 @@ const ParticipantTable = ({
                                 })}
                                 {emptyRows > 0 && (
                                     <TableRow
+                                        key={'emptyRowKey'}
                                         style={{
                                             height: 50 * emptyRows
                                         }}>

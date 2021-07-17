@@ -23,5 +23,8 @@ export default makeStyles(() => ({
         position: 'absolute',
         top: 20,
         width: 1
+    },
+    selected: {
+        backgroundColor: '#eceef7 !important'
     }
 }));

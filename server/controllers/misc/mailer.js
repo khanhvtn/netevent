@@ -17,6 +17,16 @@ const sendEmail = (from, to, subject, html) => {
     });
 };
 
+const sendInvitation = (mailOption) => {
+    return new Promise((resolve, reject) => {
+        transport.sendMail(mailOption, (err, info) => {
+            if (err) reject(err);
+            resolve(info);
+        });
+    });
+};
+
 module.exports = {
-    sendEmail
+    sendEmail,
+    sendInvitation
 };

@@ -478,7 +478,7 @@ const EventType = () => {
                                 createSuccess={createSuccess}
                                 deleteSuccess={deleteSuccess}
                                 updateSuccess={updateSuccess}
-                                tableName="List Of Event Types"
+                                tableName="List of Event Types"
                                 headCells={[
                                     {
                                         id: 'name',

@@ -5,21 +5,33 @@ import {
     ERROR_CLEAR,
     PARTICIPANT_GET_ALL_FILTER,
     PARTICIPANT_UPDATE_SUCCESS,
-    PARTICIPANT_ALL
+    PARTICIPANT_ALL,
+    PARTICIPANT_INVITATION_LIST_EMAIL,
+    PARTICIPANT_INVITE,
+    INVITATION_LOADING,
+    PARTICIPANT_SPINNER_INDEX
 } from '../constants';
 import {
     getParticipantsAPI,
     registerParticipantAPI,
     setAttendedParticipantAPI,
     setInvalidAndVerifyParticipantAPI,
-    getAllParticipants,
-    setAttendedParticipantByQrCodeAPI
+    getSuggestedParticipantsAPI,
+    setAttendedParticipantByQrCodeAPI,
+    inviteParticipantAPI
 } from '../api';
 
 //setIsLoading func is to set loading status
 const setPartiticpantIsLoading = (status, dispatch) => {
     dispatch({
         type: PARTICIPANT_LOADING,
+        payload: status
+    });
+};
+
+const setInvitationIsLoading = (status, dispatch) => {
+    dispatch({
+        type: INVITATION_LOADING,
         payload: status
     });
 };
@@ -91,11 +103,12 @@ export const getParticipants =
         setPartiticpantIsLoading(false, dispatch);
     };
 
-export const getAllParicipant = () => async (dispatch) => {
+export const getSuggestedParticipants = (userQueries) => async (dispatch) => {
     setPartiticpantIsLoading(true, dispatch);
     try {
-        const data = await getAllParticipants();
+        const data = await getSuggestedParticipantsAPI(userQueries);
         dispatch({ type: PARTICIPANT_ALL, payload: data });
+        dispatch({ type: PARTICIPANT_INVITATION_LIST_EMAIL, payload: data });
     } catch (error) {
         console.log(error);
     }
@@ -143,6 +156,7 @@ export const setAttendedParticipant = (userReq) => async (dispatch) => {
     }
     setPartiticpantIsLoading(false, dispatch);
 };
+
 export const setAttendedParticipantByQrCode =
     (userReq, setScanDelay, setErrorMessage) => async (dispatch) => {
         setPartiticpantIsLoading(true, dispatch);
@@ -180,4 +194,19 @@ export const setAttendedParticipantByQrCode =
             setScanDelay(1000);
         }
         setPartiticpantIsLoading(false, dispatch);
+    };
+
+export const inviteParticipant =
+    (index, email, eventCode) => async (dispatch) => {
+        setInvitationIsLoading(true, dispatch);
+        dispatch({ type: PARTICIPANT_SPINNER_INDEX, payload: index });
+
+        try {
+            const data = await inviteParticipantAPI(email, eventCode);
+            dispatch({ type: PARTICIPANT_INVITE, payload: data });
+        } catch (error) {
+            console.log(error.message);
+        }
+        dispatch({ type: PARTICIPANT_SPINNER_INDEX, payload: null });
+        setInvitationIsLoading(false, dispatch);
     };

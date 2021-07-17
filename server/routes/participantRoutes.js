@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { participantControllers } = require('../controllers');
 
-router.get('/', participantControllers.getAllParticipants);
+router.get('/suggest', participantControllers.getSuggestedParticipants);
 router.get('/all', participantControllers.getParticipantByEventID);
 router.get('/filter', participantControllers.filterParticipants);
 router.post('/registerEvent', participantControllers.registerEvent);
@@ -15,5 +15,6 @@ router.patch(
     '/update/attendByQrCode',
     participantControllers.setAttendedParticipantByQrCode
 );
+router.post('/invite', participantControllers.inviteParticipant);
 
 module.exports = router;
