@@ -86,12 +86,10 @@ const CustomizeFieldDialog = () => {
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-
                             <MenuItem value={'Text'}>Text</MenuItem>
                             <MenuItem value={'Select'}>Select</MenuItem>
                             <MenuItem value={'Email'}>Email</MenuItem>
                             <MenuItem value={'Checkbox'}>Checkbox</MenuItem>
-                            <MenuItem value={'Range'}>Range</MenuItem>
                             <MenuItem value={'Radio'}>Radio</MenuItem>
                             <MenuItem value={'Number'}>Number</MenuItem>
                             <MenuItem value={'DateTime'}>DateTime</MenuItem>
@@ -100,7 +98,9 @@ const CustomizeFieldDialog = () => {
                             {errors?.type ? errors.type : ''}
                         </FormHelperText>
                     </FormControl>
-                    {['Radio', 'Select'].includes(customizeFieldState.type) && (
+                    {['Radio', 'Select', 'Checkbox'].includes(
+                        customizeFieldState.type
+                    ) && (
                         <Autocomplete
                             defaultValue={customizeFieldState.optionValues}
                             id="optionValues"
@@ -139,19 +139,17 @@ const CustomizeFieldDialog = () => {
                             )}
                         />
                     )}
-                    {!['Checkbox'].includes(customizeFieldState.type) && (
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    color="primary"
-                                    checked={customizeFieldState.isRequired}
-                                    onChange={handleChangeCustomizeField}
-                                    name="isRequired"
-                                />
-                            }
-                            label="Required"
-                        />
-                    )}
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                color="primary"
+                                checked={customizeFieldState.isRequired}
+                                onChange={handleChangeCustomizeField}
+                                name="isRequired"
+                            />
+                        }
+                        label="Required"
+                    />
                 </DialogContent>
                 <DialogActions className={css.dialogActions}>
                     <Button

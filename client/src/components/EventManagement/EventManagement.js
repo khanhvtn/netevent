@@ -213,6 +213,12 @@ const EventManagement = () => {
                 isRecycleMode: state.isRecycleMode
             }
         });
+        localStorage.setItem(
+            'stateHistory',
+            JSON.stringify({
+                isRecycleMode: state.isRecycleMode
+            })
+        );
     };
 
     //toggle recycle mode

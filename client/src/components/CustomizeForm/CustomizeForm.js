@@ -17,8 +17,16 @@ import {
 } from '@material-ui/core';
 import useStyles from './styles';
 
-const CustomizeForm = ({ control, fieldList, errors }) => {
+const CustomizeForm = ({ control, fieldList, errors, getValues }) => {
     const css = useStyles();
+    const handleCheck = (title, value) => {
+        const values = getValues();
+        const targetValues = values[title];
+        const newValues = targetValues?.includes(value)
+            ? targetValues?.filter((target) => target !== value)
+            : [...(targetValues ?? []), value];
+        return newValues;
+    };
 
     const renderForm = fieldList.map((target, index) => {
         let defaultErrorOption = {
@@ -82,30 +90,70 @@ const CustomizeForm = ({ control, fieldList, errors }) => {
                     />
                 );
             case 'Checkbox':
-                return (
-                    <Controller
-                        key={index}
-                        control={control}
-                        name={target.title}
-                        rules={{ required: target.isRequire }}
-                        render={({ field }) => (
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        required={target.isRequired}
-                                        {...field}
-                                        color="primary"
-                                        onChange={(e) =>
-                                            field.onChange(e.target.checked)
-                                        }
-                                        value={field.value}
-                                    />
+                if (target.optionValues.length === 0) {
+                    return (
+                        <Controller
+                            key={index}
+                            control={control}
+                            name={target.title}
+                            rules={{ required: target.isRequire }}
+                            render={({ field }) => (
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            required={target.isRequired}
+                                            {...field}
+                                            color="primary"
+                                            onChange={(e) =>
+                                                field.onChange(e.target.checked)
+                                            }
+                                            value={field.value}
+                                        />
+                                    }
+                                    label={target.title}
+                                />
+                            )}
+                        />
+                    );
+                } else {
+                    return (
+                        <FormControl
+                            error={!!errors[target.title]?.message}
+                            className={css.textField}>
+                            <FormLabel component="legend">
+                                {target.title}
+                            </FormLabel>
+                            <Controller
+                                name={target.title}
+                                render={({ field }) =>
+                                    target.optionValues.map((value, index) => (
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    onChange={() =>
+                                                        field.onChange(
+                                                            handleCheck(
+                                                                target.title,
+                                                                value
+                                                            )
+                                                        )
+                                                    }
+                                                />
+                                            }
+                                            key={index}
+                                            label={value}
+                                        />
+                                    ))
                                 }
-                                label={target.title}
+                                control={control}
                             />
-                        )}
-                    />
-                );
+                            <FormHelperText>
+                                {errors[target.title]?.message}
+                            </FormHelperText>
+                        </FormControl>
+                    );
+                }
+
             case 'Radio':
                 return (
                     <Controller

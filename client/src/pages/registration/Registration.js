@@ -61,7 +61,8 @@ const Registration = () => {
         control,
         formState: { errors },
         reset,
-        setError
+        setError,
+        getValues
     } = useForm();
 
     // UseParams to get pathname
@@ -928,6 +929,7 @@ const Registration = () => {
                                                     />
                                                 </MuiPickersUtilsProvider>
                                                 <CustomizeForm
+                                                    getValues={getValues}
                                                     globalError={error}
                                                     errors={errors}
                                                     control={control}
