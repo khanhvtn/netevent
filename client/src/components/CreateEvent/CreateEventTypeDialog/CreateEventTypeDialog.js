@@ -34,9 +34,9 @@ const CreateEventTypeDialog = ({
             onClose={(e) => handleToggleDialogCreateEventType(e)}
             aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">
-                Create New Event Type
+                <div align="center">Create New Event Type</div>
             </DialogTitle>
-            <DialogContent>
+            <DialogContent dividers>
                 <TextField
                     className={css.textField}
                     helperText={errors?.name ? errors?.name : ''}

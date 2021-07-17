@@ -1465,15 +1465,14 @@ const CreateEvent = ({
                                     {handleCloseCreateDialog ||
                                         (handleCloseUpdateDialog && (
                                             <Button
+                                                className={css.clearAllButton}
                                                 disabled={eventIsLoading}
                                                 size="large"
                                                 onClick={
                                                     handleCloseCreateDialog ||
                                                     handleCloseUpdateDialog
-                                                }
-                                                variant="contained"
-                                                color="default">
-                                                Close
+                                                }>
+                                                Cancel
                                             </Button>
                                         ))}
                                     <Button

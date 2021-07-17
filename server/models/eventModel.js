@@ -159,7 +159,12 @@ const eventSchema = mongoose.Schema(
             type: Boolean,
             default: false
         },
-        customizeFields: { type: [customizeFieldSchema] }
+        customizeFields: {
+            type: [customizeFieldSchema]
+        },
+        invitationListEmail: {
+            type: [String]
+        }
     },
     { timestamps: true }
 );

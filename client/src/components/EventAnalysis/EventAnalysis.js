@@ -121,16 +121,12 @@ const optionVerticalBarChart = {
 
 const initialState = {
     startFrom: null,
-    startTo: null,
-    endFrom: null,
-    endTo: null
+    startTo: null
 };
 
 const filterState = {
     startFrom: null,
-    startTo: null,
-    endFrom: null,
-    endTo: null
+    startTo: null
 };
 
 const EventAnalysis = () => {
@@ -158,12 +154,10 @@ const EventAnalysis = () => {
         dispatch(
             getEventAnalysis({
                 startFrom: state.startFrom,
-                startTo: state.startTo,
-                endFrom: state.endFrom,
-                endTo: state.endTo
+                startTo: state.startTo
             })
         );
-    }, [dispatch, state.startFrom, state.startTo, state.endFrom, state.endTo]);
+    }, [dispatch, state.startFrom, state.startTo]);
 
     useEffect(() => {
         if (!loadingAnalysis && analysis.completedEventNames !== undefined) {
@@ -462,8 +456,6 @@ const EventAnalysis = () => {
                         openFilter={state.openFilter}
                         startFrom={filters.startFrom}
                         startTo={filters.startTo}
-                        endFrom={filters.endFrom}
-                        endTo={filters.endTo}
                         setFilters={setFilters}
                         handleToggleFilter={handleToggleFilter}
                         handleApplyFilter={handleApplyFilter}

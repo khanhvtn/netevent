@@ -622,7 +622,10 @@ const EventDetail = () => {
                                             <Typography
                                                 variant="body2"
                                                 style={{ fontWeight: 'bold' }}>
-                                                {state.event?.eventTypeId?.name}
+                                                {state.event?.eventTypeId?.name
+                                                    ? state.event?.eventTypeId
+                                                          ?.name
+                                                    : 'N/A'}
                                             </Typography>
                                         </Grid>
                                         <Grid
@@ -873,11 +876,13 @@ const EventDetail = () => {
                                                                 aria-controls={`facility-panel${index}bh-content`}
                                                                 id={`facility-panel${index}bh-header`}>
                                                                 <Typography>
-                                                                    {
-                                                                        facility
-                                                                            .facilityId
-                                                                            ?.name
-                                                                    }
+                                                                    {facility
+                                                                        .facilityId
+                                                                        ?.name
+                                                                        ? facility
+                                                                              .facilityId
+                                                                              ?.name
+                                                                        : 'N/A'}
                                                                 </Typography>
                                                             </AccordionSummary>
                                                             <AccordionDetails
@@ -966,9 +971,6 @@ const EventDetail = () => {
                                         variant="h6">
                                         Description
                                     </Typography>
-                                    {/* <Typography variant="body2">
-                                    {state.event?.description}
-                                </Typography> */}
                                     <Editor
                                         editorState={editorState}
                                         readOnly={true}

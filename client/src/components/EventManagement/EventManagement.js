@@ -260,6 +260,7 @@ const EventManagement = () => {
                                 </div>
                                 <div className={css.grow} />
                                 <Button
+                                    style={{ textTransform: 'none' }}
                                     disabled={isLoading}
                                     onClick={handleToggleRecycleMode}
                                     variant="contained"

@@ -66,9 +66,11 @@ const UserDialog = ({
                 onClose={(e) => handleToggleDialogCreateAndUpdate(e)}
                 aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                    {isCreateMode ? 'Create New User' : 'Update a User'}
+                    <div align="center">
+                        {isCreateMode ? 'Create New User' : 'Update a User'}
+                    </div>
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent dividers>
                     <Collapse in={openAlert} className={css.textField}>
                         <Alert severity="success">
                             Create New User Success!

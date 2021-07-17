@@ -4,7 +4,7 @@ export default makeStyles((theme) => ({
         flexGrow: 1
     },
     paper: {
-        margin: '20px',
+        margin: '18px 80px',
         [theme.breakpoints.down('md')]: {
             margin: '20px'
         }
