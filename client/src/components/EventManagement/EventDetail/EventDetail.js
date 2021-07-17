@@ -378,18 +378,22 @@ const EventDetail = () => {
                                     Event Management
                                 </Typography>
                                 <div className={css.grow} />
-                                <Tooltip title="Delete">
-                                    <div>
-                                        <Button
-                                            disabled={
-                                                isDetailLoading || isLoading
-                                            }
-                                            color="inherit"
-                                            onClick={handleToggleDialogDelete}>
-                                            Delete
-                                        </Button>
-                                    </div>
-                                </Tooltip>
+                                {state.event?.isApproved === null && (
+                                    <Tooltip title="Delete">
+                                        <div>
+                                            <Button
+                                                disabled={
+                                                    isDetailLoading || isLoading
+                                                }
+                                                color="inherit"
+                                                onClick={
+                                                    handleToggleDialogDelete
+                                                }>
+                                                Delete
+                                            </Button>
+                                        </div>
+                                    </Tooltip>
+                                )}
                                 {history.location.state.isRecycleMode ? (
                                     <Tooltip title="Edit">
                                         <div>
