@@ -863,6 +863,12 @@ const CreateEvent = ({
                 name: 'Name cannot be blanked.'
             };
         }
+        if (taskState.tasks.some((target) => target.name === name)) {
+            listErrors = {
+                ...listErrors,
+                name: `${name} already existed`
+            };
+        }
         if (!email) {
             listErrors = {
                 ...listErrors,
