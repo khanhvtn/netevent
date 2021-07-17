@@ -3,7 +3,7 @@ const User = require('../models/userModel');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const { cusResponse } = require('../utils');
-const CustomError = require('../class/CustomeError');
+const CustomError = require('../class/CustomError');
 
 /**
  *  =====================================

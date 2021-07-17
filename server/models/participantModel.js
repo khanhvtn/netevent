@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+const customizeFieldSchema = mongoose.Schema({
+    title: { type: String, required: true, trim: true },
+    value: { type: mongoose.SchemaTypes.Mixed, required: true }
+});
 /**
  *  =====================================
  *           PARTICIPANT MODEL
@@ -72,7 +76,8 @@ const participantSchema = mongoose.Schema(
         expectedGraduateDate: {
             type: Date,
             required: [true, 'Graduation Date cannot be blanked']
-        }
+        },
+        customizeFieldData: { type: [customizeFieldSchema] }
     },
     { timestamps: true }
 );

@@ -1,6 +1,6 @@
 const { Participant, Event } = require('../models');
 const { cusResponse } = require('../utils');
-const CustomError = require('../class/CustomeError');
+const CustomError = require('../class/CustomError');
 const mongoose = require('mongoose');
 const { sendInvitation, sendEmail } = require('./misc/mailer');
 const qrCode = require('qrcode');

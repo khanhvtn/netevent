@@ -35,27 +35,29 @@ import RichTextEditor from './RichTextEditor/RichTextEditor';
 import CreateEventInputGroup from './CreateEventInputGroup/CreateEventInputGroup';
 import { CreateEventInterface } from '../Context';
 import moment from 'moment';
+import CustomizeFieldDialog from './CustomizeFieldDialog/CustomizeFieldDialog';
 
 let listTag = [];
+let optionValues = [];
 const initialDescription =
     '{"blocks":[{"key":"4jrep","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}';
 
 const headCellBorrowFacility = [
     {
         id: 'name',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Name'
     },
     {
         id: 'borrowDate',
-        numeric: false,
+        type: 'date',
         disablePadding: false,
         label: 'Borrow Date'
     },
     {
         id: 'returnDate',
-        numeric: false,
+        type: 'date',
         disablePadding: false,
         label: 'Return Date'
     }
@@ -63,33 +65,60 @@ const headCellBorrowFacility = [
 const headCellsTask = [
     {
         id: 'name',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Name'
     },
     {
         id: 'email',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Email'
     },
     {
         id: 'type',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Type'
     },
     {
         id: 'startTime',
-        numeric: false,
+        type: 'date',
         disablePadding: false,
         label: 'Start Time'
     },
     {
         id: 'endTime',
-        numeric: false,
+        type: 'date',
         disablePadding: false,
         label: 'End Time'
+    }
+];
+
+const headCellsCustomizeField = [
+    {
+        id: 'title',
+        type: 'string',
+        disablePadding: false,
+        label: 'Title'
+    },
+    {
+        id: 'type',
+        type: 'string',
+        disablePadding: false,
+        label: 'Type'
+    },
+    {
+        id: 'optionValues',
+        type: 'array',
+        disablePadding: false,
+        label: 'Option Values'
+    },
+    {
+        id: 'isRequired',
+        type: 'boolean',
+        disablePadding: false,
+        label: 'Required'
     }
 ];
 const initialState = {
@@ -111,6 +140,7 @@ const initialState = {
     tags: [],
     borrowFacilities: [],
     isResetListTag: false,
+    isResetOptionValues: false,
     // create event type
     openDialogCreateEventType: false,
     eventTypeTarget: '',
@@ -145,6 +175,21 @@ const initialTaskState = {
     openCreateAndUpdateDialogTask: false,
     openDeleteDialogTask: false,
     isTaskCreateMode: true
+};
+
+const initialCustomizeFieldState = {
+    customizeFields: [],
+    isLoading: false,
+    customizeFieldCreatSuccess: false,
+    customizeFieldDeleteSuccess: false,
+    customizeFieldUpdateSuccess: false,
+    title: '',
+    type: '',
+    optionValues: [],
+    isRequired: false,
+    openCreateAndUpdateDialogCustomizeField: false,
+    openDeleteDialogCustomizeField: false,
+    isCustomizeFieldCreateMode: true
 };
 
 //Create Event Provider
@@ -211,6 +256,11 @@ const CreateEvent = ({
     //task table
     const [selectedTask, setSelectedTask] = useState([]);
     const [taskState, setTaskState] = useState(initialTaskState);
+    //task table
+    const [selectedCustomizeField, setSelectedCustomizeField] = useState([]);
+    const [customizeFieldState, setCustomizeFieldState] = useState(
+        initialCustomizeFieldState
+    );
 
     // handle clear all fields
     const handleClearFields = useCallback(
@@ -224,8 +274,10 @@ const CreateEvent = ({
             });
             setBorrowFacilityState(initialBorrowFacilityState);
             setTaskState(initialTaskState);
+            setCustomizeFieldState(initialCustomizeFieldState);
             setSelectedFacility([]);
             setSelectedTask([]);
+            setSelectedCustomizeField([]);
             setDefaultValueTags([]);
             setDefaultDescription(initialDescription);
             handleUpdateListTag([]);
@@ -279,7 +331,7 @@ const CreateEvent = ({
         }
     }, [dispatch, createEventTypeSuccess]);
 
-    //useEffect to get all needed data for crete event
+    //useEffect to get all needed data for create event
     useEffect(() => {
         dispatch(getAllEventTypes());
         dispatch(getAllFacilities());
@@ -311,6 +363,12 @@ const CreateEvent = ({
                 ).toDate(),
                 eventTypeTarget: updateEventDetail.eventTypeId.name,
                 description: updateEventDetail?.description
+            }));
+
+            // set initial customize fields for updating
+            setCustomizeFieldState((prevState) => ({
+                ...prevState,
+                customizeFields: updateEventDetail.customizeFields
             }));
 
             // setup initial facilities
@@ -429,7 +487,8 @@ const CreateEvent = ({
                         returnDate
                     };
                 }
-            )
+            ),
+            customizeFields: customizeFieldState.customizeFields
         };
         if (!isUpdateMode) {
             dispatch(createEvent(templateRequest));
@@ -488,6 +547,11 @@ const CreateEvent = ({
     //handle update listTag
     const handleUpdateListTag = (newTagList) => {
         listTag = newTagList;
+    };
+
+    //handle update listTag
+    const handleUpdateOptionValues = (newOptionValues) => {
+        optionValues = newOptionValues;
     };
 
     /* Borrow Facility */
@@ -618,6 +682,139 @@ const CreateEvent = ({
     };
 
     /* Borrow Facility */
+
+    /* Customize Fields for Registration Form */
+    const handleChangeCustomizeField = (e) => {
+        setCustomizeFieldState((prevState) => ({
+            ...prevState,
+            [e.target.name]:
+                e.target.type === 'checkbox' ? e.target.checked : e.target.value
+        }));
+    };
+
+    const handleToggleDialogCreateAndUpdateCustomizeField = (event, mode) => {
+        let targetEdit;
+        if (mode) {
+            targetEdit = customizeFieldState.customizeFields.find(
+                (target) => target.title === selectedCustomizeField[0]
+            );
+        }
+        setCustomizeFieldState((prevState) => ({
+            ...prevState,
+            title: mode ? targetEdit.title : '',
+            type: mode ? targetEdit.type : '',
+            isRequired: mode ? targetEdit.isRequired : false,
+            optionValues: mode ? targetEdit.optionValues : [],
+            openCreateAndUpdateDialogCustomizeField:
+                !prevState.openCreateAndUpdateDialogCustomizeField,
+            isCustomizeFieldCreateMode: mode ? false : true
+        }));
+        //clear Error
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null
+        });
+    };
+
+    const handleToggleDialogDeleteCustomizeField = () => {
+        setCustomizeFieldState((prevState) => ({
+            ...prevState,
+            openDeleteDialogCustomizeField:
+                !prevState.openDeleteDialogCustomizeField
+        }));
+    };
+
+    const handleCreateAndUpdateCustomizeField = () => {
+        const { title, type, isCustomizeFieldCreateMode } = customizeFieldState;
+        let listErrors = {};
+        if (!title) {
+            listErrors = {
+                ...listErrors,
+                title: 'Title cannot be blanked.'
+            };
+        }
+        if (
+            customizeFieldState.customizeFields.some(
+                (target) => target.title === title
+            ) &&
+            isCustomizeFieldCreateMode === true
+        ) {
+            listErrors = {
+                ...listErrors,
+                title: 'Title already existed.'
+            };
+        }
+        if (!type) {
+            listErrors = {
+                ...listErrors,
+                type: 'Type cannot be blanked.'
+            };
+        }
+        if (Object.keys(listErrors).length !== 0) {
+            return dispatch({
+                type: ERROR,
+                payload: listErrors
+            });
+        }
+
+        //generate new update when in edit mode
+        let update;
+        if (!customizeFieldState.isCustomizeFieldCreateMode) {
+            update = customizeFieldState.customizeFields.filter(
+                (target) => target.title !== selectedCustomizeField[0]
+            );
+        }
+
+        //create
+        setCustomizeFieldState((prevState) => {
+            update = update ? update : prevState.customizeFields;
+            return {
+                ...prevState,
+                customizeFields: [
+                    ...update,
+                    {
+                        title: prevState.title,
+                        type: prevState.type,
+                        isRequired: prevState.isRequired,
+                        optionValues
+                    }
+                ],
+                title: '',
+                type: '',
+                isRequired: false,
+                optionValues: [],
+                openCreateAndUpdateDialogCustomizeField: false
+            };
+        });
+
+        //clear error
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null
+        });
+        setSelectedCustomizeField([]);
+        optionValues = [];
+    };
+
+    const handleDeleteCustomizeField = () => {
+        setCustomizeFieldState((prevState) => {
+            return {
+                ...prevState,
+                customizeFields: prevState.customizeFields.filter(
+                    (target) => !selectedCustomizeField.includes(target.title)
+                ),
+                title: '',
+                type: '',
+                isRequired: false,
+                optionValues: [],
+                openDeleteDialogCustomizeField:
+                    !prevState.openDeleteDialogCustomizeField
+            };
+        });
+        setSelectedCustomizeField([]);
+    };
+
+    /* Customize Field */
 
     /* Task Table */
     const handleChangeTask = (e) => {
@@ -868,10 +1065,12 @@ const CreateEvent = ({
     return (
         <div>
             <CreateEventProvider
+                handleUpdateOptionValues={handleUpdateOptionValues}
                 startDate={startDate}
                 endDate={endDate}
                 handleCloseCreateDialog={handleCloseCreateDialog}
                 listTag={listTag}
+                optionValues={optionValues}
                 fileInput={fileInput}
                 eventTypes={eventTypes}
                 errors={errors}
@@ -918,7 +1117,23 @@ const CreateEvent = ({
                 setState={setState}
                 setSelectedFacility={setSelectedFacility}
                 setSelectedTask={setSelectedTask}
-                setTaskState={setTaskState}>
+                setTaskState={setTaskState}
+                //Customize Fields
+                selectedCustomizeField={selectedCustomizeField}
+                setSelectedCustomizeField={setSelectedCustomizeField}
+                customizeFieldState={customizeFieldState}
+                setCustomizeFieldState={setCustomizeFieldState}
+                handleChangeCustomizeField={handleChangeCustomizeField}
+                handleToggleDialogCreateAndUpdateCustomizeField={
+                    handleToggleDialogCreateAndUpdateCustomizeField
+                }
+                handleToggleDialogDeleteCustomizeField={
+                    handleToggleDialogDeleteCustomizeField
+                }
+                handleCreateAndUpdateCustomizeField={
+                    handleCreateAndUpdateCustomizeField
+                }
+                handleDeleteCustomizeField={handleDeleteCustomizeField}>
                 <Paper className={css.paper} elevation={3}>
                     <Grid
                         container
@@ -1060,6 +1275,7 @@ const CreateEvent = ({
                                 xs={12}>
                                 <Paper className={css.paper1} elevation={3}>
                                     <DataTable
+                                        selectedName="name"
                                         constrainRangeDate={
                                             !!state.startDate && !!state.endDate
                                         }
@@ -1109,6 +1325,7 @@ const CreateEvent = ({
                                 xs={12}>
                                 <Paper className={css.paper1} elevation={3}>
                                     <DataTable
+                                        selectedName="name"
                                         disabled={eventIsLoading}
                                         constrainRangeDate={!!state.endDate}
                                         handleToggleDialogCreateAndUpdate={
@@ -1127,13 +1344,13 @@ const CreateEvent = ({
                                             borrowFacilityState.borrowFacilityLoading
                                         }
                                         createSuccess={
-                                            borrowFacilityState.borrowFacilityCreatSucces
+                                            borrowFacilityState.borrowFacilityCreatSuccess
                                         }
                                         deleteSuccess={
-                                            borrowFacilityState.borrowFacilityDeleteSucces
+                                            borrowFacilityState.borrowFacilityDeleteSuccess
                                         }
                                         updateSuccess={
-                                            borrowFacilityState.borrowFacilityUpdateSucces
+                                            borrowFacilityState.borrowFacilityUpdateSuccess
                                         }
                                         tableName="Borrow Facility"
                                         headCells={headCellBorrowFacility}
@@ -1184,6 +1401,41 @@ const CreateEvent = ({
                                             : ''}
                                     </FormHelperText>
                                 </FormControl>
+                            </Grid>
+                            {/* Customize Fields For Registration Portal  */}
+                            <Grid item md={12} lg={12} xl={12} sm={12} xs={12}>
+                                <Paper elevation={3}>
+                                    <DataTable
+                                        selectedName="title"
+                                        disabled={eventIsLoading}
+                                        handleToggleDialogCreateAndUpdate={
+                                            handleToggleDialogCreateAndUpdateCustomizeField
+                                        }
+                                        handleToggleDialogDelete={
+                                            handleToggleDialogDeleteCustomizeField
+                                        }
+                                        take={1}
+                                        selected={selectedCustomizeField}
+                                        setSelected={setSelectedCustomizeField}
+                                        data={
+                                            customizeFieldState.customizeFields
+                                        }
+                                        isLoading={
+                                            customizeFieldState.isLoading
+                                        }
+                                        createSuccess={
+                                            customizeFieldState.customizeFieldCreatSuccess
+                                        }
+                                        deleteSuccess={
+                                            customizeFieldState.customizeFieldDeleteSuccess
+                                        }
+                                        updateSuccess={
+                                            customizeFieldState.customizeFieldUpdateSuccess
+                                        }
+                                        tableName="Customize Fields For Registration Portal"
+                                        headCells={headCellsCustomizeField}
+                                    />
+                                </Paper>
                             </Grid>
                             {/* Button Control */}
                             <Grid
@@ -1266,6 +1518,8 @@ const CreateEvent = ({
                 <BorrowFacilityDialog />
                 {/* Task Dialog */}
                 <TaskDialog />
+                {/* Customize Field Dialog */}
+                <CustomizeFieldDialog />
                 {/* Notification */}
                 <SystemNotification
                     openCreateSnackBar={state.openCreateSnackBar}

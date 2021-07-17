@@ -307,6 +307,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 const DataTable = ({
+    selectedName,
     handleToggleDialogCreateAndUpdate,
     handleToggleDialogDelete,
     take,
@@ -338,7 +339,7 @@ const DataTable = ({
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = dataFilter.map((n) => n.name);
+            const newSelected = dataFilter.map((n) => n[selectedName]);
             setSelected(newSelected);
             return;
         }
@@ -449,14 +450,19 @@ const DataTable = ({
                                     dataFilter,
                                     getComparator(order, orderBy)
                                 ).map((row, index) => {
-                                    const isItemSelected = isSelected(row.name);
+                                    const isItemSelected = isSelected(
+                                        row[selectedName]
+                                    );
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
                                             onClick={(event) =>
-                                                handleClick(event, row.name)
+                                                handleClick(
+                                                    event,
+                                                    row[selectedName]
+                                                )
                                             }
                                             role="checkbox"
                                             aria-checked={isItemSelected}
@@ -476,12 +482,7 @@ const DataTable = ({
                                                 />
                                             </TableCell>
                                             {headCells.map((cell, index) => {
-                                                if (
-                                                    cell.id === 'createdAt' ||
-                                                    cell.id === 'updatedAt' ||
-                                                    cell.id.includes('Date') ||
-                                                    cell.id.includes('Time')
-                                                ) {
+                                                if (cell.type === 'date') {
                                                     return (
                                                         <TableCell key={index}>
                                                             {moment(
@@ -491,6 +492,37 @@ const DataTable = ({
                                                             )}
                                                         </TableCell>
                                                     );
+                                                }
+                                                if (cell.type === 'boolean') {
+                                                    return (
+                                                        <TableCell key={index}>
+                                                            {row[
+                                                                cell.id
+                                                            ].toString()}
+                                                        </TableCell>
+                                                    );
+                                                }
+                                                if (cell.type === 'array') {
+                                                    if (
+                                                        row[cell.id].length ===
+                                                        0
+                                                    ) {
+                                                        return (
+                                                            <TableCell
+                                                                key={index}>
+                                                                None
+                                                            </TableCell>
+                                                        );
+                                                    } else {
+                                                        return (
+                                                            <TableCell
+                                                                key={index}>
+                                                                {row[
+                                                                    cell.id
+                                                                ].join(',')}
+                                                            </TableCell>
+                                                        );
+                                                    }
                                                 }
                                                 return (
                                                     <TableCell key={index}>

@@ -352,7 +352,7 @@ const EventDetail = () => {
         }));
     };
 
-    //handle recovery envent
+    //handle recovery event
     const handleRecoveryEvent = () => {
         dispatch(recoveryEvent({ eventId: deleteState.eventId }));
     };

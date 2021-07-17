@@ -5,6 +5,15 @@ const alphabet =
     '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const nanoid = customAlphabet(alphabet, 7);
 
+/* Customize Fields Schema */
+
+const customizeFieldSchema = mongoose.Schema({
+    title: { type: String, required: true, trim: true },
+    type: { type: String, required: true, trim: true },
+    optionValues: { type: [String] },
+    isRequired: { type: Boolean, required: true }
+});
+
 /**
  *  =====================================
  *             EVENT MODEL
@@ -149,6 +158,9 @@ const eventSchema = mongoose.Schema(
         isDeleted: {
             type: Boolean,
             default: false
+        },
+        customizeFields: {
+            type: [customizeFieldSchema]
         },
         invitationListEmail: {
             type: [String]
