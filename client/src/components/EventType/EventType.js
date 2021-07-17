@@ -482,19 +482,19 @@ const EventType = () => {
                                 headCells={[
                                     {
                                         id: 'name',
-                                        numeric: false,
+                                        type: 'string',
                                         disablePadding: false,
                                         label: 'Name'
                                     },
                                     {
                                         id: 'createdAt',
-                                        numeric: false,
+                                        type: 'date',
                                         disablePadding: false,
                                         label: 'Created At'
                                     },
                                     {
                                         id: 'updatedAt',
-                                        numeric: false,
+                                        type: 'date',
                                         disablePadding: false,
                                         label: 'Updated At'
                                     }

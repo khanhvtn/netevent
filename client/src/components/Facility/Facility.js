@@ -32,31 +32,31 @@ import NotificationApp from '../Notification/Notification';
 const headCells = [
     {
         id: 'name',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Name'
     },
     {
         id: 'code',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Code'
     },
     {
         id: 'type',
-        numeric: false,
+        type: 'string',
         disablePadding: false,
         label: 'Type'
     },
     {
         id: 'createdAt',
-        numeric: false,
+        type: 'date',
         disablePadding: false,
         label: 'Created At'
     },
     {
         id: 'updatedAt',
-        numeric: false,
+        type: 'date',
         disablePadding: false,
         label: 'Updated At'
     }
