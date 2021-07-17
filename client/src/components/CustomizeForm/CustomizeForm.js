@@ -118,12 +118,24 @@ const CustomizeForm = ({ control, fieldList, errors, getValues }) => {
                 } else {
                     return (
                         <FormControl
-                            error={!!errors[target.title]?.message}
+                            key={index}
+                            error={defaultErrorOption.error ? true : false}
                             className={css.textField}>
                             <FormLabel component="legend">
                                 {target.title}
                             </FormLabel>
                             <Controller
+                                defaultValue={[]}
+                                rules={{
+                                    validate: {
+                                        isEmpty: (arrayValue) => {
+                                            return (
+                                                !!arrayValue.length ||
+                                                `This field can not be blanked`
+                                            );
+                                        }
+                                    }
+                                }}
                                 name={target.title}
                                 render={({ field }) =>
                                     target.optionValues.map((value, index) => (
@@ -148,7 +160,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues }) => {
                                 control={control}
                             />
                             <FormHelperText>
-                                {errors[target.title]?.message}
+                                {defaultErrorOption.helperText}
                             </FormHelperText>
                         </FormControl>
                     );
