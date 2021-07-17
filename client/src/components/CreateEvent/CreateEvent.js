@@ -336,7 +336,6 @@ const CreateEvent = ({
         dispatch(getAllEventTypes());
         dispatch(getAllFacilities());
         dispatch(getAllUsers());
-        dispatch(getFacilityHistories({ returnFrom: new Date(Date.now()) }));
     }, [dispatch]);
 
     //useEffect to check update mode and set current state of update
