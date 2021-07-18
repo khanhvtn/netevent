@@ -18,7 +18,6 @@ import {
 } from '../../actions/eventTypeActions';
 
 import { getAllFacilities } from '../../actions/facilityActions';
-import { getFacilityHistories } from '../../actions/facilityHistoryActions';
 import { getAllUsers } from '../../actions/userActions';
 import { createEvent, updateEvent } from '../../actions/eventActions';
 import SystemNotification from '../Notification/Notification';
@@ -300,9 +299,6 @@ const CreateEvent = ({
             dispatch(getAllEventTypes());
             dispatch(getAllFacilities());
             dispatch(getAllUsers());
-            dispatch(
-                getFacilityHistories({ returnFrom: new Date(Date.now()) })
-            );
         }
         setState((prevState) => ({
             ...prevState,
