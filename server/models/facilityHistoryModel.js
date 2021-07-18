@@ -14,6 +14,10 @@ const facilityHistorySchema = mongoose.Schema(
             ref: 'Facility',
             required: [true, 'Facility Id cannot be blanked']
         },
+        facilityName: {
+            type: String,
+            require: [true, 'Facility name cannot be blanked']
+        },
         eventId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Event'

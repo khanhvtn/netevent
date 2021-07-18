@@ -482,6 +482,7 @@ const CreateEvent = ({
                     );
                     return {
                         facilityId: targetFacility._id,
+                        facilityName: name,
                         borrowDate,
                         returnDate
                     };
@@ -506,6 +507,7 @@ const CreateEvent = ({
                             );
                             return {
                                 facilityId: targetFacility._id,
+                                facilityName: name,
                                 borrowDate,
                                 returnDate
                             };

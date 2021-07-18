@@ -724,6 +724,8 @@ const EventReview = () => {
                                                                         ? facility
                                                                               .facilityId
                                                                               ?.name
+                                                                        : facility.facilityName
+                                                                        ? facility.facilityName
                                                                         : 'N/A'}
                                                                 </Typography>
                                                             </AccordionSummary>
