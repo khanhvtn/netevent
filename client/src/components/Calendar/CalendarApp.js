@@ -65,11 +65,15 @@ const CalendarApp = ({ targetRole }) => {
             targetRole === 3 || targetRole === 2
                 ? target.eventName
                 : `${target.eventId?.eventName} - ${target.name}`;
+
+        const resource =
+            targetRole === 3 || targetRole === 2 ? rest : rest.eventId;
+
         return {
             title,
             start: new Date(startDate),
             end: new Date(endDate),
-            resource: rest,
+            resource: resource,
             allDay: false
         };
     });
