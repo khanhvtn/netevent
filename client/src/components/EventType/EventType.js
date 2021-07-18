@@ -460,6 +460,7 @@ const EventType = () => {
                             </Toolbar>
                             {/* Facility Table */}
                             <DataTable
+                                selectedName="name"
                                 isRecoveryMode={isRecoveryMode}
                                 setIsRecoveryMode={setIsRecoveryMode}
                                 handleRecovery={handleRecovery}

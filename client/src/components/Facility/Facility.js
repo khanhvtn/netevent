@@ -492,6 +492,7 @@ const Facility = () => {
 
                             {/* Facility Table */}
                             <DataTable
+                                selectedName="name"
                                 isRecoveryMode={isRecoveryMode}
                                 setIsRecoveryMode={setIsRecoveryMode}
                                 handleRecovery={handleRecovery}
