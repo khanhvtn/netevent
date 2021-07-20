@@ -303,8 +303,10 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                         style={{ fontWeight: 'bold' }}>
                                         {isLoading ? (
                                             <Skeleton variant="text" />
+                                        ) : event.eventTypeId?.name ? (
+                                            event.eventTypeId.name
                                         ) : (
-                                            event.eventTypeId?.name
+                                            'N/A'
                                         )}
                                     </Typography>
                                 </Grid>
@@ -314,13 +316,17 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                             <div className={css.reviewBy}>
                                 {isLoading
                                     ? null
-                                    : event.reviewerId?.email && (
+                                    : event.reviewerId && (
                                           <Typography
                                               display="block"
                                               variant="caption"
                                               color="textSecondary">
                                               Reviewed by{' '}
-                                              <b>{event.reviewerId.email}</b>
+                                              <b>
+                                                  {event.reviewerId?.email
+                                                      ? event.reviewerId.email
+                                                      : 'N/A'}
+                                              </b>
                                           </Typography>
                                       )}
                             </div>
