@@ -356,7 +356,7 @@ const CreateEvent = ({
                 registrationCloseDate: moment(
                     Date.parse(updateEventDetail.registrationCloseDate)
                 ).toDate(),
-                eventTypeTarget: updateEventDetail.eventTypeId.name,
+                eventTypeTarget: updateEventDetail.eventTypeId?.name,
                 description: updateEventDetail?.description
             }));
 
@@ -371,7 +371,9 @@ const CreateEvent = ({
                 ...prevState,
                 borrowFacilities: updateFacilities.map((facility) => ({
                     _id: facility._id,
-                    name: facility.facilityId?.name,
+                    name: facility.facilityId?.name
+                        ? facility.facilityId.name
+                        : 'N/A',
                     borrowDate: facility.borrowDate,
                     returnDate: facility.returnDate
                 }))
@@ -383,7 +385,7 @@ const CreateEvent = ({
                 tasks: updateTasks.map((task) => ({
                     _id: task._id,
                     name: task.name,
-                    email: task.userId?.email,
+                    email: task.userId?.email ? task.userId.email : 'N/A',
                     type: task.type,
                     startTime: task.startDate,
                     endTime: task.endDate
