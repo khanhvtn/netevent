@@ -47,5 +47,10 @@ export default makeStyles((theme) => ({
         [theme.breakpoints.down('md')]: {
             margin: '8px 0 16px'
         }
+    },
+    chipStatus: {
+        marginLeft: 8,
+        marginBottom: 4,
+        color: 'white'
     }
 }));

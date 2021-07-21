@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles(() => ({
     paginationWrapper: {
         display: 'flex',
-        flex: '1 1 100%',
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 40
