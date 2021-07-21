@@ -308,12 +308,23 @@ const getTasksByEvent = async (req, res, next) => {
                 case 'incoming':
                     statusOptions = {
                         ...statusOptions,
-                        endDate: {
+                        startDate: {
                             $gte: new Date()
                         }
                     };
                     break;
-                case 'assigned':
+                case 'ongoing':
+                    statusOptions = {
+                        ...statusOptions,
+                        endDate: {
+                            $lte: new Date()
+                        },
+                        startDate: {
+                            $gte: new Date()
+                        }
+                    };
+                    break;
+                case 'closed':
                     statusOptions = {
                         ...statusOptions,
                         endDate: {

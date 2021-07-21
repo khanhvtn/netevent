@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTasksByEvent } from '../../actions/taskActions';
+import TaskPagination from './TaskPagination/TaskPagination';
 import {
     CircularProgress,
     Typography,
@@ -17,17 +18,35 @@ import {
     Table,
     Accordion,
     AccordionSummary,
-    AccordionDetails
+    AccordionDetails,
+    Chip
 } from '@material-ui/core';
 import moment from 'moment';
 import useStyles from './styles';
-import TaskPagination from './TaskPagination/TaskPagination';
 
 const initialState = {
     take: 5,
     page: 1,
     status: 'incoming'
 };
+
+const listFilter = [
+    {
+        status: 'incoming',
+        title: 'Incoming Event',
+        content: 'Currently, there is no incoming event!'
+    },
+    {
+        status: 'ongoing',
+        title: 'Ongoing Event',
+        content: 'Currently, there is no ongoing event!'
+    },
+    {
+        status: 'closed',
+        title: 'Closed Event',
+        content: 'Currently, there is no closed event!'
+    }
+];
 
 const MemberTask = () => {
     const css = useStyles();
@@ -91,74 +110,59 @@ const MemberTask = () => {
                                 variant="h6">
                                 Filter Task
                             </Typography>
-                            <Divider />
-                            <ListItem
-                                disableGutters
-                                className={css.sidebarListItem}
-                                style={{ paddingTop: 0, paddingBottom: 0 }}>
-                                <Button
-                                    style={
-                                        state.status === 'incoming'
-                                            ? {
-                                                  textTransform: 'none',
-                                                  fontWeight: 'medium',
-                                                  justifyContent: 'flex-start',
-                                                  letterSpacing: 0,
-                                                  padding: 12,
-                                                  backgroundColor: '#eceef7',
-                                                  color: '#3f51b5',
-                                                  borderRadius: 0
-                                              }
-                                            : {
-                                                  textTransform: 'none',
-                                                  fontWeight: 'medium',
-                                                  justifyContent: 'flex-start',
-                                                  letterSpacing: 0,
-                                                  padding: 12,
-                                                  borderRadius: 0
-                                              }
-                                    }
-                                    fullWidth
-                                    onClick={() =>
-                                        handleChangeStatus('incoming')
-                                    }>
-                                    <span>Incoming Task</span>
-                                </Button>
-                            </ListItem>
-                            <Divider />
-                            <ListItem
-                                disableGutters
-                                className={css.sidebarListItem}
-                                style={{ paddingTop: 0, paddingBottom: 0 }}>
-                                <Button
-                                    style={
-                                        state.status === 'assigned'
-                                            ? {
-                                                  textTransform: 'none',
-                                                  fontWeight: 'medium',
-                                                  justifyContent: 'flex-start',
-                                                  letterSpacing: 0,
-                                                  padding: 12,
-                                                  backgroundColor: '#eceef7',
-                                                  color: '#3f51b5',
-                                                  borderRadius: 0
-                                              }
-                                            : {
-                                                  textTransform: 'none',
-                                                  fontWeight: 'medium',
-                                                  justifyContent: 'flex-start',
-                                                  letterSpacing: 0,
-                                                  padding: 12,
-                                                  borderRadius: 0
-                                              }
-                                    }
-                                    fullWidth
-                                    onClick={() =>
-                                        handleChangeStatus('assigned')
-                                    }>
-                                    <span>Assigned Task</span>
-                                </Button>
-                            </ListItem>
+                            {listFilter.map((action, index) => {
+                                return (
+                                    <div key={index}>
+                                        <Divider />
+                                        <ListItem
+                                            disableGutters
+                                            className={css.sidebarListItem}
+                                            style={{
+                                                paddingTop: 0,
+                                                paddingBottom: 0
+                                            }}>
+                                            <Button
+                                                style={
+                                                    state.status ===
+                                                    action.status
+                                                        ? {
+                                                              textTransform:
+                                                                  'none',
+                                                              fontWeight:
+                                                                  'medium',
+                                                              justifyContent:
+                                                                  'flex-start',
+                                                              letterSpacing: 0,
+                                                              padding: 12,
+                                                              backgroundColor:
+                                                                  '#eceef7',
+                                                              color: '#3f51b5',
+                                                              borderRadius: 0
+                                                          }
+                                                        : {
+                                                              textTransform:
+                                                                  'none',
+                                                              fontWeight:
+                                                                  'medium',
+                                                              justifyContent:
+                                                                  'flex-start',
+                                                              letterSpacing: 0,
+                                                              padding: 12,
+                                                              borderRadius: 0
+                                                          }
+                                                }
+                                                fullWidth
+                                                onClick={() =>
+                                                    handleChangeStatus(
+                                                        action.status
+                                                    )
+                                                }>
+                                                <span>{action.title}</span>
+                                            </Button>
+                                        </ListItem>
+                                    </div>
+                                );
+                            })}
                         </Paper>
                     </Grid>
                     <Grid xs={12} md={8} container item direction="column">
@@ -174,7 +178,11 @@ const MemberTask = () => {
                                     className={css.title}
                                     align="left"
                                     variant="caption">
-                                    Currently, there is no task assigned to you!
+                                    {listFilter.map((action) => {
+                                        return state.status === action.status
+                                            ? action.content
+                                            : null;
+                                    })}
                                 </Typography>
                             </div>
                         ) : (
@@ -186,9 +194,11 @@ const MemberTask = () => {
                                     }}
                                     align="center"
                                     variant="h4">
-                                    {state.status === 'incoming'
-                                        ? 'Incoming task'
-                                        : 'Assigned task'}
+                                    {listFilter.map((action) => {
+                                        return state.status === action.status
+                                            ? action.title
+                                            : null;
+                                    })}
                                 </Typography>
 
                                 {tasks.map((task, index) => {
@@ -199,6 +209,10 @@ const MemberTask = () => {
                                                 variant="h6"
                                                 id="tableTitle"
                                                 component="div">
+                                                {moment(task.startDate).format(
+                                                    'LL'
+                                                )}{' '}
+                                                -{' '}
                                                 {moment(task.endDate).format(
                                                     'LL'
                                                 )}
@@ -263,6 +277,13 @@ const MemberTask = () => {
                                                                         }
                                                                         align="left">
                                                                         End Date
+                                                                    </TableCell>
+                                                                    <TableCell
+                                                                        className={
+                                                                            css.tableText
+                                                                        }
+                                                                        align="left">
+                                                                        Status
                                                                     </TableCell>
                                                                 </TableRow>
                                                             </TableHead>
@@ -330,6 +351,48 @@ const MemberTask = () => {
                                                                                             'LT'
                                                                                         )}
                                                                                     </Typography>
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {new Date() >
+                                                                                    new Date(
+                                                                                        block.endDate
+                                                                                    ) ? (
+                                                                                        <Chip
+                                                                                            className={
+                                                                                                css.chipStatus
+                                                                                            }
+                                                                                            style={{
+                                                                                                backgroundColor: `#e53935`
+                                                                                            }}
+                                                                                            size="small"
+                                                                                            label="Closed"
+                                                                                        />
+                                                                                    ) : new Date() <
+                                                                                      new Date(
+                                                                                          block.startDate
+                                                                                      ) ? (
+                                                                                        <Chip
+                                                                                            className={
+                                                                                                css.chipStatus
+                                                                                            }
+                                                                                            style={{
+                                                                                                backgroundColor: `#5c6bc0`
+                                                                                            }}
+                                                                                            size="small"
+                                                                                            label="Incoming"
+                                                                                        />
+                                                                                    ) : (
+                                                                                        <Chip
+                                                                                            className={
+                                                                                                css.chipStatus
+                                                                                            }
+                                                                                            style={{
+                                                                                                backgroundColor: `#4caf50`
+                                                                                            }}
+                                                                                            size="small"
+                                                                                            label="Ongoing"
+                                                                                        />
+                                                                                    )}
                                                                                 </TableCell>
                                                                             </TableRow>
                                                                         </TableBody>
