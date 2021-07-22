@@ -31,7 +31,9 @@ const RoleCard = ({ roleNum, roleName, defaultPath, icon, delay }) => {
     return (
         <Grid item>
             <Grow timeout={delay} in style={{ transformOrigin: '0 0 0' }}>
-                <ButtonBase onClick={handlePickRole}>
+                <ButtonBase
+                    style={{ borderRadius: 16 }}
+                    onClick={handlePickRole}>
                     <Paper elevation={3} className={css.paper}>
                         <CardMedia className={css.media} image={icon} />
                         <Typography>{roleName}</Typography>

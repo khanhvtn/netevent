@@ -33,6 +33,7 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
         <>
             <Grid xs={12} sm={6} md={4} lg={4} xl={4} item>
                 <CardActionArea
+                    style={{ borderRadius: 16 }}
                     disabled={isLoading}
                     onClick={() => handleOnClickEvent(event)}>
                     <Card className={css.root} elevation={3}>

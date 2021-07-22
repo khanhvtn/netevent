@@ -187,236 +187,242 @@ const MemberTask = () => {
                             </div>
                         ) : (
                             <>
-                                <Typography
-                                    style={{
-                                        fontWeight: 'bold',
-                                        marginBottom: 24
-                                    }}
-                                    align="center"
-                                    variant="h4">
-                                    {listFilter.map((action) => {
-                                        return state.status === action.status
-                                            ? action.title
-                                            : null;
-                                    })}
-                                </Typography>
+                                <Paper style={{ padding: 16, marginTop: 16 }}>
+                                    <Typography
+                                        style={{
+                                            fontWeight: 'bold',
+                                            marginBottom: 24
+                                        }}
+                                        align="center"
+                                        variant="h4">
+                                        {listFilter.map((action) => {
+                                            return state.status ===
+                                                action.status
+                                                ? action.title
+                                                : null;
+                                        })}
+                                    </Typography>
 
-                                {tasks.map((task, index) => {
-                                    return (
-                                        <React.Fragment key={index}>
-                                            <Typography
-                                                className={css.title}
-                                                variant="h6"
-                                                id="tableTitle"
-                                                component="div">
-                                                {moment(task.startDate).format(
-                                                    'LL'
-                                                )}{' '}
-                                                -{' '}
-                                                {moment(task.endDate).format(
-                                                    'LL'
-                                                )}
-                                            </Typography>
+                                    {tasks.map((task, index) => {
+                                        return (
+                                            <React.Fragment key={index}>
+                                                <Typography
+                                                    className={css.title}
+                                                    variant="h6"
+                                                    id="tableTitle"
+                                                    component="div">
+                                                    {moment(
+                                                        task.startDate
+                                                    ).format('LL')}{' '}
+                                                    -{' '}
+                                                    {moment(
+                                                        task.endDate
+                                                    ).format('LL')}
+                                                </Typography>
 
-                                            {/* Grid view of Event */}
-                                            {/* Event Header */}
-                                            <Accordion
-                                                className={css.accordianStyle}
-                                                key={task._id}
-                                                expanded={
-                                                    expanded ===
-                                                    `task-panel${task._id}`
-                                                }
-                                                onChange={handleChange(
-                                                    `task-panel${task._id}`
-                                                )}>
-                                                <AccordionSummary
-                                                    aria-controls="panel1d-content"
-                                                    id="panel1d-header">
-                                                    <Typography>
-                                                        {task.eventName}
-                                                    </Typography>
-                                                </AccordionSummary>
-                                                <AccordionDetails>
-                                                    <TableContainer>
-                                                        <Table
-                                                            className={
-                                                                css.table
-                                                            }
-                                                            aria-label="simple table">
-                                                            <TableHead>
-                                                                <TableRow>
-                                                                    <TableCell
-                                                                        component="th"
-                                                                        scope="row"
-                                                                        className={
-                                                                            css.tableText
-                                                                        }
-                                                                        align="left">
-                                                                        Task
-                                                                        Name
-                                                                    </TableCell>
-                                                                    <TableCell
-                                                                        className={
-                                                                            css.tableText
-                                                                        }
-                                                                        align="left">
-                                                                        Type
-                                                                    </TableCell>
-                                                                    <TableCell
-                                                                        className={
-                                                                            css.tableText
-                                                                        }
-                                                                        align="left">
-                                                                        Start
-                                                                        Date
-                                                                    </TableCell>
-                                                                    <TableCell
-                                                                        className={
-                                                                            css.tableText
-                                                                        }
-                                                                        align="left">
-                                                                        End Date
-                                                                    </TableCell>
-                                                                    <TableCell
-                                                                        className={
-                                                                            css.tableText
-                                                                        }
-                                                                        align="left">
-                                                                        Status
-                                                                    </TableCell>
-                                                                </TableRow>
-                                                            </TableHead>
-                                                            {task.taskListId?.map(
-                                                                (block) => {
-                                                                    return (
-                                                                        <TableBody
-                                                                            key={
-                                                                                block._id
-                                                                            }>
-                                                                            <TableRow>
-                                                                                <TableCell
-                                                                                    className={
-                                                                                        css.tableText
-                                                                                    }
-                                                                                    component="th"
-                                                                                    scope="row">
-                                                                                    {
-                                                                                        block.name
-                                                                                    }
-                                                                                </TableCell>
-                                                                                <TableCell
-                                                                                    className={
-                                                                                        css.tableText
-                                                                                    }
-                                                                                    align="left">
-                                                                                    {
-                                                                                        block.type
-                                                                                    }
-                                                                                </TableCell>
-                                                                                <TableCell
-                                                                                    className={
-                                                                                        css.tableText
-                                                                                    }>
-                                                                                    <Typography>
-                                                                                        {moment(
-                                                                                            block.startDate
-                                                                                        ).format(
-                                                                                            'll'
-                                                                                        )}
-                                                                                    </Typography>
-                                                                                    <Typography>
-                                                                                        {moment(
-                                                                                            block.startDate
-                                                                                        ).format(
-                                                                                            'LT'
-                                                                                        )}
-                                                                                    </Typography>
-                                                                                </TableCell>
-                                                                                <TableCell
-                                                                                    className={
-                                                                                        css.tableText
-                                                                                    }>
-                                                                                    <Typography>
-                                                                                        {moment(
-                                                                                            block.endDate
-                                                                                        ).format(
-                                                                                            'll'
-                                                                                        )}
-                                                                                    </Typography>
-                                                                                    <Typography>
-                                                                                        {moment(
-                                                                                            block.endDate
-                                                                                        ).format(
-                                                                                            'LT'
-                                                                                        )}
-                                                                                    </Typography>
-                                                                                </TableCell>
-                                                                                <TableCell>
-                                                                                    {new Date() >
-                                                                                    new Date(
-                                                                                        block.endDate
-                                                                                    ) ? (
-                                                                                        <Chip
-                                                                                            className={
-                                                                                                css.chipStatus
-                                                                                            }
-                                                                                            style={{
-                                                                                                backgroundColor: `#e53935`
-                                                                                            }}
-                                                                                            size="small"
-                                                                                            label="Closed"
-                                                                                        />
-                                                                                    ) : new Date() <
-                                                                                      new Date(
-                                                                                          block.startDate
-                                                                                      ) ? (
-                                                                                        <Chip
-                                                                                            className={
-                                                                                                css.chipStatus
-                                                                                            }
-                                                                                            style={{
-                                                                                                backgroundColor: `#5c6bc0`
-                                                                                            }}
-                                                                                            size="small"
-                                                                                            label="Incoming"
-                                                                                        />
-                                                                                    ) : (
-                                                                                        <Chip
-                                                                                            className={
-                                                                                                css.chipStatus
-                                                                                            }
-                                                                                            style={{
-                                                                                                backgroundColor: `#4caf50`
-                                                                                            }}
-                                                                                            size="small"
-                                                                                            label="Ongoing"
-                                                                                        />
-                                                                                    )}
-                                                                                </TableCell>
-                                                                            </TableRow>
-                                                                        </TableBody>
-                                                                    );
+                                                {/* Grid view of Event */}
+                                                {/* Event Header */}
+                                                <Accordion
+                                                    className={
+                                                        css.accordianStyle
+                                                    }
+                                                    key={task._id}
+                                                    expanded={
+                                                        expanded ===
+                                                        `task-panel${task._id}`
+                                                    }
+                                                    onChange={handleChange(
+                                                        `task-panel${task._id}`
+                                                    )}>
+                                                    <AccordionSummary
+                                                        aria-controls="panel1d-content"
+                                                        id="panel1d-header">
+                                                        <Typography>
+                                                            {task.eventName}
+                                                        </Typography>
+                                                    </AccordionSummary>
+                                                    <AccordionDetails>
+                                                        <TableContainer>
+                                                            <Table
+                                                                className={
+                                                                    css.table
                                                                 }
-                                                            )}
-                                                        </Table>
-                                                    </TableContainer>
-                                                </AccordionDetails>
-                                            </Accordion>
-                                        </React.Fragment>
-                                    );
-                                })}
+                                                                aria-label="simple table">
+                                                                <TableHead>
+                                                                    <TableRow>
+                                                                        <TableCell
+                                                                            component="th"
+                                                                            scope="row"
+                                                                            className={
+                                                                                css.tableText
+                                                                            }
+                                                                            align="left">
+                                                                            Task
+                                                                            Name
+                                                                        </TableCell>
+                                                                        <TableCell
+                                                                            className={
+                                                                                css.tableText
+                                                                            }
+                                                                            align="left">
+                                                                            Type
+                                                                        </TableCell>
+                                                                        <TableCell
+                                                                            className={
+                                                                                css.tableText
+                                                                            }
+                                                                            align="left">
+                                                                            Start
+                                                                            Date
+                                                                        </TableCell>
+                                                                        <TableCell
+                                                                            className={
+                                                                                css.tableText
+                                                                            }
+                                                                            align="left">
+                                                                            End
+                                                                            Date
+                                                                        </TableCell>
+                                                                        <TableCell
+                                                                            className={
+                                                                                css.tableText
+                                                                            }
+                                                                            align="left">
+                                                                            Status
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                </TableHead>
+                                                                {task.taskListId?.map(
+                                                                    (block) => {
+                                                                        return (
+                                                                            <TableBody
+                                                                                key={
+                                                                                    block._id
+                                                                                }>
+                                                                                <TableRow>
+                                                                                    <TableCell
+                                                                                        className={
+                                                                                            css.tableText
+                                                                                        }
+                                                                                        component="th"
+                                                                                        scope="row">
+                                                                                        {
+                                                                                            block.name
+                                                                                        }
+                                                                                    </TableCell>
+                                                                                    <TableCell
+                                                                                        className={
+                                                                                            css.tableText
+                                                                                        }
+                                                                                        align="left">
+                                                                                        {
+                                                                                            block.type
+                                                                                        }
+                                                                                    </TableCell>
+                                                                                    <TableCell
+                                                                                        className={
+                                                                                            css.tableText
+                                                                                        }>
+                                                                                        <Typography>
+                                                                                            {moment(
+                                                                                                block.startDate
+                                                                                            ).format(
+                                                                                                'll'
+                                                                                            )}
+                                                                                        </Typography>
+                                                                                        <Typography>
+                                                                                            {moment(
+                                                                                                block.startDate
+                                                                                            ).format(
+                                                                                                'LT'
+                                                                                            )}
+                                                                                        </Typography>
+                                                                                    </TableCell>
+                                                                                    <TableCell
+                                                                                        className={
+                                                                                            css.tableText
+                                                                                        }>
+                                                                                        <Typography>
+                                                                                            {moment(
+                                                                                                block.endDate
+                                                                                            ).format(
+                                                                                                'll'
+                                                                                            )}
+                                                                                        </Typography>
+                                                                                        <Typography>
+                                                                                            {moment(
+                                                                                                block.endDate
+                                                                                            ).format(
+                                                                                                'LT'
+                                                                                            )}
+                                                                                        </Typography>
+                                                                                    </TableCell>
+                                                                                    <TableCell>
+                                                                                        {new Date() >
+                                                                                        new Date(
+                                                                                            block.endDate
+                                                                                        ) ? (
+                                                                                            <Chip
+                                                                                                className={
+                                                                                                    css.chipStatus
+                                                                                                }
+                                                                                                style={{
+                                                                                                    backgroundColor: `#e53935`
+                                                                                                }}
+                                                                                                size="small"
+                                                                                                label="Closed"
+                                                                                            />
+                                                                                        ) : new Date() <
+                                                                                          new Date(
+                                                                                              block.startDate
+                                                                                          ) ? (
+                                                                                            <Chip
+                                                                                                className={
+                                                                                                    css.chipStatus
+                                                                                                }
+                                                                                                style={{
+                                                                                                    backgroundColor: `#5c6bc0`
+                                                                                                }}
+                                                                                                size="small"
+                                                                                                label="Incoming"
+                                                                                            />
+                                                                                        ) : (
+                                                                                            <Chip
+                                                                                                className={
+                                                                                                    css.chipStatus
+                                                                                                }
+                                                                                                style={{
+                                                                                                    backgroundColor: `#4caf50`
+                                                                                                }}
+                                                                                                size="small"
+                                                                                                label="Ongoing"
+                                                                                            />
+                                                                                        )}
+                                                                                    </TableCell>
+                                                                                </TableRow>
+                                                                            </TableBody>
+                                                                        );
+                                                                    }
+                                                                )}
+                                                            </Table>
+                                                        </TableContainer>
+                                                    </AccordionDetails>
+                                                </Accordion>
+                                            </React.Fragment>
+                                        );
+                                    })}
 
-                                {/* Event Pagination */}
-                                <TaskPagination
-                                    totalPages={totalPages}
-                                    page={state.page}
-                                    take={state.take}
-                                    handleChangeRowsPerPage={
-                                        handleChangeRowsPerPage
-                                    }
-                                    handleChangePage={handleChangePage}
-                                />
+                                    {/* Event Pagination */}
+                                    <TaskPagination
+                                        totalPages={totalPages}
+                                        page={state.page}
+                                        take={state.take}
+                                        handleChangeRowsPerPage={
+                                            handleChangeRowsPerPage
+                                        }
+                                        handleChangePage={handleChangePage}
+                                    />
+                                </Paper>
                             </>
                         )}
                     </Grid>
