@@ -1,4 +1,4 @@
-const { Participant, Event } = require('../models');
+const { Participant, Event, Feedback } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomError');
 const mongoose = require('mongoose');
@@ -587,6 +587,101 @@ const inviteParticipant = async (req, res, next) => {
     }
 };
 
+/**
+ * @decsription Sending feedback to participant
+ * @method POST
+ * @route /api/participant/sendFeedback
+ *
+ * @version 1.0
+ */
+const sendFeedbackToParticipants = async (req, res, next) => {
+    const { code } = req.body;
+    try {
+        // Get eventId
+        const currentEvent = await Event.findOne({ urlCode: code });
+        const eventId = currentEvent._id;
+
+        // Get checked participants
+        const checkedParticipants = await Participant.find({
+            event: eventId,
+            isValid: true,
+            isAttended: true
+        });
+
+        await Promise.all(
+            checkedParticipants.map(async (participant) => {
+                // Create feedback
+                const participantId = participant._id;
+                const feedback = new Feedback({
+                    eventId: eventId,
+                    userId: participantId
+                });
+
+                // Validate feedback model
+                await feedback.validate();
+
+                const saveFeedback = await feedback.save();
+
+                // Send email inviataion (Minh)
+                //
+                // Get feedback link
+                const urlCodeFeedback = saveFeedback.urlCode;
+                const urlFeedback = `/feedback/${urlCodeFeedback}`;
+                console.log(urlFeedback);
+            })
+        );
+
+        return cusResponse(res, 200, null, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
+/**
+ * @decsription Submit a feedback
+ * @method POST
+ * @route /api/participant/submitFeedback
+ *
+ * @version 1.0
+ */
+const submitFeedback = async (req, res, next) => {
+    const { question, urlCode } = req.body;
+
+    try {
+        const updateFeedback = await Feedback.findOneAndUpdate(
+            { urlCode: urlCode },
+            { question: question, isCompleted: true },
+            { new: true }
+        );
+
+        return cusResponse(res, 200, updateFeedback, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
+/**
+ * @decsription Get a feedback
+ * @method GET
+ * @route /api/participant/feedback
+ *
+ * @version 1.0
+ */
+const getFeedback = async (req, res, next) => {
+    const code = req.query.code;
+    try {
+        const feedback = await Feedback.findOne({ urlCode: code });
+
+        if (!feedback) {
+            return cusResponse(res, 200, [], null);
+        }
+
+        return cusResponse(res, 200, feedback, null);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
     getSuggestedParticipants,
     getParticipantByEventID,
@@ -596,5 +691,8 @@ module.exports = {
     setInvalidAndVerifyParticipant,
     setAttendedParticipant,
     setAttendedParticipantByQrCode,
-    inviteParticipant
+    inviteParticipant,
+    sendFeedbackToParticipants,
+    submitFeedback,
+    getFeedback
 };

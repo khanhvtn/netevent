@@ -7,7 +7,11 @@ import {
     PARTICIPANT_INVITATION_LIST_EMAIL,
     PARTICIPANT_INVITE,
     PARTICIPANT_SPINNER_INDEX,
-    INVITATION_LOADING
+    INVITATION_LOADING,
+    PARTICIPANT_SEND_FEEDBACK,
+    PARTICIPANT_SUBMIT_FEEBACK_LOADING,
+    PARTICIPANT_SUBMIT_SUCCESS,
+    PARTICIPANT_GET_FEEDBACK
 } from '../constants';
 
 const initialState = {
@@ -19,7 +23,10 @@ const initialState = {
     isInviteLoading: false,
     invitationListEmail: [],
     suggestedParticipants: [],
-    spinnerIndex: null
+    spinnerIndex: null,
+    isSentFeedback: false,
+    feedback: null,
+    isSubmittedLoading: false
 };
 
 export default function participantReducers(state = initialState, action) {
@@ -63,6 +70,26 @@ export default function participantReducers(state = initialState, action) {
             };
         case PARTICIPANT_REGISTER:
             return { ...state, complete: action.payload };
+        case PARTICIPANT_SEND_FEEDBACK:
+            return {
+                ...state,
+                isSentFeedback: action.payload
+            };
+        case PARTICIPANT_SUBMIT_FEEBACK_LOADING:
+            return {
+                ...state,
+                isSubmittedLoading: action.payload
+            };
+        case PARTICIPANT_SUBMIT_SUCCESS:
+            return {
+                ...state,
+                feedback: action.payload.data?.data
+            };
+        case PARTICIPANT_GET_FEEDBACK:
+            return {
+                ...state,
+                feedback: action.payload.data?.data
+            };
         default:
             return state;
     }

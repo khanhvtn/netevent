@@ -35,6 +35,7 @@ import {
     getEventsAnalysisAPI,
     getEventAnalysisByIDAPI
 } from '../api';
+import { sendParticipantsFeedback } from './participantActions';
 
 //setIsLoading func is to set loading status
 const setEventIsLoading = (status, dispatch) => {
@@ -348,7 +349,7 @@ export const updateEvent = (userReq) => async (dispatch) => {
     setEventIsLoading(false, dispatch);
 };
 
-export const updateEventStatus = (userReq) => async (dispatch) => {
+export const updateEventStatus = (userReq, urlCode) => async (dispatch) => {
     setEventIsLoading(true, dispatch);
     try {
         const data = await updateEventStatusAPI(userReq);
@@ -362,6 +363,8 @@ export const updateEventStatus = (userReq) => async (dispatch) => {
             type: EVENT_UPDATE_SUCCESS,
             payload: true
         });
+
+        dispatch(sendParticipantsFeedback(urlCode));
 
         setTimeout(() => {
             dispatch({

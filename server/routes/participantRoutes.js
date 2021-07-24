@@ -16,5 +16,8 @@ router.patch(
     participantControllers.setAttendedParticipantByQrCode
 );
 router.post('/invite', participantControllers.inviteParticipant);
+router.post('/sendFeedback', participantControllers.sendFeedbackToParticipants);
+router.post('/submitFeedback', participantControllers.submitFeedback);
+router.get('/feedback', participantControllers.getFeedback);
 
 module.exports = router;
