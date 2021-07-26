@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 //import makeStyles in the last
 import useStyles from './styles';
-import { ERROR_CLEAR } from '../../constants';
+import { ERROR_CLEAR, USER_LOADING } from '../../constants';
 import UserTable from './UserTable/UserTable';
 import UserFilter from './UserFilter/UserFilter';
 import UserNotification from './UserNotification/UserNotification';
@@ -80,14 +80,13 @@ const User = () => {
 
     const [selected, setSelected] = useState([]);
 
+    const [timeOutForSearch, setTimeOutForSearch] = useState({
+        key: '',
+        timeoutFunc: null
+    });
+
     //useEffect
     useEffect(() => {
-        // const filterDate = {
-        //     createdFrom: state.createdFrom ? state.createdFrom : '',
-        //     createdTo: state.createdTo ? state.createdTo : '',
-        //     updatedFrom: state.updatedFrom ? state.updatedFrom : '',
-        //     updatedTo: state.updatedTo ? state.updatedTo : '',
-        // };
         const filterDate = {
             createdFrom: state.createdFrom
                 ? format(Date.parse(state.createdFrom), 'yyyy-MM-dd')
@@ -152,7 +151,7 @@ const User = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'search' || name === 'take') {
+        if (name === 'take') {
             return setState((prevState) => ({
                 ...prevState,
                 [name]: value,
@@ -164,6 +163,32 @@ const User = () => {
             [name]: value
         }));
     };
+
+    const handleChangeSearch = (e) => {
+        const { name, value } = e.target;
+        setTimeOutForSearch((prevState) => {
+            dispatch({
+                type: USER_LOADING,
+                payload: true
+            });
+            if (prevState.timeoutFunc) {
+                clearTimeout(timeOutForSearch.timeoutFunc);
+            }
+            const newTimeoutFunc = setTimeout(() => {
+                setState((prevState) => ({
+                    ...prevState,
+                    search: value,
+                    page: 1
+                }));
+            }, 2000);
+            return {
+                ...prevState,
+                [name]: value,
+                timeoutFunc: newTimeoutFunc
+            };
+        });
+    };
+
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prevState) => ({
@@ -288,11 +313,11 @@ const User = () => {
                                         <SearchIcon />
                                     </div>
                                     <InputBase
-                                        onChange={handleChange}
+                                        onChange={handleChangeSearch}
                                         className={css.inputInput}
                                         placeholder="Search by email"
-                                        name="search"
-                                        value={state.search}
+                                        name="key"
+                                        value={timeOutForSearch.key}
                                         inputProps={{
                                             'aria-label': 'search'
                                         }}

@@ -22,6 +22,7 @@ import { useHistory } from 'react-router-dom';
 import { getEvents } from '../../actions/eventActions';
 import { getAllEventTypes } from '../../actions/eventTypeActions';
 import SystemNotification from '../Notification/Notification';
+import { EVENT_LOADING } from '../../constants';
 
 const initialState = {
     search: '',
@@ -71,6 +72,12 @@ const EventManagement = () => {
         userId: state.user.user.id,
         eventTypes: state.eventType?.eventTypes
     }));
+
+    /* state for searching */
+    const [timeOutForSearch, setTimeOutForSearch] = useState({
+        key: '',
+        timeoutFunc: null
+    });
 
     /* Change isRecycleMode if use turn back from event detail */
     const [state, setState] = useState({
@@ -148,20 +155,29 @@ const EventManagement = () => {
             page: 1
         }));
     };
-
-    const handleChange = (e) => {
+    const handleChangeSearch = (e) => {
         const { name, value } = e.target;
-        if (name === 'search' || name === 'take') {
-            return setState((prevState) => ({
+        setTimeOutForSearch((prevState) => {
+            dispatch({
+                type: EVENT_LOADING,
+                payload: true
+            });
+            if (prevState.timeoutFunc) {
+                clearTimeout(timeOutForSearch.timeoutFunc);
+            }
+            const newTimeoutFunc = setTimeout(() => {
+                setState((prevState) => ({
+                    ...prevState,
+                    search: value,
+                    page: 1
+                }));
+            }, 2000);
+            return {
                 ...prevState,
                 [name]: value,
-                page: 1
-            }));
-        }
-        setState((prevState) => ({
-            ...prevState,
-            [name]: value
-        }));
+                timeoutFunc: newTimeoutFunc
+            };
+        });
     };
 
     //handle Filter Change
@@ -254,11 +270,11 @@ const EventManagement = () => {
                                         <SearchIcon />
                                     </div>
                                     <InputBase
-                                        onChange={handleChange}
+                                        onChange={handleChangeSearch}
                                         className={css.inputInput}
                                         placeholder="Search by event name"
-                                        name="search"
-                                        value={state.search}
+                                        name="key"
+                                        value={timeOutForSearch.key}
                                         inputProps={{
                                             'aria-label': 'search'
                                         }}
@@ -266,7 +282,11 @@ const EventManagement = () => {
                                 </div>
                                 <div className={css.grow} />
                                 <Button
-                                    style={{ textTransform: 'none' }}
+                                    fullWidth
+                                    style={{
+                                        textTransform: 'none',
+                                        maxWidth: '120px'
+                                    }}
                                     disabled={isLoading}
                                     onClick={handleToggleRecycleMode}
                                     variant="contained"
@@ -282,7 +302,7 @@ const EventManagement = () => {
                                             <Delete />
                                         )
                                     }>
-                                    {state.isRecycleMode ? 'Close' : 'Bin'}
+                                    {state.isRecycleMode ? 'Close' : 'Open Bin'}
                                 </Button>
                                 <Tooltip
                                     title="Filter"
