@@ -149,7 +149,7 @@ const EventRequest = () => {
                     search: value,
                     page: 1
                 }));
-            }, 2000);
+            }, 300);
             return {
                 ...prevState,
                 [name]: value,

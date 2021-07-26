@@ -117,6 +117,8 @@ const Facility = () => {
     const [filters, setFilters] = useState(filterState);
     const [selected, setSelected] = useState([]);
     const [isRecoveryMode, setIsRecoveryMode] = useState(false);
+
+    /* state for searching */
     const [timeOutForSearch, setTimeOutForSearch] = useState({
         key: '',
         timeoutFunc: null
@@ -361,7 +363,7 @@ const Facility = () => {
                     search: value,
                     page: 1
                 }));
-            }, 2000);
+            }, 300);
             return {
                 ...prevState,
                 [name]: value,

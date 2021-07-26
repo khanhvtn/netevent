@@ -16,6 +16,7 @@ import ParticipantPagination from '../../EventManagement/ParticipantPagination/P
 import ParticipantFilter from '../../EventManagement/ParticipantFilter/ParticipantFilter';
 import SystemNotification from '../../Notification/Notification';
 import { getParticipants } from '../../../actions/participantActions';
+import { PARTICIPANT_LOADING } from '../../../constants';
 
 const initialState = {
     search: '',
@@ -42,6 +43,12 @@ const AllParticipantTable = ({ eventId, tabs }) => {
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
     const [selected, setSelected] = useState([]);
+
+    /* state for searching */
+    const [timeOutForSearch, setTimeOutForSearch] = useState({
+        key: '',
+        timeoutFunc: null
+    });
 
     // Use Effect call participants API after state is set
     useEffect(() => {
@@ -84,12 +91,29 @@ const AllParticipantTable = ({ eventId, tabs }) => {
         }));
     };
 
-    const handleChange = (e) => {
+    const handleChangeSearch = (e) => {
         const { name, value } = e.target;
-        setState((prevState) => ({
-            ...prevState,
-            [name]: value
-        }));
+        setTimeOutForSearch((prevState) => {
+            dispatch({
+                type: PARTICIPANT_LOADING,
+                payload: true
+            });
+            if (prevState.timeoutFunc) {
+                clearTimeout(timeOutForSearch.timeoutFunc);
+            }
+            const newTimeoutFunc = setTimeout(() => {
+                setState((prevState) => ({
+                    ...prevState,
+                    search: value,
+                    page: 1
+                }));
+            }, 300);
+            return {
+                ...prevState,
+                [name]: value,
+                timeoutFunc: newTimeoutFunc
+            };
+        });
     };
 
     const handleFilterChange = (e) => {
@@ -142,11 +166,11 @@ const AllParticipantTable = ({ eventId, tabs }) => {
                             <SearchIcon />
                         </div>
                         <InputBase
-                            onChange={handleChange}
+                            onChange={handleChangeSearch}
                             className={css.inputInput}
                             placeholder="Search by email, name, university or major"
-                            name="search"
-                            value={state.search}
+                            name="key"
+                            value={timeOutForSearch.key}
                             inputProps={{
                                 'aria-label': 'search'
                             }}

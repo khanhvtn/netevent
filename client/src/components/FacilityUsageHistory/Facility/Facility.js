@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 //import makeStyles in the last
 import useStyles from './styles';
-import { ERROR_CLEAR } from '../../../constants';
+import { ERROR_CLEAR, FACILITY_LOADING } from '../../../constants';
 import FacilityFilter from './FacilityFilter/FacilityFilter';
 import PaginationTable from '../MainTable/PaginationTable/PaginationTable';
 import DataTable from '../MainTable/DataTable/DataTable';
@@ -98,6 +98,10 @@ const Facility = () => {
     const [filters, setFilters] = useState(filterState);
     const [selected, setSelected] = useState([]);
     const [isRecoveryMode, setIsRecoveryMode] = useState(false);
+    const [timeOutForSearch, setTimeOutForSearch] = useState({
+        key: '',
+        timeoutFunc: null
+    });
 
     //useEffect
     useEffect(() => {
@@ -133,20 +137,31 @@ const Facility = () => {
         isRecoveryMode
     ]);
 
-    const handleChange = (e) => {
+    const handleChangeSearch = (e) => {
         const { name, value } = e.target;
-        if (name === 'search' || name === 'take') {
-            return setState((prevState) => ({
+        setTimeOutForSearch((prevState) => {
+            dispatch({
+                type: FACILITY_LOADING,
+                payload: true
+            });
+            if (prevState.timeoutFunc) {
+                clearTimeout(timeOutForSearch.timeoutFunc);
+            }
+            const newTimeoutFunc = setTimeout(() => {
+                setState((prevState) => ({
+                    ...prevState,
+                    search: value,
+                    page: 1
+                }));
+            }, 300);
+            return {
                 ...prevState,
                 [name]: value,
-                page: 1
-            }));
-        }
-        setState((prevState) => ({
-            ...prevState,
-            [name]: value
-        }));
+                timeoutFunc: newTimeoutFunc
+            };
+        });
     };
+
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prevState) => ({
@@ -217,11 +232,11 @@ const Facility = () => {
                                         <SearchIcon />
                                     </div>
                                     <InputBase
-                                        onChange={handleChange}
+                                        onChange={handleChangeSearch}
                                         className={css.inputInput}
                                         placeholder="Search by name, code, type"
-                                        name="search"
-                                        value={state.search}
+                                        name="key"
+                                        value={timeOutForSearch.key}
                                         inputProps={{
                                             'aria-label': 'search'
                                         }}
