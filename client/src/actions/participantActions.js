@@ -9,7 +9,9 @@ import {
     PARTICIPANT_INVITATION_LIST_EMAIL,
     PARTICIPANT_INVITE,
     INVITATION_LOADING,
-    PARTICIPANT_SPINNER_INDEX
+    PARTICIPANT_SPINNER_INDEX,
+    PARTICIPANT_FETCHING,
+    PARTICIPANT_FETCH_DATA
 } from '../constants';
 import {
     getParticipantsAPI,
@@ -18,7 +20,8 @@ import {
     setInvalidAndVerifyParticipantAPI,
     getSuggestedParticipantsAPI,
     setAttendedParticipantByQrCodeAPI,
-    inviteParticipantAPI
+    inviteParticipantAPI,
+    getAllParticipantAPI
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -210,3 +213,40 @@ export const inviteParticipant =
         dispatch({ type: PARTICIPANT_SPINNER_INDEX, payload: null });
         setInvitationIsLoading(false, dispatch);
     };
+
+const setParticipantIsFetching = (status, dispatch) => {
+    dispatch({
+        type: PARTICIPANT_FETCHING,
+        payload: status
+    });
+};
+
+export const getAllParticipant = (userQueries) => async (dispatch) => {
+    switch (userQueries.page) {
+        case 1:
+            setPartiticpantIsLoading(true, dispatch);
+
+            try {
+                const data = await getAllParticipantAPI(userQueries);
+                dispatch({ type: PARTICIPANT_GET_ALL_FILTER, payload: data });
+            } catch (error) {
+                console.log(error.message);
+            }
+
+            setPartiticpantIsLoading(false, dispatch);
+            break;
+
+        default:
+            setParticipantIsFetching(true, dispatch);
+
+            try {
+                const data = await getAllParticipantAPI(userQueries);
+                dispatch({ type: PARTICIPANT_FETCH_DATA, payload: data });
+            } catch (error) {
+                console.log(error.message);
+            }
+
+            setParticipantIsFetching(false, dispatch);
+            break;
+    }
+};

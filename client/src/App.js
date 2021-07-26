@@ -25,6 +25,7 @@ import FacilityHistoryAll from './components/FacilityUsageHistory/Facility/Facil
 import EventAnalysis from './components/EventAnalysis/EventAnalysis';
 import useStyles from './styles';
 import ParticipantChecking from './components/ParticipantChecking/ParticipantChecking';
+import TestScroll from './components/EventManagement/EventDetail/VerifyTable/InvitationDialog/TestScroll';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -60,6 +61,8 @@ const App = () => {
                         path="/registration/:code"
                         component={Registration}
                     />
+
+                    <Route exact path="/test" component={TestScroll} />
 
                     {/* Here is the place to add route for dashboard layout */}
                     <Route>

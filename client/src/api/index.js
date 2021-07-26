@@ -271,6 +271,12 @@ export const setAttendedParticipantAPI = (userReq) =>
     AXIOS.patch('/participant/update/attend', userReq);
 export const setAttendedParticipantByQrCodeAPI = (userReq) =>
     AXIOS.patch('/participant/update/attendByQrCode', userReq);
+export const getAllParticipantAPI = (userQueries) =>
+    AXIOS.get(
+        `/participant/allParticipant?page=${
+            userQueries?.page ? userQueries?.page : ''
+        }`
+    );
 
 // Notification History API
 export const getNotificationHistoryByEventCodeAPI = (code) =>

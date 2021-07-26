@@ -587,6 +587,40 @@ const inviteParticipant = async (req, res, next) => {
     }
 };
 
+const getAllParticipant = async (req, res, next) => {
+    try {
+        let options = {
+            take: 8
+        };
+
+        /* 
+        Variable page default is 1
+         */
+        const page = parseInt(req.query.page) || 1;
+
+        /* 
+        Variable total user based on search and filter
+         */
+        const totalParticipants = await Participant.find().countDocuments();
+
+        let totalPages = (totalParticipants / options.take)
+            .toString()
+            .includes('.')
+            ? Math.ceil(totalParticipants / options.take)
+            : totalParticipants / options.take;
+
+        //return data to client
+        const participants = await Participant.find()
+            .sort({ updatedAt: -1 })
+            .skip((page - 1) * options.take)
+            .limit(options.take);
+
+        return cusResponse(res, 200, participants, null, totalPages);
+    } catch (error) {
+        return next(new CustomError(500, error.message));
+    }
+};
+
 module.exports = {
     getSuggestedParticipants,
     getParticipantByEventID,
@@ -596,5 +630,6 @@ module.exports = {
     setInvalidAndVerifyParticipant,
     setAttendedParticipant,
     setAttendedParticipantByQrCode,
-    inviteParticipant
+    inviteParticipant,
+    getAllParticipant
 };

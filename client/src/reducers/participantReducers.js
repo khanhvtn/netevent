@@ -7,7 +7,9 @@ import {
     PARTICIPANT_INVITATION_LIST_EMAIL,
     PARTICIPANT_INVITE,
     PARTICIPANT_SPINNER_INDEX,
-    INVITATION_LOADING
+    INVITATION_LOADING,
+    PARTICIPANT_FETCHING,
+    PARTICIPANT_FETCH_DATA
 } from '../constants';
 
 const initialState = {
@@ -19,7 +21,8 @@ const initialState = {
     isInviteLoading: false,
     invitationListEmail: [],
     suggestedParticipants: [],
-    spinnerIndex: null
+    spinnerIndex: null,
+    isFetching: false
 };
 
 export default function participantReducers(state = initialState, action) {
@@ -63,6 +66,20 @@ export default function participantReducers(state = initialState, action) {
             };
         case PARTICIPANT_REGISTER:
             return { ...state, complete: action.payload };
+
+        case PARTICIPANT_FETCH_DATA:
+            return {
+                ...state,
+                participants: [
+                    ...state.participants,
+                    ...action.payload.data?.data
+                ]
+            };
+        case PARTICIPANT_FETCHING:
+            return {
+                ...state,
+                isFetching: action.payload
+            };
         default:
             return state;
     }
