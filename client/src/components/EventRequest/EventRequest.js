@@ -21,6 +21,7 @@ import SystemNotification from '../Notification/Notification';
 import EventCard from '../EventManagement/EventCard/EventCard';
 import EventFilter from '../EventManagement/EventFilter/EventFilter';
 import EventPagination from '../EventManagement/EventPagination/EventPagination';
+import { EVENT_LOADING } from '../../constants';
 
 const initialState = {
     search: '',
@@ -62,6 +63,12 @@ const EventRequest = () => {
         isLoading: state.event.isLoading,
         totalPages: state.event.totalPages
     }));
+
+    /* state for searching */
+    const [timeOutForSearch, setTimeOutForSearch] = useState({
+        key: '',
+        timeoutFunc: null
+    });
 
     // Request to get the events data
     useEffect(() => {
@@ -126,19 +133,29 @@ const EventRequest = () => {
         }));
     };
 
-    const handleChange = (e) => {
+    const handleChangeSearch = (e) => {
         const { name, value } = e.target;
-        if (name === 'search' || name === 'take') {
-            return setState((prevState) => ({
+        setTimeOutForSearch((prevState) => {
+            dispatch({
+                type: EVENT_LOADING,
+                payload: true
+            });
+            if (prevState.timeoutFunc) {
+                clearTimeout(timeOutForSearch.timeoutFunc);
+            }
+            const newTimeoutFunc = setTimeout(() => {
+                setState((prevState) => ({
+                    ...prevState,
+                    search: value,
+                    page: 1
+                }));
+            }, 2000);
+            return {
                 ...prevState,
                 [name]: value,
-                page: 1
-            }));
-        }
-        setState((prevState) => ({
-            ...prevState,
-            [name]: value
-        }));
+                timeoutFunc: newTimeoutFunc
+            };
+        });
     };
 
     //handle Filter Change
@@ -206,11 +223,11 @@ const EventRequest = () => {
                                         <SearchIcon />
                                     </div>
                                     <InputBase
-                                        onChange={handleChange}
+                                        onChange={handleChangeSearch}
                                         className={css.inputInput}
                                         placeholder="Search by event name"
-                                        name="search"
-                                        value={state.search}
+                                        name="key"
+                                        value={timeOutForSearch.key}
                                         inputProps={{
                                             'aria-label': 'search'
                                         }}
