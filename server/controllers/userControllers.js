@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const CustomError = require('../class/CustomError');
 const { sendEmail } = require('./misc/mailer');
 const { html } = require('../mail-template/template');
+const CryptoJS = require('crypto-js');
 
 /**
  *  =====================================
@@ -55,11 +56,18 @@ const login = async (req, res, next) => {
                 email: existedUser.email,
                 role: existedUser.role
             },
-            'netevent',
+            process.env.SECRET_KEY,
             { expiresIn: '1h' }
         );
 
-        res.cookie('token', token, {
+        //encrypt token
+        const encryptedToken = CryptoJS.AES.encrypt(
+            token,
+            process.env.SECRET_KEY
+        ).toString();
+
+        res.cookie('token', encryptedToken, {
+            secure: true,
             expires: new Date(Date.now() + 1 * 60 * 60 * 1000), //expire in 1h
             httpOnly: true
         });

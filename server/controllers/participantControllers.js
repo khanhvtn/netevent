@@ -359,7 +359,7 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
                         //encrypt data
                         const cipherText = CryptoJS.AES.encrypt(
                             qrData,
-                            'netevent'
+                            process.env.SECRET_KEY
                         ).toString();
                         const qrCodeDataUrl = await qrCode.toDataURL(
                             cipherText,
@@ -430,7 +430,10 @@ const setAttendedParticipantByQrCode = async (req, res, next) => {
     const { cipherTextQrCodeData } = req.body;
     try {
         // Decrypt
-        var bytes = CryptoJS.AES.decrypt(cipherTextQrCodeData, 'netevent');
+        var bytes = CryptoJS.AES.decrypt(
+            cipherTextQrCodeData,
+            process.env.SECRET_KEY
+        );
         var participantInfo = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
         const participant = await Participant.findById(
             participantInfo.participantId
