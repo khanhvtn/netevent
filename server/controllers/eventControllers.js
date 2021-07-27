@@ -1055,6 +1055,7 @@ const getRegistrationPageDetail = async (req, res, next) => {
 
         if (!browserToken) {
             res.cookie('browserToken', nanoid(), {
+                secure: true,
                 expires: new Date(Date.now() + 1 * 60 * 60 * 1000), //expire in 1h
                 httpOnly: true
             });
