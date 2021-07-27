@@ -233,8 +233,9 @@ export const getSuggestedParticipantsAPI = (userQueries) => {
     const eventCodeQuery = `eventCode=${
         userQueries?.eventCode ? userQueries.eventCode : ''
     }`;
+    const pageQuery = `page=${userQueries?.page ? userQueries.page : ''}`;
 
-    return AXIOS.get(`/participant/suggest?${eventCodeQuery}`);
+    return AXIOS.get(`/participant/suggest?${eventCodeQuery}&${pageQuery}`);
 };
 
 export const inviteParticipantAPI = (email, eventCode) => {
@@ -271,12 +272,6 @@ export const setAttendedParticipantAPI = (userReq) =>
     AXIOS.patch('/participant/update/attend', userReq);
 export const setAttendedParticipantByQrCodeAPI = (userReq) =>
     AXIOS.patch('/participant/update/attendByQrCode', userReq);
-export const getAllParticipantAPI = (userQueries) =>
-    AXIOS.get(
-        `/participant/allParticipant?page=${
-            userQueries?.page ? userQueries?.page : ''
-        }`
-    );
 
 // Notification History API
 export const getNotificationHistoryByEventCodeAPI = (code) =>

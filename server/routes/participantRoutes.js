@@ -16,6 +16,5 @@ router.patch(
     participantControllers.setAttendedParticipantByQrCode
 );
 router.post('/invite', participantControllers.inviteParticipant);
-router.get('/allParticipant', participantControllers.getAllParticipant);
 
 module.exports = router;

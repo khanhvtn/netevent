@@ -468,7 +468,7 @@ const getSuggestedParticipants = async (req, res, next) => {
     try {
         let options = {
             search: '',
-            take: 10,
+            take: 8,
             eventType: null,
             tags: [],
             language: {
@@ -495,26 +495,33 @@ const getSuggestedParticipants = async (req, res, next) => {
             };
         }
 
+        /* 
+        Variable page default is 1
+         */
+        const page = parseInt(req.query.page) || 1;
+
         const event = await Event.findOne({
             urlCode: req.query.eventCode
         }).populate('eventTypeId');
 
         const allParticipants = await Participant.find({
             name: new RegExp(options.search, 'i')
-        }).populate({
-            path: 'event',
-            match: {
-                language: event.language,
-                tags: { $in: event.tags }
-            },
-            populate: {
-                path: 'eventTypeId',
-                model: 'EventType',
+        })
+            .populate({
+                path: 'event',
                 match: {
-                    name: event.eventTypeId.name
+                    language: event.language,
+                    tags: { $in: event.tags }
+                },
+                populate: {
+                    path: 'eventTypeId',
+                    model: 'EventType',
+                    match: {
+                        name: event.eventTypeId.name
+                    }
                 }
-            }
-        });
+            })
+            .sort({ updatedAt: -1 });
 
         // Filter all participant following language and tags
         const filterParticipantsByLanguageAndTags = allParticipants.filter(
@@ -534,14 +541,31 @@ const getSuggestedParticipants = async (req, res, next) => {
             (o1, o2) => o1.email === o2.email
         );
 
+        const participantLength = filterUniqueParticipants.length;
+
+        /* 
+        Variable total participant
+         */
+        let totalPages = (participantLength / options.take)
+            .toString()
+            .includes('.')
+            ? Math.ceil(participantLength / options.take)
+            : participantLength / options.take;
+
+        // Paging participant
+        const pagingParticipant = filterUniqueParticipants
+            .skip((page - 1) * options.take)
+            .limit(options.take);
+
         return cusResponse(
             res,
             200,
             {
-                suggestedParticipants: filterUniqueParticipants,
+                suggestedParticipants: pagingParticipant,
                 invitationListEmail: event.invitationListEmail
             },
-            null
+            null,
+            totalPages
         );
     } catch (error) {
         return next(new CustomError(500, error.message));
@@ -587,40 +611,6 @@ const inviteParticipant = async (req, res, next) => {
     }
 };
 
-const getAllParticipant = async (req, res, next) => {
-    try {
-        let options = {
-            take: 8
-        };
-
-        /* 
-        Variable page default is 1
-         */
-        const page = parseInt(req.query.page) || 1;
-
-        /* 
-        Variable total user based on search and filter
-         */
-        const totalParticipants = await Participant.find().countDocuments();
-
-        let totalPages = (totalParticipants / options.take)
-            .toString()
-            .includes('.')
-            ? Math.ceil(totalParticipants / options.take)
-            : totalParticipants / options.take;
-
-        //return data to client
-        const participants = await Participant.find()
-            .sort({ updatedAt: -1 })
-            .skip((page - 1) * options.take)
-            .limit(options.take);
-
-        return cusResponse(res, 200, participants, null, totalPages);
-    } catch (error) {
-        return next(new CustomError(500, error.message));
-    }
-};
-
 module.exports = {
     getSuggestedParticipants,
     getParticipantByEventID,
@@ -630,6 +620,5 @@ module.exports = {
     setInvalidAndVerifyParticipant,
     setAttendedParticipant,
     setAttendedParticipantByQrCode,
-    inviteParticipant,
-    getAllParticipant
+    inviteParticipant
 };
