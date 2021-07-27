@@ -328,7 +328,7 @@ const EventType = () => {
                     search: value,
                     page: 1
                 }));
-            }, 300);
+            }, 2000);
             return {
                 ...prevState,
                 [name]: value,
