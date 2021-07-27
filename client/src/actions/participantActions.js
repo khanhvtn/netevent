@@ -5,11 +5,14 @@ import {
     ERROR_CLEAR,
     PARTICIPANT_GET_ALL_FILTER,
     PARTICIPANT_UPDATE_SUCCESS,
-    PARTICIPANT_ALL,
+    PARTICIPANT_GET_ALL_SUGGESTED,
     PARTICIPANT_INVITATION_LIST_EMAIL,
     PARTICIPANT_INVITE,
     INVITATION_LOADING,
-    PARTICIPANT_SPINNER_INDEX
+    PARTICIPANT_SPINNER_INDEX,
+    PARTICIPANT_FETCHING,
+    PARTICIPANT_FETCH_DATA,
+    PARTICIPANT_SUGGESTED_LOADING
 } from '../constants';
 import {
     getParticipantsAPI,
@@ -32,6 +35,20 @@ const setPartiticpantIsLoading = (status, dispatch) => {
 const setInvitationIsLoading = (status, dispatch) => {
     dispatch({
         type: INVITATION_LOADING,
+        payload: status
+    });
+};
+
+const setParticipantIsFetching = (status, dispatch) => {
+    dispatch({
+        type: PARTICIPANT_FETCHING,
+        payload: status
+    });
+};
+
+const setSuggestedParticipantIsLoading = (status, dispatch) => {
+    dispatch({
+        type: PARTICIPANT_SUGGESTED_LOADING,
         payload: status
     });
 };
@@ -104,15 +121,40 @@ export const getParticipants =
     };
 
 export const getSuggestedParticipants = (userQueries) => async (dispatch) => {
-    setPartiticpantIsLoading(true, dispatch);
-    try {
-        const data = await getSuggestedParticipantsAPI(userQueries);
-        dispatch({ type: PARTICIPANT_ALL, payload: data });
-        dispatch({ type: PARTICIPANT_INVITATION_LIST_EMAIL, payload: data });
-    } catch (error) {
-        console.log(error);
+    switch (userQueries.page) {
+        case 1:
+            setSuggestedParticipantIsLoading(true, dispatch);
+            try {
+                const data = await getSuggestedParticipantsAPI(userQueries);
+                dispatch({
+                    type: PARTICIPANT_GET_ALL_SUGGESTED,
+                    payload: data
+                });
+                dispatch({
+                    type: PARTICIPANT_INVITATION_LIST_EMAIL,
+                    payload: data
+                });
+            } catch (error) {
+                console.log(error);
+            }
+            setSuggestedParticipantIsLoading(false, dispatch);
+            break;
+
+        default:
+            setParticipantIsFetching(true, dispatch);
+            try {
+                const data = await getSuggestedParticipantsAPI(userQueries);
+                dispatch({ type: PARTICIPANT_FETCH_DATA, payload: data });
+                dispatch({
+                    type: PARTICIPANT_INVITATION_LIST_EMAIL,
+                    payload: data
+                });
+            } catch (error) {
+                console.log(error);
+            }
+            setParticipantIsFetching(false, dispatch);
+            break;
     }
-    setPartiticpantIsLoading(false, dispatch);
 };
 
 export const setInvalidAndVerifyParticipant = (userReq) => async (dispatch) => {
