@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { cusResponse } = require('../utils');
+const CryptoJS = require('crypto-js');
 
 const auth = async (req, res, next) => {
     try {
@@ -31,10 +32,12 @@ const auth = async (req, res, next) => {
             return cusResponse(res, 401, null, {
                 authentication: 'User session is expired'
             });
-        } else {
+        } else if (error.name === 'JsonWebTokenError') {
             return cusResponse(res, 401, null, {
                 authentication: 'Access Denied'
             });
+        } else {
+            console.log(error);
         }
     }
 };
