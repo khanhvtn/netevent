@@ -84,7 +84,8 @@ const EventManagement = () => {
         ...initialState,
         isRecycleMode: history.location.state?.isRecycleMode
             ? history.location.state?.isRecycleMode
-            : false
+            : false,
+        page: history.location.state?.page ? history.location.state?.page : 1
     });
     const [filters, setFilters] = useState(filterState);
 
@@ -226,6 +227,7 @@ const EventManagement = () => {
             pathname: `/dashboard/creator/event-detail/${event.urlCode}`,
             state: {
                 from: '/dashboard/creator/event-management',
+                page: state.page,
                 isRecycleMode: state.isRecycleMode
             }
         });

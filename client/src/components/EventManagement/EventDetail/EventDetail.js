@@ -267,6 +267,7 @@ const EventDetail = () => {
             pathname: `/registration/${state.event.urlCode}`,
             state: {
                 from: '/dashboard/creator/event-detail',
+                page: history.location.state?.page,
                 event: {
                     ...state.event,
                     taskListId: tasks
@@ -280,7 +281,8 @@ const EventDetail = () => {
     const handleOnClickReturn = () => {
         setState(initialState);
         let defaultHistoryState = {
-            isUpdated: state.isUpdated
+            isUpdated: state.isUpdated,
+            page: history.location.state?.page
         };
         //add isRecycleMode into history state if it exists
         if (history.location.state?.isRecycleMode) {
