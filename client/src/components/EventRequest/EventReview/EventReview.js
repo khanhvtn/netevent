@@ -650,6 +650,13 @@ const EventReview = () => {
                                                                         {`${moment(
                                                                             task.startDate
                                                                         ).format(
+                                                                            'DD MMM, YYYY'
+                                                                        )}`}
+                                                                    </Typography>
+                                                                    <Typography variant="body2">
+                                                                        {`${moment(
+                                                                            task.startDate
+                                                                        ).format(
                                                                             'LT'
                                                                         )}`}
                                                                     </Typography>
@@ -667,6 +674,13 @@ const EventReview = () => {
                                                                                 'bold'
                                                                         }}>
                                                                         To
+                                                                    </Typography>
+                                                                    <Typography variant="body2">
+                                                                        {`${moment(
+                                                                            task.endDate
+                                                                        ).format(
+                                                                            'DD MMM, YYYY'
+                                                                        )}`}
                                                                     </Typography>
                                                                     <Typography variant="body2">
                                                                         {`${moment(

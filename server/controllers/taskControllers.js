@@ -165,30 +165,16 @@ const filter = async (req, res, next) => {
             }
         };
 
-        /* 
-        Variable page default is 1
-         */
-        const page = parseInt(req.query.page) || 1;
-
-        /* 
-        Variable total task based on search and filter
-         */
-        const totalTask = await Task.find(queryOptions).countDocuments();
-
-        let totalPages = (totalTask / options.take).toString().includes('.')
-            ? Math.ceil(totalTask / options.take)
-            : totalTask / options.take;
-
         //return data to client
         const tasks = await Task.find(queryOptions)
             .populate({
                 path: 'userId eventId'
             })
-            .sort({ updatedAt: -1 })
-            .skip((page - 1) * options.take)
-            .limit(options.take);
+            .sort({ updatedAt: -1 });
 
-        return cusResponse(res, 200, tasks, null, totalPages);
+        const filterTasks = tasks.filter((task) => task.eventId);
+
+        return cusResponse(res, 200, filterTasks, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
     }
