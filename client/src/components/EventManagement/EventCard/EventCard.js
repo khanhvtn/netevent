@@ -81,6 +81,22 @@ const EventCard = ({ onClickEvent, isLoading, event }) => {
                                     } participants`
                                 )}
                             </Typography>
+                            <div>
+                                <Typography
+                                    variant="caption"
+                                    color="textSecondary"
+                                    noWrap>
+                                    {isLoading ? (
+                                        <Skeleton variant="text" width="20%" />
+                                    ) : (
+                                        `${
+                                            event.ownerId
+                                                ? event.ownerId.email
+                                                : 'N/A'
+                                        }`
+                                    )}
+                                </Typography>
+                            </div>
                         </CardContent>
 
                         {/* startDate, endDate, tags, location and eventTypeId */}

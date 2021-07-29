@@ -135,7 +135,8 @@ const useToolbarStyles = makeStyles((theme) => ({
         fontWeight: 'bold'
     },
     normalText: {
-        textTransform: 'none'
+        textTransform: 'none',
+        maxWidth: '120px'
     }
 }));
 
@@ -180,6 +181,7 @@ const EnhancedTableToolbar = (props) => {
                 <>
                     {recoveryMode && (
                         <Button
+                            fullWidth
                             className={classes.normalText}
                             disabled={
                                 constrainRangeDate === undefined ||
@@ -197,7 +199,7 @@ const EnhancedTableToolbar = (props) => {
                             endIcon={!isRecoveryMode && <Delete />}
                             variant="contained"
                             color={isRecoveryMode ? 'default' : 'secondary'}>
-                            {isRecoveryMode ? 'Close' : 'Bin'}
+                            {isRecoveryMode ? 'Close' : 'Open Bin'}
                         </Button>
                     )}
 

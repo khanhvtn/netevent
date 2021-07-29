@@ -233,8 +233,9 @@ export const getSuggestedParticipantsAPI = (userQueries) => {
     const eventCodeQuery = `eventCode=${
         userQueries?.eventCode ? userQueries.eventCode : ''
     }`;
+    const pageQuery = `page=${userQueries?.page ? userQueries.page : ''}`;
 
-    return AXIOS.get(`/participant/suggest?${eventCodeQuery}`);
+    return AXIOS.get(`/participant/suggest?${eventCodeQuery}&${pageQuery}`);
 };
 
 export const inviteParticipantAPI = (email, eventCode) => {

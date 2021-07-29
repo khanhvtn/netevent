@@ -127,6 +127,9 @@ const EventReview = () => {
                     ...prevState,
                     isUpdated: true
                 }));
+                history.push({
+                    state: { from: '/dashboard/reviewer/event-request' }
+                });
             }
         }
     }, [dispatch, history, state.event, state.previousPath, code]);
@@ -658,6 +661,13 @@ const EventReview = () => {
                                                                         {`${moment(
                                                                             task.startDate
                                                                         ).format(
+                                                                            'DD MMM, YYYY'
+                                                                        )}`}
+                                                                    </Typography>
+                                                                    <Typography variant="body2">
+                                                                        {`${moment(
+                                                                            task.startDate
+                                                                        ).format(
                                                                             'LT'
                                                                         )}`}
                                                                     </Typography>
@@ -675,6 +685,13 @@ const EventReview = () => {
                                                                                 'bold'
                                                                         }}>
                                                                         To
+                                                                    </Typography>
+                                                                    <Typography variant="body2">
+                                                                        {`${moment(
+                                                                            task.endDate
+                                                                        ).format(
+                                                                            'DD MMM, YYYY'
+                                                                        )}`}
                                                                     </Typography>
                                                                     <Typography variant="body2">
                                                                         {`${moment(
@@ -932,6 +949,19 @@ const EventReview = () => {
                                             )
                                         )}
                                     </div>
+                                </Grid>
+
+                                <Grid className={css.mt36} item>
+                                    <Typography
+                                        style={{ fontWeight: 'bold' }}
+                                        variant="h6">
+                                        Creator
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {state.event?.ownerId
+                                            ? state.event?.ownerId.email
+                                            : 'N/A'}
+                                    </Typography>
                                 </Grid>
 
                                 {/* Reviewer */}

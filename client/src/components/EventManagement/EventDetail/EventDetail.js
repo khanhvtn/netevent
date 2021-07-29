@@ -47,6 +47,7 @@ import EventCheckingCompletedDialog from '../EventDialog/EventCheckingCompletedD
 import NotificationHistory from './NotificationHistory/NotificationHistory';
 import Image from 'material-ui-image';
 import useStyles from './styles';
+import { ERROR_CLEAR } from '../../../constants';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -145,6 +146,9 @@ const EventDetail = () => {
                     ...prevState,
                     isUpdated: true
                 }));
+                history.push({
+                    state: { from: '/dashboard/creator/event-management' }
+                });
             }
         }
         return;
@@ -266,6 +270,7 @@ const EventDetail = () => {
             pathname: `/registration/${state.event.urlCode}`,
             state: {
                 from: '/dashboard/creator/event-detail',
+                page: history.location.state?.page,
                 event: {
                     ...state.event,
                     taskListId: tasks
@@ -279,7 +284,8 @@ const EventDetail = () => {
     const handleOnClickReturn = () => {
         setState(initialState);
         let defaultHistoryState = {
-            isUpdated: state.isUpdated
+            isUpdated: state.isUpdated,
+            page: history.location.state?.page
         };
         //add isRecycleMode into history state if it exists
         if (history.location.state?.isRecycleMode) {
@@ -341,12 +347,23 @@ const EventDetail = () => {
         }));
     };
 
-    const handleToggleDialogUpdate = useCallback(() => {
-        setState((prevState) => ({
-            ...prevState,
-            openUpdateDialog: !prevState.openUpdateDialog
-        }));
-    }, []);
+    const handleToggleDialogUpdate = useCallback(
+        (action) => {
+            setState((prevState) => ({
+                ...prevState,
+                openUpdateDialog: !prevState.openUpdateDialog
+            }));
+
+            //clear all error
+            if (action) {
+                dispatch({
+                    type: ERROR_CLEAR,
+                    payload: null
+                });
+            }
+        },
+        [dispatch]
+    );
 
     const handleToggleDialogCheckingCompleted = () => {
         setState((prevState) => ({
@@ -815,6 +832,13 @@ const EventDetail = () => {
                                                                         {`${moment(
                                                                             task.startDate
                                                                         ).format(
+                                                                            'DD MMM, YYYY'
+                                                                        )}`}
+                                                                    </Typography>
+                                                                    <Typography variant="body2">
+                                                                        {`${moment(
+                                                                            task.startDate
+                                                                        ).format(
                                                                             'LT'
                                                                         )}`}
                                                                     </Typography>
@@ -832,6 +856,13 @@ const EventDetail = () => {
                                                                                 'bold'
                                                                         }}>
                                                                         To
+                                                                    </Typography>
+                                                                    <Typography variant="body2">
+                                                                        {`${moment(
+                                                                            task.endDate
+                                                                        ).format(
+                                                                            'DD MMM, YYYY'
+                                                                        )}`}
                                                                     </Typography>
                                                                     <Typography variant="body2">
                                                                         {`${moment(
@@ -1089,6 +1120,19 @@ const EventDetail = () => {
                                             )
                                         )}
                                     </div>
+                                </Grid>
+
+                                <Grid className={css.mt36} item>
+                                    <Typography
+                                        style={{ fontWeight: 'bold' }}
+                                        variant="h6">
+                                        Creator
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {state.event?.ownerId
+                                            ? state.event?.ownerId.email
+                                            : 'N/A'}
+                                    </Typography>
                                 </Grid>
 
                                 {/* Reviewer */}

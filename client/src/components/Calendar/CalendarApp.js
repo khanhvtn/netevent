@@ -34,18 +34,15 @@ const CalendarApp = ({ targetRole }) => {
     }));
     const localizer = momentLocalizer(moment);
     useEffect(() => {
-        if (!history.location.state || history.location.state?.isUpdated) {
-            if (targetRole === 4) {
-                dispatch(getTasks({ userId }));
-            }
-            if (targetRole === 3) {
-                dispatch(getEvents({ ownerId: userId, isDeleted: false }));
-            }
-            if (targetRole === 2) {
-                dispatch(getEvents({ isDeleted: false }));
-            }
+        if (targetRole === 4) {
+            dispatch(getTasks({ userId }));
         }
-        history.replace();
+        if (targetRole === 3) {
+            dispatch(getEvents({ ownerId: userId, isDeleted: false }));
+        }
+        if (targetRole === 2) {
+            dispatch(getEvents({ isDeleted: false }));
+        }
     }, [dispatch, history, userId, targetRole]);
 
     //useEffect for create event success
@@ -166,6 +163,37 @@ const CalendarApp = ({ targetRole }) => {
                                 opacity: 0.9
                             }
                         };
+
+                        if (targetRole === 4) {
+                            if (new Date() > date.end) {
+                                styleTemplate = {
+                                    ...styleTemplate,
+                                    style: {
+                                        ...styleTemplate.style,
+                                        backgroundColor: `#e53935`
+                                    }
+                                };
+                            } else if (new Date() < date.start) {
+                                styleTemplate = {
+                                    ...styleTemplate,
+                                    style: {
+                                        ...styleTemplate.style,
+                                        backgroundColor: `#5c6bc0`
+                                    }
+                                };
+                            } else {
+                                styleTemplate = {
+                                    ...styleTemplate,
+                                    style: {
+                                        ...styleTemplate.style,
+                                        backgroundColor: `#4caf50`
+                                    }
+                                };
+                            }
+
+                            return styleTemplate;
+                        }
+
                         const { isApproved, isFinished } = date.resource;
                         /* Approve Status
                                 Null is pending and color is yellow

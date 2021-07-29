@@ -16,7 +16,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { getFacilityHistories } from '../../actions/facilityHistoryActions';
 import { getFacility } from '../../actions/facilityActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { ERROR_CLEAR } from '../../constants';
+import { ERROR_CLEAR, FACILITY_HISTORY_LOADING } from '../../constants';
 import FacilityHistoryFilter from './FacilityHistoryFilter/FacilityHistoryFilter';
 import FacilityHistoryPagination from './FacilityHistoryPagination/FacilityHistoryPagination';
 import FacilityHistoryTable from './FacilityHistoryTable/FacilityHistoryTable';
@@ -77,6 +77,13 @@ const FacilityUsageHistory = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const { id } = useParams();
+
+    /* state for searching */
+    const [timeOutForSearch, setTimeOutForSearch] = useState({
+        key: '',
+        timeoutFunc: null
+    });
+
     const {
         facilityHistories,
         totalPages,
@@ -93,6 +100,12 @@ const FacilityUsageHistory = () => {
 
     //useEffect
     useEffect(() => {
+        if (!history.location.state?.from) {
+            history.push({
+                state: { from: '/dashboard/reviewer/facility-usage' }
+            });
+        }
+
         dispatch(
             getFacilityHistories({
                 id: id,
@@ -129,7 +142,8 @@ const FacilityUsageHistory = () => {
         state.borrowFrom,
         state.borrowTo,
         state.returnFrom,
-        state.returnTo
+        state.returnTo,
+        history
     ]);
 
     //Get Selected Facility
@@ -137,20 +151,31 @@ const FacilityUsageHistory = () => {
         dispatch(getFacility(id));
     }, [id, dispatch]);
 
-    const handleChange = (e) => {
+    const handleChangeSearch = (e) => {
         const { name, value } = e.target;
-        if (name === 'search' || name === 'take') {
-            return setState((prevState) => ({
+        setTimeOutForSearch((prevState) => {
+            dispatch({
+                type: FACILITY_HISTORY_LOADING,
+                payload: true
+            });
+            if (prevState.timeoutFunc) {
+                clearTimeout(timeOutForSearch.timeoutFunc);
+            }
+            const newTimeoutFunc = setTimeout(() => {
+                setState((prevState) => ({
+                    ...prevState,
+                    search: value,
+                    page: 1
+                }));
+            }, 2000);
+            return {
                 ...prevState,
                 [name]: value,
-                page: 1
-            }));
-        }
-        setState((prevState) => ({
-            ...prevState,
-            [name]: value
-        }));
+                timeoutFunc: newTimeoutFunc
+            };
+        });
     };
+
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prevState) => ({
@@ -204,7 +229,8 @@ const FacilityUsageHistory = () => {
     const handleOnClickReturn = () => {
         setState(initialState);
         return history.push({
-            pathname: `/dashboard/reviewer/facility-usage`
+            pathname: `/dashboard/reviewer/facility-usage`,
+            page: history.location.state?.page
         });
     };
 
@@ -223,11 +249,11 @@ const FacilityUsageHistory = () => {
                                         <SearchIcon />
                                     </div>
                                     <InputBase
-                                        onChange={handleChange}
+                                        onChange={handleChangeSearch}
                                         className={css.inputInput}
                                         placeholder="Search by event name"
-                                        name="search"
-                                        value={state.search}
+                                        name="key"
+                                        value={timeOutForSearch.key}
                                         inputProps={{
                                             'aria-label': 'search'
                                         }}

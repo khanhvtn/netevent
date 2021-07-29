@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 //import makeStyles in the last
 import useStyles from './styles';
-import { ERROR_CLEAR } from '../../constants';
+import { ERROR_CLEAR, EVENT_TYPE_LOADING } from '../../constants';
 import DataTable from '../MainTable/DataTable/DataTable';
 import EventFilter from './EventFilter/EventFilter';
 import Notification from '../Notification/Notification';
@@ -83,6 +83,10 @@ const EventType = () => {
     const [filters, setFilters] = useState(filterState);
     const [isRecoveryMode, setIsRecoveryMode] = useState(false);
     const [selected, setSelected] = useState([]);
+    const [timeOutForSearch, setTimeOutForSearch] = useState({
+        key: '',
+        timeoutFunc: null
+    });
 
     //userEffect to toggle notification for recovery success
     useEffect(() => {
@@ -296,7 +300,7 @@ const EventType = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'search' || name === 'take') {
+        if (name === 'take') {
             return setState((prevState) => ({
                 ...prevState,
                 [name]: value,
@@ -307,6 +311,30 @@ const EventType = () => {
             ...prevState,
             [name]: value
         }));
+    };
+    const handleChangeSearch = (e) => {
+        const { name, value } = e.target;
+        setTimeOutForSearch((prevState) => {
+            dispatch({
+                type: EVENT_TYPE_LOADING,
+                payload: true
+            });
+            if (prevState.timeoutFunc) {
+                clearTimeout(timeOutForSearch.timeoutFunc);
+            }
+            const newTimeoutFunc = setTimeout(() => {
+                setState((prevState) => ({
+                    ...prevState,
+                    search: value,
+                    page: 1
+                }));
+            }, 2000);
+            return {
+                ...prevState,
+                [name]: value,
+                timeoutFunc: newTimeoutFunc
+            };
+        });
     };
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -439,11 +467,11 @@ const EventType = () => {
                                         <SearchIcon />
                                     </div>
                                     <InputBase
-                                        onChange={handleChange}
+                                        onChange={handleChangeSearch}
                                         className={css.inputInput}
-                                        placeholder="Search by name, code, type"
-                                        name="search"
-                                        value={state.search}
+                                        placeholder="Search by name"
+                                        name="key"
+                                        value={timeOutForSearch.key}
                                         inputProps={{
                                             'aria-label': 'search'
                                         }}

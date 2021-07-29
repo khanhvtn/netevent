@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 //import makeStyles in the last
 import useStyles from './styles';
-import { ERROR_CLEAR } from '../../constants';
+import { ERROR_CLEAR, FACILITY_LOADING } from '../../constants';
 import FacilityFilter from './FacilityFilter/FacilityFilter';
 import FacilityDialog from './FacilityDialog/FacilityDialog';
 import PaginationTable from '../MainTable/PaginationTable/PaginationTable';
@@ -117,6 +117,12 @@ const Facility = () => {
     const [filters, setFilters] = useState(filterState);
     const [selected, setSelected] = useState([]);
     const [isRecoveryMode, setIsRecoveryMode] = useState(false);
+
+    /* state for searching */
+    const [timeOutForSearch, setTimeOutForSearch] = useState({
+        key: '',
+        timeoutFunc: null
+    });
 
     //userEffect to toggle notification for recovery success
     useEffect(() => {
@@ -328,7 +334,7 @@ const Facility = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'search' || name === 'take') {
+        if (name === 'take') {
             return setState((prevState) => ({
                 ...prevState,
                 [name]: value,
@@ -339,6 +345,31 @@ const Facility = () => {
             ...prevState,
             [name]: value
         }));
+    };
+
+    const handleChangeSearch = (e) => {
+        const { name, value } = e.target;
+        setTimeOutForSearch((prevState) => {
+            dispatch({
+                type: FACILITY_LOADING,
+                payload: true
+            });
+            if (prevState.timeoutFunc) {
+                clearTimeout(timeOutForSearch.timeoutFunc);
+            }
+            const newTimeoutFunc = setTimeout(() => {
+                setState((prevState) => ({
+                    ...prevState,
+                    search: value,
+                    page: 1
+                }));
+            }, 2000);
+            return {
+                ...prevState,
+                [name]: value,
+                timeoutFunc: newTimeoutFunc
+            };
+        });
     };
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -470,11 +501,11 @@ const Facility = () => {
                                         <SearchIcon />
                                     </div>
                                     <InputBase
-                                        onChange={handleChange}
+                                        onChange={handleChangeSearch}
                                         className={css.inputInput}
                                         placeholder="Search by name, code, type"
-                                        name="search"
-                                        value={state.search}
+                                        name="key"
+                                        value={timeOutForSearch.key}
                                         inputProps={{
                                             'aria-label': 'search'
                                         }}
@@ -513,6 +544,7 @@ const Facility = () => {
                                 updateSuccess={updateSuccess}
                                 tableName="List of Facilities"
                                 headCells={headCells}
+                                page={state.page}
                             />
                             {/* Facility Pagination */}
                             <PaginationTable

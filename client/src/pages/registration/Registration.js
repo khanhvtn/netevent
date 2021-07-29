@@ -158,6 +158,7 @@ const Registration = () => {
                         pathname: `/dashboard/creator/event-detail/${code}`,
                         state: {
                             from: `/dashboard/creator/event-management`,
+                            page: history.location.state?.page,
                             isReviewed: true
                         }
                     });
@@ -166,6 +167,7 @@ const Registration = () => {
                         pathname: `/dashboard/reviewer/event-review/${code}`,
                         state: {
                             from: `/dashboard/reviewer/event-request`,
+                            page: history.location.state?.page,
                             isReviewed: true
                         }
                     });
