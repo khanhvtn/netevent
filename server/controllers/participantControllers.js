@@ -5,7 +5,10 @@ const mongoose = require('mongoose');
 const { sendInvitation, sendEmail } = require('./misc/mailer');
 const qrCode = require('qrcode');
 const CryptoJS = require('crypto-js');
-const { eventInvitationTemplate } = require('../mail-template/template');
+const {
+    eventInvitationTemplate,
+    feedbackTemplate
+} = require('../mail-template/template');
 
 /**
  *  =====================================
@@ -626,8 +629,13 @@ const sendFeedbackToParticipants = async (req, res, next) => {
                 //
                 // Get feedback link
                 const urlCodeFeedback = saveFeedback.urlCode;
-                const urlFeedback = `/feedback/${urlCodeFeedback}`;
-                console.log(urlFeedback);
+                const urlFeedback = `feedback/${urlCodeFeedback}`;
+                await sendEmail(
+                    'noreply@netevent.com',
+                    participant.email,
+                    'Netcompany - We Would Love To Hear Your Feedback',
+                    feedbackTemplate(urlFeedback, participant)
+                );
             })
         );
 

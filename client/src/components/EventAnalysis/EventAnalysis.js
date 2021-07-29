@@ -99,7 +99,7 @@ const optionBarChart = {
     responsive: true,
     plugins: {
         legend: {
-            position: 'right'
+            position: 'top'
         }
     }
 };
@@ -194,7 +194,7 @@ const EventAnalysis = () => {
                 ],
                 datasets: [
                     {
-                        label: 'Number of Events',
+                        label: 'Number of events',
                         data: [
                             analysis.pendingEvents,
                             analysis.approvedEvents,
