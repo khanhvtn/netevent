@@ -47,6 +47,7 @@ import EventCheckingCompletedDialog from '../EventDialog/EventCheckingCompletedD
 import NotificationHistory from './NotificationHistory/NotificationHistory';
 import Image from 'material-ui-image';
 import useStyles from './styles';
+import { ERROR_CLEAR } from '../../../constants';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -338,12 +339,23 @@ const EventDetail = () => {
         }));
     };
 
-    const handleToggleDialogUpdate = useCallback(() => {
-        setState((prevState) => ({
-            ...prevState,
-            openUpdateDialog: !prevState.openUpdateDialog
-        }));
-    }, []);
+    const handleToggleDialogUpdate = useCallback(
+        (action) => {
+            setState((prevState) => ({
+                ...prevState,
+                openUpdateDialog: !prevState.openUpdateDialog
+            }));
+
+            //clear all error
+            if (action) {
+                dispatch({
+                    type: ERROR_CLEAR,
+                    payload: null
+                });
+            }
+        },
+        [dispatch]
+    );
 
     const handleToggleDialogCheckingCompleted = () => {
         setState((prevState) => ({
