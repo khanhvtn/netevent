@@ -940,6 +940,19 @@ const EventReview = () => {
                                     </div>
                                 </Grid>
 
+                                <Grid className={css.mt36} item>
+                                    <Typography
+                                        style={{ fontWeight: 'bold' }}
+                                        variant="h6">
+                                        Creator
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {state.event?.ownerId
+                                            ? state.event?.ownerId.email
+                                            : 'N/A'}
+                                    </Typography>
+                                </Grid>
+
                                 {/* Reviewer */}
                                 {state.event?.reviewerId?.email && (
                                     <Grid className={css.mt36} item>
