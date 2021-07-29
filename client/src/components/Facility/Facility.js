@@ -544,6 +544,7 @@ const Facility = () => {
                                 updateSuccess={updateSuccess}
                                 tableName="List of Facilities"
                                 headCells={headCells}
+                                page={state.page}
                             />
                             {/* Facility Pagination */}
                             <PaginationTable

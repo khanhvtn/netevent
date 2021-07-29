@@ -146,6 +146,9 @@ const EventDetail = () => {
                     ...prevState,
                     isUpdated: true
                 }));
+                history.push({
+                    state: { from: '/dashboard/creator/event-management' }
+                });
             }
         }
         return;

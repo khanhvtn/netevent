@@ -100,6 +100,12 @@ const FacilityUsageHistory = () => {
 
     //useEffect
     useEffect(() => {
+        if (!history.location.state?.from) {
+            history.push({
+                state: { from: '/dashboard/reviewer/facility-usage' }
+            });
+        }
+
         dispatch(
             getFacilityHistories({
                 id: id,
@@ -136,7 +142,8 @@ const FacilityUsageHistory = () => {
         state.borrowFrom,
         state.borrowTo,
         state.returnFrom,
-        state.returnTo
+        state.returnTo,
+        history
     ]);
 
     //Get Selected Facility
@@ -222,7 +229,8 @@ const FacilityUsageHistory = () => {
     const handleOnClickReturn = () => {
         setState(initialState);
         return history.push({
-            pathname: `/dashboard/reviewer/facility-usage`
+            pathname: `/dashboard/reviewer/facility-usage`,
+            page: history.location.state?.page
         });
     };
 

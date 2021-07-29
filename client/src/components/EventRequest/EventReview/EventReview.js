@@ -126,6 +126,9 @@ const EventReview = () => {
                     ...prevState,
                     isUpdated: true
                 }));
+                history.push({
+                    state: { from: '/dashboard/reviewer/event-request' }
+                });
             }
         }
     }, [dispatch, history, state.event, state.previousPath, code]);

@@ -91,7 +91,7 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired
 };
 
-const DataTable = ({ take, data, isLoading, headCells }) => {
+const DataTable = ({ take, data, isLoading, headCells, page }) => {
     const css = useStyles();
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
@@ -108,7 +108,8 @@ const DataTable = ({ take, data, isLoading, headCells }) => {
             pathname: `/dashboard/reviewer/facility-usage/${id}`,
             state: {
                 data: row,
-                from: '/dashboard/reviewer/facility-usage'
+                from: '/dashboard/reviewer/facility-usage',
+                page: page
             }
         });
     };
