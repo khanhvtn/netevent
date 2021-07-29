@@ -8,6 +8,10 @@ import {
     PARTICIPANT_INVITE,
     PARTICIPANT_SPINNER_INDEX,
     INVITATION_LOADING,
+    PARTICIPANT_SEND_FEEDBACK,
+    PARTICIPANT_SUBMIT_FEEBACK_LOADING,
+    PARTICIPANT_SUBMIT_SUCCESS,
+    PARTICIPANT_GET_FEEDBACK,
     PARTICIPANT_FETCHING,
     PARTICIPANT_FETCH_DATA,
     PARTICIPANT_SUGGESTED_LOADING
@@ -23,6 +27,9 @@ const initialState = {
     invitationListEmail: [],
     suggestedParticipants: [],
     spinnerIndex: null,
+    isSentFeedback: false,
+    feedback: null,
+    isSubmittedLoading: false,
     isFetching: false,
     isLoadingSuggestedParticipant: false
 };
@@ -69,7 +76,26 @@ export default function participantReducers(state = initialState, action) {
             };
         case PARTICIPANT_REGISTER:
             return { ...state, complete: action.payload };
-
+        case PARTICIPANT_SEND_FEEDBACK:
+            return {
+                ...state,
+                isSentFeedback: action.payload
+            };
+        case PARTICIPANT_SUBMIT_FEEBACK_LOADING:
+            return {
+                ...state,
+                isSubmittedLoading: action.payload
+            };
+        case PARTICIPANT_SUBMIT_SUCCESS:
+            return {
+                ...state,
+                feedback: action.payload.data?.data
+            };
+        case PARTICIPANT_GET_FEEDBACK:
+            return {
+                ...state,
+                feedback: action.payload.data?.data
+            };
         case PARTICIPANT_FETCH_DATA:
             return {
                 ...state,

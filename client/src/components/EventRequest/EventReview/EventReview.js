@@ -41,6 +41,7 @@ import AllParticipantTable from '../AllParticipantTable/AllParticipantTable';
 import useStyles from './styles';
 import Image from 'material-ui-image';
 import Analysis from '../Analysis/Analysis';
+import FeedbackAnalysis from '../FeedbackAnalysis/FeedbackAnalysis';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -322,6 +323,13 @@ const EventReview = () => {
                                     textColor="inherit"
                                     label="Analysis"
                                     {...a11yProps(3)}
+                                />
+                                <Tab
+                                    disableTouchRipple
+                                    className={css.tabDesign}
+                                    textColor="inherit"
+                                    label="Feedback"
+                                    {...a11yProps(4)}
                                 />
                             </Tabs>
                         </Grid>
@@ -993,12 +1001,22 @@ const EventReview = () => {
                     />
                 </TabPanel>
 
-                {/* Participant Tabs */}
+                {/* Analysis Tabs */}
                 <TabPanel value={tabs} index={3}>
                     <Analysis
                         eventId={state.event?._id}
                         tabs={tabs}
                         event={state.event}
+                    />
+                </TabPanel>
+
+                {/* Feedback Tabs */}
+                <TabPanel value={tabs} index={4}>
+                    <FeedbackAnalysis
+                        eventCode={state.event?.urlCode}
+                        eventId={state.event?._id}
+                        eventName={state.event?.eventName}
+                        tabs={tabs}
                     />
                 </TabPanel>
             </Paper>

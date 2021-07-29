@@ -587,7 +587,20 @@ const eventInvitationTemplate = (event) => {
       `;
 };
 
+const feedbackTemplate = (feedbackURL, participant) => {
+    return `
+  <h5>Dear ${participant.name}</h5>
+  <br>
+  <p>Thank you for joining our event!</p>
+  <p>We would love to hear all the valuable feedback from you.</p>
+  <p>Please access this link below and fill in your answers. We promise it won't take you so long.</p>
+  <b>${host}/${feedbackURL}</b>
+  <p>Have a lovely day!</p>
+  `;
+};
+
 module.exports = {
     html,
-    eventInvitationTemplate
+    eventInvitationTemplate,
+    feedbackTemplate
 };

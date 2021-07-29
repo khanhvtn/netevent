@@ -7,6 +7,7 @@ const Task = require('./taskModel');
 const FacilityHistory = require('./facilityHistoryModel');
 const Participant = require('./participantModel');
 const NotificationHistory = require('./notificationHistoryModel');
+const Feedback = require('./feedbackModel');
 module.exports = {
     //add models here
     User,
@@ -16,5 +17,6 @@ module.exports = {
     Task,
     Participant,
     FacilityHistory,
-    NotificationHistory
+    NotificationHistory,
+    Feedback
 };

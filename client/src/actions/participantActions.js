@@ -10,6 +10,10 @@ import {
     PARTICIPANT_INVITE,
     INVITATION_LOADING,
     PARTICIPANT_SPINNER_INDEX,
+    PARTICIPANT_SEND_FEEDBACK,
+    PARTICIPANT_SUBMIT_FEEBACK_LOADING,
+    PARTICIPANT_SUBMIT_SUCCESS,
+    PARTICIPANT_GET_FEEDBACK,
     PARTICIPANT_FETCHING,
     PARTICIPANT_FETCH_DATA,
     PARTICIPANT_SUGGESTED_LOADING
@@ -21,7 +25,10 @@ import {
     setInvalidAndVerifyParticipantAPI,
     getSuggestedParticipantsAPI,
     setAttendedParticipantByQrCodeAPI,
-    inviteParticipantAPI
+    inviteParticipantAPI,
+    sendParticipantsFeedbackAPI,
+    submitFeedbackAPI,
+    getFeedbackAPI
 } from '../api';
 
 //setIsLoading func is to set loading status
@@ -35,6 +42,13 @@ const setPartiticpantIsLoading = (status, dispatch) => {
 const setInvitationIsLoading = (status, dispatch) => {
     dispatch({
         type: INVITATION_LOADING,
+        payload: status
+    });
+};
+
+const setSubmitFeedbackIsLoading = (status, dispatch) => {
+    dispatch({
+        type: PARTICIPANT_SUBMIT_FEEBACK_LOADING,
         payload: status
     });
 };
@@ -68,10 +82,6 @@ export const registerParticipant = (participantData) => async (dispatch) => {
         dispatch({
             type: PARTICIPANT_REGISTER,
             payload: true
-        });
-        dispatch({
-            type: PARTICIPANT_LOADING,
-            payload: false
         });
 
         setTimeout(() => {
@@ -252,3 +262,62 @@ export const inviteParticipant =
         dispatch({ type: PARTICIPANT_SPINNER_INDEX, payload: null });
         setInvitationIsLoading(false, dispatch);
     };
+
+export const sendParticipantsFeedback = (eventCode) => async (dispatch) => {
+    try {
+        await sendParticipantsFeedbackAPI(eventCode);
+        dispatch({
+            type: PARTICIPANT_SEND_FEEDBACK,
+            payload: true
+        });
+
+        setTimeout(() => {
+            dispatch({
+                type: PARTICIPANT_SEND_FEEDBACK,
+                payload: false
+            });
+        }, 3000);
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+export const submitFeedback = (submitForm) => async (dispatch) => {
+    setSubmitFeedbackIsLoading(true, dispatch);
+    try {
+        const data = await submitFeedbackAPI(submitForm);
+
+        dispatch({
+            type: ERROR_CLEAR,
+            payload: null
+        });
+
+        dispatch({
+            type: PARTICIPANT_SUBMIT_SUCCESS,
+            payload: data
+        });
+    } catch (error) {
+        if (error.response?.data?.errors) {
+            dispatch({
+                type: ERROR,
+                payload: error.response.data?.errors
+            });
+        }
+        console.log(error);
+    }
+    setSubmitFeedbackIsLoading(false, dispatch);
+};
+
+export const getFeedback = (code) => async (dispatch) => {
+    setPartiticpantIsLoading(true, dispatch);
+    try {
+        const data = await getFeedbackAPI(code);
+        dispatch({
+            type: PARTICIPANT_GET_FEEDBACK,
+            payload: data
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+    setPartiticpantIsLoading(false, dispatch);
+};

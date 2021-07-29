@@ -320,11 +320,14 @@ const EventDetail = () => {
     // Handle Update Event Status
     const handleUpdateEventStatus = () => {
         dispatch(
-            updateEventStatus({
-                eventId: state.event?._id,
-                status: true,
-                action: 'finish'
-            })
+            updateEventStatus(
+                {
+                    eventId: state.event?._id,
+                    status: true,
+                    action: 'finish'
+                },
+                { code: state.event?.urlCode }
+            )
         );
     };
 
