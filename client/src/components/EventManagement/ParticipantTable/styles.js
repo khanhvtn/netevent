@@ -33,5 +33,8 @@ export default makeStyles(() => ({
     },
     selected: {
         backgroundColor: '#eceef7 !important'
+    },
+    normalText: {
+        textTransform: 'none'
     }
 }));

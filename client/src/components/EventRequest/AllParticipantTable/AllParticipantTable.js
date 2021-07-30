@@ -17,6 +17,7 @@ import ParticipantFilter from '../../EventManagement/ParticipantFilter/Participa
 import SystemNotification from '../../Notification/Notification';
 import { getParticipants } from '../../../actions/participantActions';
 import { PARTICIPANT_LOADING } from '../../../constants';
+import ReviewParticipantDialog from '../../EventManagement/EventDetail/VerifyTable/ReviewParticipantDialog/ReviewParticipantDialog';
 
 const initialState = {
     search: '',
@@ -29,7 +30,9 @@ const initialState = {
     status: '',
     isParticipantUpdated: false,
     checkInMode: false,
-    openUpdateSnackBar: false
+    openUpdateSnackBar: false,
+    openReviewParticipantDialog: false,
+    participant: null
 };
 
 const filterState = {
@@ -157,6 +160,23 @@ const AllParticipantTable = ({ eventId, tabs }) => {
         setSelected([]);
     };
 
+    const handleToggleDialogReviewParticipant = (e, participant) => {
+        e.stopPropagation();
+        setState((prevState) => ({
+            ...prevState,
+            participant: participant,
+            openReviewParticipantDialog: !prevState.openReviewParticipantDialog
+        }));
+    };
+
+    const handleCloseDialogReviewParticipant = () => {
+        setState((prevState) => ({
+            ...prevState,
+            participant: null,
+            openReviewParticipantDialog: !prevState.openReviewParticipantDialog
+        }));
+    };
+
     return (
         <AppBar elevation={0} position="static" color="default">
             <Grid container direction="column">
@@ -191,6 +211,9 @@ const AllParticipantTable = ({ eventId, tabs }) => {
                     take={state.take}
                     selected={selected}
                     setSelected={setSelected}
+                    handleToggleDialogReviewParticipant={
+                        handleToggleDialogReviewParticipant
+                    }
                 />
 
                 <ParticipantPagination
@@ -210,6 +233,16 @@ const AllParticipantTable = ({ eventId, tabs }) => {
                     handleFilterChange={handleFilterChange}
                     handleApplyFilter={handleApplyFilter}
                     handleClearFilter={handleClearFilter}
+                />
+
+                <ReviewParticipantDialog
+                    openReviewParticipantDialog={
+                        state.openReviewParticipantDialog
+                    }
+                    handleCloseDialogReviewParticipant={
+                        handleCloseDialogReviewParticipant
+                    }
+                    participant={state.participant}
                 />
 
                 {/* Notification */}
