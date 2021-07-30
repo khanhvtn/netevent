@@ -43,7 +43,7 @@ const CalendarApp = ({ targetRole }) => {
         if (targetRole === 2) {
             dispatch(getEvents({ isDeleted: false }));
         }
-    }, [dispatch, history, userId, targetRole]);
+    }, [dispatch, userId, targetRole]);
 
     //useEffect for create event success
     useEffect(() => {

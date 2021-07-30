@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const mongoStore = require('connect-mongo');
 const path = require('path');
 const app = express();
 const {
@@ -15,13 +17,29 @@ const {
 } = require('./routes');
 const cors = require('cors');
 const { errorHandler } = require('./middlewares');
-const cookieParser = require('cookie-parser');
 
 /**
  *  =====================================
  *          NETEVENT APP SERVER
  *  =====================================
  */
+
+//connect to mongodb
+const port = process.env.PORT || 5000;
+const MONGO_URI =
+    process.env.CONNECTION_URL_HOST || `mongodb://localhost:27017`;
+
+const dbConnection = mongoose
+    .connect(MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+        useCreateIndex: true
+    })
+    .then((m) => {
+        console.log(`Connect to DB success`);
+        return m.connection.getClient();
+    });
 
 //middlewares
 app.use(express.json({ limit: '30mb' }));
@@ -32,11 +50,26 @@ app.use(
         origin: process.env.DEFAULT_HOST || 'http://localhost:3000'
     })
 );
-app.use(cookieParser());
+//config session
+app.use(
+    session({
+        name: process.env.SESS_NAME,
+        secret: process.env.SECRET_KEY,
+        resave: false,
+        saveUninitialized: false,
+        store: mongoStore.create({
+            clientPromise: dbConnection,
+            ttl: parseInt(process.env.SESS_LIFETIME) * 24 * 60 * 60 // (24 * 60 * 60) = 1 day
+        }),
+        cookie: {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: parseInt(process.env.SESS_LIFETIME) * 24 * 60 * 60 * 1000 // (24 * 60 * 60 * 1000) = 24h
+        }
+    })
+);
 
 //routes
-
-//test route
 app.get('/test', (req, res) => {
     res.status(200).json({ message: 'success' });
 });
@@ -61,29 +94,13 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 
-//error handler
+//use error handler
 app.use(errorHandler);
-
-const port = process.env.PORT || 5000;
-const MONGO_URI =
-    process.env.CONNECTION_URL_HOST || `mongodb://localhost:27017`;
-mongoose.connect(
-    MONGO_URI,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false,
-        useCreateIndex: true
-    },
-    (err) => {
-        if (err) {
-            return console.log(err);
-        }
-        console.log(`Connect to DB success`);
-        app.listen(port, () =>
-            console.log(`Server is running on port ${port}`)
-        );
-    }
-);
-
+dbConnection
+    .then(() =>
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        })
+    )
+    .catch((err) => console.error('Error connecting to db:', err));
 module.exports = app;
