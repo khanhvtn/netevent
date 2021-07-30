@@ -2,11 +2,9 @@ const { User } = require('../models');
 const Link = require('../models/linkModel');
 const { cusResponse } = require('../utils');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const CustomError = require('../class/CustomError');
 const { sendEmail } = require('./misc/mailer');
 const { html } = require('../mail-template/template');
-const CryptoJS = require('crypto-js');
 
 /**
  *  =====================================
@@ -49,28 +47,12 @@ const login = async (req, res, next) => {
             return next(defaultErrorMessage);
         }
 
-        //gen token
-        const token = jwt.sign(
-            {
-                id: existedUser._id,
-                email: existedUser.email,
-                role: existedUser.role
-            },
-            process.env.SECRET_KEY,
-            { expiresIn: '1h' }
-        );
-
-        //encrypt token
-        const encryptedToken = CryptoJS.AES.encrypt(
-            token,
-            process.env.SECRET_KEY
-        ).toString();
-
-        res.cookie('token', encryptedToken, {
-            secure: true,
-            expires: new Date(Date.now() + 1 * 60 * 60 * 1000), //expire in 1h
-            httpOnly: true
-        });
+        //add new session
+        req.session.user = {
+            id: existedUser._id,
+            email: existedUser.email,
+            role: existedUser.role
+        };
 
         //response token to client
         return cusResponse(
@@ -116,8 +98,14 @@ const fetchCurrentUser = async (req, res, next) => {
  */
 const userCheck = async (req, res, next) => {
     try {
+        if (req.session.user) {
+            return cusResponse(res, 200, req.session.user, null);
+        } else {
+            return next(
+                new CustomError(500, { authentication: 'Access Denied' })
+            );
+        }
         //response user info to client
-        return cusResponse(res, 200, req.user, null);
     } catch (error) {
         return next(new CustomError(500, { sysError: error.message }));
     }
@@ -132,10 +120,12 @@ const userCheck = async (req, res, next) => {
  */
 const logout = async (req, res, next) => {
     try {
-        //clear token
-        res.clearCookie('token');
-        //response user info to client
-        return cusResponse(res, 200, null, null);
+        req.session.destroy((err) => {
+            if (err) throw err;
+            res.clearCookie(process.env.SESS_NAME);
+            //response user info to client
+            return cusResponse(res, 200, null, null);
+        });
     } catch (error) {
         return next(new CustomError(500, { sysError: error.message }));
     }

@@ -17,7 +17,6 @@ const {
 } = require('./routes');
 const cors = require('cors');
 const { errorHandler } = require('./middlewares');
-const cookieParser = require('cookie-parser');
 
 /**
  *  =====================================
@@ -40,8 +39,7 @@ const dbConnection = mongoose
     .then((m) => {
         console.log(`Connect to DB success`);
         return m.connection.getClient();
-    })
-    .catch((err) => console.error('Error connecting to db:', err));
+    });
 
 //middlewares
 app.use(express.json({ limit: '30mb' }));
@@ -52,16 +50,22 @@ app.use(
         origin: process.env.DEFAULT_HOST || 'http://localhost:3000'
     })
 );
-app.use(cookieParser());
 //config session
 app.use(
     session({
+        name: process.env.SESS_NAME,
         secret: process.env.SECRET_KEY,
         resave: false,
         saveUninitialized: false,
         store: mongoStore.create({
-            clientPromise: dbConnection
-        })
+            clientPromise: dbConnection,
+            ttl: parseInt(process.env.SESS_LIFETIME) * 24 * 60 * 60 // (24 * 60 * 60) = 1 day
+        }),
+        cookie: {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: parseInt(process.env.SESS_LIFETIME) * 24 * 60 * 60 * 1000 // (24 * 60 * 60 * 1000) = 24h
+        }
     })
 );
 
@@ -92,8 +96,11 @@ if (process.env.NODE_ENV === 'production') {
 
 //use error handler
 app.use(errorHandler);
-
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+dbConnection
+    .then(() =>
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        })
+    )
+    .catch((err) => console.error('Error connecting to db:', err));
 module.exports = app;
