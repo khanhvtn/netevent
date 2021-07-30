@@ -582,8 +582,7 @@ const Registration = () => {
                                                         <TextField
                                                             {...field}
                                                             disabled={
-                                                                isReviewed ||
-                                                                state.isRegisteredSuccess
+                                                                isReviewed
                                                             }
                                                             label="Full Name"
                                                             variant="outlined"
@@ -622,8 +621,7 @@ const Registration = () => {
                                                         <TextField
                                                             {...field}
                                                             disabled={
-                                                                isReviewed ||
-                                                                state.isRegisteredSuccess
+                                                                isReviewed
                                                             }
                                                             label="Email"
                                                             variant="outlined"
@@ -661,8 +659,7 @@ const Registration = () => {
                                                         <TextField
                                                             {...field}
                                                             disabled={
-                                                                isReviewed ||
-                                                                state.isRegisteredSuccess
+                                                                isReviewed
                                                             }
                                                             label="University"
                                                             variant="outlined"
@@ -707,8 +704,7 @@ const Registration = () => {
                                                                     : false
                                                             }
                                                             disabled={
-                                                                isReviewed ||
-                                                                state.isRegisteredSuccess
+                                                                isReviewed
                                                             }
                                                             margin="none"
                                                             className={
@@ -771,8 +767,7 @@ const Registration = () => {
                                                         <TextField
                                                             {...field}
                                                             disabled={
-                                                                isReviewed ||
-                                                                state.isRegisteredSuccess
+                                                                isReviewed
                                                             }
                                                             label="Major"
                                                             variant="outlined"
@@ -811,8 +806,7 @@ const Registration = () => {
                                                         <TextField
                                                             {...field}
                                                             disabled={
-                                                                isReviewed ||
-                                                                state.isRegisteredSuccess
+                                                                isReviewed
                                                             }
                                                             label="Phone"
                                                             variant="outlined"
@@ -856,8 +850,7 @@ const Registration = () => {
                                                             return (
                                                                 <KeyboardDatePicker
                                                                     disabled={
-                                                                        isReviewed ||
-                                                                        state.isRegisteredSuccess
+                                                                        isReviewed
                                                                     }
                                                                     error={
                                                                         errors[
@@ -910,8 +903,7 @@ const Registration = () => {
                                                             return (
                                                                 <KeyboardDatePicker
                                                                     disabled={
-                                                                        isReviewed ||
-                                                                        state.isRegisteredSuccess
+                                                                        isReviewed
                                                                     }
                                                                     error={
                                                                         errors[
@@ -950,6 +942,7 @@ const Registration = () => {
                                                     />
                                                 </MuiPickersUtilsProvider>
                                                 <CustomizeForm
+                                                    disabled={isReviewed}
                                                     getValues={getValues}
                                                     globalError={error}
                                                     errors={errors}

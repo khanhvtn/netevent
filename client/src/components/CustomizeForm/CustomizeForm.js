@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import useStyles from './styles';
 
-const CustomizeForm = ({ control, fieldList, errors, getValues }) => {
+const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
     const css = useStyles();
     const handleCheck = (title, value) => {
         const values = getValues();
@@ -68,6 +68,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues }) => {
                         }}
                         render={({ field }) => (
                             <TextField
+                                disabled={disabled}
                                 type={
                                     target.type === 'Text'
                                         ? 'text'
@@ -101,6 +102,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues }) => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
+                                            disabled={disabled}
                                             required={target.isRequired}
                                             {...field}
                                             color="primary"
@@ -142,6 +144,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues }) => {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
+                                                    disabled={disabled}
                                                     onChange={() =>
                                                         field.onChange(
                                                             handleCheck(
@@ -193,6 +196,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues }) => {
                                         (option, index) => {
                                             return (
                                                 <FormControlLabel
+                                                    disabled={disabled}
                                                     key={index}
                                                     value={option}
                                                     control={<Radio />}
@@ -225,6 +229,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues }) => {
                                 delete field.ref;
                                 return (
                                     <KeyboardDatePicker
+                                        disabled={disabled}
                                         inputVariant="outlined"
                                         required={target.isRequired}
                                         className={css.textField}
@@ -253,6 +258,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues }) => {
                         rules={{ required: target.isRequire }}
                         render={({ field }) => (
                             <TextField
+                                disabled={disabled}
                                 required={target.isRequired}
                                 value={field.value}
                                 onChange={(e) => field.onChange(e.target.value)}
