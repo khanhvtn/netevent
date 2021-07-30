@@ -22,6 +22,7 @@ import ParticipantFilter from '../../ParticipantFilter/ParticipantFilter';
 import SystemNotification from '../../../Notification/Notification';
 import InvitationDialog from './InvitationDialog/InviationDialog';
 import { PARTICIPANT_LOADING } from '../../../../constants';
+import ReviewParticipantDialog from './ReviewParticipantDialog/ReviewParticipantDialog';
 
 const initialState = {
     search: '',
@@ -34,7 +35,9 @@ const initialState = {
     isParticipantUpdated: false,
     checkInMode: false,
     openUpdateSnackBar: false,
-    openInvitationDialog: false
+    openInvitationDialog: false,
+    openReviewParticipantDialog: false,
+    participant: null
 };
 
 const filterState = {
@@ -222,6 +225,23 @@ const VerifyTable = ({ eventId, tabs }) => {
         }));
     };
 
+    const handleToggleDialogReviewParticipant = (e, participant) => {
+        e.stopPropagation();
+        setState((prevState) => ({
+            ...prevState,
+            participant: participant,
+            openReviewParticipantDialog: !prevState.openReviewParticipantDialog
+        }));
+    };
+
+    const handleCloseDialogReviewParticipant = () => {
+        setState((prevState) => ({
+            ...prevState,
+            participant: null,
+            openReviewParticipantDialog: !prevState.openReviewParticipantDialog
+        }));
+    };
+
     const handleInviteParticipant = (index, email, eventCode) => {
         dispatch(inviteParticipant(index, email, eventCode));
     };
@@ -260,6 +280,9 @@ const VerifyTable = ({ eventId, tabs }) => {
                     handleSetInvalid={handleSetInvalid}
                     handleSetVerified={handleSetVerified}
                     handleToggleDialogInvitation={handleToggleDialogInvitation}
+                    handleToggleDialogReviewParticipant={
+                        handleToggleDialogReviewParticipant
+                    }
                     checkInMode={state.checkInMode}
                     selected={selected}
                     setSelected={setSelected}
@@ -288,6 +311,16 @@ const VerifyTable = ({ eventId, tabs }) => {
                     openInvitationDialog={state.openInvitationDialog}
                     handleToggleDialogInvitation={handleToggleDialogInvitation}
                     handleInviteParticipant={handleInviteParticipant}
+                />
+
+                <ReviewParticipantDialog
+                    openReviewParticipantDialog={
+                        state.openReviewParticipantDialog
+                    }
+                    handleCloseDialogReviewParticipant={
+                        handleCloseDialogReviewParticipant
+                    }
+                    participant={state.participant}
                 />
 
                 {/* Notification */}
