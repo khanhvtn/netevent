@@ -41,7 +41,8 @@ import CustomizeForm from '../../components/CustomizeForm/CustomizeForm';
 
 const eventInitialState = {
     event: null,
-    isLoaded: false
+    isLoaded: false,
+    isRegisteredSuccess: false
 };
 
 const initialDescription =
@@ -139,6 +140,10 @@ const Registration = () => {
     // Handle success register
     useEffect(() => {
         if (registerSuccess) {
+            setState((prevState) => ({
+                ...prevState,
+                isRegisteredSuccess: !prevState.isRegisteredSuccess
+            }));
             handleClearField();
             reset();
         }
@@ -577,7 +582,8 @@ const Registration = () => {
                                                         <TextField
                                                             {...field}
                                                             disabled={
-                                                                isReviewed
+                                                                isReviewed ||
+                                                                state.isRegisteredSuccess
                                                             }
                                                             label="Full Name"
                                                             variant="outlined"
@@ -616,7 +622,8 @@ const Registration = () => {
                                                         <TextField
                                                             {...field}
                                                             disabled={
-                                                                isReviewed
+                                                                isReviewed ||
+                                                                state.isRegisteredSuccess
                                                             }
                                                             label="Email"
                                                             variant="outlined"
@@ -654,7 +661,8 @@ const Registration = () => {
                                                         <TextField
                                                             {...field}
                                                             disabled={
-                                                                isReviewed
+                                                                isReviewed ||
+                                                                state.isRegisteredSuccess
                                                             }
                                                             label="University"
                                                             variant="outlined"
@@ -699,7 +707,8 @@ const Registration = () => {
                                                                     : false
                                                             }
                                                             disabled={
-                                                                isReviewed
+                                                                isReviewed ||
+                                                                state.isRegisteredSuccess
                                                             }
                                                             margin="none"
                                                             className={
@@ -762,7 +771,8 @@ const Registration = () => {
                                                         <TextField
                                                             {...field}
                                                             disabled={
-                                                                isReviewed
+                                                                isReviewed ||
+                                                                state.isRegisteredSuccess
                                                             }
                                                             label="Major"
                                                             variant="outlined"
@@ -801,7 +811,8 @@ const Registration = () => {
                                                         <TextField
                                                             {...field}
                                                             disabled={
-                                                                isReviewed
+                                                                isReviewed ||
+                                                                state.isRegisteredSuccess
                                                             }
                                                             label="Phone"
                                                             variant="outlined"
@@ -844,6 +855,10 @@ const Registration = () => {
                                                             delete field.ref;
                                                             return (
                                                                 <KeyboardDatePicker
+                                                                    disabled={
+                                                                        isReviewed ||
+                                                                        state.isRegisteredSuccess
+                                                                    }
                                                                     error={
                                                                         errors[
                                                                             'DOB'
@@ -894,6 +909,10 @@ const Registration = () => {
                                                             delete field.ref;
                                                             return (
                                                                 <KeyboardDatePicker
+                                                                    disabled={
+                                                                        isReviewed ||
+                                                                        state.isRegisteredSuccess
+                                                                    }
                                                                     error={
                                                                         errors[
                                                                             'expectedGraduateDate'
@@ -943,26 +962,44 @@ const Registration = () => {
                                                             : []
                                                     }
                                                 />
-                                                <Button
-                                                    disabled={
-                                                        isRegistered ||
-                                                        isReviewed
-                                                    }
-                                                    className={
-                                                        css.registerButton
-                                                    }
-                                                    type="submit"
-                                                    color="primary"
-                                                    variant="contained">
-                                                    {isRegistered ? (
-                                                        <CircularProgress
-                                                            size={26}
-                                                            color="inherit"
-                                                        />
-                                                    ) : (
-                                                        'Register Now'
-                                                    )}
-                                                </Button>
+                                                {state.isRegisteredSuccess ? (
+                                                    <Button
+                                                        disabled={
+                                                            state.isRegisteredSuccess
+                                                        }
+                                                        className={
+                                                            css.registerButton
+                                                        }
+                                                        type="submit"
+                                                        style={{
+                                                            color: 'white',
+                                                            backgroundColor: `#4caf50`
+                                                        }}
+                                                        variant="contained">
+                                                        Register Successfully
+                                                    </Button>
+                                                ) : (
+                                                    <Button
+                                                        disabled={
+                                                            isRegistered ||
+                                                            isReviewed
+                                                        }
+                                                        className={
+                                                            css.registerButton
+                                                        }
+                                                        type="submit"
+                                                        color="primary"
+                                                        variant="contained">
+                                                        {isRegistered ? (
+                                                            <CircularProgress
+                                                                size={26}
+                                                                color="inherit"
+                                                            />
+                                                        ) : (
+                                                            'Register Now'
+                                                        )}
+                                                    </Button>
+                                                )}
                                             </FormControl>
                                         </form>
                                     </Container>

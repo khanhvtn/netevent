@@ -16,6 +16,7 @@ const {
     notificationHistoryRoutes
 } = require('./routes');
 const cors = require('cors');
+const morgan = require('morgan');
 const { errorHandler } = require('./middlewares');
 
 /**
@@ -43,6 +44,7 @@ const dbConnection = mongoose
 
 //middlewares
 app.use(express.json({ limit: '30mb' }));
+app.use(morgan('tiny'));
 app.use(express.urlencoded({ extended: true, limit: '30mb' }));
 app.use(
     cors({
