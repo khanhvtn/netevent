@@ -50,24 +50,28 @@ app.use(
         origin: process.env.DEFAULT_HOST || 'http://localhost:3000'
     })
 );
+
+let defaultSessionOptions = {
+    name: process.env.SESS_NAME,
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUninitialized: false,
+    store: mongoStore.create({
+        clientPromise: dbConnection,
+        ttl: parseInt(process.env.SESS_LIFETIME) * 24 * 60 * 60 // (24 * 60 * 60) = 1 day
+    }),
+    cookie: {
+        httpOnly: true,
+        maxAge: parseInt(process.env.SESS_LIFETIME) * 24 * 60 * 60 * 1000 // (24 * 60 * 60 * 1000) = 24h
+    }
+};
+
+if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1); // trust first proxy
+    defaultSessionOptions.cookie.secure = true; // serve secure cookies
+}
 //config session
-app.use(
-    session({
-        name: process.env.SESS_NAME,
-        secret: process.env.SECRET_KEY,
-        resave: false,
-        saveUninitialized: false,
-        store: mongoStore.create({
-            clientPromise: dbConnection,
-            ttl: parseInt(process.env.SESS_LIFETIME) * 24 * 60 * 60 // (24 * 60 * 60) = 1 day
-        }),
-        cookie: {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: parseInt(process.env.SESS_LIFETIME) * 24 * 60 * 60 * 1000 // (24 * 60 * 60 * 1000) = 24h
-        }
-    })
-);
+app.use(session(defaultSessionOptions));
 
 //routes
 app.get('/test', (req, res) => {
