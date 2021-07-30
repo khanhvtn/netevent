@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import moment from 'moment';
 import {
     Toolbar,
     Paper,
@@ -16,7 +15,9 @@ import {
     Typography,
     Button,
     Chip,
-    CircularProgress
+    CircularProgress,
+    IconButton,
+    Tooltip
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import VerifiedUserOutlinedIcon from '@material-ui/icons/VerifiedUserOutlined';
@@ -27,6 +28,7 @@ import { useSelector } from 'react-redux';
 //import makeStyles in the last
 import useStyles from './styles';
 import { Skeleton } from '@material-ui/lab';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -68,12 +70,6 @@ const headCells = [
         label: 'University'
     },
     {
-        id: 'major',
-        numeric: false,
-        disablePadding: false,
-        label: 'Major'
-    },
-    {
         id: 'email',
         numeric: false,
         disablePadding: false,
@@ -86,16 +82,10 @@ const headCells = [
         label: 'Phone'
     },
     {
-        id: 'dob',
+        id: 'other',
         numeric: false,
         disablePadding: false,
-        label: 'DOB'
-    },
-    {
-        id: 'academic',
-        numeric: false,
-        disablePadding: false,
-        label: 'Academic'
+        label: 'Other'
     },
     {
         id: 'status',
@@ -358,7 +348,8 @@ const ParticipantTable = ({
     handleSetInvalid,
     handleSetVerified,
     handleSetAttended,
-    handleToggleDialogInvitation
+    handleToggleDialogInvitation,
+    handleToggleDialogReviewParticipant
 }) => {
     const css = useStyles();
 
@@ -481,11 +472,8 @@ const ParticipantTable = ({
                                         height: 50 * take
                                     }}>
                                     <TableCell
-                                        colSpan={
-                                            reviewerMode
-                                                ? headCells.length + 1
-                                                : headCells.length
-                                        }
+                                        key="noData"
+                                        colSpan={headCells.length + 1}
                                         align="center">
                                         <Typography>No Data Matched</Typography>
                                     </TableCell>
@@ -513,7 +501,9 @@ const ParticipantTable = ({
                                             classes={{ selected: css.selected }}
                                             selected={isItemSelected}>
                                             {!reviewerMode && (
-                                                <TableCell padding="checkbox">
+                                                <TableCell
+                                                    key="checkbox"
+                                                    padding="checkbox">
                                                     <Checkbox
                                                         size="small"
                                                         color="primary"
@@ -526,13 +516,20 @@ const ParticipantTable = ({
                                                 </TableCell>
                                             )}
                                             <TableCell
+                                                key="name"
                                                 component="th"
                                                 scope="row">
                                                 {row.name}
                                             </TableCell>
-                                            <TableCell>{row.school}</TableCell>
-                                            <TableCell>{row.major}</TableCell>
-                                            <TableCell>
+                                            <TableCell
+                                                key="school"
+                                                component="th"
+                                                scope="row">
+                                                {row.school}
+                                            </TableCell>
+                                            <TableCell
+                                                component="th"
+                                                scope="row">
                                                 <div
                                                     className={
                                                         css.textContainer
@@ -540,14 +537,33 @@ const ParticipantTable = ({
                                                     {row.email}
                                                 </div>
                                             </TableCell>
-                                            <TableCell>{row.phone}</TableCell>
-                                            <TableCell>
-                                                {moment(row.DOB).format('L')}
+                                            <TableCell
+                                                key="phone"
+                                                component="th"
+                                                scope="row">
+                                                {row.phone}
                                             </TableCell>
-                                            <TableCell>
-                                                {row.academic}
+                                            <TableCell
+                                                key="more-detail"
+                                                component="th"
+                                                scope="row">
+                                                <Tooltip title="More Detail">
+                                                    <IconButton
+                                                        onClick={(e) =>
+                                                            handleToggleDialogReviewParticipant(
+                                                                e,
+                                                                row
+                                                            )
+                                                        }
+                                                        size="small">
+                                                        <AccountCircleIcon />
+                                                    </IconButton>
+                                                </Tooltip>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell
+                                                key="status"
+                                                component="th"
+                                                scope="row">
                                                 {checkInMode ? (
                                                     <>
                                                         {row.isAttended ? (
@@ -618,11 +634,10 @@ const ParticipantTable = ({
                                             height: 50 * emptyRows
                                         }}>
                                         <TableCell
-                                            colSpan={
-                                                reviewerMode
-                                                    ? headCells.length + 1
-                                                    : headCells.length
-                                            }
+                                            key="empty"
+                                            component="th"
+                                            scope="row"
+                                            colSpan={headCells.length + 1}
                                         />
                                     </TableRow>
                                 )}
