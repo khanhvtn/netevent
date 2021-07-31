@@ -55,7 +55,7 @@ const MemberTask = () => {
     const [expanded, setExpanded] = useState(false);
 
     const { userId, tasks, totalPages, isLoading } = useSelector((state) => ({
-        userId: state.user.user.id,
+        userId: state.user.user._id,
         tasks: state.task.tasksByEvent,
         totalPages: state.task.totalPages,
         isLoading: state.task.isLoading

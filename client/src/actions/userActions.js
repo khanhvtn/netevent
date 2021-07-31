@@ -84,7 +84,6 @@ export const userLogout = (history) => async (dispatch) => {
 export const fetchCurrentUser = (currentUser, history) => async (dispatch) => {
     try {
         const { data } = await api.fetchCurrentUser({ email: currentUser });
-        console.log(data);
         dispatch({
             type: FETCH_CURRENT_USER,
             payload: data.data
