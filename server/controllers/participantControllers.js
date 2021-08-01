@@ -440,7 +440,14 @@ const setAttendedParticipantByQrCode = async (req, res, next) => {
         var participantInfo = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
         const participant = await Participant.findById(
             participantInfo.participantId
-        );
+        ).populate('event');
+        if (participant.event.isFinished) {
+            return next(
+                new CustomError(500, {
+                    qrCode: 'This QR Code is expired'
+                })
+            );
+        }
         if (participant.isAttended) {
             return next(
                 new CustomError(500, {
