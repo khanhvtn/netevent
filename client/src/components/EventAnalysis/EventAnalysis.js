@@ -126,8 +126,8 @@ const initialState = {
 };
 
 const filterState = {
-    startFrom: null,
-    startTo: null
+    startFrom: getLastMonth(),
+    startTo: new Date()
 };
 
 const EventAnalysis = () => {
