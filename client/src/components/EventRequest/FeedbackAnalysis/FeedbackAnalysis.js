@@ -465,20 +465,18 @@ const FeedbackAnalysis = ({ eventId }) => {
                 <Paper elevation={0} className={css.paper}>
                     <Grid container>
                         <Grid item xs={12}>
-                            <Paper className={css.paperHeader}>
-                                <Typography
-                                    className={css.title}
-                                    style={{ fontWeight: 'bold' }}
-                                    align="left"
-                                    variant="h4">
-                                    Feedback Review
-                                </Typography>
-                            </Paper>
+                            <Typography
+                                className={css.title}
+                                align="left"
+                                variant="h4">
+                                Feedback Review
+                            </Typography>
                         </Grid>
                     </Grid>
-                    <div className={css.tmp} align="center">
-                        <Grid container spacing={3}>
-                            <Grid item xs={6}>
+                    <div align="center">
+                        <Grid container spacing={2}>
+                            {/* QUESTION 1 */}
+                            <Grid item xs={12}>
                                 <Paper className={css.paperChart}>
                                     <Box height="25%">
                                         <Typography className={css.labelChart}>
@@ -486,26 +484,34 @@ const FeedbackAnalysis = ({ eventId }) => {
                                             Netcompany as a workplace to your
                                             friend/colleague?
                                         </Typography>
+
                                         <Bar
+                                            style={{ marginTop: 16 }}
                                             data={question1FeedbackState}
                                             options={optionQuestion1Chart}
+                                            height={75}
                                         />
                                     </Box>
                                 </Paper>
                             </Grid>
-                            <Grid item xs={6}>
+
+                            {/* QUESTION 2 */}
+                            <Grid item xs={12} md={6}>
                                 <Paper className={css.paperChart}>
                                     <Typography className={css.labelChart}>
                                         Do you find the content of the seminar
                                         helpful?
                                     </Typography>
                                     <Bar
+                                        style={{ marginTop: 42 }}
                                         data={question2FeedbackState}
                                         options={optionQuestion2Chart}
                                     />
                                 </Paper>
                             </Grid>
-                            <Grid item xs={6}>
+
+                            {/* QUESTION 3 */}
+                            <Grid item xs={12} md={6}>
                                 <Paper className={css.paperChart}>
                                     <Typography className={css.labelChart}>
                                         What is your willingness to recommend a
@@ -513,13 +519,16 @@ const FeedbackAnalysis = ({ eventId }) => {
                                         colleague?
                                     </Typography>
                                     <Bar
+                                        style={{ marginTop: 16 }}
                                         data={question3FeedbackState}
                                         options={optionQuestion3Chart}
                                     />
                                 </Paper>
                             </Grid>
-                            <Grid item xs={6}>
-                                <Paper className={css.paperChart}>
+
+                            {/* QUESTION 4 */}
+                            <Grid item xs={12} md={4}>
+                                <Paper className={css.pie}>
                                     <Typography className={css.labelChart}>
                                         Would you like us to send you upcoming
                                         events and seminar notification?
@@ -532,21 +541,26 @@ const FeedbackAnalysis = ({ eventId }) => {
                                           ?.data[0] === 0 &&
                                       question4FeedbackState.datasets[0]
                                           ?.data[1] === 0 ? (
-                                        <Pie
-                                            data={noDataPieChartData}
-                                            options={optionNoDataPieChart}
-                                        />
+                                        <article className={css.chartContainer}>
+                                            <Pie
+                                                data={noDataPieChartData}
+                                                options={optionNoDataPieChart}
+                                            />
+                                        </article>
                                     ) : (
-                                        <Pie
-                                            data={question4FeedbackState}
-                                            options={optionQuestion4Chart}
-                                        />
+                                        <article className={css.chartContainer}>
+                                            <Pie
+                                                data={question4FeedbackState}
+                                                options={optionQuestion4Chart}
+                                            />
+                                        </article>
                                     )}
                                 </Paper>
                             </Grid>
 
-                            <Grid item xs={6}>
-                                <Paper className={css.paperChart}>
+                            {/* QUESTION 5A */}
+                            <Grid item xs={12} md={4}>
+                                <Paper className={css.pie}>
                                     <Typography className={css.labelChart}>
                                         Please rate the following as you see fit
                                         on the seminar: Presentation Quality
@@ -565,21 +579,26 @@ const FeedbackAnalysis = ({ eventId }) => {
                                           ?.data[3] === 0 &&
                                       question5AFeedbackState.datasets[0]
                                           ?.data[4] === 0 ? (
-                                        <Pie
-                                            data={noDataPieChartData}
-                                            options={optionNoDataPieChart}
-                                        />
+                                        <article className={css.chartContainer}>
+                                            <Pie
+                                                data={noDataPieChartData}
+                                                options={optionNoDataPieChart}
+                                            />
+                                        </article>
                                     ) : (
-                                        <Pie
-                                            data={question5AFeedbackState}
-                                            options={optionQuestion5AChart}
-                                        />
+                                        <article className={css.chartContainer}>
+                                            <Pie
+                                                data={question5AFeedbackState}
+                                                options={optionQuestion5AChart}
+                                            />
+                                        </article>
                                     )}
                                 </Paper>
                             </Grid>
 
-                            <Grid item xs={6}>
-                                <Paper className={css.paperChart}>
+                            {/* QUESTION 5B */}
+                            <Grid item xs={12} md={4}>
+                                <Paper className={css.pie}>
                                     <Typography className={css.labelChart}>
                                         Please rate the following as you see fit
                                         on the seminar: Speaker Knowledge
@@ -598,18 +617,24 @@ const FeedbackAnalysis = ({ eventId }) => {
                                           .data[3] === 0 &&
                                       question5BFeedbackState.datasets[0]
                                           .data[4] === 0 ? (
-                                        <Pie
-                                            data={noDataPieChartData}
-                                            options={optionNoDataPieChart}
-                                        />
+                                        <article className={css.chartContainer}>
+                                            <Pie
+                                                data={noDataPieChartData}
+                                                options={optionNoDataPieChart}
+                                            />
+                                        </article>
                                     ) : (
-                                        <Pie
-                                            data={question5BFeedbackState}
-                                            options={optionQuestion5BChart}
-                                        />
+                                        <article className={css.chartContainer}>
+                                            <Pie
+                                                data={question5BFeedbackState}
+                                                options={optionQuestion5BChart}
+                                            />
+                                        </article>
                                     )}
                                 </Paper>
                             </Grid>
+
+                            {/* QUESTION 6 */}
                             <Grid item xs={12}>
                                 <Paper className={css.paperChart}>
                                     <Typography className={css.labelChart}>
