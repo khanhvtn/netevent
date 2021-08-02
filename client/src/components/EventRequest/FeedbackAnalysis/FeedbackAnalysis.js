@@ -239,7 +239,7 @@ const optionQuestion3Chart = {
 const optionQuestion4Chart = {
     plugins: {
         legend: {
-            display: false
+            display: true
         }
     }
 };
@@ -247,7 +247,7 @@ const optionQuestion4Chart = {
 const optionQuestion5AChart = {
     plugins: {
         legend: {
-            display: false
+            display: true
         }
     }
 };
@@ -255,7 +255,7 @@ const optionQuestion5AChart = {
 const optionQuestion5BChart = {
     plugins: {
         legend: {
-            display: false
+            display: true
         }
     }
 };
