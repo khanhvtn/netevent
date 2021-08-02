@@ -12,9 +12,11 @@ const ParticipantPagination = ({
     handleChangePage
 }) => {
     const css = useStyles();
-    const { totalPages } = useSelector((state) => ({
-        totalPages: state.participant.totalPages
+    const { totalPages, isLoading } = useSelector((state) => ({
+        totalPages: state.participant.totalPages,
+        isLoading: state.participant.isLoading
     }));
+
     return (
         <Toolbar className={css.paginationWrapper}>
             <div className={css.selectRowNumWrapper}>
@@ -35,6 +37,7 @@ const ParticipantPagination = ({
             </div>
             <div>
                 <Pagination
+                    disabled={isLoading}
                     page={page}
                     shape="rounded"
                     variant="text"

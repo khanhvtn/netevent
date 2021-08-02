@@ -9,7 +9,8 @@ const FacilityHistoryPagination = ({
     take,
     handleChangeRowsPerPage,
     handleChangePage,
-    totalPages
+    totalPages,
+    isLoading
 }) => {
     const css = useStyles();
 
@@ -33,7 +34,7 @@ const FacilityHistoryPagination = ({
             </div>
             <div>
                 <Pagination
-                    disabled={!totalPages}
+                    disabled={isLoading}
                     page={page}
                     shape="rounded"
                     variant="text"

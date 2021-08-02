@@ -9,7 +9,8 @@ const TaskPagination = ({
     take,
     handleChangeRowsPerPage,
     handleChangePage,
-    totalPages
+    totalPages,
+    isLoading
 }) => {
     const css = useStyles();
     return (
@@ -32,6 +33,7 @@ const TaskPagination = ({
             </div>
             <div>
                 <Pagination
+                    disabled={isLoading}
                     page={page}
                     shape="rounded"
                     variant="text"

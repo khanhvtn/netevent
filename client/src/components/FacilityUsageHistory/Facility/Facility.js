@@ -266,6 +266,7 @@ const Facility = () => {
                             />
                             {/* Facility Pagination */}
                             <PaginationTable
+                                isLoading={isLoading}
                                 page={state.page}
                                 take={state.take}
                                 handleChangeRowsPerPage={

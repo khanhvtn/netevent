@@ -54,8 +54,8 @@ const MemberTask = () => {
     const [state, setState] = useState(initialState);
     const [expanded, setExpanded] = useState(false);
 
-    const { userId, tasks, totalPages, isLoading } = useSelector((state) => ({
-        userId: state.user.user._id,
+    const { user, tasks, totalPages, isLoading } = useSelector((state) => ({
+        user: state.user.user,
         tasks: state.task.tasksByEvent,
         totalPages: state.task.totalPages,
         isLoading: state.task.isLoading
@@ -67,10 +67,10 @@ const MemberTask = () => {
                 take: state.take,
                 page: state.page,
                 status: state.status,
-                userId: userId
+                userId: user.id
             })
         );
-    }, [dispatch, userId, state.take, state.page, state.status]);
+    }, [dispatch, user, state.take, state.page, state.status]);
 
     const handleChange = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -122,34 +122,11 @@ const MemberTask = () => {
                                                 paddingBottom: 0
                                             }}>
                                             <Button
-                                                style={
+                                                className={
                                                     state.status ===
                                                     action.status
-                                                        ? {
-                                                              textTransform:
-                                                                  'none',
-                                                              fontWeight:
-                                                                  'medium',
-                                                              justifyContent:
-                                                                  'flex-start',
-                                                              letterSpacing: 0,
-                                                              padding: 12,
-                                                              backgroundColor:
-                                                                  '#eceef7',
-                                                              color: '#3f51b5',
-                                                              borderRadius: 0
-                                                          }
-                                                        : {
-                                                              textTransform:
-                                                                  'none',
-                                                              fontWeight:
-                                                                  'medium',
-                                                              justifyContent:
-                                                                  'flex-start',
-                                                              letterSpacing: 0,
-                                                              padding: 12,
-                                                              borderRadius: 0
-                                                          }
+                                                        ? css.activeFilter
+                                                        : css.inactiveFilter
                                                 }
                                                 fullWidth
                                                 onClick={() =>
@@ -414,6 +391,7 @@ const MemberTask = () => {
 
                                     {/* Event Pagination */}
                                     <TaskPagination
+                                        isLoading={isLoading}
                                         totalPages={totalPages}
                                         page={state.page}
                                         take={state.take}

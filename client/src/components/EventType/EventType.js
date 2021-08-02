@@ -56,6 +56,27 @@ const filterState = {
     updatedTo: null
 };
 
+const headCells = [
+    {
+        id: 'name',
+        type: 'string',
+        disablePadding: false,
+        label: 'Name'
+    },
+    {
+        id: 'createdAt',
+        type: 'date',
+        disablePadding: false,
+        label: 'Created At'
+    },
+    {
+        id: 'updatedAt',
+        type: 'date',
+        disablePadding: false,
+        label: 'Updated At'
+    }
+];
+
 const EventType = () => {
     const css = useStyles();
     const dispatch = useDispatch();
@@ -508,29 +529,11 @@ const EventType = () => {
                                 deleteSuccess={deleteSuccess}
                                 updateSuccess={updateSuccess}
                                 tableName="List of Event Types"
-                                headCells={[
-                                    {
-                                        id: 'name',
-                                        type: 'string',
-                                        disablePadding: false,
-                                        label: 'Name'
-                                    },
-                                    {
-                                        id: 'createdAt',
-                                        type: 'date',
-                                        disablePadding: false,
-                                        label: 'Created At'
-                                    },
-                                    {
-                                        id: 'updatedAt',
-                                        type: 'date',
-                                        disablePadding: false,
-                                        label: 'Updated At'
-                                    }
-                                ]}
+                                headCells={headCells}
                             />
                             {/* Facility Pagination */}
                             <PaginationTable
+                                isLoading={isLoading}
                                 page={state.page}
                                 take={state.take}
                                 handleChangeRowsPerPage={

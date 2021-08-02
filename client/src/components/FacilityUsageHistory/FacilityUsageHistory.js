@@ -280,6 +280,7 @@ const FacilityUsageHistory = () => {
                             />
                             {/* Facility Pagination */}
                             <FacilityHistoryPagination
+                                isLoading={isLoading}
                                 page={state.page}
                                 take={state.take}
                                 handleChangeRowsPerPage={

@@ -52,5 +52,23 @@ export default makeStyles((theme) => ({
         marginLeft: 8,
         marginBottom: 4,
         color: 'white'
+    },
+    activeFilter: {
+        textTransform: 'none',
+        fontWeight: 'medium',
+        justifyContent: 'flex-start',
+        letterSpacing: 0,
+        padding: 12,
+        backgroundColor: '#eceef7',
+        color: '#3f51b5',
+        borderRadius: 0
+    },
+    inactiveFilter: {
+        textTransform: 'none',
+        fontWeight: 'medium',
+        justifyContent: 'flex-start',
+        letterSpacing: 0,
+        padding: 12,
+        borderRadius: 0
     }
 }));
