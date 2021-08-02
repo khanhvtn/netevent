@@ -4,7 +4,7 @@ export default makeStyles((theme) => ({
         marginTop: '10%'
     },
     paper: {
-        margin: '40px 80px',
+        margin: '40px 30px',
         paddingBottom: 80,
         minHeight: '38vh',
         [theme.breakpoints.down('md')]: {
@@ -23,5 +23,20 @@ export default makeStyles((theme) => ({
     contentWrapper: {
         marginTop: '20%',
         minHeight: '40vh'
+    },
+    paperChart: {
+        margin: theme.spacing(2),
+        padding: theme.spacing(2)
+    },
+
+    paperHeader: {
+        margin: theme.spacing(1),
+        padding: theme.spacing(1)
+    },
+
+    title: {
+        flex: '1 1 100%',
+        fontWeight: 'bold',
+        padding: theme.spacing(3)
     }
 }));

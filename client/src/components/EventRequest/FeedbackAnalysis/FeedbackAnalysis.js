@@ -108,7 +108,7 @@ const question4ChartData = {
     datasets: [
         {
             label: 'Would you like us to send you upcoming events and seminar notification?',
-            data: [0, 0],
+            data: [],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)'
@@ -124,7 +124,7 @@ const question5AChartData = {
     datasets: [
         {
             label: 'Please rate the following as you see fit on the seminar: Presentation Quality',
-            data: [0, 0, 0, 0, 0],
+            data: [],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -149,7 +149,7 @@ const question5BChartData = {
     datasets: [
         {
             label: 'Please rate the following as you see fit on the seminar: Speaker Knowledge',
-            data: [0, 0, 0, 0, 0],
+            data: [],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -164,6 +164,19 @@ const question5BChartData = {
                 'rgba(75, 192, 192, 1)',
                 'rgba(153, 102, 255, 1)'
             ],
+            borderWidth: 1
+        }
+    ]
+};
+
+const noDataPieChartData = {
+    labels: ['No Available Data'],
+    datasets: [
+        {
+            label: 'No Available Data',
+            data: [100],
+            backgroundColor: ['rgb(39,44,52,0.2)'],
+            borderColor: ['rgb(39,44,52,0.1)'],
             borderWidth: 1
         }
     ]
@@ -240,6 +253,14 @@ const optionQuestion5AChart = {
 };
 
 const optionQuestion5BChart = {
+    plugins: {
+        legend: {
+            display: false
+        }
+    }
+};
+
+const optionNoDataPieChart = {
     plugins: {
         legend: {
             display: false
@@ -428,6 +449,12 @@ const FeedbackAnalysis = ({ eventId }) => {
         }
     }, [feedbacks, isLoading]);
 
+    useEffect(() => {
+        if (!isLoading) {
+            console.log(question5BFeedbackState.datasets[0]);
+        }
+    }, [isLoading, question5BFeedbackState]);
+
     return (
         <>
             {isLoading ? (
@@ -436,109 +463,198 @@ const FeedbackAnalysis = ({ eventId }) => {
                 </div>
             ) : (
                 <Paper elevation={0} className={css.paper}>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Paper className={css.paperHeader}>
+                                <Typography
+                                    className={css.title}
+                                    style={{ fontWeight: 'bold' }}
+                                    align="left"
+                                    variant="h4">
+                                    Feedback Review
+                                </Typography>
+                            </Paper>
+                        </Grid>
+                    </Grid>
                     <div className={css.tmp} align="center">
                         <Grid container spacing={3}>
                             <Grid item xs={6}>
-                                <Box height="25%">
+                                <Paper className={css.paperChart}>
+                                    <Box height="25%">
+                                        <Typography className={css.labelChart}>
+                                            How likely are you to recommend
+                                            Netcompany as a workplace to your
+                                            friend/colleague?
+                                        </Typography>
+                                        <Bar
+                                            data={question1FeedbackState}
+                                            options={optionQuestion1Chart}
+                                        />
+                                    </Box>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Paper className={css.paperChart}>
                                     <Typography className={css.labelChart}>
-                                        How likely are you to recommend
-                                        Netcompany as a workplace to your
-                                        friend/colleague?
+                                        Do you find the content of the seminar
+                                        helpful?
                                     </Typography>
                                     <Bar
-                                        data={question1FeedbackState}
-                                        options={optionQuestion1Chart}
+                                        data={question2FeedbackState}
+                                        options={optionQuestion2Chart}
                                     />
-                                </Box>
+                                </Paper>
                             </Grid>
                             <Grid item xs={6}>
-                                <Typography className={css.labelChart}>
-                                    Do you find the content of the seminar
-                                    helpful?
-                                </Typography>
-                                <Bar
-                                    data={question2FeedbackState}
-                                    options={optionQuestion2Chart}
-                                />
+                                <Paper className={css.paperChart}>
+                                    <Typography className={css.labelChart}>
+                                        What is your willingness to recommend a
+                                        future NC seminar to a friend or a
+                                        colleague?
+                                    </Typography>
+                                    <Bar
+                                        data={question3FeedbackState}
+                                        options={optionQuestion3Chart}
+                                    />
+                                </Paper>
                             </Grid>
                             <Grid item xs={6}>
-                                <Typography className={css.labelChart}>
-                                    What is your willingness to recommend a
-                                    future NC seminar to a friend or a
-                                    colleague?
-                                </Typography>
-                                <Bar
-                                    data={question3FeedbackState}
-                                    options={optionQuestion3Chart}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography className={css.labelChart}>
-                                    Would you like us to send you upcoming
-                                    events and seminar notification?
-                                </Typography>
-                                <Pie
-                                    data={question4FeedbackState}
-                                    options={optionQuestion4Chart}
-                                />
-                            </Grid>
-
-                            <Grid item xs={6}>
-                                <Typography className={css.labelChart}>
-                                    Please rate the following as you see fit on
-                                    the seminar: Presentation Quality
-                                </Typography>
-                                <Pie
-                                    data={question5AFeedbackState}
-                                    options={optionQuestion5AChart}
-                                />
+                                <Paper className={css.paperChart}>
+                                    <Typography className={css.labelChart}>
+                                        Would you like us to send you upcoming
+                                        events and seminar notification?
+                                    </Typography>
+                                    {!Array.isArray(
+                                        question4FeedbackState.datasets[0].data
+                                    ) ? (
+                                        <></>
+                                    ) : question4FeedbackState.datasets[0]
+                                          ?.data[0] === 0 &&
+                                      question4FeedbackState.datasets[0]
+                                          ?.data[1] === 0 ? (
+                                        <Pie
+                                            data={noDataPieChartData}
+                                            options={optionNoDataPieChart}
+                                        />
+                                    ) : (
+                                        <Pie
+                                            data={question4FeedbackState}
+                                            options={optionQuestion4Chart}
+                                        />
+                                    )}
+                                </Paper>
                             </Grid>
 
                             <Grid item xs={6}>
-                                <Typography className={css.labelChart}>
-                                    Please rate the following as you see fit on
-                                    the seminar: Speaker Knowledge
-                                </Typography>
-                                <Pie
-                                    data={question5BFeedbackState}
-                                    options={optionQuestion5BChart}
-                                />
+                                <Paper className={css.paperChart}>
+                                    <Typography className={css.labelChart}>
+                                        Please rate the following as you see fit
+                                        on the seminar: Presentation Quality
+                                    </Typography>
+                                    {!Array.isArray(
+                                        question5AFeedbackState.datasets[0].data
+                                    ) ? (
+                                        <></>
+                                    ) : question5AFeedbackState.datasets[0]
+                                          ?.data[0] === 0 &&
+                                      question5AFeedbackState.datasets[0]
+                                          ?.data[1] === 0 &&
+                                      question5AFeedbackState.datasets[0]
+                                          ?.data[2] === 0 &&
+                                      question5AFeedbackState.datasets[0]
+                                          ?.data[3] === 0 &&
+                                      question5AFeedbackState.datasets[0]
+                                          ?.data[4] === 0 ? (
+                                        <Pie
+                                            data={noDataPieChartData}
+                                            options={optionNoDataPieChart}
+                                        />
+                                    ) : (
+                                        <Pie
+                                            data={question5AFeedbackState}
+                                            options={optionQuestion5AChart}
+                                        />
+                                    )}
+                                </Paper>
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <Paper className={css.paperChart}>
+                                    <Typography className={css.labelChart}>
+                                        Please rate the following as you see fit
+                                        on the seminar: Speaker Knowledge
+                                    </Typography>
+                                    {!Array.isArray(
+                                        question5BFeedbackState.datasets[0].data
+                                    ) ? (
+                                        <></>
+                                    ) : question5BFeedbackState.datasets[0]
+                                          .data[0] === 0 &&
+                                      question5BFeedbackState.datasets[0]
+                                          .data[1] === 0 &&
+                                      question5BFeedbackState.datasets[0]
+                                          .data[2] === 0 &&
+                                      question5BFeedbackState.datasets[0]
+                                          .data[3] === 0 &&
+                                      question5BFeedbackState.datasets[0]
+                                          .data[4] === 0 ? (
+                                        <Pie
+                                            data={noDataPieChartData}
+                                            options={optionNoDataPieChart}
+                                        />
+                                    ) : (
+                                        <Pie
+                                            data={question5BFeedbackState}
+                                            options={optionQuestion5BChart}
+                                        />
+                                    )}
+                                </Paper>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography className={css.labelChart}>
-                                    Please provide any suggestions to help us
-                                    improve the quality of future event.
-                                </Typography>
-                                <Table
-                                    className={css.table}
-                                    aria-label="simple table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Sender</TableCell>
-                                            <TableCell align="left">
-                                                Answer
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {question6FeedbackState?.map(
-                                            (result) => (
-                                                <TableRow key={result.sender}>
-                                                    <TableCell
-                                                        component="th"
-                                                        scope="row">
-                                                        {result.sender}
-                                                    </TableCell>
-                                                    <TableCell
-                                                        component="th"
-                                                        scope="row">
-                                                        {result.answer}
-                                                    </TableCell>
-                                                </TableRow>
-                                            )
-                                        )}
-                                    </TableBody>
-                                </Table>
+                                <Paper className={css.paperChart}>
+                                    <Typography className={css.labelChart}>
+                                        Please provide any suggestions to help
+                                        us improve the quality of future event.
+                                    </Typography>
+                                    <Table
+                                        className={css.table}
+                                        aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Sender</TableCell>
+                                                <TableCell align="left">
+                                                    Answer
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {question6FeedbackState?.length !==
+                                            0 ? (
+                                                question6FeedbackState?.map(
+                                                    (result) => (
+                                                        <TableRow
+                                                            key={result.sender}>
+                                                            <TableCell
+                                                                component="th"
+                                                                scope="row">
+                                                                {result.sender}
+                                                            </TableCell>
+                                                            <TableCell
+                                                                component="th"
+                                                                scope="row">
+                                                                {result.answer}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )
+                                                )
+                                            ) : (
+                                                <Typography>
+                                                    No Data Available
+                                                </Typography>
+                                            )}
+                                        </TableBody>
+                                    </Table>
+                                </Paper>
                             </Grid>
                         </Grid>
                     </div>
