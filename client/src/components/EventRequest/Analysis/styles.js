@@ -4,21 +4,26 @@ export default makeStyles((theme) => ({
         flexGrow: 1
     },
     paper: {
-        margin: '40px 80px',
+        margin: '40px 30px',
         paddingBottom: 80,
-        minHeight: '70vh',
+        minHeight: '38vh',
         [theme.breakpoints.down('md')]: {
             margin: '20px'
+        },
+        [theme.breakpoints.down('xs')]: {
+            margin: 0
         }
     },
 
     analysisCard: {
+        margin: theme.spacing(2),
         padding: theme.spacing(2),
         textAlign: 'center',
         color: theme.palette.text.secondary
     },
 
     pie: {
+        margin: theme.spacing(2),
         padding: theme.spacing(2),
         textAlign: 'center',
         color: theme.palette.text.secondary
@@ -60,6 +65,12 @@ export default makeStyles((theme) => ({
     exportBtn: {
         text: 'right',
         float: 'right',
-        backgroundColor: '#0e2045'
+        backgroundColor: '#0e2045',
+        margin: theme.spacing(2)
+    },
+
+    title: {
+        fontWeight: 'bold',
+        margin: theme.spacing(2)
     }
 }));

@@ -9,6 +9,9 @@ export default makeStyles((theme) => ({
         backgroundColor: theme.palette.background.default,
         [theme.breakpoints.down('md')]: {
             margin: '20px'
+        },
+        [theme.breakpoints.down('xs')]: {
+            margin: 0
         }
     },
 

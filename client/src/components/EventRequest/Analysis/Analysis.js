@@ -161,7 +161,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                 </div>
             ) : (
                 <Paper elevation={0} className={css.paper}>
-                    <Grid container spacing={3}>
+                    <Grid container>
                         <Grid item xs={6}>
                             <Typography
                                 className={css.title}
@@ -182,7 +182,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                                 </Typography>
                             </Button>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} md={6}>
                             <Paper className={css.analysisCard}>
                                 <Typography className={css.chartTypo}>
                                     <AssignmentIndIcon
@@ -195,7 +195,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                                 </Typography>
                             </Paper>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} md={6}>
                             <Paper className={css.analysisCard}>
                                 <Typography className={css.chartTypo}>
                                     <LibraryAddCheckIcon
@@ -210,7 +210,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                             </Paper>
                         </Grid>
 
-                        <Grid item xs={6}>
+                        <Grid item xs={12} md={6}>
                             <Paper className={css.analysisCard}>
                                 <Typography className={css.chartTypo}>
                                     <BrandingWatermarkIcon
@@ -224,7 +224,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                                 </Typography>
                             </Paper>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} md={6}>
                             <Paper className={css.analysisCard}>
                                 <Typography className={css.chartTypo}>
                                     <BrandingWatermarkIcon
@@ -244,7 +244,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                         spacing={3}
                         style={{ paddingTop: 10 }}
                         justify="center">
-                        <Grid item xs={6}>
+                        <Grid item xs={12} md={6}>
                             <Paper className={css.pie}>
                                 <Typography className={css.chartTypo}>
                                     <PieChartIcon
@@ -260,7 +260,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                                 </article>
                             </Paper>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} md={6}>
                             <Paper className={css.pie}>
                                 <Typography className={css.chartTypo}>
                                     <PieChartIcon
