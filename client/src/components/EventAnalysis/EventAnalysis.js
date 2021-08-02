@@ -321,7 +321,6 @@ const EventAnalysis = () => {
         }));
         setState((prevState) => ({
             ...prevState,
-            ...filterState,
             openFilter: !prevState.openFilter
         }));
     };
