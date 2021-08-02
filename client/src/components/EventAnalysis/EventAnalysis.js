@@ -18,6 +18,7 @@ import { ExportToCsv } from 'export-to-csv';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import { useDispatch, useSelector } from 'react-redux';
 import EventAnalysisFilter from './EventAnalysisFilter/EventAnalysisFilter';
+import { getLastMonth } from '../../utils';
 
 const signUpAndShowUpData = {
     labels: ['Signed Up', 'Showed Up'],
@@ -120,8 +121,8 @@ const optionVerticalBarChart = {
 };
 
 const initialState = {
-    startFrom: null,
-    startTo: null
+    startFrom: getLastMonth(),
+    startTo: new Date()
 };
 
 const filterState = {
