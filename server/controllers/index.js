@@ -8,7 +8,7 @@ const facilityHistoryControllers = require('./facilityHistoryControllers');
 const linkControllers = require('./linkControllers');
 const participantControllers = require('./participantControllers');
 const notificationControllers = require('./notificationHistoryControllers');
-
+const feedbackControllers = require('./feedbackControllers');
 /**
  *  =====================================
  *        ALL CONTROLLERS EXPORT
@@ -25,5 +25,6 @@ module.exports = {
     facilityHistoryControllers,
     linkControllers,
     participantControllers,
-    notificationControllers
+    notificationControllers,
+    feedbackControllers
 };

@@ -9,7 +9,7 @@ import facilityHistoryReducers from './facilityHistoryReducers';
 import participantReducers from './participantReducers';
 import notificationHistoryReducers from './notificationHistoryReducers';
 import taskReducers from './taskReducers';
-
+import feedbackReducers from './feedbackReducers';
 const rootReducers = combineReducers({
     user: userReducers,
     error: errorReducers,
@@ -20,7 +20,8 @@ const rootReducers = combineReducers({
     facilityHistory: facilityHistoryReducers,
     participant: participantReducers,
     notificationHistory: notificationHistoryReducers,
-    task: taskReducers
+    task: taskReducers,
+    feedback: feedbackReducers
 });
 
 export default rootReducers;

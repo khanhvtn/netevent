@@ -322,3 +322,8 @@ export const getTasksAPI = (userQueries) => {
         }&updatedTo=${updatedTo ? updatedTo : ''}`
     );
 };
+
+//Feedback API
+
+export const getFeedbackByEventIDAPI = (eventId) =>
+    AXIOS.get(`/feedback/eventID?eventId=${eventId ? eventId : ''}`);
