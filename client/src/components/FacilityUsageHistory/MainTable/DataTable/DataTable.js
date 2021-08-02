@@ -83,9 +83,7 @@ function EnhancedTableHead(props) {
 
 EnhancedTableHead.propTypes = {
     classes: PropTypes.object.isRequired,
-    numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired
@@ -144,20 +142,15 @@ const DataTable = ({ take, data, isLoading, headCells, page }) => {
                                 {Array.apply(null, { length: take + 1 }).map(
                                     (row, index) => {
                                         return (
-                                            <>
-                                                <TableRow key={index}>
-                                                    {headCells.map(
-                                                        (row, index) => {
-                                                            return (
-                                                                <TableCell
-                                                                    key={index}>
-                                                                    <Skeleton />
-                                                                </TableCell>
-                                                            );
-                                                        }
-                                                    )}
-                                                </TableRow>
-                                            </>
+                                            <TableRow key={`skeleton-${index}`}>
+                                                {headCells.map((row, index) => {
+                                                    return (
+                                                        <TableCell key={index}>
+                                                            <Skeleton />
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                            </TableRow>
                                         );
                                     }
                                 )}

@@ -81,9 +81,7 @@ function EnhancedTableHead(props) {
 
 EnhancedTableHead.propTypes = {
     classes: PropTypes.object.isRequired,
-    numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired
@@ -159,21 +157,15 @@ const FacilityHistoryTable = ({
                                 {Array.apply(null, { length: take + 1 }).map(
                                     (row, index) => {
                                         return (
-                                            <>
-                                                <TableRow key={index}>
-                                                    <TableCell>
-                                                        <Skeleton />
-                                                    </TableCell>
-                                                    {headCells.map(() => {
-                                                        return (
-                                                            <TableCell
-                                                                key={index}>
-                                                                <Skeleton />
-                                                            </TableCell>
-                                                        );
-                                                    })}
-                                                </TableRow>
-                                            </>
+                                            <TableRow key={`skeleton-${index}`}>
+                                                {headCells.map((row, index) => {
+                                                    return (
+                                                        <TableCell key={index}>
+                                                            <Skeleton />
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                            </TableRow>
                                         );
                                     }
                                 )}
@@ -184,7 +176,9 @@ const FacilityHistoryTable = ({
                                     style={{
                                         height: 50 * take
                                     }}>
-                                    <TableCell colSpan={7} align="center">
+                                    <TableCell
+                                        colSpan={headCells.length}
+                                        align="center">
                                         <Typography>No Data Matched</Typography>
                                     </TableCell>
                                 </TableRow>
@@ -225,7 +219,7 @@ const FacilityHistoryTable = ({
                                         style={{
                                             height: 50 * emptyRows
                                         }}>
-                                        <TableCell colSpan={7} />
+                                        <TableCell colSpan={headCells.length} />
                                     </TableRow>
                                 )}
                             </>

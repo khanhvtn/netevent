@@ -18,9 +18,10 @@ import { getFacility } from '../../actions/facilityActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { ERROR_CLEAR, FACILITY_HISTORY_LOADING } from '../../constants';
 import FacilityHistoryFilter from './FacilityHistoryFilter/FacilityHistoryFilter';
-import FacilityHistoryPagination from './FacilityHistoryPagination/FacilityHistoryPagination';
 import FacilityHistoryTable from './FacilityHistoryTable/FacilityHistoryTable';
 import { useHistory, useParams } from 'react-router-dom';
+import PaginationTable from './MainTable/PaginationTable/PaginationTable';
+
 const headCells = [
     {
         id: 'eventName',
@@ -279,7 +280,7 @@ const FacilityUsageHistory = () => {
                                 headCells={headCells}
                             />
                             {/* Facility Pagination */}
-                            <FacilityHistoryPagination
+                            <PaginationTable
                                 isLoading={isLoading}
                                 page={state.page}
                                 take={state.take}
