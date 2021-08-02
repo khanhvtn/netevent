@@ -25,9 +25,9 @@ import useStyles from './styles';
 import { ERROR_CLEAR, EVENT_TYPE_LOADING } from '../../constants';
 import DataTable from '../MainTable/DataTable/DataTable';
 import EventFilter from './EventFilter/EventFilter';
-import Notification from '../Notification/Notification';
 import EventDialog from './EventDialog/EventDialog';
 import PaginationTable from '../MainTable/PaginationTable/PaginationTable';
+import SystemNotification from '../Notification/Notification';
 
 const initialState = {
     search: '',
@@ -566,7 +566,7 @@ const EventType = () => {
                 isRecoveryMode={isRecoveryMode}
             />
             {/* Notification */}
-            <Notification
+            <SystemNotification
                 openDeleteSnackBar={state.openDeleteSnackBar}
                 openCreateSnackBar={state.openCreateSnackBar}
                 openUpdateSnackBar={state.openUpdateSnackBar}

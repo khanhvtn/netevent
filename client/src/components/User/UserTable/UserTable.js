@@ -346,25 +346,23 @@ const UserTable = ({
                         {isLoading || isCreated || isUpdated || isDeleted ? (
                             <>
                                 {Array.apply(null, { length: take + 1 }).map(
-                                    () => {
+                                    (row, index) => {
                                         return (
-                                            <>
-                                                <TableRow>
-                                                    <TableCell>
-                                                        <Skeleton />
-                                                    </TableCell>
-                                                    {headCells.map(
-                                                        (cell, index) => {
-                                                            return (
-                                                                <TableCell
-                                                                    key={index}>
-                                                                    <Skeleton />
-                                                                </TableCell>
-                                                            );
-                                                        }
-                                                    )}
-                                                </TableRow>
-                                            </>
+                                            <TableRow key={`skeleton-${index}`}>
+                                                <TableCell>
+                                                    <Skeleton />
+                                                </TableCell>
+                                                {headCells.map(
+                                                    (cell, index) => {
+                                                        return (
+                                                            <TableCell
+                                                                key={index + 1}>
+                                                                <Skeleton />
+                                                            </TableCell>
+                                                        );
+                                                    }
+                                                )}
+                                            </TableRow>
                                         );
                                     }
                                 )}

@@ -440,26 +440,21 @@ const ParticipantTable = ({
                                 {Array.apply(null, { length: take + 1 }).map(
                                     (row, index) => {
                                         return (
-                                            <>
-                                                <TableRow
-                                                    key={`${index}-skeleton`}>
-                                                    {!reviewerMode && (
-                                                        <TableCell>
+                                            <TableRow key={`${index}-skeleton`}>
+                                                {!reviewerMode && (
+                                                    <TableCell>
+                                                        <Skeleton />
+                                                    </TableCell>
+                                                )}
+                                                {headCells.map((row, index) => {
+                                                    return (
+                                                        <TableCell
+                                                            key={`${index}-skeleton-row`}>
                                                             <Skeleton />
                                                         </TableCell>
-                                                    )}
-                                                    {headCells.map(
-                                                        (row, index) => {
-                                                            return (
-                                                                <TableCell
-                                                                    key={`${index}-skeleton-row`}>
-                                                                    <Skeleton />
-                                                                </TableCell>
-                                                            );
-                                                        }
-                                                    )}
-                                                </TableRow>
-                                            </>
+                                                    );
+                                                })}
+                                            </TableRow>
                                         );
                                     }
                                 )}

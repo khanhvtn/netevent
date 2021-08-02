@@ -24,10 +24,10 @@ import useStyles from './styles';
 import { ERROR_CLEAR, USER_LOADING } from '../../constants';
 import UserTable from './UserTable/UserTable';
 import UserFilter from './UserFilter/UserFilter';
-import UserNotification from './UserNotification/UserNotification';
 import UserDialog from './UserDialog/UserDialog';
-import UserPagination from './UserPagination/UserPagination';
 import { useHistory } from 'react-router-dom';
+import SystemNotification from '../Notification/Notification';
+import PaginationTable from '../FacilityUsageHistory/MainTable/PaginationTable/PaginationTable';
 
 const initialState = {
     search: '',
@@ -62,18 +62,23 @@ const User = () => {
     const css = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const { user, users, isCreated, isDeleted, isUpdated } = useSelector(
-        (state) => ({
-            user: state.user.user,
-            users: state.user.users,
-            isLoading: state.user.isLoading,
-            totalPages: state.user.totalPages,
-            errors: state.error.errors,
-            isCreated: state.user.isCreated,
-            isDeleted: state.user.isDeleted,
-            isUpdated: state.user.isUpdated
-        })
-    );
+    const {
+        user,
+        users,
+        isCreated,
+        isDeleted,
+        isUpdated,
+        totalPages,
+        isLoading
+    } = useSelector((state) => ({
+        user: state.user.user,
+        users: state.user.users,
+        isLoading: state.user.isLoading,
+        totalPages: state.user.totalPages,
+        isCreated: state.user.isCreated,
+        isDeleted: state.user.isDeleted,
+        isUpdated: state.user.isUpdated
+    }));
 
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState(filterState);
@@ -332,6 +337,7 @@ const User = () => {
                                     </IconButton>
                                 </Tooltip>
                             </Toolbar>
+
                             {/* User Table */}
                             <UserTable
                                 handleToggleDialogCreateAndUpdate={
@@ -344,14 +350,17 @@ const User = () => {
                                 selected={selected}
                                 setSelected={setSelected}
                             />
+
                             {/* User Pagination */}
-                            <UserPagination
+                            <PaginationTable
+                                isLoading={isLoading}
                                 page={state.page}
                                 take={state.take}
                                 handleChangeRowsPerPage={
                                     handleChangeRowsPerPage
                                 }
                                 handleChangePage={handleChangePage}
+                                totalPages={totalPages}
                             />
                         </Grid>
                     </AppBar>
@@ -375,7 +384,7 @@ const User = () => {
                 handleDelete={handleDelete}
             />
             {/* Notification */}
-            <UserNotification
+            <SystemNotification
                 openDeleteSnackBar={state.openDeleteSnackBar}
                 openCreateSnackBar={state.openCreateSnackBar}
                 openUpdateSnackBar={state.openUpdateSnackBar}

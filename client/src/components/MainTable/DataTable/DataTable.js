@@ -412,23 +412,18 @@ const DataTable = ({
                                 {Array.apply(null, { length: take + 1 }).map(
                                     (row, index) => {
                                         return (
-                                            <>
-                                                <TableRow key={index}>
-                                                    <TableCell>
-                                                        <Skeleton />
-                                                    </TableCell>
-                                                    {headCells.map(
-                                                        (row, index) => {
-                                                            return (
-                                                                <TableCell
-                                                                    key={index}>
-                                                                    <Skeleton />
-                                                                </TableCell>
-                                                            );
-                                                        }
-                                                    )}
-                                                </TableRow>
-                                            </>
+                                            <TableRow key={`skeleton-${index}`}>
+                                                <TableCell>
+                                                    <Skeleton />
+                                                </TableCell>
+                                                {headCells.map((row, index) => {
+                                                    return (
+                                                        <TableCell key={index}>
+                                                            <Skeleton />
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                            </TableRow>
                                         );
                                     }
                                 )}

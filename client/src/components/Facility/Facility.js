@@ -27,7 +27,7 @@ import FacilityFilter from './FacilityFilter/FacilityFilter';
 import FacilityDialog from './FacilityDialog/FacilityDialog';
 import PaginationTable from '../MainTable/PaginationTable/PaginationTable';
 import DataTable from '../MainTable/DataTable/DataTable';
-import NotificationApp from '../Notification/Notification';
+import SystemNotification from '../Notification/Notification';
 
 const headCells = [
     {
@@ -546,6 +546,7 @@ const Facility = () => {
                                 headCells={headCells}
                                 page={state.page}
                             />
+
                             {/* Facility Pagination */}
                             <PaginationTable
                                 isLoading={isLoading}
@@ -581,7 +582,7 @@ const Facility = () => {
                 handleDelete={handleDelete}
             />
             {/* Notification */}
-            <NotificationApp
+            <SystemNotification
                 openDeleteSnackBar={state.openDeleteSnackBar}
                 openCreateSnackBar={state.openCreateSnackBar}
                 openUpdateSnackBar={state.openUpdateSnackBar}
