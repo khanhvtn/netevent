@@ -673,9 +673,21 @@ const FeedbackAnalysis = ({ eventId }) => {
                                                     )
                                                 )
                                             ) : (
-                                                <Typography>
-                                                    No Data Available
-                                                </Typography>
+                                                <>
+                                                    <TableRow
+                                                        style={{
+                                                            height: 50 * 5
+                                                        }}>
+                                                        <TableCell
+                                                            colSpan={5}
+                                                            align="center">
+                                                            <Typography>
+                                                                No Data
+                                                                Available
+                                                            </Typography>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                </>
                                             )}
                                         </TableBody>
                                     </Table>
