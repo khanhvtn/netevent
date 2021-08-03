@@ -150,9 +150,11 @@ export default makeStyles((theme) => ({
         margin: 36
     },
     chip: {
-        backgroundColor: '#000054',
-        color: '#fff',
-        margin: theme.spacing(0.5)
+        backgroundColor: '#e8eaf6',
+        color: '#3f51b5',
+        margin: theme.spacing(0.5),
+        padding: theme.spacing(0.5),
+        fontWeight: 'bold'
     },
     chipContainer: {
         root: {
@@ -164,11 +166,7 @@ export default makeStyles((theme) => ({
             }
         }
     },
-    // form: {
-    //     color: "#000054",
-    //     fontSize: "20pt",
-    //     marginTop: 7
-    // },
+
     textField: {
         marginTop: '20px'
     },

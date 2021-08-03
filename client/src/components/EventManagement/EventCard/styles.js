@@ -55,6 +55,9 @@ export default makeStyles((theme) => ({
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        maxWidth: 120
+        maxWidth: 120,
+        margin: theme.spacing(0.5),
+        padding: theme.spacing(0.5),
+        fontWeight: 'bold'
     }
 }));
