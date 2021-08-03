@@ -32,7 +32,8 @@ const initialState = {
     checkInMode: false,
     openUpdateSnackBar: false,
     openReviewParticipantDialog: false,
-    participant: null
+    participant: null,
+    reviewerMode: true
 };
 
 const filterState = {
@@ -207,7 +208,7 @@ const AllParticipantTable = ({ eventId, tabs }) => {
                 </Toolbar>
 
                 <ParticipantTable
-                    reviewerMode={true}
+                    reviewerMode={state.reviewerMode}
                     take={state.take}
                     selected={selected}
                     setSelected={setSelected}
