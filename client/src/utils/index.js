@@ -13,8 +13,7 @@ export const convertBase64 = (file) => {
 };
 
 export const getLastMonth = () => {
-    var d = new Date();
-    d.setDate(1);
-    d.setMonth(d.getMonth() - 1);
-    return d;
+    var targetDate = new Date();
+    targetDate.setMonth(targetDate.getMonth() - 1);
+    return targetDate;
 };

@@ -36,7 +36,6 @@ export default makeStyles((theme) => ({
     selectedFacility: {
         flex: '1 1 100%',
         fontWeight: 'bold',
-        marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(2)
+        marginLeft: theme.spacing(2)
     }
 }));

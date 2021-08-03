@@ -203,12 +203,12 @@ const FacilityHistoryTable = ({
 
                                             <TableCell>
                                                 {moment(row.borrowDate).format(
-                                                    'LLLL'
+                                                    'DD/MM/YYYY, h:mm a'
                                                 )}
                                             </TableCell>
                                             <TableCell>
                                                 {moment(row.returnDate).format(
-                                                    'LLLL'
+                                                    'DD/MM/YYYY, h:mm a'
                                                 )}
                                             </TableCell>
                                         </TableRow>

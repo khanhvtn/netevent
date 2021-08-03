@@ -514,22 +514,22 @@ const Registration = () => {
                                                                         css.tableText
                                                                     }
                                                                     align="left">
-                                                                    {moment(
+                                                                    {`${moment(
                                                                         task.startDate
                                                                     ).format(
-                                                                        'LLLL'
-                                                                    )}
+                                                                        'DD MMM, YYYY, LT'
+                                                                    )}`}
                                                                 </TableCell>
                                                                 <TableCell
                                                                     className={
                                                                         css.tableText
                                                                     }
                                                                     align="left">
-                                                                    {moment(
+                                                                    {`${moment(
                                                                         task.endDate
                                                                     ).format(
-                                                                        'LLLL'
-                                                                    )}
+                                                                        'DD MMM, YYYY, LT'
+                                                                    )}`}
                                                                 </TableCell>
                                                             </TableRow>
                                                         )

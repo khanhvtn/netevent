@@ -559,7 +559,52 @@ const ParticipantTable = ({
                                                 key="status"
                                                 component="th"
                                                 scope="row">
-                                                {checkInMode ? (
+                                                {reviewerMode ? (
+                                                    <>
+                                                        {row.isAttended ? (
+                                                            <Chip
+                                                                className={
+                                                                    css.fixedWidthChip
+                                                                }
+                                                                size="small"
+                                                                label="Checked"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        '#4caf50'
+                                                                }}
+                                                                color="primary"
+                                                            />
+                                                        ) : row.isValid ===
+                                                          null ? (
+                                                            <Chip
+                                                                className={
+                                                                    css.fixedWidthChip
+                                                                }
+                                                                size="small"
+                                                                label="Pending"
+                                                                color="default"
+                                                            />
+                                                        ) : row.isValid ? (
+                                                            <Chip
+                                                                className={
+                                                                    css.fixedWidthChip
+                                                                }
+                                                                size="small"
+                                                                label="Verified"
+                                                                color="primary"
+                                                            />
+                                                        ) : (
+                                                            <Chip
+                                                                className={
+                                                                    css.fixedWidthChip
+                                                                }
+                                                                size="small"
+                                                                label="Invalid"
+                                                                color="secondary"
+                                                            />
+                                                        )}
+                                                    </>
+                                                ) : checkInMode ? (
                                                     <>
                                                         {row.isAttended ? (
                                                             <Chip

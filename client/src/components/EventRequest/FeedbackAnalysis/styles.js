@@ -47,7 +47,7 @@ export default makeStyles((theme) => ({
     title: {
         flex: '1 1 100%',
         fontWeight: 'bold',
-        padding: theme.spacing(3)
+        padding: theme.spacing(2)
     },
 
     chartContainer: {
