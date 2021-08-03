@@ -395,12 +395,7 @@ const EventAnalysis = () => {
 
                             <Grid container direction="row" item xs={12}>
                                 {/* Number of Events Chart */}
-                                <Grid
-                                    justifyContent="center"
-                                    alignItems="center"
-                                    item
-                                    xs={12}
-                                    md={6}>
+                                <Grid item xs={12} md={6}>
                                     <Paper
                                         style={{ justifyContent: 'center' }}
                                         className={css.paperChart}>
@@ -424,12 +419,7 @@ const EventAnalysis = () => {
                                 </Grid>
 
                                 {/* Number of showing up event chart */}
-                                <Grid
-                                    justifyContent="center"
-                                    alignItems="center"
-                                    item
-                                    xs={12}
-                                    md={6}>
+                                <Grid item xs={12} md={6}>
                                     <Paper className={css.paperChart}>
                                         <div align="center">
                                             <Typography
