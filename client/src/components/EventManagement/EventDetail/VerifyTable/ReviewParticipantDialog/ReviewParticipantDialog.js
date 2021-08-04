@@ -28,6 +28,8 @@ const ReviewParticipantDialog = ({
 }) => {
     const css = useStyles();
 
+    console.log(participant);
+
     return (
         <Dialog
             classes={{ paper: css.dialogPaper }}
@@ -57,6 +59,21 @@ const ReviewParticipantDialog = ({
 
                 <div style={{ marginTop: 16, marginBottom: 16 }}>
                     <Grid container direction="row">
+                        <Grid xs={12} container direction="column" item>
+                            {/*  */}
+                            <Typography
+                                variant="body1"
+                                style={{
+                                    fontWeight: 'bold',
+                                    color: '#616161'
+                                }}>
+                                Email
+                            </Typography>
+                            <DialogContentText>
+                                {participant?.email}
+                            </DialogContentText>
+                        </Grid>
+
                         <Grid xs={6} container direction="column" item>
                             {/*  */}
                             <Typography
@@ -69,19 +86,6 @@ const ReviewParticipantDialog = ({
                             </Typography>
                             <DialogContentText>
                                 {participant?.name}
-                            </DialogContentText>
-
-                            {/*  */}
-                            <Typography
-                                variant="body1"
-                                style={{
-                                    fontWeight: 'bold',
-                                    color: '#616161'
-                                }}>
-                                Email
-                            </Typography>
-                            <DialogContentText>
-                                {participant?.email}
                             </DialogContentText>
 
                             {/*  */}
@@ -166,10 +170,28 @@ const ReviewParticipantDialog = ({
                             </DialogContentText>
                         </div>
                     ) : (
-                        <DialogContentText>
-                            Customize field:{' '}
-                            {participant?.customizeFieldData.length}
-                        </DialogContentText>
+                        participant?.customizeFieldData.map((data) => {
+                            return (
+                                <Grid
+                                    key={`customize-${data._id}`}
+                                    xs={6}
+                                    container
+                                    direction="column"
+                                    item>
+                                    <Typography
+                                        variant="body1"
+                                        style={{
+                                            fontWeight: 'bold',
+                                            color: '#616161'
+                                        }}>
+                                        {data.title}
+                                    </Typography>
+                                    <DialogContentText>
+                                        {data.value[0]}
+                                    </DialogContentText>
+                                </Grid>
+                            );
+                        })
                     )}
                 </div>
             </DialogContent>

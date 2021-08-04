@@ -1053,6 +1053,32 @@ const getRegistrationPageDetail = async (req, res, next) => {
     try {
         const browserToken = req.cookies?.browserToken;
 
+        const event = await Event.findOne({
+            urlCode: req.query.code,
+            isApproved: true,
+            isFinished: false
+        }).populate({
+            path: 'taskListId facilityHistoryListId eventTypeId reviewerId',
+            populate: [
+                {
+                    path: 'facilityId',
+                    model: 'Facility'
+                },
+                {
+                    path: 'userId',
+                    model: 'User'
+                },
+                {
+                    path: 'eventTypeId',
+                    model: 'EventType'
+                }
+            ]
+        });
+
+        if (!event) {
+            return cusResponse(res, 200, [], null);
+        }
+
         if (!browserToken) {
             res.cookie('browserToken', nanoid(), {
                 secure: true,
@@ -1085,40 +1111,8 @@ const getRegistrationPageDetail = async (req, res, next) => {
                     }
                 ]
             });
-
-            if (!updateEvent) {
-                return cusResponse(res, 200, [], null);
-            }
-
             return cusResponse(res, 200, updateEvent, null);
         }
-
-        const event = await Event.findOne({
-            urlCode: req.query.code,
-            isApproved: true,
-            isFinished: false
-        }).populate({
-            path: 'taskListId facilityHistoryListId eventTypeId reviewerId',
-            populate: [
-                {
-                    path: 'facilityId',
-                    model: 'Facility'
-                },
-                {
-                    path: 'userId',
-                    model: 'User'
-                },
-                {
-                    path: 'eventTypeId',
-                    model: 'EventType'
-                }
-            ]
-        });
-
-        if (!event) {
-            return cusResponse(res, 200, [], null);
-        }
-
         return cusResponse(res, 200, event, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
