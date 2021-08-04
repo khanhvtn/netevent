@@ -955,44 +955,27 @@ const Registration = () => {
                                                             : []
                                                     }
                                                 />
-                                                {state.isRegisteredSuccess ? (
-                                                    <Button
-                                                        disabled={
-                                                            state.isRegisteredSuccess
-                                                        }
-                                                        className={
-                                                            css.registerButton
-                                                        }
-                                                        type="submit"
-                                                        style={{
-                                                            color: 'white',
-                                                            backgroundColor: `#4caf50`
-                                                        }}
-                                                        variant="contained">
-                                                        Register Successfully
-                                                    </Button>
-                                                ) : (
-                                                    <Button
-                                                        disabled={
-                                                            isRegistered ||
-                                                            isReviewed
-                                                        }
-                                                        className={
-                                                            css.registerButton
-                                                        }
-                                                        type="submit"
-                                                        color="primary"
-                                                        variant="contained">
-                                                        {isRegistered ? (
-                                                            <CircularProgress
-                                                                size={26}
-                                                                color="inherit"
-                                                            />
-                                                        ) : (
-                                                            'Register Now'
-                                                        )}
-                                                    </Button>
-                                                )}
+
+                                                <Button
+                                                    disabled={
+                                                        isRegistered ||
+                                                        isReviewed
+                                                    }
+                                                    className={
+                                                        css.registerButton
+                                                    }
+                                                    type="submit"
+                                                    color="primary"
+                                                    variant="contained">
+                                                    {isRegistered ? (
+                                                        <CircularProgress
+                                                            size={26}
+                                                            color="inherit"
+                                                        />
+                                                    ) : (
+                                                        'Register Now'
+                                                    )}
+                                                </Button>
                                             </FormControl>
                                         </form>
                                     </Container>
