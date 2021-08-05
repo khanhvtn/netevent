@@ -132,7 +132,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
                                     validate: {
                                         isEmpty: (arrayValue) => {
                                             return (
-                                                !!arrayValue.length ||
+                                                !!arrayValue?.length ||
                                                 `This field can not be blanked`
                                             );
                                         }

@@ -34,7 +34,7 @@ import { registerParticipant } from '../../actions/participantActions';
 import { useParams, useHistory } from 'react-router';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import SystemNotification from '../../components/Notification/Notification';
-import { ERROR_CLEAR } from '../../constants';
+import { ERROR, ERROR_CLEAR } from '../../constants';
 import useStyles from './styles';
 import { useForm, Controller } from 'react-hook-form';
 import CustomizeForm from '../../components/CustomizeForm/CustomizeForm';
@@ -51,6 +51,7 @@ const initialDescription =
 const Registration = () => {
     const css = useStyles();
     const [state, setState] = useState(eventInitialState);
+    const [historyEmail, setHistoryEmail] = useState([]);
 
     const myRef = useRef(null);
     const history = useHistory();
@@ -180,6 +181,10 @@ const Registration = () => {
         }
     };
 
+    const checkEmail = (email) => {
+        return historyEmail.includes(email);
+    };
+
     // Handle On Click Register
     const handleOnRegister = (data) => {
         console.log(data);
@@ -194,13 +199,28 @@ const Registration = () => {
             expectedGraduateDate,
             ...rest
         } = data;
+
+        if (checkEmail(email)) {
+            let listErrors = {
+                email: 'Email is already existed'
+            };
+            dispatch({
+                type: ERROR,
+                payload: listErrors
+            });
+
+            return;
+        }
+
         let customizeFieldData = [];
+
         for (let key in rest) {
             customizeFieldData.push({ title: key, value: rest[key] });
         }
+
         dispatch(
             registerParticipant({
-                event: state.event._id,
+                event: eventDetail._id,
                 email,
                 name,
                 academic,
@@ -212,6 +232,8 @@ const Registration = () => {
                 customizeFieldData
             })
         );
+
+        setHistoryEmail([...historyEmail, email]);
     };
 
     return isLoading ? (
