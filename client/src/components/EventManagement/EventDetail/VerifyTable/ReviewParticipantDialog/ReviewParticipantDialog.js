@@ -187,7 +187,9 @@ const ReviewParticipantDialog = ({
                                         {data.title}
                                     </Typography>
                                     <DialogContentText>
-                                        {data.value[0]}
+                                        {Array.isArray(data.value)
+                                            ? data.value.join(', ')
+                                            : data.value}
                                     </DialogContentText>
                                 </Grid>
                             );
