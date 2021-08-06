@@ -34,15 +34,14 @@ import { registerParticipant } from '../../actions/participantActions';
 import { useParams, useHistory } from 'react-router';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import SystemNotification from '../../components/Notification/Notification';
-import { ERROR, ERROR_CLEAR } from '../../constants';
+import { ERROR_CLEAR } from '../../constants';
 import useStyles from './styles';
 import { useForm, Controller } from 'react-hook-form';
 import CustomizeForm from '../../components/CustomizeForm/CustomizeForm';
 
 const eventInitialState = {
     event: null,
-    isLoaded: false,
-    isRegisteredSuccess: false
+    isLoaded: false
 };
 
 const initialDescription =
@@ -51,7 +50,6 @@ const initialDescription =
 const Registration = () => {
     const css = useStyles();
     const [state, setState] = useState(eventInitialState);
-    const [historyEmail, setHistoryEmail] = useState([]);
 
     const myRef = useRef(null);
     const history = useHistory();
@@ -108,10 +106,10 @@ const Registration = () => {
 
     // Call API to get current event by urlCode
     useEffect(() => {
-        if (!isReviewed && !state.event && !isLoading) {
+        if (!isReviewed && !state.event && !state.isLoaded && !isLoading) {
             dispatch(getRegistrationPageDetail(code));
         }
-    }, [dispatch, state.event, isLoading, isReviewed, code]);
+    }, [dispatch, state.event, state.isLoaded, isLoading, isReviewed, code]);
 
     // Check if page is valid by event status
     useEffect(() => {
@@ -141,10 +139,6 @@ const Registration = () => {
     // Handle success register
     useEffect(() => {
         if (registerSuccess) {
-            setState((prevState) => ({
-                ...prevState,
-                isRegisteredSuccess: !prevState.isRegisteredSuccess
-            }));
             handleClearField();
             reset();
         }
@@ -181,13 +175,8 @@ const Registration = () => {
         }
     };
 
-    const checkEmail = (email) => {
-        return historyEmail.includes(email);
-    };
-
     // Handle On Click Register
     const handleOnRegister = (data) => {
-        console.log(data);
         const {
             email,
             name,
@@ -199,18 +188,6 @@ const Registration = () => {
             expectedGraduateDate,
             ...rest
         } = data;
-
-        if (checkEmail(email)) {
-            let listErrors = {
-                email: 'Email is already existed'
-            };
-            dispatch({
-                type: ERROR,
-                payload: listErrors
-            });
-
-            return;
-        }
 
         let customizeFieldData = [];
 
@@ -232,8 +209,6 @@ const Registration = () => {
                 customizeFieldData
             })
         );
-
-        setHistoryEmail([...historyEmail, email]);
     };
 
     return isLoading ? (
