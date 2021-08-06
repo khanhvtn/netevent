@@ -66,8 +66,9 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
                         rules={{
                             validate: defaultValidation
                         }}
-                        render={({ field }) => (
+                        render={({ field: { ref, ...field } }) => (
                             <TextField
+                                inputRef={ref}
                                 disabled={disabled}
                                 type={
                                     target.type === 'Text'
@@ -99,10 +100,11 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
                             control={control}
                             name={target.title}
                             rules={{ required: target.isRequire }}
-                            render={({ field }) => (
+                            render={({ field: { ref, ...field } }) => (
                                 <FormControlLabel
                                     control={
                                         <Checkbox
+                                            inputRef={ref}
                                             disabled={disabled}
                                             required={target.isRequired}
                                             {...field}
@@ -257,8 +259,9 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
                         control={control}
                         name={target.title}
                         rules={{ required: target.isRequire }}
-                        render={({ field }) => (
+                        render={({ field: { ref, ...field } }) => (
                             <TextField
+                                inputRef={ref}
                                 disabled={disabled}
                                 required={target.isRequired}
                                 value={field.value}

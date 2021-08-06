@@ -576,8 +576,11 @@ const Registration = () => {
                                                             !!value ||
                                                             `Full Name can not be blanked`
                                                     }}
-                                                    render={({ field }) => (
+                                                    render={({
+                                                        field: { ref, ...field }
+                                                    }) => (
                                                         <TextField
+                                                            inputRef={ref}
                                                             {...field}
                                                             disabled={
                                                                 isReviewed
@@ -615,8 +618,11 @@ const Registration = () => {
                                                             !!value ||
                                                             `Email can not be blanked`
                                                     }}
-                                                    render={({ field }) => (
+                                                    render={({
+                                                        field: { ref, ...field }
+                                                    }) => (
                                                         <TextField
+                                                            inputRef={ref}
                                                             {...field}
                                                             disabled={
                                                                 isReviewed
@@ -653,8 +659,11 @@ const Registration = () => {
                                                             !!value ||
                                                             `University can not be blanked`
                                                     }}
-                                                    render={({ field }) => (
+                                                    render={({
+                                                        field: { ref, ...field }
+                                                    }) => (
                                                         <TextField
+                                                            inputRef={ref}
                                                             {...field}
                                                             disabled={
                                                                 isReviewed
@@ -692,7 +701,9 @@ const Registration = () => {
                                                             !!value ||
                                                             `Academic can not be blanked`
                                                     }}
-                                                    render={({ field }) => (
+                                                    render={({
+                                                        field: { ref, ...field }
+                                                    }) => (
                                                         <FormControl
                                                             error={
                                                                 errors[
@@ -716,6 +727,7 @@ const Registration = () => {
                                                                 Academic *
                                                             </InputLabel>
                                                             <Select
+                                                                inputRef={ref}
                                                                 {...field}
                                                                 fullWidth
                                                                 variant="outlined"
@@ -761,8 +773,11 @@ const Registration = () => {
                                                             !!value ||
                                                             `Major can not be blanked`
                                                     }}
-                                                    render={({ field }) => (
+                                                    render={({
+                                                        field: { ref, ...field }
+                                                    }) => (
                                                         <TextField
+                                                            inputRef={ref}
                                                             {...field}
                                                             disabled={
                                                                 isReviewed
@@ -800,8 +815,11 @@ const Registration = () => {
                                                             !!value ||
                                                             `Phone can not be blanked`
                                                     }}
-                                                    render={({ field }) => (
+                                                    render={({
+                                                        field: { ref, ...field }
+                                                    }) => (
                                                         <TextField
+                                                            inputRef={ref}
                                                             {...field}
                                                             disabled={
                                                                 isReviewed
