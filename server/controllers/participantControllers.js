@@ -224,11 +224,23 @@ const filterParticipants = async (req, res, next) => {
  */
 const registerEvent = async (req, res, next) => {
     try {
-        const data = new Participant(req.body);
-        await data.validate();
+        const event = await Participant.find({
+            event: req.body.event,
+            email: req.body.email
+        });
+        console.log(event);
+        if (event.length > 0) {
+            let errors = {
+                email: 'Sorry! this email have already registered for this event.'
+            };
+            return next(new CustomError(500, errors));
+        } else {
+            const data = new Participant(req.body);
+            await data.validate();
 
-        const savedData = await data.save();
-        return cusResponse(res, 200, savedData, null);
+            const savedData = await data.save();
+            return cusResponse(res, 200, savedData, null);
+        }
     } catch (error) {
         if (error.name == 'ValidationError') {
             let errors = {};
