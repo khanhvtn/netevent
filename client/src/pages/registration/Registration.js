@@ -62,7 +62,8 @@ const Registration = () => {
         formState: { errors },
         reset,
         setError,
-        getValues
+        getValues,
+        clearErrors
     } = useForm();
 
     // UseParams to get pathname
@@ -140,9 +141,10 @@ const Registration = () => {
     useEffect(() => {
         if (registerSuccess) {
             handleClearField();
+            clearErrors();
             reset();
         }
-    }, [dispatch, registerSuccess, handleClearField, reset]);
+    }, [dispatch, registerSuccess, handleClearField, reset, clearErrors]);
 
     // On scroll register button
     const executeScroll = () =>
@@ -194,7 +196,6 @@ const Registration = () => {
         for (let key in rest) {
             customizeFieldData.push({ title: key, value: rest[key] });
         }
-
         dispatch(
             registerParticipant({
                 event: eventDetail._id,

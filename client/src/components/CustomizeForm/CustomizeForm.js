@@ -94,6 +94,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
                 if (target.optionValues.length === 0) {
                     return (
                         <Controller
+                            defaultValue={false}
                             key={index}
                             control={control}
                             name={target.title}
@@ -109,7 +110,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
                                             onChange={(e) =>
                                                 field.onChange(e.target.checked)
                                             }
-                                            value={field.value}
+                                            checked={field.value}
                                         />
                                     }
                                     label={target.title}
