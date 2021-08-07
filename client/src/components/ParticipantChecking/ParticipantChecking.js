@@ -1,22 +1,37 @@
-import { Paper, Typography, Grid, CircularProgress } from '@material-ui/core';
+import {
+    Paper,
+    Typography,
+    Grid,
+    CircularProgress,
+    Dialog,
+    DialogContent,
+    Slide
+} from '@material-ui/core';
 import React, { useCallback, useState, useEffect } from 'react';
 import useStyle from './styles';
 import QrReader from 'react-qr-reader';
 import { useDispatch, useSelector } from 'react-redux';
-import SystemNotification from '../Notification/Notification';
 import { setAttendedParticipantByQrCode } from '../../actions/participantActions';
+import './styles.scss';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 const ParticipantChecking = () => {
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const [scanDelay, setScanDelay] = useState(1000);
     const [qrCodeData, SetQrCodeDate] = useState('');
     const [openUpdateSnackBar, SetOpenUpdateSnackBar] = useState(false);
     const css = useStyle();
     const dispatch = useDispatch();
-    const { isParticipantUpdated, errors } = useSelector((state) => ({
-        isParticipantUpdated: state.participant.isUpdated,
-        isLoading: state.participant.isLoading,
-        errors: state.error.errors
-    }));
+    const { isParticipantUpdated, errors, isLoading } = useSelector(
+        (state) => ({
+            isParticipantUpdated: state.participant.isUpdated,
+            isLoading: state.participant.isLoading,
+            errors: state.error.errors
+        })
+    );
     // UseEffect for update event success
     useEffect(() => {
         SetOpenUpdateSnackBar(isParticipantUpdated);
@@ -26,7 +41,6 @@ const ParticipantChecking = () => {
     Then, request to server to change the participant status */
     useEffect(() => {
         if (qrCodeData) {
-            console.log(qrCodeData);
             setScanDelay(false);
             dispatch(
                 setAttendedParticipantByQrCode(
@@ -34,6 +48,7 @@ const ParticipantChecking = () => {
                         cipherTextQrCodeData: qrCodeData
                     },
                     setScanDelay,
+                    setSuccessMessage,
                     setErrorMessage
                 )
             );
@@ -85,7 +100,7 @@ const ParticipantChecking = () => {
                         style={{ width: '100%', maxWidth: '500px' }}
                     />
                 </Grid>
-                {!errors?.qrCode && scanDelay === false && (
+                {scanDelay === false && isLoading === true ? (
                     <Grid
                         item
                         container
@@ -96,8 +111,7 @@ const ParticipantChecking = () => {
                         <Typography variant="h6">Verifying.....</Typography>
                         <CircularProgress />
                     </Grid>
-                )}
-                {errors?.qrCode ? (
+                ) : errors?.qrCode ? (
                     <Grid
                         item
                         container
@@ -109,25 +123,66 @@ const ParticipantChecking = () => {
                             {errors.qrCode}
                         </Typography>
                     </Grid>
+                ) : errorMessage && scanDelay ? (
+                    <Grid
+                        item
+                        container
+                        direction="row"
+                        alignItems="center"
+                        justify="center"
+                        spacing={3}>
+                        <Typography color="secondary" variant="h6">
+                            {errorMessage}
+                        </Typography>
+                    </Grid>
                 ) : (
-                    errorMessage &&
-                    scanDelay && (
-                        <Grid
-                            item
-                            container
-                            direction="row"
-                            alignItems="center"
-                            justify="center"
-                            spacing={3}>
-                            <Typography color="secondary" variant="h6">
-                                {errorMessage}
-                            </Typography>
-                        </Grid>
-                    )
+                    ''
                 )}
             </Grid>
             {/* Notification */}
-            <SystemNotification openUpdateSnackBar={openUpdateSnackBar} />
+            <Dialog open={openUpdateSnackBar} TransitionComponent={Transition}>
+                <DialogContent className={css.dialogContent}>
+                    <Grid
+                        container
+                        alignItems="center"
+                        justify="center"
+                        spacing={3}
+                        direction="column">
+                        <Grid item>
+                            <svg
+                                className="qr-checked"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 130.2 130.2">
+                                <circle
+                                    className="path circle"
+                                    fill="none"
+                                    stroke="#73AF55"
+                                    strokeWidth={6}
+                                    strokeMiterlimit={10}
+                                    cx="65.1"
+                                    cy="65.1"
+                                    r="62.1"
+                                />
+                                <polyline
+                                    className="path check"
+                                    fill="none"
+                                    stroke="#73AF55"
+                                    strokeWidth={6}
+                                    strokeLinecap="round"
+                                    strokeMiterlimit={10}
+                                    points="100.2,40.2 51.5,88.8 29.8,67.5 "
+                                />
+                            </svg>
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h5">
+                                {successMessage}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+            </Dialog>
         </Paper>
     );
 };
