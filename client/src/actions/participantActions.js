@@ -210,10 +210,12 @@ export const setAttendedParticipant = (userReq) => async (dispatch) => {
 };
 
 export const setAttendedParticipantByQrCode =
-    (userReq, setScanDelay, setErrorMessage) => async (dispatch) => {
+    (userReq, setScanDelay, setSuccessMessage, setErrorMessage) =>
+    async (dispatch) => {
         setPartiticpantIsLoading(true, dispatch);
         try {
-            await setAttendedParticipantByQrCodeAPI(userReq);
+            const { data } = await setAttendedParticipantByQrCodeAPI(userReq);
+            setSuccessMessage(`Welcome, ${data.data}`);
             dispatch({
                 type: PARTICIPANT_UPDATE_SUCCESS,
                 payload: true
@@ -233,6 +235,7 @@ export const setAttendedParticipantByQrCode =
                 //enable camera scan time out.
                 setScanDelay(1000);
                 setErrorMessage('');
+                setSuccessMessage('');
             }, 3000);
         } catch (error) {
             console.log(error.message);

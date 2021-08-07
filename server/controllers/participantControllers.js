@@ -467,12 +467,12 @@ const setAttendedParticipantByQrCode = async (req, res, next) => {
                 })
             );
         }
-        const updateNotAttendedParticipant = await Participant.updateOne(
+        await Participant.updateOne(
             { _id: participantInfo.participantId },
             { $set: { isAttended: true } },
             { new: true }
         );
-        return cusResponse(res, 200, updateNotAttendedParticipant, null);
+        return cusResponse(res, 200, participant.name, null);
     } catch (error) {
         return next(new CustomError(500, { qrCode: 'Invalid QR Code' }));
     }
