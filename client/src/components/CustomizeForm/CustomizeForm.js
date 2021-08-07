@@ -175,7 +175,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
             case 'Radio':
                 return (
                     <Controller
-                        defaultValue={[]}
+                        defaultValue=""
                         key={index}
                         control={control}
                         name={target.title}

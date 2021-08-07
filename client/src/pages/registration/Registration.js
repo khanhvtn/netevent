@@ -153,6 +153,7 @@ const Registration = () => {
         if (customizeFields) {
             for (const field of customizeFields) {
                 switch (field.type) {
+                    case 'Radio':
                     case 'Email':
                     case 'Number':
                     case 'Text':
@@ -175,12 +176,6 @@ const Registration = () => {
                             };
                             break;
                         }
-                    case 'Radio':
-                        dynamicDefaultValues = {
-                            ...dynamicDefaultValues,
-                            [field.title]: []
-                        };
-                        break;
                     case 'DateTime':
                         dynamicDefaultValues = {
                             ...dynamicDefaultValues,
