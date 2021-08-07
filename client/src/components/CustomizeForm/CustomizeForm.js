@@ -66,9 +66,8 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
                         rules={{
                             validate: defaultValidation
                         }}
-                        render={({ field: { ref, ...field } }) => (
+                        render={({ field }) => (
                             <TextField
-                                inputRef={ref}
                                 disabled={disabled}
                                 type={
                                     target.type === 'Text'
@@ -147,6 +146,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
+                                                    color="primary"
                                                     disabled={disabled}
                                                     onChange={() =>
                                                         field.onChange(
@@ -175,7 +175,7 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
             case 'Radio':
                 return (
                     <Controller
-                        defaultValue={target.optionValues[0]}
+                        defaultValue={[]}
                         key={index}
                         control={control}
                         name={target.title}
@@ -202,7 +202,9 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
                                                     disabled={disabled}
                                                     key={index}
                                                     value={option}
-                                                    control={<Radio />}
+                                                    control={
+                                                        <Radio color="primary" />
+                                                    }
                                                     label={option}
                                                 />
                                             );
@@ -259,9 +261,8 @@ const CustomizeForm = ({ control, fieldList, errors, getValues, disabled }) => {
                         control={control}
                         name={target.title}
                         rules={{ required: target.isRequire }}
-                        render={({ field: { ref, ...field } }) => (
+                        render={({ field }) => (
                             <TextField
-                                inputRef={ref}
                                 disabled={disabled}
                                 required={target.isRequired}
                                 value={field.value}

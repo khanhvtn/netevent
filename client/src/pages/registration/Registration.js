@@ -137,15 +137,85 @@ const Registration = () => {
         });
     }, [dispatch]);
 
+    //func generate defaultValues
+    const genDefaultValues = useCallback((customizeFields) => {
+        let originalDefaultValues = {
+            email: '',
+            name: '',
+            academic: '',
+            school: '',
+            major: '',
+            phone: '',
+            DOB: Date.now(),
+            expectedGraduateDate: Date.now()
+        };
+        let dynamicDefaultValues = {};
+        if (customizeFields) {
+            for (const field of customizeFields) {
+                switch (field.type) {
+                    case 'Email':
+                    case 'Number':
+                    case 'Text':
+                        dynamicDefaultValues = {
+                            ...dynamicDefaultValues,
+                            [field.title]: ''
+                        };
+                        break;
+                    case 'Checkbox':
+                        if (field.optionValues.length === 0) {
+                            dynamicDefaultValues = {
+                                ...dynamicDefaultValues,
+                                [field.title]: false
+                            };
+                            break;
+                        } else {
+                            dynamicDefaultValues = {
+                                ...dynamicDefaultValues,
+                                [field.title]: []
+                            };
+                            break;
+                        }
+                    case 'Radio':
+                        dynamicDefaultValues = {
+                            ...dynamicDefaultValues,
+                            [field.title]: []
+                        };
+                        break;
+                    case 'DateTime':
+                        dynamicDefaultValues = {
+                            ...dynamicDefaultValues,
+                            [field.title]: Date.now()
+                        };
+                        break;
+                    default:
+                        dynamicDefaultValues = {
+                            ...dynamicDefaultValues,
+                            [field.title]: ''
+                        };
+                        break;
+                }
+            }
+        }
+        return { ...originalDefaultValues, ...dynamicDefaultValues };
+    }, []);
+
     // Handle success register
     useEffect(() => {
         if (registerSuccess) {
             handleClearField();
             clearErrors();
-            reset();
+            reset(genDefaultValues(state.event?.customizeFields));
         }
-    }, [dispatch, registerSuccess, handleClearField, reset, clearErrors]);
-
+    }, [
+        dispatch,
+        registerSuccess,
+        handleClearField,
+        reset,
+        clearErrors,
+        getValues,
+        genDefaultValues,
+        state.event?.customizeFields
+    ]);
     // On scroll register button
     const executeScroll = () =>
         myRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -576,11 +646,8 @@ const Registration = () => {
                                                             !!value ||
                                                             `Full Name can not be blanked`
                                                     }}
-                                                    render={({
-                                                        field: { ref, ...field }
-                                                    }) => (
+                                                    render={({ field }) => (
                                                         <TextField
-                                                            inputRef={ref}
                                                             {...field}
                                                             disabled={
                                                                 isReviewed
@@ -618,11 +685,8 @@ const Registration = () => {
                                                             !!value ||
                                                             `Email can not be blanked`
                                                     }}
-                                                    render={({
-                                                        field: { ref, ...field }
-                                                    }) => (
+                                                    render={({ field }) => (
                                                         <TextField
-                                                            inputRef={ref}
                                                             {...field}
                                                             disabled={
                                                                 isReviewed
@@ -659,11 +723,8 @@ const Registration = () => {
                                                             !!value ||
                                                             `University can not be blanked`
                                                     }}
-                                                    render={({
-                                                        field: { ref, ...field }
-                                                    }) => (
+                                                    render={({ field }) => (
                                                         <TextField
-                                                            inputRef={ref}
                                                             {...field}
                                                             disabled={
                                                                 isReviewed
@@ -701,9 +762,7 @@ const Registration = () => {
                                                             !!value ||
                                                             `Academic can not be blanked`
                                                     }}
-                                                    render={({
-                                                        field: { ref, ...field }
-                                                    }) => (
+                                                    render={({ field }) => (
                                                         <FormControl
                                                             error={
                                                                 errors[
@@ -727,7 +786,6 @@ const Registration = () => {
                                                                 Academic *
                                                             </InputLabel>
                                                             <Select
-                                                                inputRef={ref}
                                                                 {...field}
                                                                 fullWidth
                                                                 variant="outlined"
@@ -773,11 +831,8 @@ const Registration = () => {
                                                             !!value ||
                                                             `Major can not be blanked`
                                                     }}
-                                                    render={({
-                                                        field: { ref, ...field }
-                                                    }) => (
+                                                    render={({ field }) => (
                                                         <TextField
-                                                            inputRef={ref}
                                                             {...field}
                                                             disabled={
                                                                 isReviewed
@@ -815,11 +870,8 @@ const Registration = () => {
                                                             !!value ||
                                                             `Phone can not be blanked`
                                                     }}
-                                                    render={({
-                                                        field: { ref, ...field }
-                                                    }) => (
+                                                    render={({ field }) => (
                                                         <TextField
-                                                            inputRef={ref}
                                                             {...field}
                                                             disabled={
                                                                 isReviewed
