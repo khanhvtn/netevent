@@ -53,6 +53,19 @@ const signUpAndOpenUpData = {
     ]
 };
 
+const noDataPieChartData = {
+    labels: ['No Available Data'],
+    datasets: [
+        {
+            label: 'No Available Data',
+            data: [100],
+            backgroundColor: ['rgb(39,44,52,0.2)'],
+            borderColor: ['rgb(39,44,52,0.1)'],
+            borderWidth: 1
+        }
+    ]
+};
+
 const Analysis = ({ eventId, tabs, event }) => {
     const css = useStyles();
     const dispatch = useDispatch();
@@ -254,7 +267,12 @@ const Analysis = ({ eventId, tabs, event }) => {
                                 </Typography>
                                 <article className={css.chartContainer}>
                                     <Pie
-                                        data={signUpAndShowUpState}
+                                        data={
+                                            signUpAndShowUpState.datasets[0]
+                                                .data.length === 0
+                                                ? noDataPieChartData
+                                                : signUpAndShowUpState
+                                        }
                                         options={options}
                                     />
                                 </article>
@@ -270,7 +288,12 @@ const Analysis = ({ eventId, tabs, event }) => {
                                 </Typography>
                                 <article className={css.chartContainer}>
                                     <Pie
-                                        data={signUpAndOpenUpState}
+                                        data={
+                                            signUpAndOpenUpState.datasets[0]
+                                                .data.length === 0
+                                                ? noDataPieChartData
+                                                : signUpAndOpenUpState
+                                        }
                                         options={options}
                                     />
                                 </article>
