@@ -88,6 +88,19 @@ const participantOfCompletedEventData = {
     ]
 };
 
+const noDataPieChartData = {
+    labels: ['No Available Data'],
+    datasets: [
+        {
+            label: 'No Available Data',
+            data: [100],
+            backgroundColor: ['rgb(39,44,52,0.2)'],
+            borderColor: ['rgb(39,44,52,0.1)'],
+            borderWidth: 1
+        }
+    ]
+};
+
 const optionBarChart = {
     indexAxis: 'y',
     // Elements options apply to all of the options unless overridden in a dataset
@@ -411,7 +424,13 @@ const EventAnalysis = () => {
                                             </Typography>
                                             <div style={{ width: '50%' }}>
                                                 <Pie
-                                                    data={signUpAndShowUpState}
+                                                    data={
+                                                        signUpAndShowUpState
+                                                            .datasets[0].data
+                                                            .length === 0
+                                                            ? noDataPieChartData
+                                                            : signUpAndShowUpState
+                                                    }
                                                 />
                                             </div>
                                         </div>
