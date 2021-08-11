@@ -269,7 +269,9 @@ const Analysis = ({ eventId, tabs, event }) => {
                                     <Pie
                                         data={
                                             signUpAndShowUpState.datasets[0]
-                                                .data.length === 0
+                                                .data[0] === 0 &&
+                                            signUpAndShowUpState.datasets[0]
+                                                .data[1] === 0
                                                 ? noDataPieChartData
                                                 : signUpAndShowUpState
                                         }
@@ -290,7 +292,9 @@ const Analysis = ({ eventId, tabs, event }) => {
                                     <Pie
                                         data={
                                             signUpAndOpenUpState.datasets[0]
-                                                .data.length === 0
+                                                .data[0] === 0 &&
+                                            signUpAndOpenUpState.datasets[0]
+                                                .data[1] === 0
                                                 ? noDataPieChartData
                                                 : signUpAndOpenUpState
                                         }

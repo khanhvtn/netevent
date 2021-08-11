@@ -426,8 +426,11 @@ const EventAnalysis = () => {
                                                 <Pie
                                                     data={
                                                         signUpAndShowUpState
-                                                            .datasets[0].data
-                                                            .length === 0
+                                                            .datasets[0]
+                                                            .data[0] === 0 &&
+                                                        signUpAndShowUpState
+                                                            .datasets[0]
+                                                            .data[1] === 0
                                                             ? noDataPieChartData
                                                             : signUpAndShowUpState
                                                     }
