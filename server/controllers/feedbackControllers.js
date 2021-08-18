@@ -194,7 +194,7 @@ const getFeedbackByEventID = async (req, res, next) => {
                     question5AChartInitialData[3] =
                         question5AChartInitialData[3] + question5A[key];
                 }
-                if (key === 'Execellent') {
+                if (key === 'Excellent') {
                     question5AChartInitialData[4] =
                         question5AChartInitialData[4] + question5A[key];
                 }
@@ -219,7 +219,7 @@ const getFeedbackByEventID = async (req, res, next) => {
                     question5BChartInitialData[3] =
                         question5BChartInitialData[3] + question5B[key];
                 }
-                if (key === 'Execellent') {
+                if (key === 'Excellent') {
                     question5BChartInitialData[4] =
                         question5BChartInitialData[4] + question5B[key];
                 }
@@ -235,7 +235,6 @@ const getFeedbackByEventID = async (req, res, next) => {
             chart5B: question5BChartInitialData,
             chart6: question6ChartInitialData
         };
-
         return cusResponse(res, 200, result, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
