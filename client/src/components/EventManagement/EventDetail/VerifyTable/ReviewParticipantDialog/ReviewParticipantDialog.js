@@ -30,6 +30,8 @@ const ReviewParticipantDialog = ({
 
     console.log(participant);
 
+    const isBoolean = (val) => 'boolean' === typeof val;
+
     return (
         <Dialog
             classes={{ paper: css.dialogPaper }}
@@ -189,6 +191,10 @@ const ReviewParticipantDialog = ({
                                     <DialogContentText>
                                         {Array.isArray(data.value)
                                             ? data.value.join(', ')
+                                            : isBoolean(data.value)
+                                            ? data.value
+                                                ? 'Yes'
+                                                : 'No'
                                             : data.value}
                                     </DialogContentText>
                                 </Grid>
