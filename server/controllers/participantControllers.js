@@ -625,7 +625,7 @@ const inviteParticipant = async (req, res, next) => {
         // Send Email Invitation (Minh)
         await sendEmail(
             'noreply@netevent.com',
-            newInvitationList.join(', '),
+            email,
             'Netcompany - You May Interest In This Event',
             eventInvitationTemplate(event)
         );
