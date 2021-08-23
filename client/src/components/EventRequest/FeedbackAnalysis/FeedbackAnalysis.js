@@ -124,7 +124,7 @@ const question5AChartData = {
     datasets: [
         {
             label: 'Please rate the following as you see fit on the seminar: Presentation Quality',
-            data: [],
+            data: [0, 0, 0, 0, 0],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -149,6 +149,31 @@ const question5BChartData = {
     datasets: [
         {
             label: 'Please rate the following as you see fit on the seminar: Speaker Knowledge',
+            data: [0, 0, 0, 0, 0],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+        }
+    ]
+};
+
+const questionFeedbackSentVsReceivedData = {
+    labels: ['Sent', 'Received'],
+    datasets: [
+        {
+            label: 'Feedback Sent vs Feedback Received',
             data: [],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -182,84 +207,6 @@ const noDataPieChartData = {
     ]
 };
 
-const optionQuestion1Chart = {
-    scales: {
-        y: [
-            {
-                ticks: {
-                    beginAtZero: true,
-                    precision: 0
-                }
-            }
-        ]
-    },
-    plugins: {
-        legend: {
-            display: false
-        }
-    }
-};
-
-const optionQuestion2Chart = {
-    scales: {
-        yAxes: [
-            {
-                ticks: {
-                    beginAtZero: true,
-                    precision: 0
-                }
-            }
-        ]
-    },
-    plugins: {
-        legend: {
-            display: false
-        }
-    }
-};
-
-const optionQuestion3Chart = {
-    scales: {
-        yAxes: [
-            {
-                ticks: {
-                    beginAtZero: true,
-                    precision: 0
-                }
-            }
-        ]
-    },
-    plugins: {
-        legend: {
-            display: false
-        }
-    }
-};
-
-const optionQuestion4Chart = {
-    plugins: {
-        legend: {
-            display: true
-        }
-    }
-};
-
-const optionQuestion5AChart = {
-    plugins: {
-        legend: {
-            display: true
-        }
-    }
-};
-
-const optionQuestion5BChart = {
-    plugins: {
-        legend: {
-            display: true
-        }
-    }
-};
-
 const optionNoDataPieChart = {
     plugins: {
         legend: {
@@ -284,6 +231,276 @@ const FeedbackAnalysis = ({ eventId }) => {
     const [question5BFeedbackState, setQuestion5BFeedbackState] =
         useState(question5BChartData);
     const [question6FeedbackState, setQuestion6FeedbackState] = useState([]);
+    const [
+        questionFeedbackSentvsReceivedState,
+        setQuestionFeedbackSentvsReceivedState
+    ] = useState(questionFeedbackSentVsReceivedData);
+    const [questionParticipantAgreeState, setQuestionParticipantAgreeState] =
+        useState([]);
+
+    const optionQuestion1Chart = {
+        scales: {
+            yAxes: [
+                {
+                    ticks: {
+                        beginAtZero: true,
+                        precision: 0
+                    }
+                }
+            ]
+        },
+
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function (TooltipItem) {
+                        let total = 0;
+                        for (
+                            let i = 0;
+                            i < question1FeedbackState.datasets[0].data.length;
+                            i++
+                        ) {
+                            total += question1FeedbackState.datasets[0].data[i];
+                        }
+
+                        const percentage = (
+                            (parseInt(TooltipItem.formattedValue) / total) *
+                            100
+                        ).toFixed(0);
+                        // return `${currentValue} (${percentage}%)`;
+                        let label =
+                            'Rating: ' +
+                            percentage +
+                            `% (${TooltipItem.formattedValue})`;
+                        return label;
+                    }
+                }
+            }
+        }
+    };
+
+    const optionQuestion2Chart = {
+        scales: {
+            yAxes: [
+                {
+                    ticks: {
+                        beginAtZero: true,
+                        precision: 0
+                    }
+                }
+            ]
+        },
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function (TooltipItem) {
+                        let total = 0;
+                        for (
+                            let i = 0;
+                            i < question2FeedbackState.datasets[0].data.length;
+                            i++
+                        ) {
+                            total += question2FeedbackState.datasets[0].data[i];
+                        }
+
+                        const percentage = (
+                            (parseInt(TooltipItem.formattedValue) / total) *
+                            100
+                        ).toFixed(0);
+                        // return `${currentValue} (${percentage}%)`;
+                        let label =
+                            'Rating: ' +
+                            percentage +
+                            `% (${TooltipItem.formattedValue})`;
+                        return label;
+                    }
+                }
+            }
+        }
+    };
+
+    const optionQuestion3Chart = {
+        scales: {
+            yAxes: [
+                {
+                    ticks: {
+                        beginAtZero: true,
+                        precision: 0
+                    }
+                }
+            ]
+        },
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function (TooltipItem) {
+                        let total = 0;
+                        for (
+                            let i = 0;
+                            i < question3FeedbackState.datasets[0].data.length;
+                            i++
+                        ) {
+                            total += question3FeedbackState.datasets[0].data[i];
+                        }
+
+                        const percentage = (
+                            (parseInt(TooltipItem.formattedValue) / total) *
+                            100
+                        ).toFixed(0);
+                        // return `${currentValue} (${percentage}%)`;
+                        let label =
+                            'Rating: ' +
+                            percentage +
+                            `% (${TooltipItem.formattedValue})`;
+                        return label;
+                    }
+                }
+            }
+        }
+    };
+
+    const optionQuestion4Chart = {
+        plugins: {
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function (TooltipItem) {
+                        let total = 0;
+                        for (
+                            let i = 0;
+                            i < question4FeedbackState.datasets[0].data.length;
+                            i++
+                        ) {
+                            total += question4FeedbackState.datasets[0].data[i];
+                        }
+                        const percentage = (
+                            (TooltipItem.parsed / total) *
+                            100
+                        ).toFixed(0);
+                        // return `${currentValue} (${percentage}%)`;
+                        let label =
+                            TooltipItem.label +
+                            ': ' +
+                            percentage +
+                            `% (${TooltipItem.parsed})`;
+                        return label;
+                    }
+                }
+            }
+        }
+    };
+
+    const optionQuestion5AChart = {
+        plugins: {
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function (TooltipItem) {
+                        let total = 0;
+                        for (
+                            let i = 0;
+                            i < question5AFeedbackState.datasets[0].data.length;
+                            i++
+                        ) {
+                            total +=
+                                question5AFeedbackState.datasets[0].data[i];
+                        }
+                        const percentage = (
+                            (TooltipItem.parsed / total) *
+                            100
+                        ).toFixed(0);
+                        // return `${currentValue} (${percentage}%)`;
+                        let label =
+                            TooltipItem.label +
+                            ': ' +
+                            percentage +
+                            `% (${TooltipItem.parsed})`;
+                        return label;
+                    }
+                }
+            }
+        }
+    };
+
+    const optionQuestion5BChart = {
+        plugins: {
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function (TooltipItem) {
+                        let total = 0;
+                        for (
+                            let i = 0;
+                            i < question5BFeedbackState.datasets[0].data.length;
+                            i++
+                        ) {
+                            total +=
+                                question5BFeedbackState.datasets[0].data[i];
+                        }
+                        const percentage = (
+                            (TooltipItem.parsed / total) *
+                            100
+                        ).toFixed(0);
+                        // return `${currentValue} (${percentage}%)`;
+                        let label =
+                            TooltipItem.label +
+                            ': ' +
+                            percentage +
+                            `% (${TooltipItem.parsed})`;
+                        return label;
+                    }
+                }
+            }
+        }
+    };
+
+    const optionFeedbackSentVsReceived = {
+        plugins: {
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function (TooltipItem) {
+                        let total = 0;
+                        for (
+                            let i = 0;
+                            i <
+                            questionFeedbackSentvsReceivedState.datasets[0].data
+                                .length;
+                            i++
+                        ) {
+                            total +=
+                                questionFeedbackSentvsReceivedState.datasets[0]
+                                    .data[i];
+                        }
+                        const percentage = (
+                            (TooltipItem.parsed / total) *
+                            100
+                        ).toFixed(0);
+                        // return `${currentValue} (${percentage}%)`;
+                        let label =
+                            TooltipItem.label +
+                            ': ' +
+                            percentage +
+                            `% (${TooltipItem.parsed})`;
+                        return label;
+                    }
+                }
+            }
+        }
+    };
+
     const { feedbacks, isLoading } = useSelector((state) => ({
         feedbacks: state.feedback.feedbacks,
         isLoading: state.feedback.isLoading
@@ -445,15 +662,34 @@ const FeedbackAnalysis = ({ eventId }) => {
                     }
                 ]
             });
+            setQuestionFeedbackSentvsReceivedState({
+                labels: ['Sent', 'Received'],
+                datasets: [
+                    {
+                        label: 'Feedback Sent vs Feedback Received',
+                        data: feedbacks.chartSendVsReceived,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }
+                ]
+            });
             setQuestion6FeedbackState(feedbacks.chart6);
+            setQuestionParticipantAgreeState(feedbacks.chartParticipantAgree);
         }
     }, [feedbacks, isLoading]);
-
-    useEffect(() => {
-        if (!isLoading) {
-            console.log(question5BFeedbackState.datasets[0]);
-        }
-    }, [isLoading, question5BFeedbackState]);
 
     return (
         <>
@@ -523,6 +759,42 @@ const FeedbackAnalysis = ({ eventId }) => {
                                         data={question3FeedbackState}
                                         options={optionQuestion3Chart}
                                     />
+                                </Paper>
+                            </Grid>
+
+                            {/* Feedback Sent / Feedback Recieved */}
+                            <Grid item xs={12} md={6}>
+                                <Paper className={css.pie}>
+                                    <Typography className={css.labelChart}>
+                                        Feedback Sent vs Feedback Received
+                                    </Typography>
+                                    {!Array.isArray(
+                                        questionFeedbackSentvsReceivedState
+                                            .datasets[0].data
+                                    ) ? (
+                                        <></>
+                                    ) : questionFeedbackSentvsReceivedState
+                                          .datasets[0].data[0] === 0 &&
+                                      questionFeedbackSentvsReceivedState
+                                          .datasets[0].data[1] === 0 ? (
+                                        <article className={css.chartContainer}>
+                                            <Pie
+                                                data={noDataPieChartData}
+                                                options={optionNoDataPieChart}
+                                            />
+                                        </article>
+                                    ) : (
+                                        <article className={css.chartContainer}>
+                                            <Pie
+                                                data={
+                                                    questionFeedbackSentvsReceivedState
+                                                }
+                                                options={
+                                                    optionFeedbackSentVsReceived
+                                                }
+                                            />
+                                        </article>
+                                    )}
                                 </Paper>
                             </Grid>
 
@@ -631,6 +903,57 @@ const FeedbackAnalysis = ({ eventId }) => {
                                             />
                                         </article>
                                     )}
+                                </Paper>
+                            </Grid>
+
+                            {/* Agree to receive notification */}
+                            <Grid item xs={12}>
+                                <Paper className={css.paperChart}>
+                                    <Typography className={css.labelChart}>
+                                        Participants agree to receive future
+                                        notifications
+                                    </Typography>
+                                    <Table
+                                        className={css.table}
+                                        aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Email</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {questionParticipantAgreeState?.length !==
+                                            0 ? (
+                                                questionParticipantAgreeState?.map(
+                                                    (value, index) => (
+                                                        <TableRow key={index}>
+                                                            <TableCell
+                                                                component="th"
+                                                                scope="row">
+                                                                {value}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )
+                                                )
+                                            ) : (
+                                                <>
+                                                    <TableRow
+                                                        style={{
+                                                            height: 50 * 5
+                                                        }}>
+                                                        <TableCell
+                                                            colSpan={5}
+                                                            align="center">
+                                                            <Typography>
+                                                                No Data
+                                                                Available
+                                                            </Typography>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                </>
+                                            )}
+                                        </TableBody>
+                                    </Table>
                                 </Paper>
                             </Grid>
 

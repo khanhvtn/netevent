@@ -49,6 +49,23 @@ const getFeedbackByEventID = async (req, res, next) => {
             eventId: options.eventId
         }).populate('userId');
 
+        // Get number of feedback Sent
+        const feedbackSent = await Feedback.find({
+            eventId: options.eventId
+        });
+
+        const feedbackReceived = await Feedback.find({
+            eventId: options.eventId,
+            isCompleted: true
+        });
+        const numberOfFeedbackReceived = feedbackReceived.length;
+        const numberOfFeedbackSent = feedbackSent.length;
+
+        // Get list of participants agree to receive notification
+        const participantAgreeToReceiveNoti = feedbacks.filter(
+            (feedback) => feedback.question[3].value == 1
+        );
+
         const feedbackQuestion1 = [];
         const feedbackQuestion2 = [];
         const feedbackQuestion3 = [];
@@ -138,6 +155,15 @@ const getFeedbackByEventID = async (req, res, next) => {
         const question5AChartInitialData = [0, 0, 0, 0, 0];
         const question5BChartInitialData = [0, 0, 0, 0, 0];
         const question6ChartInitialData = feedbackQuestion6;
+        const questionFeedbackSentVsReceived = [
+            numberOfFeedbackSent,
+            numberOfFeedbackReceived
+        ];
+        const questionParticipantAgreeToReceive = [];
+
+        participantAgreeToReceiveNoti.forEach((element) => {
+            questionParticipantAgreeToReceive.push(element.userId.email);
+        });
 
         feedbackAnalysis.question1Result.forEach((question1) => {
             Object.keys(question1).forEach((key) => {
@@ -233,8 +259,11 @@ const getFeedbackByEventID = async (req, res, next) => {
             chart4: question4ChartInitialData,
             chart5A: question5AChartInitialData,
             chart5B: question5BChartInitialData,
-            chart6: question6ChartInitialData
+            chart6: question6ChartInitialData,
+            chartSendVsReceived: questionFeedbackSentVsReceived,
+            chartParticipantAgree: questionParticipantAgreeToReceive
         };
+
         return cusResponse(res, 200, result, null);
     } catch (error) {
         return next(new CustomError(500, error.message));
