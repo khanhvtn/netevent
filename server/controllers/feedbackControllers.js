@@ -1,7 +1,6 @@
 const { Feedback } = require('../models');
 const { cusResponse } = require('../utils');
 const CustomError = require('../class/CustomError');
-
 /**
  *  =====================================
  *         FEEDBACK CONTROLLER
@@ -57,7 +56,7 @@ const getFeedbackByEventID = async (req, res, next) => {
         const feedbackReceived = await Feedback.find({
             eventId: options.eventId,
             isCompleted: true
-        });
+        }).populate('userId');
         const numberOfFeedbackReceived = feedbackReceived.length;
         const numberOfFeedbackSent = feedbackSent.length;
 
@@ -160,6 +159,29 @@ const getFeedbackByEventID = async (req, res, next) => {
             numberOfFeedbackReceived
         ];
         const questionParticipantAgreeToReceive = [];
+        const raw = [];
+
+        feedbackReceived.forEach((feedback) => {
+            var date = new Date(feedback.createdAt);
+            raw.push({
+                Timestamp: date.toLocaleString(),
+                Sender: feedback.userId.email,
+                'How likely are you to recommend Netcompany as a workplace to your friend/colleague?':
+                    feedback.question[0].value,
+                'Do you find the content of the seminar helpful?':
+                    feedback.question[1].value,
+                'What is your willingness to recommend a future NC seminar to a friend or a colleague?':
+                    feedback.question[2].value,
+                'Would you like us to send you upcoming events and seminar notification?':
+                    feedback.question[3].value,
+                'Please rate the following as you see fit on the seminar: Presentation Quality':
+                    feedback.question[4].value.presentationQuality,
+                'Please rate the following as you see fit on the seminar: Speaker Knowledge':
+                    feedback.question[4].value.speakerKnowledge,
+                'Please provide any suggestions to help us improve the quality of future event':
+                    feedback.question[5].value
+            });
+        });
 
         participantAgreeToReceiveNoti.forEach((element) => {
             questionParticipantAgreeToReceive.push(element.userId.email);
@@ -261,7 +283,8 @@ const getFeedbackByEventID = async (req, res, next) => {
             chart5B: question5BChartInitialData,
             chart6: question6ChartInitialData,
             chartSendVsReceived: questionFeedbackSentVsReceived,
-            chartParticipantAgree: questionParticipantAgreeToReceive
+            chartParticipantAgree: questionParticipantAgreeToReceive,
+            raw: raw
         };
 
         return cusResponse(res, 200, result, null);

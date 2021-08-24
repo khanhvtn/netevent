@@ -5,16 +5,19 @@ import {
     Grid,
     Paper,
     Typography,
-    CircularProgress
+    CircularProgress,
+    Button
 } from '@material-ui/core';
 import useStyles from './styles';
 import { Bar, Pie } from 'react-chartjs-2';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { getFeedbackByEventID } from '../../../actions/feedbackActions';
+import { ExportToCsv } from 'export-to-csv';
 
 const question1ChartData = {
     labels: ['1', '2', '3', '4', '5', '6', '7'],
@@ -215,7 +218,7 @@ const optionNoDataPieChart = {
     }
 };
 
-const FeedbackAnalysis = ({ eventId }) => {
+const FeedbackAnalysis = ({ eventId, eventName }) => {
     const css = useStyles();
     const dispatch = useDispatch();
     const [question1FeedbackState, setQuestion1FeedbackState] =
@@ -691,6 +694,24 @@ const FeedbackAnalysis = ({ eventId }) => {
         }
     }, [feedbacks, isLoading]);
 
+    const handleOnExport = () => {
+        const exportData = feedbacks.raw;
+        const csvOptions = {
+            fieldSeparator: ',',
+            quoteStrings: '"',
+            decimalSeparator: '.',
+            showLabels: true,
+            showTitle: true,
+            title: `${eventName} Feedback`,
+            useTextFile: false,
+            useBom: true,
+            useKeysAsHeaders: true,
+            filename: `${eventName} Feedback`
+        };
+        const csvExporter = new ExportToCsv(csvOptions);
+        csvExporter.generateCsv(exportData);
+    };
+
     return (
         <>
             {isLoading ? (
@@ -700,13 +721,41 @@ const FeedbackAnalysis = ({ eventId }) => {
             ) : (
                 <Paper elevation={0} className={css.paper}>
                     <Grid container>
-                        <Grid item xs={12}>
+                        <Grid item xs={6}>
                             <Typography
                                 className={css.title}
                                 align="left"
                                 variant="h4">
                                 Feedback Review
                             </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            {feedbacks.raw.length == 0 ? (
+                                <Button
+                                    variant="contained"
+                                    disabled
+                                    className={css.exportBtn}
+                                    onClick={() => handleOnExport()}>
+                                    <Typography className={css.titleExportBtn}>
+                                        <GetAppIcon
+                                            className={css.iconAnalysis}
+                                        />
+                                        Export
+                                    </Typography>
+                                </Button>
+                            ) : (
+                                <Button
+                                    variant="contained"
+                                    className={css.exportBtn}
+                                    onClick={() => handleOnExport()}>
+                                    <Typography className={css.titleExportBtn}>
+                                        <GetAppIcon
+                                            className={css.iconAnalysis}
+                                        />
+                                        Export
+                                    </Typography>
+                                </Button>
+                            )}
                         </Grid>
                     </Grid>
                     <div align="center">
