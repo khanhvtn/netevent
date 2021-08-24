@@ -848,7 +848,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                             </Grid>
 
                             {/* QUESTION 4 */}
-                            <Grid item xs={12} md={4}>
+                            <Grid item xs={12} md={6}>
                                 <Paper className={css.pie}>
                                     <Typography className={css.labelChart}>
                                         Would you like us to send you upcoming
@@ -880,7 +880,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                             </Grid>
 
                             {/* QUESTION 5A */}
-                            <Grid item xs={12} md={4}>
+                            <Grid item xs={12} md={6}>
                                 <Paper className={css.pie}>
                                     <Typography className={css.labelChart}>
                                         Please rate the following as you see fit
@@ -918,7 +918,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                             </Grid>
 
                             {/* QUESTION 5B */}
-                            <Grid item xs={12} md={4}>
+                            <Grid item xs={12} md={6}>
                                 <Paper className={css.pie}>
                                     <Typography className={css.labelChart}>
                                         Please rate the following as you see fit
