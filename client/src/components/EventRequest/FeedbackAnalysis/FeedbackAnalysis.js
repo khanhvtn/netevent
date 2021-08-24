@@ -730,7 +730,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                             </Typography>
                         </Grid>
                         <Grid item xs={6}>
-                            {feedbacks.raw.length == 0 ? (
+                            {feedbacks.raw?.length == 0 ? (
                                 <Button
                                     variant="contained"
                                     disabled
