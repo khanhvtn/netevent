@@ -31,6 +31,19 @@ export default makeStyles((theme) => ({
         margin: theme.spacing(2),
         padding: theme.spacing(2)
     },
+    exportBtn: {
+        text: 'right',
+        float: 'right',
+        backgroundColor: '#0e2045',
+        margin: theme.spacing(2)
+    },
+    titleExportBtn: {
+        color: '#ffffff',
+        fontSize: 18,
+        fontWeight: 'bold',
+        verticalAlign: 'middle',
+        display: 'inline-flex'
+    },
 
     pie: {
         margin: theme.spacing(2),
