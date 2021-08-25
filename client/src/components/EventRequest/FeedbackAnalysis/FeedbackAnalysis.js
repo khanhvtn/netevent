@@ -759,7 +759,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                         </Grid>
                     </Grid>
                     <div align="center">
-                        <Grid container spacing={2}>
+                        <Grid container spacing={2} justify="center">
                             {/* QUESTION 1 */}
                             <Grid item xs={12}>
                                 <Paper className={css.paperChart}>

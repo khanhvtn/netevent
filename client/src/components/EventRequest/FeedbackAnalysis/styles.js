@@ -64,7 +64,7 @@ export default makeStyles((theme) => ({
     },
 
     chartContainer: {
-        height: '50vh',
+        height: '70vh',
         marginTop: 16,
         [theme.breakpoints.down('md')]: {
             height: 'auto'
