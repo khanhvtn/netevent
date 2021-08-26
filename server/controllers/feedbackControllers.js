@@ -104,46 +104,70 @@ const getFeedbackByEventID = async (req, res, next) => {
         );
 
         const feedbackAnalysis = {
-            question1Result: [],
-            question2Result: [],
-            question3Result: [],
-            question4Result: [],
-            question5AResult: [],
-            question5BResult: [],
+            question1Result: {},
+            question2Result: {},
+            question3Result: {},
+            question4Result: {},
+            question5AResult: {},
+            question5BResult: {},
             question6Result: []
         };
 
-        feedbackQuestion1.reduce(function (sums, entry) {
+        feedbackAnalysis.question1Result = feedbackQuestion1.reduce(function (
+            sums,
+            entry
+        ) {
             sums[entry.value] = (sums[entry.value] || 0) + 1;
-            feedbackAnalysis.question1Result.push(sums);
-        }, {});
+            return sums;
+        },
+        {});
 
-        feedbackQuestion2.reduce(function (sums, entry) {
+        feedbackAnalysis.question2Result = feedbackQuestion2.reduce(function (
+            sums,
+            entry
+        ) {
             sums[entry.value] = (sums[entry.value] || 0) + 1;
-            feedbackAnalysis.question2Result.push(sums);
-        }, {});
+            return sums;
+        },
+        {});
 
-        feedbackQuestion3.reduce(function (sums, entry) {
+        feedbackAnalysis.question3Result = feedbackQuestion3.reduce(function (
+            sums,
+            entry
+        ) {
             sums[entry.value] = (sums[entry.value] || 0) + 1;
-            feedbackAnalysis.question3Result.push(sums);
-        }, {});
+            return sums;
+        },
+        {});
 
-        feedbackQuestion4.reduce(function (sums, entry) {
+        feedbackAnalysis.question4Result = feedbackQuestion4.reduce(function (
+            sums,
+            entry
+        ) {
             sums[entry.value] = (sums[entry.value] || 0) + 1;
-            feedbackAnalysis.question4Result.push(sums);
-        }, {});
+            return sums;
+        },
+        {});
 
-        feedbackQuestion5A.reduce(function (sums, entry) {
+        feedbackAnalysis.question5AResult = feedbackQuestion5A.reduce(function (
+            sums,
+            entry
+        ) {
             sums[entry.presentationQuality] =
                 (sums[entry.presentationQuality] || 0) + 1;
-            feedbackAnalysis.question5AResult.push(sums);
-        }, {});
+            return sums;
+        },
+        {});
 
-        feedbackQuestion5B.reduce(function (sums, entry) {
+        feedbackAnalysis.question5BResult = feedbackQuestion5B.reduce(function (
+            sums,
+            entry
+        ) {
             sums[entry.speakerKnowledge] =
                 (sums[entry.speakerKnowledge] || 0) + 1;
-            feedbackAnalysis.question5BResult.push(sums);
-        }, {});
+            return sums;
+        },
+        {});
 
         feedbackAnalysis.question6Result.push(feedbackQuestion6);
 
@@ -187,91 +211,91 @@ const getFeedbackByEventID = async (req, res, next) => {
             questionParticipantAgreeToReceive.push(element.userId.email);
         });
 
-        feedbackAnalysis.question1Result.forEach((question1) => {
-            Object.keys(question1).forEach((key) => {
-                question1ChartInitialData[parseInt(key) - 1] =
-                    question1ChartInitialData[parseInt(key) - 1] +
-                    question1[key];
-            });
+        Object.keys(feedbackAnalysis.question1Result).forEach((key) => {
+            question1ChartInitialData[parseInt(key) - 1] =
+                question1ChartInitialData[parseInt(key) - 1] +
+                feedbackAnalysis.question1Result[key];
         });
 
-        feedbackAnalysis.question2Result.forEach((question2) => {
-            Object.keys(question2).forEach((key) => {
-                question2ChartInitialData[parseInt(key) - 1] =
-                    question2ChartInitialData[parseInt(key) - 1] +
-                    question2[key];
-            });
+        Object.keys(feedbackAnalysis.question2Result).forEach((key) => {
+            question2ChartInitialData[parseInt(key) - 1] =
+                question2ChartInitialData[parseInt(key) - 1] +
+                feedbackAnalysis.question2Result[key];
         });
 
-        feedbackAnalysis.question3Result.forEach((question3) => {
-            Object.keys(question3).forEach((key) => {
-                question3ChartInitialData[parseInt(key) - 1] =
-                    question3ChartInitialData[parseInt(key) - 1] +
-                    question3[key];
-            });
+        Object.keys(feedbackAnalysis.question3Result).forEach((key) => {
+            question3ChartInitialData[parseInt(key) - 1] =
+                question3ChartInitialData[parseInt(key) - 1] +
+                feedbackAnalysis.question3Result[key];
         });
 
-        feedbackAnalysis.question4Result.forEach((question4) => {
-            Object.keys(question4).forEach((key) => {
-                if (key === '1') {
-                    question4ChartInitialData[0] =
-                        question4ChartInitialData[0] + question4[key];
-                }
-                if (key === '0') {
-                    question4ChartInitialData[1] =
-                        question4ChartInitialData[1] + question4[key];
-                }
-            });
+        Object.keys(feedbackAnalysis.question4Result).forEach((key) => {
+            if (key === '1') {
+                question4ChartInitialData[0] =
+                    question4ChartInitialData[0] +
+                    feedbackAnalysis.question4Result[key];
+            }
+            if (key === '0') {
+                question4ChartInitialData[1] =
+                    question4ChartInitialData[1] +
+                    feedbackAnalysis.question4Result[key];
+            }
         });
 
-        feedbackAnalysis.question5AResult.forEach((question5A) => {
-            Object.keys(question5A).forEach((key) => {
-                if (key === 'Very Poor') {
-                    question5AChartInitialData[0] =
-                        question5AChartInitialData[0] + question5A[key];
-                }
-                if (key === 'Poor') {
-                    question5AChartInitialData[1] =
-                        question5AChartInitialData[1] + question5A[key];
-                }
-                if (key === 'Moderate') {
-                    question5AChartInitialData[2] =
-                        question5AChartInitialData[2] + question5A[key];
-                }
-                if (key === 'Good') {
-                    question5AChartInitialData[3] =
-                        question5AChartInitialData[3] + question5A[key];
-                }
-                if (key === 'Excellent') {
-                    question5AChartInitialData[4] =
-                        question5AChartInitialData[4] + question5A[key];
-                }
-            });
+        Object.keys(feedbackAnalysis.question5AResult).forEach((key) => {
+            if (key === 'Very Poor') {
+                question5AChartInitialData[0] =
+                    question5AChartInitialData[0] +
+                    feedbackAnalysis.question5AResult[key];
+            }
+            if (key === 'Poor') {
+                question5AChartInitialData[1] =
+                    question5AChartInitialData[1] +
+                    feedbackAnalysis.question5AResult[key];
+            }
+            if (key === 'Moderate') {
+                question5AChartInitialData[2] =
+                    question5AChartInitialData[2] +
+                    feedbackAnalysis.question5AResult[key];
+            }
+            if (key === 'Good') {
+                question5AChartInitialData[3] =
+                    question5AChartInitialData[3] +
+                    feedbackAnalysis.question5AResult[key];
+            }
+            if (key === 'Excellent') {
+                question5AChartInitialData[4] =
+                    question5AChartInitialData[4] +
+                    feedbackAnalysis.question5AResult[key];
+            }
         });
 
-        feedbackAnalysis.question5BResult.forEach((question5B) => {
-            Object.keys(question5B).forEach((key) => {
-                if (key === 'Very Poor') {
-                    question5BChartInitialData[0] =
-                        question5BChartInitialData[0] + question5B[key];
-                }
-                if (key === 'Poor') {
-                    question5BChartInitialData[1] =
-                        question5BChartInitialData[1] + question5B[key];
-                }
-                if (key === 'Moderate') {
-                    question5BChartInitialData[2] =
-                        question5BChartInitialData[2] + question5B[key];
-                }
-                if (key === 'Good') {
-                    question5BChartInitialData[3] =
-                        question5BChartInitialData[3] + question5B[key];
-                }
-                if (key === 'Excellent') {
-                    question5BChartInitialData[4] =
-                        question5BChartInitialData[4] + question5B[key];
-                }
-            });
+        Object.keys(feedbackAnalysis.question5BResult).forEach((key) => {
+            if (key === 'Very Poor') {
+                question5BChartInitialData[0] =
+                    question5BChartInitialData[0] +
+                    feedbackAnalysis.question5BResult[key];
+            }
+            if (key === 'Poor') {
+                question5BChartInitialData[1] =
+                    question5BChartInitialData[1] +
+                    feedbackAnalysis.question5BResult[key];
+            }
+            if (key === 'Moderate') {
+                question5BChartInitialData[2] =
+                    question5BChartInitialData[2] +
+                    feedbackAnalysis.question5BResult[key];
+            }
+            if (key === 'Good') {
+                question5BChartInitialData[3] =
+                    question5BChartInitialData[3] +
+                    feedbackAnalysis.question5BResult[key];
+            }
+            if (key === 'Excellent') {
+                question5BChartInitialData[4] =
+                    question5BChartInitialData[4] +
+                    feedbackAnalysis.question5BResult[key];
+            }
         });
 
         const result = {

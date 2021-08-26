@@ -242,15 +242,10 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
         useState([]);
 
     const optionQuestion1Chart = {
-        scales: {
-            yAxes: [
-                {
-                    ticks: {
-                        beginAtZero: true,
-                        precision: 0
-                    }
-                }
-            ]
+        scale: {
+            ticks: {
+                precision: 0
+            }
         },
 
         plugins: {
@@ -287,15 +282,10 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
     };
 
     const optionQuestion2Chart = {
-        scales: {
-            yAxes: [
-                {
-                    ticks: {
-                        beginAtZero: true,
-                        precision: 0
-                    }
-                }
-            ]
+        scale: {
+            ticks: {
+                precision: 0
+            }
         },
         plugins: {
             legend: {
@@ -331,15 +321,10 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
     };
 
     const optionQuestion3Chart = {
-        scales: {
-            yAxes: [
-                {
-                    ticks: {
-                        beginAtZero: true,
-                        precision: 0
-                    }
-                }
-            ]
+        scale: {
+            ticks: {
+                precision: 0
+            }
         },
         plugins: {
             legend: {
