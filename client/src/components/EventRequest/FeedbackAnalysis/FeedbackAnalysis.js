@@ -18,6 +18,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { getFeedbackByEventID } from '../../../actions/feedbackActions';
 import { ExportToCsv } from 'export-to-csv';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const question1ChartData = {
     labels: ['1', '2', '3', '4', '5', '6', '7'],
@@ -247,8 +248,31 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                 precision: 0
             }
         },
-
         plugins: {
+            datalabels: {
+                color: '#36A2EB',
+                font: {
+                    weight: 'bold'
+                },
+                display: function (context) {
+                    return context.dataset.data[context.dataIndex] !== 0; // or >= 1 or ...
+                },
+                formatter: function (value) {
+                    let total = 0;
+                    for (
+                        let i = 0;
+                        i < question1FeedbackState.datasets[0].data.length;
+                        i++
+                    ) {
+                        total += question1FeedbackState.datasets[0].data[i];
+                    }
+
+                    const percentage = ((value / total) * 100).toFixed(0);
+                    // return `${currentValue} (${percentage}%)`;
+                    let label = percentage + `% (${value})`;
+                    return label;
+                }
+            },
             legend: {
                 display: false
             },
@@ -288,6 +312,30 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
             }
         },
         plugins: {
+            datalabels: {
+                display: function (context) {
+                    return context.dataset.data[context.dataIndex] !== 0; // or >= 1 or ...
+                },
+                color: '#36A2EB',
+                font: {
+                    weight: 'bold'
+                },
+                formatter: function (value) {
+                    let total = 0;
+                    for (
+                        let i = 0;
+                        i < question2FeedbackState.datasets[0].data.length;
+                        i++
+                    ) {
+                        total += question2FeedbackState.datasets[0].data[i];
+                    }
+
+                    const percentage = ((value / total) * 100).toFixed(0);
+                    // return `${currentValue} (${percentage}%)`;
+                    let label = percentage + `% (${value})`;
+                    return label;
+                }
+            },
             legend: {
                 display: false
             },
@@ -327,6 +375,30 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
             }
         },
         plugins: {
+            datalabels: {
+                display: function (context) {
+                    return context.dataset.data[context.dataIndex] !== 0; // or >= 1 or ...
+                },
+                color: '#36A2EB',
+                font: {
+                    weight: 'bold'
+                },
+                formatter: function (value) {
+                    let total = 0;
+                    for (
+                        let i = 0;
+                        i < question3FeedbackState.datasets[0].data.length;
+                        i++
+                    ) {
+                        total += question3FeedbackState.datasets[0].data[i];
+                    }
+
+                    const percentage = ((value / total) * 100).toFixed(0);
+                    // return `${currentValue} (${percentage}%)`;
+                    let label = percentage + `% (${value})`;
+                    return label;
+                }
+            },
             legend: {
                 display: false
             },
@@ -361,6 +433,30 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
 
     const optionQuestion4Chart = {
         plugins: {
+            datalabels: {
+                display: function (context) {
+                    return context.dataset.data[context.dataIndex] !== 0; // or >= 1 or ...
+                },
+                color: '#36A2EB',
+                font: {
+                    weight: 'bold'
+                },
+                formatter: function (value) {
+                    let total = 0;
+                    for (
+                        let i = 0;
+                        i < question4FeedbackState.datasets[0].data.length;
+                        i++
+                    ) {
+                        total += question4FeedbackState.datasets[0].data[i];
+                    }
+
+                    const percentage = ((value / total) * 100).toFixed(0);
+                    // return `${currentValue} (${percentage}%)`;
+                    let label = percentage + `% (${value})`;
+                    return label;
+                }
+            },
             tooltip: {
                 enabled: true,
                 callbacks: {
@@ -392,6 +488,30 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
 
     const optionQuestion5AChart = {
         plugins: {
+            datalabels: {
+                display: function (context) {
+                    return context.dataset.data[context.dataIndex] !== 0; // or >= 1 or ...
+                },
+                color: '#36A2EB',
+                font: {
+                    weight: 'bold'
+                },
+                formatter: function (value) {
+                    let total = 0;
+                    for (
+                        let i = 0;
+                        i < question5AFeedbackState.datasets[0].data.length;
+                        i++
+                    ) {
+                        total += question5AFeedbackState.datasets[0].data[i];
+                    }
+
+                    const percentage = ((value / total) * 100).toFixed(0);
+                    // return `${currentValue} (${percentage}%)`;
+                    let label = percentage + `% (${value})`;
+                    return label;
+                }
+            },
             tooltip: {
                 enabled: true,
                 callbacks: {
@@ -424,6 +544,30 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
 
     const optionQuestion5BChart = {
         plugins: {
+            datalabels: {
+                display: function (context) {
+                    return context.dataset.data[context.dataIndex] !== 0; // or >= 1 or ...
+                },
+                color: '#36A2EB',
+                font: {
+                    weight: 'bold'
+                },
+                formatter: function (value) {
+                    let total = 0;
+                    for (
+                        let i = 0;
+                        i < question5BFeedbackState.datasets[0].data.length;
+                        i++
+                    ) {
+                        total += question5BFeedbackState.datasets[0].data[i];
+                    }
+
+                    const percentage = ((value / total) * 100).toFixed(0);
+                    // return `${currentValue} (${percentage}%)`;
+                    let label = percentage + `% (${value})`;
+                    return label;
+                }
+            },
             tooltip: {
                 enabled: true,
                 callbacks: {
@@ -456,22 +600,30 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
 
     const optionFeedbackSentVsReceived = {
         plugins: {
+            datalabels: {
+                display: function (context) {
+                    return context.dataset.data[context.dataIndex] !== 0; // or >= 1 or ...
+                },
+                color: '#36A2EB',
+                font: {
+                    weight: 'bold'
+                },
+                formatter: function (value) {
+                    let total =
+                        questionFeedbackSentvsReceivedState.datasets[0].data[0];
+                    const percentage = ((value / total) * 100).toFixed(0);
+                    // return `${currentValue} (${percentage}%)`;
+                    let label = percentage + `% (${value})`;
+                    return label;
+                }
+            },
             tooltip: {
                 enabled: true,
                 callbacks: {
                     label: function (TooltipItem) {
-                        let total = 0;
-                        for (
-                            let i = 0;
-                            i <
-                            questionFeedbackSentvsReceivedState.datasets[0].data
-                                .length;
-                            i++
-                        ) {
-                            total +=
-                                questionFeedbackSentvsReceivedState.datasets[0]
-                                    .data[i];
-                        }
+                        let total =
+                            questionFeedbackSentvsReceivedState.datasets[0]
+                                .data[0];
                         const percentage = (
                             (TooltipItem.parsed / total) *
                             100
@@ -760,6 +912,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                                             data={question1FeedbackState}
                                             options={optionQuestion1Chart}
                                             height={75}
+                                            plugins={[ChartDataLabels]}
                                         />
                                     </Box>
                                 </Paper>
@@ -776,6 +929,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                                         style={{ marginTop: 42 }}
                                         data={question2FeedbackState}
                                         options={optionQuestion2Chart}
+                                        plugins={[ChartDataLabels]}
                                     />
                                 </Paper>
                             </Grid>
@@ -792,6 +946,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                                         style={{ marginTop: 16 }}
                                         data={question3FeedbackState}
                                         options={optionQuestion3Chart}
+                                        plugins={[ChartDataLabels]}
                                     />
                                 </Paper>
                             </Grid>
@@ -815,6 +970,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                                             <Pie
                                                 data={noDataPieChartData}
                                                 options={optionNoDataPieChart}
+                                                plugins={[ChartDataLabels]}
                                             />
                                         </article>
                                     ) : (
@@ -826,6 +982,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                                                 options={
                                                     optionFeedbackSentVsReceived
                                                 }
+                                                plugins={[ChartDataLabels]}
                                             />
                                         </article>
                                     )}
@@ -858,6 +1015,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                                             <Pie
                                                 data={question4FeedbackState}
                                                 options={optionQuestion4Chart}
+                                                plugins={[ChartDataLabels]}
                                             />
                                         </article>
                                     )}
@@ -896,6 +1054,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                                             <Pie
                                                 data={question5AFeedbackState}
                                                 options={optionQuestion5AChart}
+                                                plugins={[ChartDataLabels]}
                                             />
                                         </article>
                                     )}
@@ -934,6 +1093,7 @@ const FeedbackAnalysis = ({ eventId, eventName }) => {
                                             <Pie
                                                 data={question5BFeedbackState}
                                                 options={optionQuestion5BChart}
+                                                plugins={[ChartDataLabels]}
                                             />
                                         </article>
                                     )}
