@@ -6,10 +6,27 @@ name: NetEvent Backend CI/CD Github Actions
 on:
   push:
     branches:
-      - feature/userTableUpdate
+      - develop
 
 jobs:
   build:
+    env:
+      TYPE: ${{ secrets.TYPE }}
+      PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      PROJECT_KEY_ID: ${{ secrets.PROJECT_KEY_ID }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      AUTH_URI: ${{ secrets.AUTH_URI }}
+      TOKEN_URI: ${{ secrets.TOKEN_URI }}
+      AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
+      CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
+      CONNECTION_URL_HOST: ${{ secrets.CONNECTION_URL_HOST }}
+      CONNECTION_URL_TEST: ${{ secrets.CONNECTION_URL_TEST }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      SESS_NAME: ${{ secrets.SESS_NAME }}
+      SESS_LIFETIME: ${{ secrets.SESS_LIFETIME }}
+
     runs-on: ubuntu-latest
 
     strategy:

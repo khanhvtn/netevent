@@ -1,8 +1,10 @@
 const EventType = require('../models/eventTypeModel');
+
 //Require the dev-dependencies
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const server = require('../index');
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+let server = require('../index');
+let should = chai.should();
 
 /**
  *  =====================================
@@ -17,8 +19,8 @@ chai.use(chaiHttp);
 
 //Testing block for eventType
 describe('EventTypes', () => {
+    //Before each test we empty the database
     beforeEach((done) => {
-        //Before each test we empty the database
         EventType.remove({}, () => {
             done();
         });
@@ -32,6 +34,7 @@ describe('EventTypes', () => {
             chai.request(server)
                 .get('/api/eventType/filter')
                 .end((err, res) => {
+                    should.exist(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
@@ -54,6 +57,7 @@ describe('EventTypes', () => {
                 .post('/api/eventType/create')
                 .send(eventType)
                 .end((err, res) => {
+                    should.exist(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
@@ -87,6 +91,7 @@ describe('EventTypes', () => {
                     .patch('/api/eventType/update')
                     .send(updateEventType)
                     .end((err, res) => {
+                        should.exist(res.body);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);
@@ -113,22 +118,18 @@ describe('EventTypes', () => {
             let deleteEventType = {
                 deleteList: ['testEventTypeName']
             };
-            eventType.save((err, eventType) => {
+            eventType.save(() => {
                 chai.request(server)
                     .delete('/api/eventType/delete')
                     .send(deleteEventType)
                     .end((err, res) => {
+                        should.exist(res.body);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);
                         res.body.should.have.property('message').eql('success');
                         res.body.should.have.property('data');
-                        res.body.data.should.have
-                            .property('name')
-                            .eql(eventType.name);
-                        res.body.data.should.have.property('_id');
-                        res.body.data.should.have.property('createdAt');
-                        res.body.data.should.have.property('updatedAt');
+                        res.body.data.should.have.property('ok').eql(1);
                         done();
                     });
             });

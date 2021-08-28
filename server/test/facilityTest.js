@@ -1,8 +1,10 @@
 const Facility = require('../models/facilityModel');
+
 //Require the dev-dependencies
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const server = require('../index');
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+let server = require('../index');
+let should = chai.should();
 
 /**
  *  =====================================
@@ -32,6 +34,7 @@ describe('Facilities', () => {
             chai.request(server)
                 .get('/api/facility/filter')
                 .end((err, res) => {
+                    should.exist(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
@@ -56,6 +59,7 @@ describe('Facilities', () => {
                 .post('/api/facility/create')
                 .send(facility)
                 .end((err, res) => {
+                    should.exist(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
@@ -102,6 +106,7 @@ describe('Facilities', () => {
                     .patch('/api/facility/update')
                     .send(updateFacility)
                     .end((err, res) => {
+                        should.exist(res.body);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);
@@ -139,29 +144,19 @@ describe('Facilities', () => {
             let deleteFacility = {
                 deleteList: ['testFacility']
             };
-            facility.save((err, facility) => {
+            facility.save(() => {
                 chai.request(server)
                     .delete('/api/facility/delete')
                     .send(deleteFacility)
                     .end((err, res) => {
+                        currentResponse = res;
+                        should.exist(res.body);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);
                         res.body.should.have.property('message').eql('success');
                         res.body.should.have.property('data');
-                        res.body.data.should.have
-                            .property('name')
-                            .eql(facility.name);
-                        res.body.data.should.have
-                            .property('code')
-                            .eql(facility.code);
-                        res.body.data.should.have
-                            .property('type')
-                            .eql(facility.type);
-                        res.body.data.should.have.property('_id');
-                        res.body.data.should.have.property('status').eql(true);
-                        res.body.data.should.have.property('createdAt');
-                        res.body.data.should.have.property('updatedAt');
+                        res.body.data.should.have.property('ok').eql(1);
                         done();
                     });
             });

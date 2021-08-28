@@ -27,8 +27,13 @@ const { errorHandler } = require('./middlewares');
 
 //connect to mongodb
 const port = process.env.PORT || 5000;
-const MONGO_URI =
-    process.env.CONNECTION_URL_HOST || `mongodb://localhost:27017`;
+let MONGO_URI;
+
+if (process.env.NODE_ENV === 'test') {
+    MONGO_URI = process.env.CONNECTION_URL_TEST;
+} else {
+    MONGO_URI = process.env.CONNECTION_URL_HOST || `mongodb://localhost:27017`;
+}
 
 const dbConnection = mongoose
     .connect(MONGO_URI, {

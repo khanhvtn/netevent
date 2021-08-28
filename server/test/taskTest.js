@@ -1,11 +1,11 @@
 const Task = require('../models/taskModel');
 const User = require('../models/userModel');
-const Event = require('../models/eventModel');
 
 //Require the dev-dependencies
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const server = require('../index');
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+let server = require('../index');
+let should = chai.should();
 
 /**
  *  =====================================
@@ -35,6 +35,7 @@ describe('Tasks', () => {
             chai.request(server)
                 .get('/api/task/filter')
                 .end((err, res) => {
+                    should.exist(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
@@ -50,25 +51,20 @@ describe('Tasks', () => {
      */
     describe('/POST/task/create task', () => {
         it('it should POST a task', (done) => {
-            let event = new Event({
-                eventName: 'testEventName',
-                language: 'testLanguage',
-                mode: 'testMode'
-            });
             let user = new User({ email: 'test@gmail.com', role: ['1'] });
             let task = new Task({
                 name: 'testTaskName',
                 type: 'testTaskType',
                 startDate: Date.now(),
                 endDate: Date.now(),
-                userId: user._id,
-                eventId: event._id
+                userId: user._id
             });
 
             chai.request(server)
                 .post('/api/task/create')
                 .send(task)
                 .end((err, res) => {
+                    should.exist(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
@@ -79,9 +75,6 @@ describe('Tasks', () => {
                     res.body.data.should.have
                         .property('userId')
                         .eql(task.userId.toString());
-                    res.body.data.should.have
-                        .property('eventId')
-                        .eql(task.eventId.toString());
                     res.body.data.should.have.property('_id');
                     res.body.data.should.have.property('createdAt');
                     res.body.data.should.have.property('updatedAt');
@@ -95,19 +88,13 @@ describe('Tasks', () => {
      */
     describe('/PUT/task/update task', () => {
         it('it should UPDATE a task', (done) => {
-            let event = new Event({
-                eventName: 'testEventName',
-                language: 'testLanguage',
-                mode: 'testMode'
-            });
             let user = new User({ email: 'test@gmail.com', role: ['1'] });
             let task = new Task({
                 name: 'testTaskName',
                 type: 'testTaskType',
                 startDate: Date.now(),
                 endDate: Date.now(),
-                userId: user._id,
-                eventId: event._id
+                userId: user._id
             });
             let updateTask = {
                 filter: task._id,
@@ -121,6 +108,7 @@ describe('Tasks', () => {
                     .patch('/api/task/update')
                     .send(updateTask)
                     .end((err, res) => {
+                        should.exist(res.body);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);
@@ -135,9 +123,6 @@ describe('Tasks', () => {
                         res.body.data.should.have
                             .property('userId')
                             .eql(task.userId.toString());
-                        res.body.data.should.have
-                            .property('eventId')
-                            .eql(task.eventId.toString());
                         res.body.data.should.have.property('_id');
                         res.body.data.should.have.property('createdAt');
                         res.body.data.should.have.property('updatedAt');
@@ -152,19 +137,13 @@ describe('Tasks', () => {
      */
     describe('/DELETE/task/delete task', () => {
         it('it should DELETE a task', (done) => {
-            let event = new Event({
-                eventName: 'testEventName',
-                language: 'testLanguage',
-                mode: 'testMode'
-            });
             let user = new User({ email: 'test@gmail.com', role: ['1'] });
             let task = new Task({
                 name: 'testTaskName',
                 type: 'testTaskType',
                 startDate: Date.now(),
                 endDate: Date.now(),
-                userId: user._id,
-                eventId: event._id
+                userId: user._id
             });
             let deleteTask = {
                 deleteList: [task._id]
@@ -174,6 +153,7 @@ describe('Tasks', () => {
                     .delete('/api/task/delete')
                     .send(deleteTask)
                     .end((err, res) => {
+                        should.exist(res.body);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);
@@ -188,9 +168,6 @@ describe('Tasks', () => {
                         res.body.data.should.have
                             .property('userId')
                             .eql(task.userId.toString());
-                        res.body.data.should.have
-                            .property('eventId')
-                            .eql(task.eventId.toString());
                         res.body.data.should.have.property('_id');
                         res.body.data.should.have.property('createdAt');
                         res.body.data.should.have.property('updatedAt');

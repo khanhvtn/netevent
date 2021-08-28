@@ -1,8 +1,10 @@
 const User = require('../models/userModel');
+
 //Require the dev-dependencies
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const server = require('../index');
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+let server = require('../index');
+let should = chai.should();
 
 /**
  *  =====================================
@@ -32,6 +34,7 @@ describe('Users', () => {
             chai.request(server)
                 .get('/api/user/filter')
                 .end((err, res) => {
+                    should.exist(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
@@ -45,32 +48,38 @@ describe('Users', () => {
     /*
      * Test the /POST user
      */
-    // describe('/POST/user/create user', () => {
-    //     it('it should POST a user', (done) => {
-    //         let user = {
-    //             email: "test@gmail.com",
-    //             role: ['1'],
-    //         }
-    //         chai.request(server)
-    //             .post('/api/user/create')
-    //             .send(user)
-    //             .end((err, res) => {
-
-    //                 res.should.have.status(200);
-    //                 res.body.should.be.a('object');
-    //                 res.body.should.have.property('code').eql(200);
-    //                 res.body.should.have.property('message').eql('success');
-    //                 res.body.should.have.property('data');
-    //                 res.body.data.should.have.deep.property('role').eql(user.role);
-    //                 res.body.data.should.have.deep.property('isConfirmed').eql(false);
-    //                 res.body.data.should.have.deep.property('_id');
-    //                 res.body.data.should.have.deep.property('email').eql(user.email);
-    //                 res.body.data.should.have.deep.property('createdAt');
-    //                 res.body.data.should.have.deep.property('updatedAt');
-    //                 done();
-    //             });
-    //     });
-    // });
+    describe('/POST/user/create user', () => {
+        it('it should POST a user', (done) => {
+            let user = {
+                email: 'test@gmail.com',
+                role: ['1']
+            };
+            chai.request(server)
+                .post('/api/user/create')
+                .send(user)
+                .end((err, res) => {
+                    should.exist(res.body);
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('code').eql(200);
+                    res.body.should.have.property('message').eql('success');
+                    res.body.should.have.property('data');
+                    res.body.data.should.have.deep
+                        .property('role')
+                        .eql(user.role);
+                    res.body.data.should.have.deep
+                        .property('isConfirmed')
+                        .eql(false);
+                    res.body.data.should.have.deep.property('_id');
+                    res.body.data.should.have.deep
+                        .property('email')
+                        .eql(user.email);
+                    res.body.data.should.have.deep.property('createdAt');
+                    res.body.data.should.have.deep.property('updatedAt');
+                    done();
+                });
+        });
+    });
 
     /*
      * Test the /PATCH user
@@ -90,6 +99,7 @@ describe('Users', () => {
                     .patch('/api/user/update')
                     .send(updateUser)
                     .end((err, res) => {
+                        should.exist(res.body);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);
@@ -127,6 +137,7 @@ describe('Users', () => {
                     .delete('/api/user/delete')
                     .send(deleteUser)
                     .end((err, res) => {
+                        should.exist(res.body);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);

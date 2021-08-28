@@ -1,11 +1,11 @@
 const FacilityHistory = require('../models/facilityHistoryModel');
-const Event = require('../models/eventModel');
 const Facility = require('../models/facilityModel');
 
 //Require the dev-dependencies
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const server = require('../index');
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+let server = require('../index');
+let should = chai.should();
 
 /**
  *  =====================================
@@ -20,8 +20,8 @@ chai.use(chaiHttp);
 
 //Testing block for facility history
 describe('Facility Histories', () => {
+    //Before each test we empty the database
     beforeEach((done) => {
-        //Before each test we empty the database
         FacilityHistory.remove({}, () => {
             done();
         });
@@ -35,6 +35,7 @@ describe('Facility Histories', () => {
             chai.request(server)
                 .get('/api/facilityHistory/filter')
                 .end((err, res) => {
+                    should.exist(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
@@ -50,11 +51,6 @@ describe('Facility Histories', () => {
      */
     describe('/POST/facilityHistory/create facilityHistory', () => {
         it('it should POST a facilityHistory', (done) => {
-            let event = new Event({
-                eventName: 'testEventName',
-                language: 'testLanguage',
-                mode: 'testMode'
-            });
             let facility = new Facility({
                 name: 'testFacilityName',
                 code: 'testCode',
@@ -63,14 +59,15 @@ describe('Facility Histories', () => {
 
             let facilityHistory = {
                 facilityId: facility._id,
-                eventId: event._id,
                 borrowDate: Date.now(),
                 returnDate: Date.now()
             };
+
             chai.request(server)
                 .post('/api/facilityHistory/create')
                 .send(facilityHistory)
                 .end((err, res) => {
+                    should.exist(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('code').eql(200);
@@ -79,9 +76,6 @@ describe('Facility Histories', () => {
                     res.body.data.should.have
                         .property('facilityId')
                         .eql(facilityHistory.facilityId.toString());
-                    res.body.data.should.have
-                        .property('eventId')
-                        .eql(facilityHistory.eventId.toString());
                     res.body.data.should.have.property('_id');
                     res.body.data.should.have.property('createdAt');
                     res.body.data.should.have.property('updatedAt');
@@ -95,11 +89,6 @@ describe('Facility Histories', () => {
      */
     describe('/DELETE/facility/delete facility', () => {
         it('it should DELETE a facility', (done) => {
-            let event = new Event({
-                eventName: 'testEventName',
-                language: 'testLanguage',
-                mode: 'testMode'
-            });
             let facility = new Facility({
                 name: 'testFacilityName',
                 code: 'testCode',
@@ -108,7 +97,6 @@ describe('Facility Histories', () => {
 
             let facilityHistory = new FacilityHistory({
                 facilityId: facility._id,
-                eventId: event._id,
                 borrowDate: Date.now(),
                 returnDate: Date.now()
             });
@@ -122,6 +110,7 @@ describe('Facility Histories', () => {
                     .delete('/api/facilityHistory/delete')
                     .send(deleteFacility)
                     .end((err, res) => {
+                        should.exist(res.body);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('code').eql(200);
@@ -130,9 +119,6 @@ describe('Facility Histories', () => {
                         res.body.data.should.have
                             .property('facilityId')
                             .eql(facilityHistory.facilityId.toString());
-                        res.body.data.should.have
-                            .property('eventId')
-                            .eql(facilityHistory.eventId.toString());
                         res.body.data.should.have.property('_id');
                         res.body.data.should.have.property('createdAt');
                         res.body.data.should.have.property('updatedAt');
