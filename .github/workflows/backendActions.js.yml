@@ -37,7 +37,8 @@ jobs:
         
         # Testing on all mongo db version
         mongodb-version: [4.0, 4.2, 4.4]
-
+        
+      max-parallel: 1
 
     steps:
     - name: Checkout repository
