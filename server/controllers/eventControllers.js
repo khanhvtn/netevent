@@ -1051,7 +1051,9 @@ const alphabet =
 const nanoid = customAlphabet(alphabet, 7);
 const getRegistrationPageDetail = async (req, res, next) => {
     try {
-        const checkBrowserToken = req?.cookies;
+        const checkBrowserToken = req.cookies?.browserToken
+            ? req.cookies?.browserToken
+            : null;
 
         const event = await Event.findOne({
             urlCode: req.query.code,
@@ -1079,7 +1081,7 @@ const getRegistrationPageDetail = async (req, res, next) => {
             return cusResponse(res, 200, [], null);
         }
 
-        if (!checkBrowserToken?.browserToken) {
+        if (!checkBrowserToken) {
             res.cookie('browserToken', nanoid(), {
                 secure: true,
                 expires: new Date(Date.now() + 1 * 60 * 60 * 1000), //expire in 1h
