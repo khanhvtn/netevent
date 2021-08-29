@@ -183,81 +183,81 @@ describe('Events', () => {
     /*
      * Test the /DELETE event
      */
-    describe('/DELETE/event/delete event', () => {
-        it('it should DELETE a event', (done) => {
-            let eventType = new EventType({ name: 'testEventTypeName' });
-            let user = new User({ email: 'test@gmail.com', role: ['1'] });
-            let facility = new Facility({
-                name: 'testFacility',
-                code: 'testCode',
-                type: 'testType'
-            });
+    // describe('/DELETE/event/delete event', () => {
+    //     it('it should DELETE a event', (done) => {
+    //         let eventType = new EventType({ name: 'testEventTypeName' });
+    //         let user = new User({ email: 'test@gmail.com', role: ['1'] });
+    //         let facility = new Facility({
+    //             name: 'testFacility',
+    //             code: 'testCode',
+    //             type: 'testType'
+    //         });
 
-            let event = {
-                eventName: 'testEventName',
-                language: 'testLanguage',
-                mode: 'testMode',
-                image: 'abcd',
-                location: 'testLocation',
-                accommodation: 'testAccommodation',
-                registrationCloseDate: Date.now() + 1,
-                startDate: Date.now(),
-                endDate: Date.now() + 2,
-                maxParticipants: '20',
-                tags: ['TEST', 'TAG'],
-                description: 'testDescription',
-                budget: '10000',
-                ownerId: user._id,
-                eventTypeId: eventType._id,
-                tasks: [
-                    {
-                        name: 'testTaskName',
-                        type: 'testTaskType',
-                        startDate: Date.now(),
-                        endDate: Date.now(),
-                        userId: user._id
-                    }
-                ],
-                borrowFacilities: [
-                    {
-                        facilityId: facility._id,
-                        borrowDate: Date.now(),
-                        returnDate: Date.now()
-                    }
-                ]
-            };
+    //         let event = {
+    //             eventName: 'testEventName',
+    //             language: 'testLanguage',
+    //             mode: 'testMode',
+    //             image: 'abcd',
+    //             location: 'testLocation',
+    //             accommodation: 'testAccommodation',
+    //             registrationCloseDate: Date.now() + 1,
+    //             startDate: Date.now(),
+    //             endDate: Date.now() + 2,
+    //             maxParticipants: '20',
+    //             tags: ['TEST', 'TAG'],
+    //             description: 'testDescription',
+    //             budget: '10000',
+    //             ownerId: user._id,
+    //             eventTypeId: eventType._id,
+    //             tasks: [
+    //                 {
+    //                     name: 'testTaskName',
+    //                     type: 'testTaskType',
+    //                     startDate: Date.now(),
+    //                     endDate: Date.now(),
+    //                     userId: user._id
+    //                 }
+    //             ],
+    //             borrowFacilities: [
+    //                 {
+    //                     facilityId: facility._id,
+    //                     borrowDate: Date.now(),
+    //                     returnDate: Date.now()
+    //                 }
+    //             ]
+    //         };
 
-            user.save(() => {
-                facility.save(() => {
-                    chai.request(server)
-                        .post('/api/event/create')
-                        .send(event)
-                        .end((err, res) => {
-                            res.should.have.status(200);
-                            res.body.should.be.a('object');
-                            res.body.should.have.property('code').eql(200);
-                            res.body.should.have
-                                .property('message')
-                                .eql('success');
-                            res.body.should.have.property('data');
-                            res.body.data.should.have
-                                .property('eventName')
-                                .eql(event.eventName);
-                            res.body.data.should.have
-                                .property('language')
-                                .eql(event.language);
-                            res.body.data.should.have
-                                .property('mode')
-                                .eql(event.mode);
-                            res.body.data.should.have.property('_id');
-                            res.body.data.should.have.property('createdAt');
-                            res.body.data.should.have.property('updatedAt');
-                            done();
-                        });
-                });
-            });
-        });
-    });
+    //         user.save(() => {
+    //             facility.save(() => {
+    //                 chai.request(server)
+    //                     .post('/api/event/create')
+    //                     .send(event)
+    //                     .end((err, res) => {
+    //                         res.should.have.status(200);
+    //                         res.body.should.be.a('object');
+    //                         res.body.should.have.property('code').eql(200);
+    //                         res.body.should.have
+    //                             .property('message')
+    //                             .eql('success');
+    //                         res.body.should.have.property('data');
+    //                         res.body.data.should.have
+    //                             .property('eventName')
+    //                             .eql(event.eventName);
+    //                         res.body.data.should.have
+    //                             .property('language')
+    //                             .eql(event.language);
+    //                         res.body.data.should.have
+    //                             .property('mode')
+    //                             .eql(event.mode);
+    //                         res.body.data.should.have.property('_id');
+    //                         res.body.data.should.have.property('createdAt');
+    //                         res.body.data.should.have.property('updatedAt');
+    //                         done();
+    //                     });
+    //             });
+    //         });
+    //     });
+    // });
 
     //After each we console log the error or response (Only for debug)
     afterEach(function () {
