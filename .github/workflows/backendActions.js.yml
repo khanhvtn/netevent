@@ -26,6 +26,7 @@ jobs:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       SESS_NAME: ${{ secrets.SESS_NAME }}
       SESS_LIFETIME: ${{ secrets.SESS_LIFETIME }}
+      NODE_ENV: test
 
     runs-on: ubuntu-latest
 

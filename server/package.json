@@ -6,7 +6,7 @@
     "scripts": {
         "start": "node index.js",
         "dev": "nodemon -r dotenv/config index.js",
-        "test": "SET NODE_ENV=test&& mocha --timeout 10000 --exit -r dotenv/config"
+        "test": "mocha --timeout 10000 --exit -r dotenv/config"
     },
     "keywords": [],
     "author": "",
