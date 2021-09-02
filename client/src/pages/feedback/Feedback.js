@@ -229,12 +229,12 @@ const Feedback = () => {
                 question5: 'Required*'
             };
         }
-        if (!state.question6) {
-            listErrors = {
-                ...listErrors,
-                question6: 'Required*'
-            };
-        }
+        // if (!state.question6) {
+        //     listErrors = {
+        //         ...listErrors,
+        //         question6: 'Required*'
+        //     };
+        // }
 
         if (Object.keys(listErrors).length !== 0) {
             dispatch({
