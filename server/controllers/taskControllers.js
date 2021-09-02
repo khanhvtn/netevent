@@ -303,10 +303,10 @@ const getTasksByEvent = async (req, res, next) => {
                     statusOptions = {
                         ...statusOptions,
                         endDate: {
-                            $lte: new Date()
+                            $gte: new Date()
                         },
                         startDate: {
-                            $gte: new Date()
+                            $lte: new Date()
                         }
                     };
                     break;
@@ -339,6 +339,8 @@ const getTasksByEvent = async (req, res, next) => {
                 }
             })
             .sort({ endDate: -1 });
+
+        console.log(queryEvent);
 
         const filterEvents = queryEvent.filter(
             (event) => event.taskListId.length !== 0

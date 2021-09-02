@@ -1051,7 +1051,9 @@ const alphabet =
 const nanoid = customAlphabet(alphabet, 7);
 const getRegistrationPageDetail = async (req, res, next) => {
     try {
-        const checkBrowserToken = null;
+        const checkBrowserToken = req.cookies?.browserToken
+            ? req.cookies?.browserToken
+            : null;
 
         const event = await Event.findOne({
             urlCode: req.query.code,
