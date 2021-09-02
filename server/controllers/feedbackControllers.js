@@ -45,7 +45,8 @@ const getFeedbackByEventID = async (req, res, next) => {
 
     try {
         const feedbacks = await Feedback.find({
-            eventId: options.eventId
+            eventId: options.eventId,
+            isCompleted: true
         }).populate('userId');
 
         // Get number of feedback Sent
@@ -186,7 +187,7 @@ const getFeedbackByEventID = async (req, res, next) => {
         const raw = [];
 
         feedbackReceived.forEach((feedback) => {
-            var date = new Date(feedback.createdAt);
+            var date = new Date(feedback.updatedAt);
             raw.push({
                 Timestamp: date.toLocaleString(),
                 Sender: feedback.userId.email,

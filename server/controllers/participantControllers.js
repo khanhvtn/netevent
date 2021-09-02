@@ -56,13 +56,13 @@ const filterParticipants = async (req, res, next) => {
             search: '',
             take: 10,
             isValid: {
-                $in: [true, false, null]
+                $in: [null, true, false]
             },
             isAttended: {
                 $in: [true, false]
             },
             academic: {
-                $in: ['Bachelor', 'Master', 'PhD']
+                $in: ['Bachelor', 'Master', 'Phd']
             },
             eventId: null
         };
@@ -329,7 +329,6 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
                 for (var i = 0; i < participants.length; i++) {
                     emailParticipantsList.push(participants[i].email);
                 }
-                const stringUsersMail = emailParticipantsList.join(', ');
 
                 const description = JSON.parse(event.description);
 
@@ -384,7 +383,7 @@ const setInvalidAndVerifyParticipant = async (req, res, next) => {
                         );
                         return await sendInvitation({
                             from: 'noreply@netevent.com',
-                            to: stringUsersMail,
+                            to: participant.email,
                             subject: `NetEvent - ${event.eventName} - Invitation`,
                             icalEvent: {
                                 filename: 'invitation.ics',
