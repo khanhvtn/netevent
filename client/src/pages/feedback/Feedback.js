@@ -492,7 +492,8 @@ const Feedback = () => {
                             <div>
                                 <Typography variant="h6">
                                     Please provide any suggestions to help us
-                                    improve the quality of future event. *
+                                    improve the quality of future event.
+                                    (Optional)
                                     <FormHelperText error>
                                         {errors ? errors['question6'] : ''}
                                     </FormHelperText>
