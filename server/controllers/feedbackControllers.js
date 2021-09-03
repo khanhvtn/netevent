@@ -97,12 +97,14 @@ const getFeedbackByEventID = async (req, res, next) => {
         feedbacks.map((feedback) =>
             feedbackQuestion5B.push(feedback.question[4].value)
         );
-        feedbacks.map((feedback) =>
-            feedbackQuestion6.push({
-                sender: feedback.userId.email,
-                answer: feedback.question[5].value
-            })
-        );
+        feedbacks
+            .filter((feedback) => feedback.question[5].value !== '')
+            .map((feedback) =>
+                feedbackQuestion6.push({
+                    sender: feedback.userId.email,
+                    answer: feedback.question[5].value
+                })
+            );
 
         const feedbackAnalysis = {
             question1Result: {},
