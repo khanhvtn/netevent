@@ -281,13 +281,13 @@ const Feedback = () => {
                             <Typography variant="h4">Feedback Form</Typography>
                             <div style={{ marginTop: 16 }}>
                                 <Typography variant="body1">
-                                    Để cải thiện và mang đến chất lượng cho các
-                                    event. Netcompany thực hiện khảo sát ý kiến
-                                    của người dùng về chất lượng và hiệu quả của
-                                    sự kiện vừa được tổ chức. Mong sẽ nhận được
-                                    nhiều ý kiến hay và hữu ích để có thể đem
-                                    tới các sự kiện tương lai kết quả tốt đẹp
-                                    hơn.
+                                    To improve and bring quality to events.
+                                    Netcompany conducts a survey of users'
+                                    opinions on the quality and effectiveness of
+                                    the event that has just been held. Hope to
+                                    receive many good and useful comments so
+                                    that we can bring better results to future
+                                    events.
                                 </Typography>
                             </div>
                             <div style={{ marginTop: 16 }}>

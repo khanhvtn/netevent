@@ -19,6 +19,7 @@ import PieChartIcon from '@material-ui/icons/PieChart';
 import { useDispatch, useSelector } from 'react-redux';
 import EventAnalysisFilter from './EventAnalysisFilter/EventAnalysisFilter';
 import { getLastMonth } from '../../utils';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const signUpAndShowUpData = {
     labels: ['Signed Up', 'Showed Up'],
@@ -114,11 +115,37 @@ const optionBarChart = {
     plugins: {
         legend: {
             position: 'top'
+        },
+        datalabels: {
+            display: function (context) {
+                return context.dataset.data[context.dataIndex] !== 0; // or >= 1 or ...
+            },
+            color: '#36A2EB',
+            font: {
+                weight: 'bold'
+            },
+            formatter: function (value) {
+                return value;
+            }
         }
     }
 };
 
 const optionVerticalBarChart = {
+    plugins: {
+        datalabels: {
+            display: function (context) {
+                return context.dataset.data[context.dataIndex] !== 0; // or >= 1 or ...
+            },
+            color: '#36A2EB',
+            font: {
+                weight: 'bold'
+            },
+            formatter: function (value) {
+                return value;
+            }
+        }
+    },
     scales: {
         yAxes: [
             {
@@ -130,6 +157,23 @@ const optionVerticalBarChart = {
     },
     ticks: {
         precision: 0
+    }
+};
+
+const options = {
+    plugins: {
+        datalabels: {
+            display: function (context) {
+                return context.dataset.data[context.dataIndex] !== 0; // or >= 1 or ...
+            },
+            color: '#36A2EB',
+            font: {
+                weight: 'bold'
+            },
+            formatter: function (value) {
+                return value + ' %';
+            }
+        }
     }
 };
 
@@ -402,6 +446,7 @@ const EventAnalysis = () => {
                                         data={participantOfCompletedEventState}
                                         options={optionVerticalBarChart}
                                         height={80}
+                                        plugins={[ChartDataLabels]}
                                     />
                                 </Paper>
                             </Grid>
@@ -434,6 +479,8 @@ const EventAnalysis = () => {
                                                             ? noDataPieChartData
                                                             : signUpAndShowUpState
                                                     }
+                                                    plugins={[ChartDataLabels]}
+                                                    options={options}
                                                 />
                                             </div>
                                         </div>
@@ -456,6 +503,7 @@ const EventAnalysis = () => {
                                         <Bar
                                             data={eventStatusState}
                                             options={optionBarChart}
+                                            plugins={[ChartDataLabels]}
                                         />
                                     </Paper>
                                 </Grid>

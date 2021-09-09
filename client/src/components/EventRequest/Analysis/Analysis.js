@@ -16,9 +16,24 @@ import { getEventAnalysisByID } from '../../../actions/eventActions';
 import { useDispatch, useSelector } from 'react-redux';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ExportToCsv } from 'export-to-csv';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
 const options = {
-    maintainAspectRatio: false
+    maintainAspectRatio: false,
+    plugins: {
+        datalabels: {
+            display: function (context) {
+                return context.dataset.data[context.dataIndex] !== 0; // or >= 1 or ...
+            },
+            color: '#36A2EB',
+            font: {
+                weight: 'bold'
+            },
+            formatter: function (value) {
+                return value;
+            }
+        }
+    }
 };
 
 const signUpAndShowUpData = {
@@ -276,6 +291,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                                                 : signUpAndShowUpState
                                         }
                                         options={options}
+                                        plugins={[ChartDataLabels]}
                                     />
                                 </article>
                             </Paper>
@@ -299,6 +315,7 @@ const Analysis = ({ eventId, tabs, event }) => {
                                                 : signUpAndOpenUpState
                                         }
                                         options={options}
+                                        plugins={[ChartDataLabels]}
                                     />
                                 </article>
                             </Paper>
