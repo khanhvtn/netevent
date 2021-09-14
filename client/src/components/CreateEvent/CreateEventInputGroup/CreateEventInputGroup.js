@@ -388,14 +388,14 @@ const CreateEventInputGroup = ({
                                 ? true
                                 : false
                         }
-                        minDate={
+                        // minDate={
+                        //     state.startDate
+                        //         ? Date.parse(state.startDate)
+                        //         : undefined
+                        // }
+                        maxDate={
                             state.startDate
                                 ? Date.parse(state.startDate)
-                                : undefined
-                        }
-                        maxDate={
-                            state.endDate
-                                ? Date.parse(state.endDate)
                                 : undefined
                         }
                         error={errors?.registrationCloseDate ? true : false}

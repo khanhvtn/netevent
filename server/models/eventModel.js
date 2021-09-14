@@ -65,10 +65,10 @@ const eventSchema = mongoose.Schema(
             required: [true, 'Registration Close Date cannot be blanked'],
             validate: {
                 validator: function (v) {
-                    return new Date(v) > new Date(this.startDate);
+                    return new Date(v) < new Date(this.startDate);
                 },
                 message: () =>
-                    `Registration Close Date cannot be smaller than Start Date`
+                    `Registration Close Date cannot be larger than Start Date`
             }
         },
         endDate: {
